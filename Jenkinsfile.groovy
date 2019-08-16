@@ -1,4 +1,4 @@
-def dockerHubRepo = "icgcargo/platform-ui"
+def dockerHubRepo = "icgcargo/argo-gateway"
 def commit = "UNKNOWN"
 
 pipeline {
@@ -39,19 +39,18 @@ spec:
                     commit = sh(returnStdout: true, script: 'git describe --always').trim()
                 }
                 script {
-                    version = sh(returnStdout: true, script: 'cat ./client/package.json | grep version | cut -d \':\' -f2 | sed -e \'s/"//\' -e \'s/",//\'').trim()
+                    version = sh(returnStdout: true, script: 'cat ./package.json | grep version | cut -d \':\' -f2 | sed -e \'s/"//\' -e \'s/",//\'').trim()
                 }
             }
         }
         stage('Test') {
             steps {
                 container('node') {
-                    sh "cd ./client && npm ci"
-                    sh "cd ./client && npm run build && npm run test"
+                    sh "npm ci"
+                    sh "npm run test"
                 }
             }
         }
-
         stage('Deploy to argo-dev') {
             when {
                 branch "develop"
@@ -62,10 +61,10 @@ spec:
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                     }
                     // DNS error if --network is default
-                    sh "cd ./client && docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version}-${commit}"
+                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version}-${commit}"
                     sh "docker push ${dockerHubRepo}:${version}-${commit}"
                 }
-                build(job: "/ARGO/provision/platform-ui", parameters: [
+                build(job: "/ARGO/provision/gateway", parameters: [
                      [$class: 'StringParameterValue', name: 'AP_ARGO_ENV', value: 'dev' ],
                      [$class: 'StringParameterValue', name: 'AP_ARGS_LINE', value: "--set-string image.tag=${version}-${commit}" ]
                 ])
@@ -81,11 +80,11 @@ spec:
                     withCredentials([usernamePassword(credentialsId:'argoDockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                     }
-                    sh "cd ./client && docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:latest -t ${dockerHubRepo}:${version}"
+                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:latest -t ${dockerHubRepo}:${version}"
                     sh "docker push ${dockerHubRepo}:${version}"
                     sh "docker push ${dockerHubRepo}:latest"
                 }
-                build(job: "/ARGO/provision/platform-ui", parameters: [
+                build(job: "/ARGO/provision/gateway", parameters: [
                      [$class: 'StringParameterValue', name: 'AP_ARGO_ENV', value: 'qa' ],
                      [$class: 'StringParameterValue', name: 'AP_ARGS_LINE', value: "--set-string image.tag=${version}" ]
                 ])
