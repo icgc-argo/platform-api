@@ -11,7 +11,7 @@ kind: Pod
 spec:
   containers:
   - name: node
-    image: mhart/alpine-node:latest
+    image: node:12.6.0
     tty: true
   - name: helm
     image: alpine/helm:2.12.3
@@ -93,7 +93,7 @@ spec:
     }
     post {
         unsuccessful {
-            // i used node container since it has curl already
+            // i used node   container since it has curl already
             container("node") {
                 script {
                     if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
@@ -105,7 +105,6 @@ spec:
             }
         }
         fixed {
-            // i used node container since it has curl already
             container("node") {
                 script {
                     if (env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop") {
