@@ -1,20 +1,11 @@
-# argo-platform
+# Platform Gateway
 
-This repo contains the ICGC-Argo server-rendered front-end and its [GraphQl](https://graphql.org/learn/) API aggregation gateway.
+GraphQL endpoint providing a single endpoint to access data from Argo's many services.
 
-## Repo structure
+## Development
 
-```
-argo-platform
-|__ client (server-rendered React app)
-|   |__ pages (Next.js routing wrappers)
-|   |__ components (layout & stateful components)
-|   |__ uikits (pure presentational components)
-|   |__ global (utility functions, configs and constants)
-|   |__ stories (Storybook stories, pulling from uikits)
-|__ server (GraphQl API)
-    |__ schemas (individual domain schemas,
-        remote and locally defined)
-```
+### Quick Start
 
-Refer to [./client/README.md](./client/README.md) and [./server/README.md](./server/README.md) for each module's documentations.
+- Set up environment: copy `.env.schema` to `.env` and update environment accordingly if needed. Values provided in the schema file can be used when running the server locally for development.
+- Install dependencies: `npm i`
+- Run server locally: `npm run dev`
