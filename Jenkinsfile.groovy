@@ -1,4 +1,5 @@
 def dockerHubRepo = "icgcargo/argo-gateway"
+def githubRepo = "icgc-argo/platform-api"
 def commit = "UNKNOWN"
 
 pipeline {
@@ -77,6 +78,11 @@ spec:
             }
             steps {
                 container('docker') {
+                    withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git tag ${version}"
+                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
+                    }
+
                     withCredentials([usernamePassword(credentialsId:'argoDockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                     }
