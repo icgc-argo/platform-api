@@ -53,17 +53,6 @@ spec:
             }
         }
 
-        stage('Test github tag') {
-            steps {
-                container('docker') {
-                    withCredentials([usernamePassword(credentialsId: 'argoGithub', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                        sh "git tag ${version}"
-                        sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
-                    }
-                }
-            }
-        }
-
         stage('Deploy to argo-dev') {
             when {
                 branch "develop"
