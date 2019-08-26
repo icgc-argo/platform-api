@@ -42,7 +42,7 @@ const getRegistrationData = async (programShortName, Authorization) => {
   return response;
 };
 
-const uploadRegistrationData = async (programShortName, fileStream, Authorization) => {
+const uploadRegistrationData = async (programShortName, filename, fileStream, Authorization) => {
   const formData = new FormData();
 
   // Need to buffer whole file from stream to ensure it all gets added to form data.
@@ -50,7 +50,7 @@ const uploadRegistrationData = async (programShortName, fileStream, Authorizatio
 
   // For FormData to send a buffer as a file, it requires a filename in the options.
   formData.append('registrationFile', fileBuffer, {
-    filename: 'registrationFile.tsv',
+    filename,
   });
 
   const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`;

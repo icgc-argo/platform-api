@@ -170,14 +170,19 @@ const resolvers = {
       const { Authorization, egoToken } = context;
       const { shortName, registrationFile } = args;
 
+      // Here we are confirming that the user has at least some ability to write Program Data
+      //  This is to reduce the opportunity for spamming the gateway with file uploads
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
+
+      const userId = TokenUtils.decodeToken(egoToken).sub;
 
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
       const response = await clinicalService.uploadRegistrationData(
         shortName,
+        filename,
         fileStream,
         Authorization,
       );
