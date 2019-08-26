@@ -1,8 +1,14 @@
-import { gql, UserInputError, ServerError } from 'apollo-server-express';
+import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
-import costDirectiveTypeDef from '../costDirectiveTypeDef';
 
+import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
+
+import { EGO_PUBLIC_KEY } from '../../config';
+
+const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+
+import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
 
@@ -161,8 +167,12 @@ const resolvers = {
   },
   Mutation: {
     uploadClinicalRegistration: async (obj, args, context, info) => {
-      const { Authorization } = context;
+      const { Authorization, egoToken } = context;
       const { shortName, registrationFile } = args;
+
+      if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
+        throw new AuthenticationError('User is not authorized to write data');
+      }
 
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
