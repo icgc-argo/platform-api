@@ -70,7 +70,7 @@ const typeDefs = gql`
     inviteAcceptedAt: String
   }
 
-  type ProgramConstants {
+  type ProgramOptions {
     cancerTypes: [String]! @cost(complexity: 5)
     primarySites: [String]! @cost(complexity: 5)
     institutions: [String]! @cost(complexity: 5)
@@ -150,7 +150,7 @@ const typeDefs = gql`
     """
     joinProgramInvite(id: ID!): JoinProgramInvite
 
-    constants: ProgramConstants!
+    programOptions: ProgramOptions!
   }
 
   type Mutation {
@@ -225,7 +225,7 @@ const convertGrpcUserToGql = userDetails => ({
 });
 
 const resolvers = {
-  ProgramConstants: {
+  ProgramOptions: {
     cancerTypes: async (constants, args, context, info) => {
       const { egoToken } = context;
       const response = await programService.listCancers(egoToken);

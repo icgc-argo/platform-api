@@ -68,7 +68,7 @@ const listUsers = async (shortName, jwt = null) => {
   });
 };
 
-/* Read Constants Lists */
+/* Read Options Lists */
 const listCountries = async (jwt = null) => {
   return await new Promise((resolve, reject) => {
     programService.listCountries(
