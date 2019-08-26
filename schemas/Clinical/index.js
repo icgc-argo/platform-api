@@ -1,6 +1,8 @@
 import { gql, AuthenticationError } from 'apollo-server-express';
+import { GraphQLJSONObject } from 'graphql-type-json';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -15,6 +17,7 @@ import { ERROR_MESSAGES } from '../../services/clinical/messages';
 const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
+  scalar JSONObject
 
   """
   It is possible for there to be no available ClinicalRegistrationData for a program,
@@ -37,12 +40,18 @@ const typeDefs = gql`
     row: Int!
     programShortName: String!
     donorSubmitterId: String!
-    gender: String!
     specimenSubmitterId: String!
     specimentType: String!
-    tumourNormalDesignation: String!
     sampleSubmitterId: String!
     sampleType: String!
+    gender: String!
+    tumourNormalDesignation: String!
+
+    """
+    data is a JSON Object without defined keys that will contain any additional fields that are
+      returned by the clinical registration and not part of the above hardcoded list
+    """
+    data: JSONObject!
   }
 
   type ClinicalRegistrationStats @cost(complexity: 10) {
@@ -103,12 +112,23 @@ const convertRegistrationRecordToGql = (record, row) => ({
   row,
   programShortName: record.program_id,
   donorSubmitterId: record.submitter_donor_id,
-  gender: record.gender,
   specimenSubmitterId: record.submitter_specimen_id,
   specimentType: record.specimen_type,
-  tumourNormalDesignation: record.tumour_normal_designation,
   sampleSubmitterId: record.submitter_sample_id,
   sampleType: record.sample_type,
+  gender: record.gender,
+  tumourNormalDesignation: record.tumour_normal_designation,
+  data: () =>
+    omit(record, [
+      'program_id',
+      'submitter_donor_id',
+      'submitter_specimen_id',
+      'specimen_type',
+      'submitter_sample_id',
+      'sample_type',
+      'tumour_normal_designation',
+      'gender',
+    ]),
 });
 
 const convertRegistrationStatsToGql = statsEntry => {

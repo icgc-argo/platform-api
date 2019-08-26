@@ -36,6 +36,7 @@
     "graphql": "^14.2.1",
     "graphql-cost-analysis": "^1.0.3",
     "graphql-tools": "^4.0.4",
+    "graphql-type-json": "^0.3.0",
     "grpc": "^1.20.3",
     "lodash": "^4.17.14",
     "node-fetch": "^2.3.0",
