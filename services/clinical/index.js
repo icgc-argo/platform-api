@@ -25,14 +25,12 @@ const uploadRegistrationData = async (programShortName, fileStream, Authorizatio
     filename: 'registrationFile.tsv',
   });
 
-  const response = await fetch(
-    `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`,
-    {
-      method: 'post',
-      headers: { Authorization },
-      body: formData,
-    },
-  )
+  const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`;
+  const response = await fetch(url, {
+    method: 'post',
+    headers: { Authorization },
+    body: formData,
+  })
     .then(response => response.json())
     .catch(err => {
       console.error('Error occurred sending uploadRegistrationData to Clinical Service: ', err);

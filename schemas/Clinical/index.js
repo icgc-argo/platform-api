@@ -1,11 +1,13 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
+import costDirectiveTypeDef from '../costDirectiveTypeDef';
 
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
 
 const typeDefs = gql`
+  ${costDirectiveTypeDef}
   scalar Upload
 
   """
@@ -25,7 +27,7 @@ const typeDefs = gql`
     alreadyRegistered: ClinicalRegistrationStats!
   }
 
-  type ClinicalRegistrationRecord {
+  type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
     programShortName: String!
     donorSubmitterId: String!
@@ -37,7 +39,7 @@ const typeDefs = gql`
     sampleType: String!
   }
 
-  type ClinicalRegistrationStats {
+  type ClinicalRegistrationStats @cost(complexity: 10) {
     count: Int!
     rows: [Int]!
     names: [String]!
@@ -49,7 +51,7 @@ const typeDefs = gql`
     rows: [Int]!
   }
 
-  type ClinicalRegistrationError {
+  type ClinicalRegistrationError @cost(complexity: 5) {
     type: String!
     message: String!
     row: Int!
@@ -64,7 +66,7 @@ const typeDefs = gql`
     """
     Retrieve current stored Clinical Registration data for a program
     """
-    clinicalRegistration(shortName: String!, file: Upload!): ClinicalRegistrationData!
+    clinicalRegistration(shortName: String!): ClinicalRegistrationData!
   }
 
   type Mutation {
@@ -131,23 +133,18 @@ const convertRegistrationErrorToGql = errorData => ({
 });
 
 const convertRegistrationDataToGql = data => {
-  const registration = get(data, 'registration', {});
   return {
-    id: registration._id || null,
-    creator: registration.creator || null,
-    records: get(registration, 'records', []).map((record, i) =>
-      convertRegistrationRecordToGql(record, i),
-    ),
+    id: data._id || null,
+    creator: data.creator || null,
+    records: get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: get(data, 'errors', []).map((errorData, i) =>
       convertRegistrationErrorToGql(errorData, i),
     ),
 
-    newDonors: convertRegistrationStatsToGql(get(registration, 'stats.newDonorIds', {})),
-    newSpecimens: convertRegistrationStatsToGql(get(registration, 'stats.newSpecimenIds', {})),
-    newSamples: convertRegistrationStatsToGql(get(registration, 'stats.newSampleIds', {})),
-    alreadyRegistered: convertRegistrationStatsToGql(
-      get(registration, 'stats.alreadyRegistered', {}),
-    ),
+    newDonors: convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
+    newSpecimens: convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
+    newSamples: convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
+    alreadyRegistered: convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', {})),
   };
 };
 
@@ -173,7 +170,10 @@ const resolvers = {
         fileStream,
         Authorization,
       );
-      return convertRegistrationDataToGql(response);
+
+      // Success data is inside the key "registration", error data is in the root level
+      const data = response.successful ? response.registration : response;
+      return convertRegistrationDataToGql(data);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { authorization } = context;
