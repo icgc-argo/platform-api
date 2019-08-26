@@ -15,3 +15,6 @@ export const EGO_APPLICATION_SECRET = process.env.EGO_APPLICATION_SECRET;
 
 // Program Service config
 export const PROGRAM_SERVICE_ROOT = process.env.PROGRAM_SERVICE_ROOT || 'localhost:50052';
+
+// Clinical Service config
+export const CLINICAL_SERVICE_ROOT = process.env.CLINICAL_SERVICE_ROOT || 'localhost:3000';
