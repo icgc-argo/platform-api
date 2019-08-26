@@ -289,7 +289,7 @@ const resolvers = {
       const joinProgramDetails = get(response, 'invitation');
       return response ? grpcToGql(joinProgramDetails) : null;
     },
-    constants: () => ({}),
+    programOptions: () => ({}),
   },
   Mutation: {
     createProgram: async (obj, args, context, info) => {
