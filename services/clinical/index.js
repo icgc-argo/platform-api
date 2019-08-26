@@ -47,13 +47,12 @@ const clearRegistrationData = async (programShortName, registrationId, Authoriza
       headers: { Authorization },
     },
   )
-    .then(response => response.json())
+    .then(response => (response.ok ? true : response.json()))
     .catch(err => {
       console.error(
         `Error occurred attempting to delete registration data from Clinical Service (${programShortName}, ${registrationid}): `,
         err,
       );
-      throw err;
     });
   return response;
 };
@@ -66,7 +65,7 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
       headers: { Authorization },
     },
   )
-    .then(response => response.json())
+    .then(response => true)
     .catch(err =>
       console.error(
         `Error occurred attempting to commit registration data in Clinical Service (${programShortName}, ${registrationid}): `,

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql, UserInputError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
@@ -176,13 +176,16 @@ const resolvers = {
       return convertRegistrationDataToGql(data);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
-      const { authorization } = context;
+      const { Authorization } = context;
       const { shortName, registrationId } = args;
       const response = await clinicalService.clearRegistrationData(
         shortName,
         registrationId,
-        egoToken,
+        Authorization,
       );
+      if (response.error) {
+        throw new UserInputError(response.message);
+      }
       return true;
     },
     commitClinicalRegistration: async (obj, args, context, info) => {
