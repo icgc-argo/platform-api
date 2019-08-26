@@ -85,7 +85,7 @@ const typeDefs = gql`
 
     """
     Complete registration of the currently uploaded Clinical Registration data
-    On Success, returns a list of new Sample IDs
+    On Success, returns a list of the new sample IDs that were committed
     """
     commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
   }
