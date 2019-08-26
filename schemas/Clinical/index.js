@@ -1,4 +1,4 @@
-import { gql, UserInputError } from 'apollo-server-express';
+import { gql, UserInputError, ServerError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
@@ -85,8 +85,9 @@ const typeDefs = gql`
 
     """
     Complete registration of the currently uploaded Clinical Registration data
+    On Success, returns a list of new Sample IDs
     """
-    commitClinicalRegistration(shortName: String!, registrationId: String!): Boolean!
+    commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
   }
 `;
 
@@ -196,7 +197,7 @@ const resolvers = {
         registrationId,
         Authorization,
       );
-      return true;
+      return get(response, 'newSamples', []);
     },
   },
 };
