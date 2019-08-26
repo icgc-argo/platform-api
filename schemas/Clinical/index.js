@@ -20,7 +20,7 @@ const typeDefs = gql`
   It is possible for there to be no available ClinicalRegistrationData for a program,
     in this case the object will return with id and creator equal to null, and an empty records list.
   """
-  type ClinicalRegistrationData {
+  type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
     creator: String
 
@@ -82,18 +82,20 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationData!
+    ): ClinicalRegistrationData! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
     """
     clearClinicalRegistration(shortName: String!, registrationId: String!): Boolean!
+      @cost(complexity: 10)
 
     """
     Complete registration of the currently uploaded Clinical Registration data
     On Success, returns a list of the new sample IDs that were committed
     """
     commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
+      @cost(complexity: 20)
   }
 `;
 
@@ -143,15 +145,16 @@ const convertRegistrationDataToGql = data => {
   return {
     id: data._id || null,
     creator: data.creator || null,
-    records: get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
-    errors: get(data, 'errors', []).map((errorData, i) =>
-      convertRegistrationErrorToGql(errorData, i),
-    ),
+    records: () =>
+      get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
+    errors: () =>
+      get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
 
-    newDonors: convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
-    newSpecimens: convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
-    newSamples: convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
-    alreadyRegistered: convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', {})),
+    newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
+    newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
+    newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
+    alreadyRegistered: () =>
+      convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', {})),
   };
 };
 
