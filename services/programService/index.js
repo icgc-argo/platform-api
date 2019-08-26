@@ -68,6 +68,57 @@ const listUsers = async (shortName, jwt = null) => {
   });
 };
 
+/* Read Constants Lists */
+const listCountries = async (jwt = null) => {
+  return await new Promise((resolve, reject) => {
+    programService.listCountries(
+      {},
+      getAuthMeta(jwt),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listCountries'),
+    );
+  });
+};
+
+const listCancers = async (jwt = null) => {
+  return await new Promise((resolve, reject) => {
+    programService.listCancers(
+      {},
+      getAuthMeta(jwt),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listCancers'),
+    );
+  });
+};
+
+const listPrimarySites = async (jwt = null) => {
+  return await new Promise((resolve, reject) => {
+    programService.listPrimarySites(
+      {},
+      getAuthMeta(jwt),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listPrimarySites'),
+    );
+  });
+};
+
+const listRegions = async (jwt = null) => {
+  return await new Promise((resolve, reject) => {
+    programService.listRegions(
+      {},
+      getAuthMeta(jwt),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listRegions'),
+    );
+  });
+};
+
+const listInstitutions = async (jwt = null) => {
+  return await new Promise((resolve, reject) => {
+    programService.listInstitutions(
+      {},
+      getAuthMeta(jwt),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listInstitutions'),
+    );
+  });
+};
+
 /*
  * Mutating Methods
  */
@@ -251,6 +302,13 @@ export default {
   listPrograms,
   getJoinProgramInvite,
   listUsers,
+
+  listCancers,
+  listPrimarySites,
+  listRegions,
+  listInstitutions,
+  listCountries,
+
   createProgram,
   updateProgram,
 

@@ -70,6 +70,14 @@ const typeDefs = gql`
     inviteAcceptedAt: String
   }
 
+  type ProgramConstants {
+    cancerTypes: [String]! @cost(complexity: 5)
+    primarySites: [String]! @cost(complexity: 5)
+    institutions: [String]! @cost(complexity: 5)
+    regions: [String]! @cost(complexity: 5)
+    countries: [String]! @cost(complexity: 5)
+  }
+
   input ProgramUserInput {
     email: String!
     firstName: String!
@@ -141,6 +149,8 @@ const typeDefs = gql`
     retrieve join program invitation by id
     """
     joinProgramInvite(id: ID!): JoinProgramInvite
+
+    constants: ProgramConstants!
   }
 
   type Mutation {
@@ -215,6 +225,43 @@ const convertGrpcUserToGql = userDetails => ({
 });
 
 const resolvers = {
+  ProgramConstants: {
+    cancerTypes: async (constants, args, context, info) => {
+      const { egoToken } = context;
+      const response = await programService.listCancers(egoToken);
+      return get(response, 'cancers', [])
+        .map(cancerType => cancerType.name.value)
+        .sort();
+    },
+    primarySites: async (constants, args, context, info) => {
+      const { egoToken } = context;
+      const response = await programService.listPrimarySites(egoToken);
+      return get(response, 'primary_sites', [])
+        .map(site => site.name.value)
+        .sort();
+    },
+    institutions: async (constants, args, context, info) => {
+      const { egoToken } = context;
+      const response = await programService.listInstitutions(egoToken);
+      return get(response, 'institutions', [])
+        .map(institution => institution.name.value)
+        .sort();
+    },
+    regions: async (constants, args, context, info) => {
+      const { egoToken } = context;
+      const response = await programService.listRegions(egoToken);
+      return get(response, 'regions', [])
+        .map(region => region.name.value)
+        .sort();
+    },
+    countries: async (constants, args, context, info) => {
+      const { egoToken } = context;
+      const response = await programService.listCountries(egoToken);
+      return get(response, 'countries', [])
+        .map(country => country.name.value)
+        .sort();
+    },
+  },
   Program: {
     users: async (program, args, context, info) => {
       const { egoToken } = context;
@@ -242,6 +289,7 @@ const resolvers = {
       const joinProgramDetails = get(response, 'invitation');
       return response ? grpcToGql(joinProgramDetails) : null;
     },
+    constants: () => ({}),
   },
   Mutation: {
     createProgram: async (obj, args, context, info) => {
