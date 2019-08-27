@@ -4,7 +4,7 @@
  */
 import grpc from 'grpc';
 import * as loader from '@grpc/proto-loader';
-import { EGO_ROOT_GRPC } from '../../config';
+import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
@@ -48,4 +48,20 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
-export default { getUser, listUsers };
+const getApiToken = async () => {
+  const url = `${EGO_ROOT_REST}/o/token`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    // convert response to gql stats
+    .then(response => {
+      console.log(response);
+      return response;
+    })
+    .then(response => response.json())
+    .catch(err => console.error('Error fetching api token: ', err));
+  return response;
+};
+
+export default { getUser, listUsers, getApiToken };

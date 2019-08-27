@@ -29,6 +29,11 @@ const typeDefs = gql`
     ISO Formatted DateTime:
     """
     lastLogin: String
+
+    """
+    EGO API Token
+    """
+    apiToken: String
   }
 
   type Query {
@@ -62,6 +67,13 @@ const convertEgoUser = user => ({
 
 // Provide resolver functions for your schema fields
 const resolvers = {
+  User: {
+    apiToken: async (obj, args, context, info) => {
+      console.log('user api token resolver');
+      //egoService.getApiToken();
+      return 'API TOKEN';
+    },
+  },
   Query: {
     user: async (obj, args, context, info) => {
       const { egoToken } = context;
