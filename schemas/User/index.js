@@ -5,6 +5,11 @@ import { get } from 'lodash';
 
 import egoService from '../../services/ego';
 
+import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
+
+import { EGO_PUBLIC_KEY } from '../../config';
+const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type User {
@@ -46,6 +51,11 @@ const typeDefs = gql`
     retrieve paginated list of user data
     """
     users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
+
+    """
+    self
+    """
+    self: Int
   }
 `;
 
@@ -77,10 +87,13 @@ const resolvers = {
   Query: {
     user: async (obj, args, context, info) => {
       const { egoToken } = context;
+
       const egoUser = await egoService.getUser(args.id, egoToken);
       return egoUser === null ? null : convertEgoUser(egoUser);
     },
     users: async (obj, args, context, info) => {
+      console.log('context', context);
+
       const { egoToken } = context;
       const options = {
         ...args,
@@ -88,6 +101,14 @@ const resolvers = {
       const response = await egoService.listUsers(options, egoToken);
       const egoUserList = get(response, 'users', []);
       return egoUserList.map(egoUser => convertEgoUser(egoUser));
+    },
+    self: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const userId = decodedToken.sub;
+      console.log('self', userId, Authorization);
+
+      const response = await egoService.getApiToken(userId, Authorization);
     },
   },
 };
