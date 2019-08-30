@@ -190,6 +190,7 @@ const resolvers = {
   },
   Mutation: {
     uploadClinicalRegistration: async (obj, args, context, info) => {
+      g;
       const { Authorization, egoToken } = context;
       const { shortName, registrationFile } = args;
 
@@ -198,8 +199,6 @@ const resolvers = {
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
-
-      const userId = TokenUtils.decodeToken(egoToken).sub;
 
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
