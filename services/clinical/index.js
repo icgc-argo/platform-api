@@ -1,34 +1,9 @@
-import { CLINICAL_SERVICE_ROOT } from '../../config';
-import fetch, { Response } from 'node-fetch';
 import { AuthenticationError, UserInputError, ServerError } from 'apollo-server-express';
-
+import fetch, { Response } from 'node-fetch';
 import FormData from 'form-data';
 
-/*
-convert the REST status codes to GQL errors, or return the response if passing
-*/
-const registrationResponseHandler = async response => {
-  switch (response.status) {
-    case 200:
-    case 201:
-      return response;
-    case 401:
-    case 403:
-      throw new AuthenticationError(response.status);
-    case 404:
-      let notFoundData;
-      try {
-        notFoundData = await response.json();
-      } catch {
-        notFoundData = { message: '' };
-      }
-      throw new UserInputError(notFoundData.message);
-    case 500:
-      throw new ServerError();
-    default:
-      return response;
-  }
-};
+import { CLINICAL_SERVICE_ROOT } from '../../config';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 const getRegistrationData = async (programShortName, Authorization) => {
   const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`;
