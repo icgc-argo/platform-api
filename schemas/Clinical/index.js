@@ -76,6 +76,36 @@ const typeDefs = gql`
     donorId: String!
     specimenId: String!
   }
+  
+  type ClinicalSubmissionData @cost(complexity: 10) {
+    id: ID!
+    state: String!
+    version: String!
+    clinicalEntities: [ClinicalEntityData]!    
+  }
+
+  type ClinicalEntityData {
+    batchName: String!
+    creator: String!
+    """
+    Not strongly typing records because it will vary for each clinical type
+    """
+    records: JSONObject
+    dataErrors: [ClinicalSubmissionError]
+    """
+    Not strongly typing stats because it is not yet decided
+    """
+    stats: JSONObject
+  }
+
+  type ClinicalSubmissionError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+  }
 
   type Query {
     """
@@ -105,6 +135,14 @@ const typeDefs = gql`
     """
     commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
       @cost(complexity: 20)
+    
+    """
+    Upload Clinical Submission files
+    """
+    uploadClinicalSubmissions(
+      shortName: String!,
+      clinicalFiles: [Upload!]
+    ): [String]! @cost(complexity: 30)
   }
 `;
 
@@ -235,6 +273,25 @@ const resolvers = {
       );
       return get(response, 'newSamples', []);
     },
+    uploadClinicalSubmissions: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const { shortName, clinicalFiles } = args;      
+
+      // see reason in uploadRegistration
+      if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
+        throw new AuthenticationError('User is not authorized to write data');
+      }
+
+      var filesMap = {};
+      await Promise.all(clinicalFiles).then( 
+        val => val.forEach(
+          file => filesMap[file.filename] = file.createReadStream()
+        )
+      );
+      print(Object.keys(filesMap));
+      const response = await clinicalService.uploadClinicalSubmissionData(shortName, filesMap, Authorization);      
+      return response;
+    },
   },
 };
 
@@ -242,3 +299,7 @@ export default makeExecutableSchema({
   typeDefs,
   resolvers,
 });
+
+const print = (msg) => {
+  console.log ("Printing >>>>>>>>>>>>>>" +  msg);
+}
