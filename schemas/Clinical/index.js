@@ -190,7 +190,6 @@ const resolvers = {
   },
   Mutation: {
     uploadClinicalRegistration: async (obj, args, context, info) => {
-      g;
       const { Authorization, egoToken } = context;
       const { shortName, registrationFile } = args;
 
