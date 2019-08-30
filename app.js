@@ -6,6 +6,7 @@ import costAnalysis from 'graphql-cost-analysis';
 
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
+import clinicalSchema from './schemas/Clinical';
 import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
 import config from './package.json';
 import costDirectiveTypeDef from './schemas/costDirectiveTypeDef';
@@ -33,7 +34,7 @@ ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
 };
 
 const init = async () => {
-  const schemas = [userSchema, programSchema];
+  const schemas = [userSchema, programSchema, clinicalSchema];
 
   const server = new ApolloServer({
     schema: mergeSchemas({
@@ -42,6 +43,8 @@ const init = async () => {
     context: ({ req }) => ({
       isUserRequest: true,
       egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
+      Authorization:
+        `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
     }),
     introspection: true,
