@@ -1,3 +1,4 @@
+import { AuthenticationError, UserInputError, ServerError } from 'apollo-server-express';
 /*
 convert the REST status codes to GQL errors, or return the response if passing
 */

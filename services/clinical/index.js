@@ -1,4 +1,3 @@
-import { AuthenticationError, UserInputError, ServerError } from 'apollo-server-express';
 import fetch, { Response } from 'node-fetch';
 import FormData from 'form-data';
 
@@ -11,9 +10,8 @@ const getRegistrationData = async (programShortName, Authorization) => {
     method: 'get',
     headers: { Authorization },
   })
-    .then(registrationResponseHandler)
+    .then(restErrorResponseHandler)
     .then(response => response.json());
-  // .catch(err => console.error('Error fetching Clinical Registration Data: ', err));
   return response;
 };
 
@@ -34,7 +32,7 @@ const uploadRegistrationData = async (programShortName, filename, fileStream, Au
     headers: { Authorization },
     body: formData,
   })
-    .then(registrationResponseHandler)
+    .then(restErrorResponseHandler)
     .then(response => response.json());
   return response;
 };
@@ -47,7 +45,7 @@ const clearRegistrationData = async (programShortName, registrationId, Authoriza
       headers: { Authorization },
     },
   )
-    .then(registrationResponseHandler)
+    .then(restErrorResponseHandler)
     .then(response => true);
   return response;
 };
@@ -60,7 +58,7 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
       headers: { Authorization },
     },
   )
-    .then(registrationResponseHandler)
+    .then(restErrorResponseHandler)
     .then(response => response.json());
   return response;
 };
