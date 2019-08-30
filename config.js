@@ -15,3 +15,7 @@ export const EGO_APPLICATION_SECRET = process.env.EGO_APPLICATION_SECRET;
 
 // Program Service config
 export const PROGRAM_SERVICE_ROOT = process.env.PROGRAM_SERVICE_ROOT || 'localhost:50052';
+
+// Submission Service config
+export const SUBMISSION_SERVICE_ROOT = process.env.SUBMISSION_SERVICE_ROOT || 'http://localhost:3000';
+export const SUBMISSION_TEMPLATE_PATH = process.env.SUBMISSION_TEMPLATE_PATH || "/submission/schema/template/";
