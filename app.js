@@ -43,7 +43,8 @@ const init = async () => {
     context: ({ req }) => ({
       isUserRequest: true,
       egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
-      Authorization: `Bearer ${(req.headers.authorization || '').split('Bearer ').join('')}` || '',
+      Authorization:
+        `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
     }),
     introspection: true,
