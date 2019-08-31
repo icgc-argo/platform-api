@@ -6,7 +6,10 @@ import costAnalysis from 'graphql-cost-analysis';
 
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
-import {PORT, NODE_ENV, GQL_MAX_COST, SUBMISSION_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH} from './config';
+
+import {PORT, NODE_ENV, GQL_MAX_COST, SUBMISSION_TEMPLATE_PATH, CLINICAL_SERVICE_ROOT} from './config';
+import clinicalSchema from './schemas/Clinical';
+
 import config from './package.json';
 import costDirectiveTypeDef from './schemas/costDirectiveTypeDef';
 import urlJoin from "url-join";
@@ -35,7 +38,7 @@ ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
 };
 
 const init = async () => {
-  const schemas = [userSchema, programSchema];
+  const schemas = [userSchema, programSchema, clinicalSchema];
 
   const server = new ApolloServer({
     schema: mergeSchemas({
@@ -44,6 +47,8 @@ const init = async () => {
     context: ({ req }) => ({
       isUserRequest: true,
       egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
+      Authorization:
+        `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
     }),
     introspection: true,
@@ -60,7 +65,7 @@ const init = async () => {
   // Our specification download service can't use GraphQL because GraphQL specification requires the content-type
   // that it returns be json, and we want to be able to return other content types, such as tab-separated-values,
   // so that the user is automatically prompted to save the file from their browser.
-  const apiRoot = urlJoin(SUBMISSION_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
+  const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
   app.get('/downloads', async (req,res) => {
     const name = req.query.template;
     if (name == undefined) {
