@@ -15,8 +15,7 @@ const getRegistrationData = async (programShortName, Authorization) => {
   return response;
 };
 
-const uploadRegistrationData = async (programShortName, filename, fileStream, Authorization) => {
-  console.log("FILEs: " + filename);
+const uploadRegistrationData = async (programShortName, filename, fileStream, Authorization) => {  
   const formData = new FormData();
 
   // Need to buffer whole file from stream to ensure it all gets added to form data.
