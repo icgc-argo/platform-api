@@ -3,16 +3,17 @@ import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
 import costAnalysis from 'graphql-cost-analysis';
-
+import * as swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
+import path from 'path';
 
-import {PORT, NODE_ENV, GQL_MAX_COST, SUBMISSION_TEMPLATE_PATH, CLINICAL_SERVICE_ROOT} from './config';
+import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
 import clinicalSchema from './schemas/Clinical';
 
 import config from './package.json';
-var clinical = require('./routes/clinical');
-import costDirectiveTypeDef from './schemas/costDirectiveTypeDef';
+const clinical = require('./routes/clinical');
 
 const { version } = config;
 
@@ -61,7 +62,13 @@ const init = async () => {
     res.json(version);
   });
 
-  app.use("/clinical", clinical);
+  app.use('/clinical', clinical);
+
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
+  );
 
   app.listen(PORT, () =>
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
