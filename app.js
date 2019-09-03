@@ -76,4 +76,3 @@ const init = async () => {
 };
 
 init();
-//console.log(yaml.load(path.join(__dirname, "./resources/swagger.yaml")));
