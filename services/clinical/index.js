@@ -5,7 +5,7 @@ import { CLINICAL_SERVICE_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
 const getRegistrationData = async (programShortName, Authorization) => {
-  const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`;
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration`;
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
@@ -26,7 +26,7 @@ const uploadRegistrationData = async (programShortName, filename, fileStream, Au
     filename,
   });
 
-  const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration`;
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration`;
   const response = await fetch(url, {
     method: 'post',
     headers: { Authorization },
@@ -39,7 +39,7 @@ const uploadRegistrationData = async (programShortName, filename, fileStream, Au
 
 const clearRegistrationData = async (programShortName, registrationId, Authorization) => {
   const response = await fetch(
-    `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration/${registrationId}`,
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration/${registrationId}`,
     {
       method: 'delete',
       headers: { Authorization },
@@ -52,7 +52,7 @@ const clearRegistrationData = async (programShortName, registrationId, Authoriza
 
 const commitRegistrationData = async (programShortName, registrationId, Authorization) => {
   const response = await fetch(
-    `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/registration/${registrationId}/commit`,
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration/${registrationId}/commit`,
     {
       method: 'post',
       headers: { Authorization },
