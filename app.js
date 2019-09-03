@@ -6,9 +6,12 @@ import costAnalysis from 'graphql-cost-analysis';
 
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
+
+import {PORT, NODE_ENV, GQL_MAX_COST, SUBMISSION_TEMPLATE_PATH, CLINICAL_SERVICE_ROOT} from './config';
 import clinicalSchema from './schemas/Clinical';
-import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
+
 import config from './package.json';
+var clinical = require('./routes/clinical');
 import costDirectiveTypeDef from './schemas/costDirectiveTypeDef';
 
 const { version } = config;
@@ -57,6 +60,8 @@ const init = async () => {
   app.get('/status', (req, res) => {
     res.json(version);
   });
+
+  app.use("/clinical", clinical);
 
   app.listen(PORT, () =>
     console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
