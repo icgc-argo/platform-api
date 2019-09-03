@@ -3,14 +3,13 @@ import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
 import costAnalysis from 'graphql-cost-analysis';
-import * as swaggerUi from "swagger-ui-express";
-import yaml from "yamljs";
+import * as swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
-import path from "path";
+import path from 'path';
 
-
-import {PORT, NODE_ENV, GQL_MAX_COST} from './config';
+import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
 import clinicalSchema from './schemas/Clinical';
 
 import config from './package.json';
@@ -63,11 +62,12 @@ const init = async () => {
     res.json(version);
   });
 
-  app.use("/clinical", clinical);
+  app.use('/clinical', clinical);
 
-  app.use("/api-docs",
-   swaggerUi.serve,
-   swaggerUi.setup(yaml.load(path.join(__dirname, "./resources/swagger.yaml")))
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
   );
 
   app.listen(PORT, () =>

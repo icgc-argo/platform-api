@@ -1,14 +1,14 @@
 openapi: 3.0.0
 info:
-  title: Platform-API 
+  title: Platform-API
   version: 1.0.0
 security:
-  - bearerAuth: ["PROGRAMDATA-${programId}.WRITE", "CLINICALSERVICE.WRITE"]
+  - bearerAuth: ['PROGRAMDATA-${programId}.WRITE', 'CLINICALSERVICE.WRITE']
 paths:
-  "/clinical/template/{schema}":
+  '/clinical/template/{schema}':
     parameters:
-      - name: schema 
-        description: name of the schema to download the template file for 
+      - name: schema
+        description: name of the schema to download the template file for
         in: path
         required: true
         schema:
@@ -16,19 +16,19 @@ paths:
     get:
       summary: Download the template file for a given schema
       responses:
-        "200":
-          description: "A tsv template file for the given schemaName"
+        '200':
+          description: 'A tsv template file for the given schemaName'
           content:
             text/tab-separated-values:
               schema:
                 example: 'program_id\tsubmitter_donor_id\tgender\tsubmitter_specimen_id\tspecimen_type\ttumour_normal_designation\tsubmitter_sample_id\tsample_type'
                 type: string
-        "404":
+        '404':
           description: The errror message indicating the schema could not be found
           content:
             application/json:
               schema:
-                example: "{\"message\": \"no schema named 'invalidName' found\"}"
+                example: '{"message": "no schema named ''invalidName'' found"}'
                 type: string
 
       description: returns the current in progress registration for a program if any

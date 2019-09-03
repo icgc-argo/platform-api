@@ -70,9 +70,7 @@ export const withRetries = (
           operation.retry(err)
         ) {
           console.warn(
-            `grpc method ${methodName} failed with errorCode ${
-              err.code
-            }, retrying after ${currentAttempt} attempt(s)`,
+            `grpc method ${methodName} failed with errorCode ${err.code}, retrying after ${currentAttempt} attempt(s)`,
           );
           return;
         }

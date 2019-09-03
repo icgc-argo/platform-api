@@ -42,7 +42,8 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "prettier": "1.18.2"
   },
   "prettier": {
     "printWidth": 100,

@@ -21,7 +21,8 @@ export const EGO_PUBLIC_KEY =
 export const PROGRAM_SERVICE_ROOT = process.env.PROGRAM_SERVICE_ROOT || 'localhost:50052';
 
 // Submission Service config
-export const SUBMISSION_TEMPLATE_PATH = process.env.SUBMISSION_TEMPLATE_PATH || "/submission/schema/template/";
+export const SUBMISSION_TEMPLATE_PATH =
+  process.env.SUBMISSION_TEMPLATE_PATH || '/submission/schema/template/';
 
 // Clinical Service config
 export const CLINICAL_SERVICE_ROOT = process.env.CLINICAL_SERVICE_ROOT || 'http://localhost:3000';
