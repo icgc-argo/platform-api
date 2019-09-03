@@ -10,7 +10,7 @@ var router = express.Router()
 // so that the user is automatically prompted to save the file from their browser.
 const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
 
-router.get('/template/:template', async (req,res) => {
+router.get('/template/:template', async (req, res) => {
     const name = req.params.template
     const data = fetch(urlJoin(apiRoot, name)).then((r) => {
         res.status(r.status);
@@ -20,5 +20,4 @@ router.get('/template/:template', async (req,res) => {
         res.send(r.body.read());
     });
 });
-
 module.exports = router
