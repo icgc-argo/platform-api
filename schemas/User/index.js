@@ -36,6 +36,13 @@ const typeDefs = gql`
     lastLogin: String
   }
 
+  type AccessKey {
+    accessKey: String
+    description: String
+    exp: Int
+    scope: [String]
+  }
+
   type AccessKeyResp {
     accessKey: String
     error: String
@@ -58,6 +65,13 @@ const typeDefs = gql`
     """
     self: AccessKeyResp
   }
+
+  type Mutation {
+    """
+    Generate Ego access key
+    """
+    generateAccessKey(scopes: [String]): AccessKey!
+  }
 `;
 
 const convertEgoUser = user => ({
@@ -78,17 +92,13 @@ const convertEgoUser = user => ({
 
 // Provide resolver functions for your schema fields
 const resolvers = {
-  User: {},
   Query: {
     user: async (obj, args, context, info) => {
       const { egoToken } = context;
-
       const egoUser = await egoService.getUser(args.id, egoToken);
       return egoUser === null ? null : convertEgoUser(egoUser);
     },
     users: async (obj, args, context, info) => {
-      console.log('context', context);
-
       const { egoToken } = context;
       const options = {
         ...args,
@@ -111,6 +121,18 @@ const resolvers = {
         error: !accessKey || accessKey.length !== 1 ? errorMsg : '',
         exp: exp,
       };
+    },
+  },
+  Mutation: {
+    generateAccessKey: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const userName = decodedToken.context.user.name;
+      const userId = decodedToken.sub;
+
+      const { scopes } = await egoService.getScopes(userName, Authorization);
+      const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
+      return { ...response, accessKey: response.accessToken };
     },
   },
 };

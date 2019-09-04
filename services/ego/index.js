@@ -61,4 +61,28 @@ const getEgoAccessKey = async (userId, Authorization) => {
   return response;
 };
 
-export default { getUser, listUsers, getEgoAccessKey };
+const generateEgoAccessKey = async (userId, scopes, Authorization) => {
+  const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}&scopes=${encodeURIComponent(
+    scopes.join(),
+  )}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const getScopes = async (userName, Authorization) => {
+  const url = `${EGO_ROOT_REST}/o/scopes?userName=${userName}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+export default { getUser, listUsers, generateEgoAccessKey, getScopes };
