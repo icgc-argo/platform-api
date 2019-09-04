@@ -34,11 +34,12 @@ const typeDefs = gql`
     ISO Formatted DateTime:
     """
     lastLogin: String
+  }
 
-    """
-    EGO API Token
-    """
-    apiToken: String
+  type AccessKeyResp {
+    accessKey: String
+    error: String
+    exp: Int
   }
 
   type Query {
@@ -55,7 +56,7 @@ const typeDefs = gql`
     """
     self
     """
-    self: Int
+    self: AccessKeyResp
   }
 `;
 
@@ -77,13 +78,7 @@ const convertEgoUser = user => ({
 
 // Provide resolver functions for your schema fields
 const resolvers = {
-  User: {
-    apiToken: async (obj, args, context, info) => {
-      console.log('user api token resolver');
-      //egoService.getApiToken();
-      return 'API TOKEN';
-    },
-  },
+  User: {},
   Query: {
     user: async (obj, args, context, info) => {
       const { egoToken } = context;
@@ -106,9 +101,16 @@ const resolvers = {
       const { Authorization, egoToken } = context;
       const decodedToken = TokenUtils.decodeToken(egoToken);
       const userId = decodedToken.sub;
-      console.log('self', userId, Authorization);
 
+      const errorMsg = 'An error has been found with your API key. Please generate a new API key';
       const response = await egoService.getApiToken(userId, Authorization);
+      const { accessToken: accessKey, exp } = response[0];
+
+      return {
+        accessKey: accessKey.length === 1 ? accessKey[0] : '',
+        error: !accessKey || accessKey.length !== 1 ? errorMsg : '',
+        exp: exp,
+      };
     },
   },
 };

@@ -7,6 +7,7 @@ import * as loader from '@grpc/proto-loader';
 import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import fetch, { Response } from 'node-fetch';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
 const packageDefinition = loader.loadSync(PROTO_PATH, {
@@ -55,13 +56,8 @@ const getApiToken = async (userId, Authorization) => {
     method: 'get',
     headers: { Authorization },
   })
-    // convert response to gql stats
-    .then(response => {
-      console.log('get api token', response);
-      return response;
-    })
-    .then(response => response.json())
-    .catch(err => console.error('Error fetching api token: ', err));
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
   return response;
 };
 
