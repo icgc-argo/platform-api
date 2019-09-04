@@ -103,7 +103,7 @@ const resolvers = {
       const userId = decodedToken.sub;
 
       const errorMsg = 'An error has been found with your API key. Please generate a new API key';
-      const response = await egoService.getApiToken(userId, Authorization);
+      const response = await egoService.getEgoAccessKey(userId, Authorization);
       const { accessToken: accessKey, exp } = response[0];
 
       return {

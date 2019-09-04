@@ -50,7 +50,7 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
-const getApiToken = async (userId, Authorization) => {
+const getEgoAccessKey = async (userId, Authorization) => {
   const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}`;
   const response = await fetch(url, {
     method: 'get',
@@ -61,4 +61,4 @@ const getApiToken = async (userId, Authorization) => {
   return response;
 };
 
-export default { getUser, listUsers, getApiToken };
+export default { getUser, listUsers, getEgoAccessKey };
