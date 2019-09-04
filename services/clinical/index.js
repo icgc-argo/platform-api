@@ -71,8 +71,7 @@ const uploadClinicalSubmissionData = async (programShortName, filesMap, Authoriz
       filename,
     });
   }
-  console.log(CLINICAL_SERVICE_ROOT);
-  const url = `${CLINICAL_SERVICE_ROOT}/program/${programShortName}/clinical/upload`;
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/upload`;
   const response = await fetch(url, {
     method: 'post',
     headers: { Authorization },
