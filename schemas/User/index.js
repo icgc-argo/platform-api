@@ -61,9 +61,9 @@ const typeDefs = gql`
     users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
 
     """
-    self
+    retrive access key for ego
     """
-    self: AccessKeyResp
+    accessKey: AccessKeyResp
   }
 
   type Mutation {
@@ -107,7 +107,7 @@ const resolvers = {
       const egoUserList = get(response, 'users', []);
       return egoUserList.map(egoUser => convertEgoUser(egoUser));
     },
-    self: async (obj, args, context, info) => {
+    accessKey: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
       const decodedToken = TokenUtils.decodeToken(egoToken);
       const userId = decodedToken.sub;
