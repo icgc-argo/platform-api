@@ -10,6 +10,7 @@ export const restErrorResponseHandler = async response => {
     case 401:
     case 403:
       throw new AuthenticationError(response.status);
+    case 400:
     case 404:
       let notFoundData;
       try {
@@ -18,7 +19,8 @@ export const restErrorResponseHandler = async response => {
       } catch {
         notFoundData = { message: '' };
       }
-      throw new UserInputError(notFoundData.message);
+      // throw error with message and properties in response (if any)
+      throw new UserInputError(notFoundData.message, notFoundData);
     case 500:
       throw new ServerError();
     default:
