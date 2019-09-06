@@ -85,4 +85,4 @@ const getScopes = async (userName, Authorization) => {
   return response;
 };
 
-export default { getUser, listUsers, generateEgoAccessKey, getScopes };
+export default { getUser, listUsers, generateEgoAccessKey, getScopes, getEgoAccessKey };
