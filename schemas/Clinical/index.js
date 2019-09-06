@@ -18,6 +18,13 @@ const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
   scalar JSONObject
+    
+  enum SubmissionState {
+    OPEN,
+    VALID,
+    INVALID,
+    PENDING_APPROVAL
+  }
 
   """
   It is possible for there to be no available ClinicalRegistrationData for a program,
@@ -76,10 +83,10 @@ const typeDefs = gql`
     donorId: String!
     specimenId: String!
   }
-  
+
   type ClinicalSubmissionData @cost(complexity: 10) {
     id: ID    
-    state: String
+    state: SubmissionState
     version: String
     clinicalEntities: [ClinicalEntityData]!
   }
@@ -225,12 +232,11 @@ const convertClinicalSubmissionDataToGql = (data) => {
   const schemaErrors = get(data, "errors", {});
   // convert clinical entities for gql
   const clinicalEntities = [];
-  for (var clinicalType in submission.clinicalEntities) {
+  for (let clinicalType in submission.clinicalEntities) {
     clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]));
   }
   // collect schema errors for each entity in dataErrors (not sure if this is OK??)
-  for (var clinicalType in schemaErrors) {
-    console.log("Curent entity:" + clinicalType);
+  for (let clinicalType in schemaErrors) {
     clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, {dataErrors: schemaErrors[clinicalType]}));
   }
   return {
@@ -339,7 +345,7 @@ const resolvers = {
         throw new AuthenticationError('User is not authorized to write data');
       }
 
-      var filesMap = {};
+      const filesMap = {};
       await Promise.all(clinicalFiles).then( 
         val => val.forEach(
           file => filesMap[file.filename] = file.createReadStream()
