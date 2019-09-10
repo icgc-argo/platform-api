@@ -36,13 +36,6 @@ const typeDefs = gql`
     lastLogin: String
   }
 
-  type AccessKey {
-    key: String
-    description: String
-    exp: Int
-    scope: [String]
-  }
-
   type AccessKeyResp {
     key: String
     error: String
@@ -70,7 +63,7 @@ const typeDefs = gql`
     """
     Generate Ego access key
     """
-    generateAccessKey(scopes: [String]): AccessKey!
+    generateAccessKey: AccessKeyResp!
   }
 `;
 
@@ -117,7 +110,7 @@ const resolvers = {
 
       const key = keys[0];
       const errorResponse = { key: null, exp: null, error: errorMsg };
-      const keyResp = { key: key.accessToken, exp: key.exp, error: null };
+      const keyResp = { key: key.accessToken, exp: key.exp, error: '' };
 
       return keys.length > 1 || keys.length === 0 ? errorResponse : keyResp;
     },
@@ -129,9 +122,15 @@ const resolvers = {
       const userName = decodedToken.context.user.name;
       const userId = decodedToken.sub;
 
+      // delete old keys
+      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
+      const deletions = await egoService.deleteKeys(keys, Authorization);
+
+      // get scopes for new token
       const { scopes } = await egoService.getScopes(userName, Authorization);
+
       const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
-      return { ...response, accessKey: response.accessToken };
+      return { exp: response.exp, key: response.accessToken, error: '' };
     },
   },
 };

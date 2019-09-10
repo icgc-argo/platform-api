@@ -85,4 +85,30 @@ const getScopes = async (userName, Authorization) => {
   return response;
 };
 
-export default { getUser, listUsers, generateEgoAccessKey, getScopes, getEgoAccessKey };
+const deleteKeys = async (keys, Authorization) => {
+  const accessKeys = keys.map(k => k.accessToken);
+  const ps = accessKeys.map(async key => {
+    const url = `${EGO_ROOT_REST}/o/token?token=${encodeURIComponent(key)}`;
+    const promise = fetch(url, {
+      method: 'delete',
+      headers: { Authorization },
+    })
+      .then(resp => ({ key, success: true }))
+      .catch(err => {
+        console.error(err);
+        return { key, success: false };
+      });
+    return promise;
+  });
+
+  return Promise.all(ps);
+};
+
+export default {
+  getUser,
+  listUsers,
+  generateEgoAccessKey,
+  getScopes,
+  getEgoAccessKeys,
+  deleteKeys,
+};
