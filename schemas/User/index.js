@@ -37,14 +37,14 @@ const typeDefs = gql`
   }
 
   type AccessKey {
-    accessKey: String
+    key: String
     description: String
     exp: Int
     scope: [String]
   }
 
   type AccessKeyResp {
-    accessKey: String
+    key: String
     error: String
     exp: Int
   }
@@ -113,24 +113,13 @@ const resolvers = {
       const userId = decodedToken.sub;
 
       const errorMsg = 'An error has been found with your API key. Please generate a new API key';
-      const response = await egoService.getEgoAccessKey(userId, Authorization);
+      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
 
-      const { accessToken: accessKey, exp } = response[0];
+      const key = keys[0];
+      const errorResponse = { key: null, exp: null, error: errorMsg };
+      const keyResp = { key: key.accessToken, exp: key.exp, error: null };
 
-      if (response.length > 1 || response.length === 0) {
-        return {
-          accessKey: null,
-          exp: null,
-          error: errorMsg,
-        };
-      } else {
-        const key = response[0];
-        return {
-          accessKey: key.accessKey,
-          error: '',
-          exp: key.exp,
-        };
-      }
+      return keys.length > 1 || keys.length === 0 ? errorResponse : keyResp;
     },
   },
   Mutation: {

@@ -50,7 +50,7 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
-const getEgoAccessKey = async (userId, Authorization) => {
+const getEgoAccessKeys = async (userId, Authorization) => {
   const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}`;
   const response = await fetch(url, {
     method: 'get',
