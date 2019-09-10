@@ -18,6 +18,13 @@ const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
   scalar JSONObject
+    
+  enum SubmissionState {
+    OPEN,
+    VALID,
+    INVALID,
+    PENDING_APPROVAL
+  }
 
   """
   It is possible for there to be no available ClinicalRegistrationData for a program,
@@ -77,6 +84,40 @@ const typeDefs = gql`
     specimenId: String!
   }
 
+  type ClinicalSubmissionData @cost(complexity: 10) {
+    id: ID    
+    state: SubmissionState
+    version: String
+    clinicalEntities: [ClinicalEntityData]!
+  }
+
+  type ClinicalEntityData {
+    clinicalType: String!
+    batchName: String
+    creator: String
+    records: [ClinicalSubmissionRecord]!
+    dataErrors: [ClinicalSubmissionError]!
+  }
+
+  type ClinicalSubmissionRecord {
+    row: Int!
+    fields: [ClinicalSubmissionRecordField!]!
+  }
+
+  type ClinicalSubmissionRecordField {
+    name: String!
+    value: String!
+  }
+
+  type ClinicalSubmissionError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+  }
+
   type Query {
     """
     Retrieve current stored Clinical Registration data for a program
@@ -105,6 +146,14 @@ const typeDefs = gql`
     """
     commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
       @cost(complexity: 20)
+    
+    """
+    Upload Clinical Submission files
+    """
+    uploadClinicalSubmissions(
+      shortName: String!,
+      clinicalFiles: [Upload!]
+    ): ClinicalSubmissionData! @cost(complexity: 30)
   }
 `;
 
@@ -178,6 +227,58 @@ const convertRegistrationDataToGql = data => {
   };
 };
 
+const convertClinicalSubmissionDataToGql = (data) => {
+  const submission = get(data, "submission", {});
+  const schemaErrors = get(data, "errors", {});
+  // convert clinical entities for gql
+  const clinicalEntities = [];
+  for (let clinicalType in submission.clinicalEntities) {
+    clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]));
+  }
+  // collect schema errors for each entity in dataErrors (not sure if this is OK??)
+  for (let clinicalType in schemaErrors) {
+    clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, {dataErrors: schemaErrors[clinicalType]}));
+  }
+  return {
+    id: submission._id || null,
+    state: submission.state || null,
+    version: submission.version || null,
+    clinicalEntities: clinicalEntities,
+  }
+}
+
+const convertClinicalSubmissionEntityToGql = (type, entity) => {
+  return {
+    clinicalType: type,
+    batchName: entity.batchName || null,
+    creator: entity.creator || null,
+    records: () => get(entity, 'records', []).map((record, index) => convertClinicalSubmissionRecordToGql(index, record)),
+    dataErrors: () => get(entity, 'dataErrors', []).map((error) => convertClinicalSubmissionErrorToGql(error)), 
+  }
+}
+
+const convertClinicalSubmissionRecordToGql = (index, record) => {
+  const fields = [];
+  for (var field in record) {
+    fields.push({name: field, value: record[field]})
+  }
+  return {
+      row: index,
+      fields: fields
+  }
+}
+
+const convertClinicalSubmissionErrorToGql = (errorData) => {
+  return {
+    type: errorData.type,
+    message: get(ERROR_MESSAGES, errorData.type, ''),
+    row: errorData.index,
+    field: errorData.fieldName,
+    value: errorData.info.value,
+    donorId: errorData.info.donorSubmitterId,
+  }
+}
+
 const resolvers = {
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
@@ -234,6 +335,24 @@ const resolvers = {
         Authorization,
       );
       return get(response, 'newSamples', []);
+    },
+    uploadClinicalSubmissions: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const { shortName, clinicalFiles } = args;      
+
+      // see reason in uploadRegistration
+      if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
+        throw new AuthenticationError('User is not authorized to write data');
+      }
+
+      const filesMap = {};
+      await Promise.all(clinicalFiles).then( 
+        val => val.forEach(
+          file => filesMap[file.filename] = file.createReadStream()
+        )
+      );
+      const response = await clinicalService.uploadClinicalSubmissionData(shortName, filesMap, Authorization);    
+      return convertClinicalSubmissionDataToGql(response);
     },
   },
 };
