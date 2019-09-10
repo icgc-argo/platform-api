@@ -159,7 +159,7 @@ const typeDefs = gql`
     For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
     Returns Program object details of created program
     """
-    createProgram(program: ProgramInput!): Program @cost(complexity: 10)
+    createProgram(program: ProgramInput!): Boolean @cost(complexity: 20)
 
     """
     Update Program
@@ -297,13 +297,12 @@ const resolvers = {
 
       // Submitted and Genomic donors are not part of input, need to be set to 0 to start.
       const program = { ...get(args, 'program', {}), submittedDonors: 0, genomicDonors: 0 };
-      const createResponse = await programService.createProgram(program, egoToken);
-      const programResponse = await programService.getProgram(
-        get(args, 'program.shortName'),
-        egoToken,
-      );
-      const programDetails = get(programResponse, 'program');
-      return programResponse === null ? null : convertGrpcProgramToGql(programDetails);
+      try {
+        const createResponse = await programService.createProgram(program, egoToken);
+        return true;
+      } catch (e) {
+        return false;
+      }
     },
 
     updateProgram: async (obj, args, context, info) => {
