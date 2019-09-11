@@ -5,6 +5,11 @@ import { get } from 'lodash';
 
 import egoService from '../../services/ego';
 
+import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
+
+import { EGO_PUBLIC_KEY } from '../../config';
+const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
   type User {
@@ -31,6 +36,12 @@ const typeDefs = gql`
     lastLogin: String
   }
 
+  type AccessKeyResp {
+    key: String
+    error: String
+    exp: Int
+  }
+
   type Query {
     """
     retrieve User data by id
@@ -41,6 +52,18 @@ const typeDefs = gql`
     retrieve paginated list of user data
     """
     users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
+
+    """
+    retrive access key for ego
+    """
+    accessKey: AccessKeyResp
+  }
+
+  type Mutation {
+    """
+    Generate Ego access key
+    """
+    generateAccessKey: AccessKeyResp!
   }
 `;
 
@@ -76,6 +99,38 @@ const resolvers = {
       const response = await egoService.listUsers(options, egoToken);
       const egoUserList = get(response, 'users', []);
       return egoUserList.map(egoUser => convertEgoUser(egoUser));
+    },
+    accessKey: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const userId = decodedToken.sub;
+
+      const errorMsg = 'An error has been found with your API key. Please generate a new API key';
+      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
+
+      const key = keys[0];
+      const errorResponse = { key: null, exp: null, error: errorMsg };
+      const keyResp = { key: key.accessToken, exp: key.exp, error: '' };
+
+      return keys.length > 1 || keys.length === 0 ? errorResponse : keyResp;
+    },
+  },
+  Mutation: {
+    generateAccessKey: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const userName = decodedToken.context.user.name;
+      const userId = decodedToken.sub;
+
+      // delete old keys
+      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
+      const deletions = await egoService.deleteKeys(keys, Authorization);
+
+      // get scopes for new token
+      const { scopes } = await egoService.getScopes(userName, Authorization);
+
+      const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
+      return { exp: response.exp, key: response.accessToken, error: '' };
     },
   },
 };

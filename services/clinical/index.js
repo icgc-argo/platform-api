@@ -63,9 +63,29 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
   return response;
 };
 
+const uploadClinicalSubmissionData = async (programShortName, filesMap, Authorization) => {
+  const formData = new FormData();    
+  for (var filename in filesMap) {
+    const fileBuffer = await new Response(filesMap[filename]).buffer();
+    formData.append('clinicalFiles', fileBuffer, {
+      filename,
+    });
+  }
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/upload`;
+  const response = await fetch(url, {
+    method: 'post',
+    headers: { Authorization },
+    body: formData,
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
 export default {
   getRegistrationData,
   uploadRegistrationData,
   clearRegistrationData,
   commitRegistrationData,
+  uploadClinicalSubmissionData,
 };

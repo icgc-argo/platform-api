@@ -4,8 +4,10 @@
  */
 import grpc from 'grpc';
 import * as loader from '@grpc/proto-loader';
-import { EGO_ROOT_GRPC } from '../../config';
+import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
+import fetch, { Response } from 'node-fetch';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
 const packageDefinition = loader.loadSync(PROTO_PATH, {
@@ -48,4 +50,65 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
-export default { getUser, listUsers };
+const getEgoAccessKeys = async (userId, Authorization) => {
+  const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const generateEgoAccessKey = async (userId, scopes, Authorization) => {
+  const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}&scopes=${encodeURIComponent(
+    scopes.join(),
+  )}`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const getScopes = async (userName, Authorization) => {
+  const url = `${EGO_ROOT_REST}/o/scopes?userName=${userName}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const deleteKeys = async (keys, Authorization) => {
+  const accessKeys = keys.map(k => k.accessToken);
+  const ps = accessKeys.map(async key => {
+    const url = `${EGO_ROOT_REST}/o/token?token=${encodeURIComponent(key)}`;
+    const promise = fetch(url, {
+      method: 'delete',
+      headers: { Authorization },
+    })
+      .then(resp => ({ key, success: true }))
+      .catch(err => {
+        console.error(err);
+        return { key, success: false };
+      });
+    return promise;
+  });
+
+  return Promise.all(ps);
+};
+
+export default {
+  getUser,
+  listUsers,
+  generateEgoAccessKey,
+  getScopes,
+  getEgoAccessKeys,
+  deleteKeys,
+};
