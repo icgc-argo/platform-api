@@ -107,12 +107,18 @@ const resolvers = {
 
       const errorMsg = 'An error has been found with your API key. Please generate a new API key';
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
-      const key = keys[0];
+
       const errorResponse = { key: null, exp: null, error: errorMsg };
 
-      return keys.length > 1 || keys.length === 0
-        ? errorResponse
-        : { key: key.accessToken, exp: key.exp, error: '' };
+      // a user should have only one key
+      if (keys.length === 1) {
+        const key = keys[0];
+        return { key: key.accessToken, exp: key.exp, error: '' };
+      } else if (keys.length === 0) {
+        return null;
+      } else {
+        return errorResponse;
+      }
     },
   },
   Mutation: {
