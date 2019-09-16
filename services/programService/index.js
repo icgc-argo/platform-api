@@ -22,7 +22,7 @@ const packageDefinition = loader.loadSync(protoPath, {
 const proto = grpc.loadPackageDefinition(packageDefinition).program_service;
 
 const programService = withRetries(
-  new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createInsecure()),
+  new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl()),
 );
 
 /*
