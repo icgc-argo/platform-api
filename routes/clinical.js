@@ -11,7 +11,7 @@ var router = express.Router();
 const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
 
 router.get('/template/:template', async (req, res) => {
-  const name = req.params.template;
+  const name = req.params.template.replace(/.tsv$/, '');
   const data = fetch(urlJoin(apiRoot, name)).then(r => {
     res.status(r.status);
     res.headers = r.headers;
