@@ -118,7 +118,6 @@ const typeDefs = gql`
     Retrieve current stored Clinical Submission data for a program
     """
     clinicalSubmissions(shortName: String!): ClinicalSubmissionData!
-
   }
 
   type Mutation {
@@ -289,10 +288,10 @@ const resolvers = {
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const { shortName } = args;    
+      const { shortName } = args;
 
-      const response = await clinicalService.getClinicalSubmissionData(shortName, Authorization);    
-      return convertClinicalSubmissionDataToGql({ submission: response });  
+      const response = await clinicalService.getClinicalSubmissionData(shortName, Authorization);
+      return convertClinicalSubmissionDataToGql({ submission: response });
     },
   },
   Mutation: {
