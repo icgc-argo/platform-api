@@ -148,13 +148,13 @@ const typeDefs = gql`
 `;
 
 const convertRegistrationRecordToGql = (record, row) => {
-  const output = { row };
+  const fields = [];
 
   for (const field in record) {
-    output[field] = record[field];
+    fields.push({ name: field, value: record[field] });
   }
 
-  return output;
+  return { row, fields };
 };
 
 const convertRegistrationStatsToGql = statsEntry => {
