@@ -31,7 +31,8 @@ const typeDefs = gql`
   type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
     creator: String
-
+    fileName: String
+    createdAt: String
     records: [ClinicalRegistrationRecord]!
     errors: [ClinicalRegistrationError]!
 
