@@ -12,10 +12,12 @@ const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
+import customScalars from '../customScalars';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
+  scalar DateTime
 
   enum SubmissionState {
     OPEN
@@ -32,7 +34,7 @@ const typeDefs = gql`
     id: ID
     creator: String
     fileName: String
-    createdAt: String
+    createdAt: DateTime
     records: [ClinicalRegistrationRecord]!
     errors: [ClinicalRegistrationError]!
 
