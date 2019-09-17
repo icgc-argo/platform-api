@@ -75,7 +75,7 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
 };
 
 const uploadClinicalSubmissionData = async (programShortName, filesMap, Authorization) => {
-  const formData = new FormData();    
+  const formData = new FormData();
   for (var filename in filesMap) {
     const fileBuffer = await new Response(filesMap[filename]).buffer();
     formData.append('clinicalFiles', fileBuffer, {
@@ -93,6 +93,19 @@ const uploadClinicalSubmissionData = async (programShortName, filesMap, Authoriz
   return response;
 };
 
+const validateClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+  const response = await fetch(
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/validate/${versionId}`,
+    {
+      method: 'post',
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
 export default {
   getRegistrationData,
   uploadRegistrationData,
@@ -100,4 +113,5 @@ export default {
   commitRegistrationData,
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
+  validateClinicalSubmissionData,
 };
