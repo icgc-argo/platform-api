@@ -12,10 +12,12 @@ const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
+import customScalars from '../customScalars';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
+  scalar DateTime
 
   enum SubmissionState {
     OPEN
@@ -31,7 +33,8 @@ const typeDefs = gql`
   type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
     creator: String
-
+    fileName: String
+    createdAt: DateTime
     records: [ClinicalRegistrationRecord]!
     errors: [ClinicalRegistrationError]!
 
@@ -197,6 +200,8 @@ const convertRegistrationDataToGql = data => {
   return {
     id: data._id || null,
     creator: data.creator || null,
+    fileName: data.batchName || null,
+    createdAt: data.createdAt || null,
     records: () =>
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
