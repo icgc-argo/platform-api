@@ -1,5 +1,4 @@
 import { gql, AuthenticationError } from 'apollo-server-express';
-import { GraphQLJSONObject } from 'graphql-type-json';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
@@ -17,12 +16,11 @@ import { ERROR_MESSAGES } from '../../services/clinical/messages';
 const typeDefs = gql`
   ${costDirectiveTypeDef}
   scalar Upload
-  scalar JSONObject
-    
+
   enum SubmissionState {
-    OPEN,
-    VALID,
-    INVALID,
+    OPEN
+    VALID
+    INVALID
     PENDING_APPROVAL
   }
 
@@ -45,20 +43,12 @@ const typeDefs = gql`
 
   type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
-    programShortName: String!
-    donorSubmitterId: String!
-    specimenSubmitterId: String!
-    specimentType: String!
-    sampleSubmitterId: String!
-    sampleType: String!
-    gender: String!
-    tumourNormalDesignation: String!
+    fields: [ClinicalRegistrationRecordField!]
+  }
 
-    """
-    data is a JSON Object without defined keys that will contain any additional fields that are
-      returned by the clinical registration and not part of the above hardcoded list
-    """
-    data: JSONObject!
+  type ClinicalRegistrationRecordField {
+    name: String!
+    value: String!
   }
 
   type ClinicalRegistrationStats @cost(complexity: 10) {
@@ -85,7 +75,7 @@ const typeDefs = gql`
   }
 
   type ClinicalSubmissionData @cost(complexity: 10) {
-    id: ID    
+    id: ID
     state: SubmissionState
     version: String
     clinicalEntities: [ClinicalEntityData]!
@@ -146,12 +136,12 @@ const typeDefs = gql`
     """
     commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
       @cost(complexity: 20)
-    
+
     """
     Upload Clinical Submission files
     """
     uploadClinicalSubmissions(
-      shortName: String!,
+      shortName: String!
       clinicalFiles: [Upload!]
     ): ClinicalSubmissionData! @cost(complexity: 30)
     
@@ -165,28 +155,15 @@ const typeDefs = gql`
   }
 `;
 
-const convertRegistrationRecordToGql = (record, row) => ({
-  row,
-  programShortName: record.program_id,
-  donorSubmitterId: record.submitter_donor_id,
-  specimenSubmitterId: record.submitter_specimen_id,
-  specimentType: record.specimen_type,
-  sampleSubmitterId: record.submitter_sample_id,
-  sampleType: record.sample_type,
-  gender: record.gender,
-  tumourNormalDesignation: record.tumour_normal_designation,
-  data: () =>
-    omit(record, [
-      'program_id',
-      'submitter_donor_id',
-      'submitter_specimen_id',
-      'specimen_type',
-      'submitter_sample_id',
-      'sample_type',
-      'tumour_normal_designation',
-      'gender',
-    ]),
-});
+const convertRegistrationRecordToGql = (record, row) => {
+  const fields = [];
+
+  for (const field in record) {
+    fields.push({ name: field, value: record[field] });
+  }
+
+  return { row, fields };
+};
 
 const convertRegistrationStatsToGql = statsEntry => {
   const output = {
@@ -235,48 +212,58 @@ const convertRegistrationDataToGql = data => {
   };
 };
 
-const convertClinicalSubmissionDataToGql = (data) => {
-  const submission = get(data, "submission", {});
-  const schemaErrors = get(data, "errors", {});
+const convertClinicalSubmissionDataToGql = data => {
+  const submission = get(data, 'submission', {});
+  const schemaErrors = get(data, 'errors', {});
   // convert clinical entities for gql
   const clinicalEntities = [];
   for (let clinicalType in submission.clinicalEntities) {
-    clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]));
+    clinicalEntities.push(
+      convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]),
+    );
   }
   // collect schema errors for each entity in dataErrors (not sure if this is OK??)
   for (let clinicalType in schemaErrors) {
-    clinicalEntities.push(convertClinicalSubmissionEntityToGql(clinicalType, {dataErrors: schemaErrors[clinicalType]}));
+    clinicalEntities.push(
+      convertClinicalSubmissionEntityToGql(clinicalType, {
+        dataErrors: schemaErrors[clinicalType],
+      }),
+    );
   }
   return {
     id: submission._id || null,
     state: submission.state || null,
     version: submission.version || null,
     clinicalEntities: clinicalEntities,
-  }
-}
+  };
+};
 
 const convertClinicalSubmissionEntityToGql = (type, entity) => {
   return {
     clinicalType: type,
     batchName: entity.batchName || null,
     creator: entity.creator || null,
-    records: () => get(entity, 'records', []).map((record, index) => convertClinicalSubmissionRecordToGql(index, record)),
-    dataErrors: () => get(entity, 'dataErrors', []).map((error) => convertClinicalSubmissionErrorToGql(error)), 
-  }
-}
+    records: () =>
+      get(entity, 'records', []).map((record, index) =>
+        convertClinicalSubmissionRecordToGql(index, record),
+      ),
+    dataErrors: () =>
+      get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
+  };
+};
 
 const convertClinicalSubmissionRecordToGql = (index, record) => {
   const fields = [];
   for (var field in record) {
-    fields.push({name: field, value: record[field]})
+    fields.push({ name: field, value: record[field] });
   }
   return {
-      row: index,
-      fields: fields
-  }
-}
+    row: index,
+    fields: fields,
+  };
+};
 
-const convertClinicalSubmissionErrorToGql = (errorData) => {
+const convertClinicalSubmissionErrorToGql = errorData => {
   return {
     type: errorData.type,
     message: get(ERROR_MESSAGES, errorData.type, ''),
@@ -284,8 +271,8 @@ const convertClinicalSubmissionErrorToGql = (errorData) => {
     field: errorData.fieldName,
     value: errorData.info.value,
     donorId: errorData.info.donorSubmitterId,
-  }
-}
+  };
+};
 
 const resolvers = {
   Query: {
@@ -346,7 +333,7 @@ const resolvers = {
     },
     uploadClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const { shortName, clinicalFiles } = args;      
+      const { shortName, clinicalFiles } = args;
 
       // see reason in uploadRegistration
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
@@ -354,12 +341,14 @@ const resolvers = {
       }
 
       const filesMap = {};
-      await Promise.all(clinicalFiles).then( 
-        val => val.forEach(
-          file => filesMap[file.filename] = file.createReadStream()
-        )
+      await Promise.all(clinicalFiles).then(val =>
+        val.forEach(file => (filesMap[file.filename] = file.createReadStream())),
       );
-      const response = await clinicalService.uploadClinicalSubmissionData(shortName, filesMap, Authorization);    
+      const response = await clinicalService.uploadClinicalSubmissionData(
+        shortName,
+        filesMap,
+        Authorization,
+      );
       return convertClinicalSubmissionDataToGql(response);
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
