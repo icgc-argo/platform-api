@@ -197,8 +197,6 @@ const convertRegistrationDataToGql = data => {
   return {
     id: data._id || null,
     creator: data.creator || null,
-    fileName: data.batchName || null,
-    createdAt: data.createdAt || null,
     records: () =>
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
