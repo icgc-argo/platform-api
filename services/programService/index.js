@@ -21,8 +21,11 @@ const packageDefinition = loader.loadSync(protoPath, {
 
 const proto = grpc.loadPackageDefinition(packageDefinition).program_service;
 
+const programServiceRegex = RegExp(/:443$/);
 const programService = withRetries(
-  new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl()),
+  programServiceRegex.test(PROGRAM_SERVICE_ROOT)
+    ? new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl())
+    : new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createInsecure()),
 );
 
 /*
