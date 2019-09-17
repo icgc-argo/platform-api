@@ -144,6 +144,12 @@ const typeDefs = gql`
       shortName: String!
       clinicalFiles: [Upload!]
     ): ClinicalSubmissionData! @cost(complexity: 30)
+
+    """
+    Validate the uploaded clinical files
+    """
+    validateClinicalSubmissions(shortName: String!, version: String!): ClinicalSubmissionData!
+      @cost(complexity: 30)
   }
 `;
 
@@ -339,6 +345,16 @@ const resolvers = {
       const response = await clinicalService.uploadClinicalSubmissionData(
         shortName,
         filesMap,
+        Authorization,
+      );
+      return convertClinicalSubmissionDataToGql(response);
+    },
+    validateClinicalSubmissions: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const { shortName, version } = args;
+      const response = await clinicalService.validateClinicalSubmissionData(
+        shortName,
+        version,
         Authorization,
       );
       return convertClinicalSubmissionDataToGql(response);
