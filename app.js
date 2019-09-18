@@ -13,6 +13,7 @@ import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
 import clinicalSchema from './schemas/Clinical';
 
 import config from './package.json';
+import logger from './utils/logger';
 const clinical = require('./routes/clinical');
 
 const { version } = config;
@@ -31,7 +32,7 @@ ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
         variables: req.body.variables,
         maximumCost: GQL_MAX_COST,
         // logs out complexity so we can later on come back and decide on appropriate limit
-        onComplete: cost => console.log(`QUERY_COST: ${cost}`),
+        onComplete: cost => logger.info(`QUERY_COST: ${cost}`),
       }),
     ],
   };
@@ -71,7 +72,7 @@ const init = async () => {
   );
 
   app.listen(PORT, () =>
-    console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
+    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
   );
 };
 

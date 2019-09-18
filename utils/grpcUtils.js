@@ -7,6 +7,7 @@ import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 import keys from 'lodash/keys';
 import has from 'lodash/has';
+import logger from './logger';
 
 /* When building gRPC requests we frequently need to provide a value as:
  * { value: "asdf" }
@@ -27,7 +28,7 @@ export const getAuthMeta = jwt => {
 
 export const defaultPromiseCallback = (resolve, reject, serviceName) => (err, response) => {
   if (err) {
-    console.log(`GRPC error - ${serviceName}: ${err}`);
+    logger.error(`GRPC error - ${serviceName}: ${err}`);
     reject(err);
   }
   resolve(response);
@@ -69,7 +70,7 @@ export const withRetries = (
           err.details === STREAM_REMOVED_DETAILS &&
           operation.retry(err)
         ) {
-          console.warn(
+          logger.warn(
             `grpc method ${methodName} failed with errorCode ${err.code}, retrying after ${currentAttempt} attempt(s)`,
           );
           return;
