@@ -8,6 +8,7 @@ import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import fetch, { Response } from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
+import logger from '../../utils/logger';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
 const packageDefinition = loader.loadSync(PROTO_PATH, {
@@ -95,7 +96,7 @@ const deleteKeys = async (keys, Authorization) => {
     })
       .then(resp => ({ key, success: true }))
       .catch(err => {
-        console.error(err);
+        logger.error(err);
         return { key, success: false };
       });
     return promise;
