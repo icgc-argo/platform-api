@@ -326,11 +326,11 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 const resolvers = {
   ClinicalRegistrationResp: {
     __resolveType(obj, context, info) {
-      if (obj.error) {
+      if ('error' in obj) {
         return 'ClinicalRegistrationInvalid';
       }
 
-      if (obj.id) {
+      if ('id' in obj) {
         return 'ClinicalRegistrationData';
       }
 
