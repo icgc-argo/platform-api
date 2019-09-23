@@ -238,7 +238,6 @@ const convertRegistrationDataToGql = data => {
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
       get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
-
     newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
     newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
     newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
@@ -367,15 +366,6 @@ const resolvers = {
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
 
-      /**
-       *
-       *
-       *
-       *
-       *
-       *
-       *
-       */
       try {
         const response = await clinicalService.uploadRegistrationData(
           shortName,
@@ -383,7 +373,12 @@ const resolvers = {
           fileStream,
           Authorization,
         );
+
+        // Success data is inside the key "registration", error data is in the root level
+        const data = { ...response.registration, errors: response.errors };
+        return convertRegistrationDataToGql(response);
       } catch (e) {
+        // errors that don't go into error table
         if (e.code) {
           return { error: e.msg, code: ERROR_CODES[e.code] };
         } else {
@@ -391,12 +386,6 @@ const resolvers = {
           console.error('other error', e);
         }
       }
-
-      console.log('file name', filename, 'Resp', response);
-
-      // Success data is inside the key "registration", error data is in the root level
-      const data = response.successful ? response.registration : response;
-      return convertRegistrationDataToGql(data);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
