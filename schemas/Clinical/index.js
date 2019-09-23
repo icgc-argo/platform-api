@@ -13,6 +13,7 @@ import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
 import customScalars from '../customScalars';
+import { ERROR_CODES } from '../../constants/clinical';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -43,6 +44,13 @@ const typeDefs = gql`
     newSamples: ClinicalRegistrationStats!
     alreadyRegistered: ClinicalRegistrationStats!
   }
+
+  type ClinicalRegistrationInvalid {
+    error: String
+    code: String
+  }
+
+  union ClinicalRegistrationResp = ClinicalRegistrationData | ClinicalRegistrationInvalid
 
   type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
@@ -146,7 +154,7 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationData! @cost(complexity: 30)
+    ): ClinicalRegistrationResp! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
@@ -316,6 +324,19 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 };
 
 const resolvers = {
+  ClinicalRegistrationResp: {
+    __resolveType(obj, context, info) {
+      if (obj.error) {
+        return 'ClinicalRegistrationInvalid';
+      }
+
+      if (obj.id) {
+        return 'ClinicalRegistrationData';
+      }
+
+      return null;
+    },
+  },
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -345,12 +366,33 @@ const resolvers = {
 
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
-      const response = await clinicalService.uploadRegistrationData(
-        shortName,
-        filename,
-        fileStream,
-        Authorization,
-      );
+
+      /**
+       *
+       *
+       *
+       *
+       *
+       *
+       *
+       */
+      try {
+        const response = await clinicalService.uploadRegistrationData(
+          shortName,
+          filename,
+          fileStream,
+          Authorization,
+        );
+      } catch (e) {
+        if (e.code) {
+          return { error: e.msg, code: ERROR_CODES[e.code] };
+        } else {
+          // catch all error
+          console.error('other error', e);
+        }
+      }
+
+      console.log('file name', filename, 'Resp', response);
 
       // Success data is inside the key "registration", error data is in the root level
       const data = response.successful ? response.registration : response;
