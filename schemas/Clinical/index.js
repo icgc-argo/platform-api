@@ -376,7 +376,7 @@ const resolvers = {
 
         // Success data is inside the key "registration", error data is in the root level
         const data = { ...response.registration, errors: response.errors };
-        return convertRegistrationDataToGql(response);
+        return convertRegistrationDataToGql(data);
       } catch (e) {
         // errors that don't go into error table
         if (e.code) {
