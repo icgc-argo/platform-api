@@ -79,10 +79,10 @@ const typeDefs = gql`
     message: String!
     row: Int!
     field: String!
-    value: String!
-    sampleId: String!
+    value: String
+    sampleId: String
     donorId: String!
-    specimenId: String!
+    specimenId: String
   }
 
   type ClinicalSubmissionData @cost(complexity: 10) {
