@@ -90,6 +90,7 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     dataErrors: [ClinicalSubmissionError]!
+    dataUpdates: [ClinicalSubmissionUpdate]!
   }
 
   type ClinicalSubmissionRecord {
@@ -108,6 +109,14 @@ const typeDefs = gql`
     row: Int!
     field: String!
     value: String!
+    donorId: String!
+  }
+
+  type ClinicalSubmissionUpdate @cost(complexity: 5) {
+    row: Int!
+    field: String!
+    newValue: String!
+    oldValue: String!
     donorId: String!
   }
 
@@ -257,6 +266,8 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       ),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
+    dataUpdates: () =>
+      get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
   };
 };
 
@@ -279,6 +290,16 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     field: errorData.fieldName,
     value: errorData.info.value,
     donorId: errorData.info.donorSubmitterId,
+  };
+};
+
+const convertClinicalSubmissionUpdateToGql = updateData => {
+  return {
+    row: updateData.index,
+    field: updateData.fieldName,
+    newValue: updateData.info.newValue,
+    oldValue: updateData.info.oldValue,
+    donorId: updateData.info.donorSubmitterId,
   };
 };
 
