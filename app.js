@@ -23,7 +23,7 @@ ApolloServer.prototype._createGraphQLServerOptions =
 
 ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
   const options = await this._createGraphQLServerOptions(req, res);
-  logger.info(
+  logger.debug(
     `
 ==== gql request ====
 query: ${req.body.query}
