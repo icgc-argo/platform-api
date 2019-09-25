@@ -82,6 +82,13 @@ const typeDefs = gql`
     state: SubmissionState
     version: String
     clinicalEntities: [ClinicalEntityData]!
+    fileErrors: [ClinicalError]
+  }
+
+  type ClinicalError @cost(complexity: 5) {
+    msg: String!
+    fileNames: [String]!
+    code: String!
   }
 
   type ClinicalEntityData {
@@ -231,7 +238,8 @@ const convertRegistrationDataToGql = data => {
 
 const convertClinicalSubmissionDataToGql = data => {
   const submission = get(data, 'submission', {});
-  const schemaErrors = get(data, 'errors', {});
+  const schemaErrors = get(data, 'schemaErrors', {});
+  const fileErrors = get(data, 'fileErrors', []);
   // convert clinical entities for gql
   const clinicalEntities = [];
   for (let clinicalType in submission.clinicalEntities) {
@@ -252,6 +260,7 @@ const convertClinicalSubmissionDataToGql = data => {
     state: submission.state || null,
     version: submission.version || null,
     clinicalEntities: clinicalEntities,
+    fileErrors: fileErrors,
   };
 };
 
