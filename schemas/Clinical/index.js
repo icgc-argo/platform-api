@@ -82,6 +82,13 @@ const typeDefs = gql`
     state: SubmissionState
     version: String
     clinicalEntities: [ClinicalEntityData]!
+    fileErrors: [ClinicalError]
+  }
+
+  type ClinicalError @cost(complexity: 5) {
+    msg: String!
+    fileNames: [String]!
+    code: String!
   }
 
   type ClinicalEntityData {
@@ -90,6 +97,7 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     dataErrors: [ClinicalSubmissionError]!
+    dataUpdates: [ClinicalSubmissionUpdate]!
   }
 
   type ClinicalSubmissionRecord {
@@ -108,6 +116,14 @@ const typeDefs = gql`
     row: Int!
     field: String!
     value: String!
+    donorId: String!
+  }
+
+  type ClinicalSubmissionUpdate @cost(complexity: 5) {
+    row: Int!
+    field: String!
+    newValue: String!
+    oldValue: String!
     donorId: String!
   }
 
@@ -222,7 +238,8 @@ const convertRegistrationDataToGql = data => {
 
 const convertClinicalSubmissionDataToGql = data => {
   const submission = get(data, 'submission', {});
-  const schemaErrors = get(data, 'errors', {});
+  const schemaErrors = get(data, 'schemaErrors', {});
+  const fileErrors = get(data, 'fileErrors', []);
   // convert clinical entities for gql
   const clinicalEntities = [];
   for (let clinicalType in submission.clinicalEntities) {
@@ -243,6 +260,7 @@ const convertClinicalSubmissionDataToGql = data => {
     state: submission.state || null,
     version: submission.version || null,
     clinicalEntities: clinicalEntities,
+    fileErrors: fileErrors,
   };
 };
 
@@ -257,6 +275,8 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       ),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
+    dataUpdates: () =>
+      get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
   };
 };
 
@@ -279,6 +299,16 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     field: errorData.fieldName,
     value: errorData.info.value,
     donorId: errorData.info.donorSubmitterId,
+  };
+};
+
+const convertClinicalSubmissionUpdateToGql = updateData => {
+  return {
+    row: updateData.index,
+    field: updateData.fieldName,
+    newValue: updateData.info.newValue,
+    oldValue: updateData.info.oldValue,
+    donorId: updateData.info.donorSubmitterId,
   };
 };
 
