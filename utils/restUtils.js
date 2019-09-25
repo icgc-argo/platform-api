@@ -6,7 +6,6 @@ export const restErrorResponseHandler = async response => {
   switch (response.status) {
     case 200:
     case 201:
-    case 422:
       return response;
     case 401:
     case 403:
