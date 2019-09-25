@@ -105,6 +105,30 @@ const validateClinicalSubmissionData = async (programShortName, versionId, Autho
     .then(response => response.json());
   return response;
 };
+const commitClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+  const response = await fetch(
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/commit/${versionId}`,
+    {
+      method: 'post',
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response);
+  return true;
+};
+const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+  const response = await fetch(
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
+    {
+      method: 'post',
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response);
+  return true;
+};
 
 export default {
   getRegistrationData,
@@ -114,4 +138,6 @@ export default {
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
   validateClinicalSubmissionData,
+  commitClinicalSubmissionData,
+  approveClinicalSubmissionData,
 };

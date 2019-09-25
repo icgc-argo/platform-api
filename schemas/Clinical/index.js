@@ -174,6 +174,9 @@ const typeDefs = gql`
     """
     validateClinicalSubmissions(shortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
+
+    commitClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
+    approveClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
   }
 `;
 
@@ -397,7 +400,7 @@ const resolvers = {
       return convertClinicalSubmissionDataToGql(response);
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
-      const { Authorization, egoToken } = context;
+      const { Authorization } = context;
       const { shortName, version } = args;
       const response = await clinicalService.validateClinicalSubmissionData(
         shortName,
@@ -405,6 +408,26 @@ const resolvers = {
         Authorization,
       );
       return convertClinicalSubmissionDataToGql(response);
+    },
+    commitClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { shortName, version } = args;
+      const response = await clinicalService.commitClinicalSubmissionData(
+        shortName,
+        version,
+        Authorization,
+      );
+      return response ? true : false;
+    },
+    approveClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { shortName, version } = args;
+      const response = await clinicalService.approveClinicalSubmissionData(
+        shortName,
+        version,
+        Authorization,
+      );
+      return response ? true : false;
     },
   },
 };
