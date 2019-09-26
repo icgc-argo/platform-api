@@ -33,6 +33,7 @@ const typeDefs = gql`
   """
   type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
+    shortName: ID
     creator: String
     fileName: String
     createdAt: DateTime
@@ -46,6 +47,7 @@ const typeDefs = gql`
   }
 
   type ClinicalRegistrationInvalid {
+    shortName: String
     error: String
     code: String
   }
@@ -342,7 +344,7 @@ const resolvers = {
       const { shortName } = args;
 
       const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql(response);
+      return convertRegistrationDataToGql({ ...response, shortName });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -375,12 +377,12 @@ const resolvers = {
         );
 
         // Success data is inside the key "registration", error data is in the root level
-        const data = { ...response.registration, errors: response.errors };
+        const data = { ...response.registration, errors: response.errors, shortName };
         return convertRegistrationDataToGql(data);
       } catch (e) {
         // errors that don't go into error table
         if (e.code) {
-          return { error: e.msg, code: ERROR_CODES[e.code] };
+          return { error: e.msg, code: ERROR_CODES[e.code], shortName };
         } else {
           // catch all error
           console.error('other error', e);
