@@ -13,6 +13,8 @@ import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
 import customScalars from '../customScalars';
+import { ERROR_CODES } from '../../constants/clinical';
+import logger from '../../utils/logger';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -32,6 +34,7 @@ const typeDefs = gql`
   """
   type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
+    programShortName: ID
     creator: String
     fileName: String
     createdAt: DateTime
@@ -43,6 +46,14 @@ const typeDefs = gql`
     newSamples: ClinicalRegistrationStats!
     alreadyRegistered: ClinicalRegistrationStats!
   }
+
+  type ClinicalRegistrationInvalid {
+    programShortName: String
+    error: String
+    code: String
+  }
+
+  union ClinicalRegistrationResp = ClinicalRegistrationData | ClinicalRegistrationInvalid
 
   type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
@@ -71,10 +82,10 @@ const typeDefs = gql`
     message: String!
     row: Int!
     field: String!
-    value: String!
-    sampleId: String!
+    value: String
+    sampleId: String
     donorId: String!
-    specimenId: String!
+    specimenId: String
   }
 
   type ClinicalSubmissionData @cost(complexity: 10) {
@@ -146,7 +157,7 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationData! @cost(complexity: 30)
+    ): ClinicalRegistrationResp! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
@@ -223,6 +234,7 @@ const convertRegistrationErrorToGql = errorData => ({
 const convertRegistrationDataToGql = data => {
   return {
     id: data._id || null,
+    programShortName: data.shortName,
     creator: data.creator || null,
     fileName: data.batchName || null,
     createdAt: data.createdAt || null,
@@ -230,7 +242,6 @@ const convertRegistrationDataToGql = data => {
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
       get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
-
     newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
     newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
     newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
@@ -316,13 +327,26 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 };
 
 const resolvers = {
+  ClinicalRegistrationResp: {
+    __resolveType(obj, context, info) {
+      if ('error' in obj) {
+        return 'ClinicalRegistrationInvalid';
+      }
+
+      if ('id' in obj) {
+        return 'ClinicalRegistrationData';
+      }
+
+      return null;
+    },
+  },
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
       const { shortName } = args;
 
       const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql(response);
+      return convertRegistrationDataToGql({ ...response, shortName });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -345,16 +369,27 @@ const resolvers = {
 
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
-      const response = await clinicalService.uploadRegistrationData(
-        shortName,
-        filename,
-        fileStream,
-        Authorization,
-      );
 
-      // Success data is inside the key "registration", error data is in the root level
-      const data = response.successful ? response.registration : response;
-      return convertRegistrationDataToGql(data);
+      try {
+        const response = await clinicalService.uploadRegistrationData(
+          shortName,
+          filename,
+          fileStream,
+          Authorization,
+        );
+
+        // Success data is inside the key "registration", error data is in the root level
+        const data = { ...response.registration, errors: response.errors, shortName };
+        return convertRegistrationDataToGql(data);
+      } catch (e) {
+        // errors that don't go into error table
+        if (e.code) {
+          return { error: e.msg, code: ERROR_CODES[e.code], shortName };
+        } else {
+          // catch all error
+          logger.error('uploadClinicalRegistration error', err);
+        }
+      }
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
