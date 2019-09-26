@@ -14,6 +14,7 @@ import clinicalService from '../../services/clinical';
 import { ERROR_MESSAGES } from '../../services/clinical/messages';
 import customScalars from '../customScalars';
 import { ERROR_CODES } from '../../constants/clinical';
+import logger from '../../utils/logger';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -385,7 +386,7 @@ const resolvers = {
           return { error: e.msg, code: ERROR_CODES[e.code], shortName };
         } else {
           // catch all error
-          console.error('other error', e);
+          logger.error('uploadClinicalRegistration error', err);
         }
       }
     },
