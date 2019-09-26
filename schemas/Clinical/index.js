@@ -34,7 +34,7 @@ const typeDefs = gql`
   """
   type ClinicalRegistrationData @cost(complexity: 10) {
     id: ID
-    shortName: ID
+    programShortName: ID
     creator: String
     fileName: String
     createdAt: DateTime
@@ -48,7 +48,7 @@ const typeDefs = gql`
   }
 
   type ClinicalRegistrationInvalid {
-    shortName: String
+    programShortName: String
     error: String
     code: String
   }
@@ -234,6 +234,7 @@ const convertRegistrationErrorToGql = errorData => ({
 const convertRegistrationDataToGql = data => {
   return {
     id: data._id || null,
+    programShortName: data.shortName,
     creator: data.creator || null,
     fileName: data.batchName || null,
     createdAt: data.createdAt || null,
