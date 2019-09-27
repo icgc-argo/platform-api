@@ -381,10 +381,10 @@ const resolvers = {
         // Success data is inside the key "registration", error data is in the root level
         const data = { ...response.registration, errors: response.errors, shortName };
         return convertRegistrationDataToGql(data);
-      } catch (e) {
+      } catch (err) {
         // errors that don't go into error table
-        if (e.code) {
-          return { error: e.msg, code: ERROR_CODES[e.code], shortName };
+        if (err.code) {
+          return { error: err.msg, code: ERROR_CODES[err.code], shortName };
         } else {
           // catch all error
           logger.error('uploadClinicalRegistration error', err);
