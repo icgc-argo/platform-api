@@ -186,7 +186,8 @@ const typeDefs = gql`
     validateClinicalSubmissions(shortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
 
-    commitClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
+    commitClinicalSubmission(shortName: String!, version: String!): ClinicalSubmissionData!
+      @cost(complexity: 30)
     approveClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
   }
 `;
@@ -452,7 +453,7 @@ const resolvers = {
         version,
         Authorization,
       );
-      return response ? true : false;
+      return convertClinicalSubmissionDataToGql({ submission: response });
     },
     approveClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;

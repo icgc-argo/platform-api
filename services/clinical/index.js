@@ -114,8 +114,8 @@ const commitClinicalSubmissionData = async (programShortName, versionId, Authori
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response);
-  return true;
+    .then(response => response.json());
+  return response;
 };
 const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
   const response = await fetch(
