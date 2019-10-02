@@ -293,7 +293,7 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
       get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
-    createdAt: 'DateGoesHERE', // this is a place holder for now
+    createdAt: new Date(), // this is a place holder for now
   };
 };
 
