@@ -119,7 +119,7 @@ const typeDefs = gql`
 
   type ClinicalSubmissionRecordField {
     name: String!
-    value: String!
+    value: String
   }
 
   type ClinicalSubmissionError @cost(complexity: 5) {
@@ -149,6 +149,11 @@ const typeDefs = gql`
     Retrieve current stored Clinical Submission data for a program
     """
     clinicalSubmissions(shortName: String!): ClinicalSubmissionData!
+
+    """
+    Retrieve current stored Clinical Submission Types list
+    """
+    clinicalSubmissionTypesList: [String!]
   }
 
   type Mutation {
@@ -293,7 +298,7 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
       get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
-    createdAt: new Date(), // this is a place holder for now
+    createdAt: entity.createdAt || null,
   };
 };
 
@@ -357,6 +362,9 @@ const resolvers = {
 
       const response = await clinicalService.getClinicalSubmissionData(shortName, Authorization);
       return convertClinicalSubmissionDataToGql({ submission: response });
+    },
+    clinicalSubmissionTypesList: async (obj, args, context, info) => {
+      return await clinicalService.getClinicalSubmissionTypesList();
     },
   },
   Mutation: {
