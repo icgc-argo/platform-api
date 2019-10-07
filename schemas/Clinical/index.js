@@ -109,6 +109,7 @@ const typeDefs = gql`
     records: [ClinicalSubmissionRecord]!
     dataErrors: [ClinicalSubmissionError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
+    createdAt: DateTime
   }
 
   type ClinicalSubmissionRecord {
@@ -292,6 +293,7 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
       get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
+    createdAt: new Date(), // this is a place holder for now
   };
 };
 

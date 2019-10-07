@@ -21,11 +21,26 @@ const packageDefinition = loader.loadSync(protoPath, {
 
 const proto = grpc.loadPackageDefinition(packageDefinition).program_service;
 
+/**
+ * this config was taken from: https://cs.mcgill.ca/~mxia3/2019/02/23/Using-gRPC-in-Production/
+ */
+const GRPC_CONFIG = {
+  'grpc.keepalive_time_ms': 10000,
+  'grpc.keepalive_timeout_ms': 5000,
+  'grpc.keepalive_permit_without_calls': 'true',
+  'grpc.http2.max_pings_without_data': 0,
+  'grpc.http2.min_time_between_pings_ms': 10000,
+  'grpc.http2.min_ping_interval_without_data_ms': 5000,
+};
 const programServiceRegex = RegExp(/:443$/);
 const programService = withRetries(
   programServiceRegex.test(PROGRAM_SERVICE_ROOT)
-    ? new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl())
-    : new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createInsecure()),
+    ? new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl(), GRPC_CONFIG)
+    : new proto.ProgramService(
+        PROGRAM_SERVICE_ROOT,
+        grpc.credentials.createInsecure(),
+        GRPC_CONFIG,
+      ),
 );
 
 /*
