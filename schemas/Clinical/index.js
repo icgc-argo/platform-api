@@ -148,7 +148,7 @@ const typeDefs = gql`
     """
     Retrieve current stored Clinical Submission data for a program
     """
-    clinicalSubmissions(shortName: String!): ClinicalSubmissionData!
+    clinicalSubmissions(programShortName: String!): ClinicalSubmissionData!
 
     """
     Retrieve current stored Clinical Submission Types list
@@ -182,19 +182,22 @@ const typeDefs = gql`
     Upload Clinical Submission files
     """
     uploadClinicalSubmissions(
-      shortName: String!
+      programShortName: String!
       clinicalFiles: [Upload!]
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
     Validate the uploaded clinical files
     """
-    validateClinicalSubmissions(shortName: String!, version: String!): ClinicalSubmissionData!
-      @cost(complexity: 30)
+    validateClinicalSubmissions(
+      programShortName: String!
+      version: String!
+    ): ClinicalSubmissionData! @cost(complexity: 30)
 
-    commitClinicalSubmission(shortName: String!, version: String!): ClinicalSubmissionData!
+    commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
-    approveClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
+    approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
+      @cost(complexity: 30)
   }
 `;
 
@@ -358,9 +361,12 @@ const resolvers = {
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName } = args;
+      const { programShortName } = args;
 
-      const response = await clinicalService.getClinicalSubmissionData(shortName, Authorization);
+      const response = await clinicalService.getClinicalSubmissionData(
+        programShortName,
+        Authorization,
+      );
       return convertClinicalSubmissionDataToGql({ submission: response });
     },
     clinicalSubmissionTypesList: async (obj, args, context, info) => {
@@ -427,7 +433,7 @@ const resolvers = {
     },
     uploadClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const { shortName, clinicalFiles } = args;
+      const { programShortName, clinicalFiles } = args;
 
       // see reason in uploadRegistration
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
@@ -439,7 +445,7 @@ const resolvers = {
         val.forEach(file => (filesMap[file.filename] = file.createReadStream())),
       );
       const response = await clinicalService.uploadClinicalSubmissionData(
-        shortName,
+        programShortName,
         filesMap,
         Authorization,
       );
@@ -447,9 +453,9 @@ const resolvers = {
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.validateClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );
@@ -457,9 +463,9 @@ const resolvers = {
     },
     commitClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.commitClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );
@@ -467,9 +473,9 @@ const resolvers = {
     },
     approveClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.approveClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );

@@ -64,7 +64,7 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
 };
 
 const getClinicalSubmissionTypesList = async () => {
-  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema/all`;
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema/list`;
   const response = await fetch(url, {
     method: 'get',
   })
