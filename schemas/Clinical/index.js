@@ -256,21 +256,19 @@ const convertClinicalSubmissionDataToGql = data => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
+
   // convert clinical entities for gql
-  const clinicalEntities = [];
-  for (let clinicalType in submission.clinicalEntities) {
-    clinicalEntities.push(
+  const clinicalEntities = [
+    ...submission.clinicalEntities.map(clinicalType =>
       convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]),
-    );
-  }
-  // collect schema errors for each entity in dataErrors (not sure if this is OK??)
-  for (let clinicalType in schemaErrors) {
-    clinicalEntities.push(
+    ),
+    ...schemaErrors.map(clinicalType =>
       convertClinicalSubmissionEntityToGql(clinicalType, {
         dataErrors: schemaErrors[clinicalType],
       }),
-    );
-  }
+    ),
+  ];
+
   return {
     id: submission._id || null,
     state: submission.state || null,
