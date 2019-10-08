@@ -108,6 +108,7 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     dataErrors: [ClinicalSubmissionError]!
+    schemaErrors: [ClinicalSubmissionError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
   }
@@ -256,18 +257,15 @@ const convertClinicalSubmissionDataToGql = data => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
-
   // convert clinical entities for gql
-  const clinicalEntities = [
-    ...submission.clinicalEntities.map(clinicalType =>
-      convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]),
-    ),
-    ...schemaErrors.map(clinicalType =>
-      convertClinicalSubmissionEntityToGql(clinicalType, {
-        dataErrors: schemaErrors[clinicalType],
-      }),
-    ),
-  ];
+  const clinicalEntities = Object.entries(submission.clinicalEntities).map(
+    ([clinicalType, clinicalEntity]) =>
+      convertClinicalSubmissionEntityToGql(
+        clinicalType,
+        clinicalEntity,
+        schemaErrors[clinicalType],
+      ),
+  );
 
   return {
     id: submission._id || null,
@@ -278,7 +276,7 @@ const convertClinicalSubmissionDataToGql = data => {
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (type, entity) => {
+const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors = []) => {
   return {
     clinicalType: type,
     batchName: entity.batchName || null,
@@ -287,6 +285,7 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       get(entity, 'records', []).map((record, index) =>
         convertClinicalSubmissionRecordToGql(index, record),
       ),
+    schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
