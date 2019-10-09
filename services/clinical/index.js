@@ -63,6 +63,16 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
   return response;
 };
 
+const getClinicalSubmissionTypesList = async () => {
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema/list`;
+  const response = await fetch(url, {
+    method: 'get',
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
 const getClinicalSubmissionData = async (programShortName, Authorization) => {
   const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/upload`;
   const response = await fetch(url, {
@@ -105,6 +115,7 @@ const validateClinicalSubmissionData = async (programShortName, versionId, Autho
     .then(response => response.json());
   return response;
 };
+
 const commitClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/commit/${versionId}`,
@@ -117,6 +128,7 @@ const commitClinicalSubmissionData = async (programShortName, versionId, Authori
     .then(response => response.json());
   return response;
 };
+
 const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
@@ -135,6 +147,7 @@ export default {
   uploadRegistrationData,
   clearRegistrationData,
   commitRegistrationData,
+  getClinicalSubmissionTypesList,
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
   validateClinicalSubmissionData,

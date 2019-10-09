@@ -108,6 +108,7 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     dataErrors: [ClinicalSubmissionError]!
+    schemaErrors: [ClinicalSubmissionError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
   }
@@ -119,7 +120,7 @@ const typeDefs = gql`
 
   type ClinicalSubmissionRecordField {
     name: String!
-    value: String!
+    value: String
   }
 
   type ClinicalSubmissionError @cost(complexity: 5) {
@@ -148,7 +149,12 @@ const typeDefs = gql`
     """
     Retrieve current stored Clinical Submission data for a program
     """
-    clinicalSubmissions(shortName: String!): ClinicalSubmissionData!
+    clinicalSubmissions(programShortName: String!): ClinicalSubmissionData!
+
+    """
+    Retrieve current stored Clinical Submission Types list
+    """
+    clinicalSubmissionTypesList: [String!]
   }
 
   type Mutation {
@@ -177,19 +183,22 @@ const typeDefs = gql`
     Upload Clinical Submission files
     """
     uploadClinicalSubmissions(
-      shortName: String!
+      programShortName: String!
       clinicalFiles: [Upload!]
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
     Validate the uploaded clinical files
     """
-    validateClinicalSubmissions(shortName: String!, version: String!): ClinicalSubmissionData!
-      @cost(complexity: 30)
+    validateClinicalSubmissions(
+      programShortName: String!
+      version: String!
+    ): ClinicalSubmissionData! @cost(complexity: 30)
 
-    commitClinicalSubmission(shortName: String!, version: String!): ClinicalSubmissionData!
+    commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
-    approveClinicalSubmission(shortName: String!, version: String!): Boolean! @cost(complexity: 30)
+    approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
+      @cost(complexity: 30)
   }
 `;
 
@@ -257,20 +266,15 @@ const convertClinicalSubmissionDataToGql = data => {
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
   // convert clinical entities for gql
-  const clinicalEntities = [];
-  for (let clinicalType in submission.clinicalEntities) {
-    clinicalEntities.push(
-      convertClinicalSubmissionEntityToGql(clinicalType, submission.clinicalEntities[clinicalType]),
-    );
-  }
-  // collect schema errors for each entity in dataErrors (not sure if this is OK??)
-  for (let clinicalType in schemaErrors) {
-    clinicalEntities.push(
-      convertClinicalSubmissionEntityToGql(clinicalType, {
-        dataErrors: schemaErrors[clinicalType],
-      }),
-    );
-  }
+  const clinicalEntities = Object.entries(submission.clinicalEntities || {}).map(
+    ([clinicalType, clinicalEntity]) =>
+      convertClinicalSubmissionEntityToGql(
+        clinicalType,
+        clinicalEntity,
+        schemaErrors[clinicalType],
+      ),
+  );
+
   return {
     id: submission._id || null,
     state: submission.state || null,
@@ -280,7 +284,7 @@ const convertClinicalSubmissionDataToGql = data => {
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (type, entity) => {
+const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors = []) => {
   return {
     clinicalType: type,
     batchName: entity.batchName || null,
@@ -289,11 +293,12 @@ const convertClinicalSubmissionEntityToGql = (type, entity) => {
       get(entity, 'records', []).map((record, index) =>
         convertClinicalSubmissionRecordToGql(index, record),
       ),
+    schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
       get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
-    createdAt: new Date(), // this is a place holder for now
+    createdAt: entity.createdAt ? new Date(entity.createdAt) : null,
   };
 };
 
@@ -353,10 +358,16 @@ const resolvers = {
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName } = args;
+      const { programShortName } = args;
 
-      const response = await clinicalService.getClinicalSubmissionData(shortName, Authorization);
+      const response = await clinicalService.getClinicalSubmissionData(
+        programShortName,
+        Authorization,
+      );
       return convertClinicalSubmissionDataToGql({ submission: response });
+    },
+    clinicalSubmissionTypesList: async (obj, args, context, info) => {
+      return await clinicalService.getClinicalSubmissionTypesList();
     },
   },
   Mutation: {
@@ -419,7 +430,7 @@ const resolvers = {
     },
     uploadClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const { shortName, clinicalFiles } = args;
+      const { programShortName, clinicalFiles } = args;
 
       // see reason in uploadRegistration
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
@@ -431,7 +442,7 @@ const resolvers = {
         val.forEach(file => (filesMap[file.filename] = file.createReadStream())),
       );
       const response = await clinicalService.uploadClinicalSubmissionData(
-        shortName,
+        programShortName,
         filesMap,
         Authorization,
       );
@@ -439,9 +450,9 @@ const resolvers = {
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.validateClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );
@@ -449,9 +460,9 @@ const resolvers = {
     },
     commitClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.commitClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );
@@ -459,9 +470,9 @@ const resolvers = {
     },
     approveClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
-      const { shortName, version } = args;
+      const { programShortName, version } = args;
       const response = await clinicalService.approveClinicalSubmissionData(
-        shortName,
+        programShortName,
         version,
         Authorization,
       );
