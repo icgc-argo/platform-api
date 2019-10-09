@@ -108,6 +108,7 @@ const typeDefs = gql`
     batchName: String
     creator: String
     records: [ClinicalSubmissionRecord]!
+    stats: ClinicalSubmissionStats
     dataErrors: [ClinicalSubmissionError]!
     schemaErrors: [ClinicalSubmissionError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
@@ -122,6 +123,13 @@ const typeDefs = gql`
   type ClinicalSubmissionRecordField {
     name: String!
     value: String
+  }
+
+  type ClinicalSubmissionStats {
+    noUpdate: [Int]!
+    new: [Int]!
+    updated: [Int]!
+    errorsFound: [Int]!
   }
 
   type ClinicalSubmissionError @cost(complexity: 5) {
@@ -295,6 +303,7 @@ const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors =
       get(entity, 'records', []).map((record, index) =>
         convertClinicalSubmissionRecordToGql(index, record),
       ),
+    stats: entity.stats || null,
     schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
