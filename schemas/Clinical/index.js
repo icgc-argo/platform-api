@@ -90,6 +90,7 @@ const typeDefs = gql`
 
   type ClinicalSubmissionData @cost(complexity: 10) {
     id: ID
+    programShortName: ID
     state: SubmissionState
     version: String
     clinicalEntities: [ClinicalEntityData]!
@@ -261,7 +262,7 @@ const convertRegistrationDataToGql = data => {
   };
 };
 
-const convertClinicalSubmissionDataToGql = data => {
+const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
@@ -277,6 +278,7 @@ const convertClinicalSubmissionDataToGql = data => {
 
   return {
     id: submission._id || null,
+    programShortName,
     state: submission.state || null,
     version: submission.version || null,
     clinicalEntities: clinicalEntities,
@@ -364,7 +366,7 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql({ submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     clinicalSubmissionTypesList: async (obj, args, context, info) => {
       return await clinicalService.getClinicalSubmissionTypesList();
@@ -446,7 +448,7 @@ const resolvers = {
         filesMap,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(response);
+      return convertClinicalSubmissionDataToGql(programShortName, response);
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -456,7 +458,7 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(response);
+      return convertClinicalSubmissionDataToGql(programShortName, response);
     },
     commitClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -466,7 +468,7 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql({ submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     approveClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
