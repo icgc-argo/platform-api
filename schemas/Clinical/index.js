@@ -2,6 +2,7 @@ import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
+import flattenDeep from 'lodash/flattenDeep';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -295,7 +296,6 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
   const clinicalEntities = get(data, 'clinicalEntities', {});
-  // convert clinical entities for gql
 
   return {
     id: submission._id || null,
@@ -304,23 +304,25 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     version: submission.version || null,
     clinicalEntities: () =>
       Object.entries(clinicalEntities).map(([clinicalType, clinicalEntity]) =>
-        convertClinicalSubmissionEntityToGql(clinicalType, clinicalEntity, {
-          ...schemaErrors[clinicalType],
+        convertClinicalSubmissionEntityToGql(
           clinicalType,
-        }),
+          clinicalEntity,
+          schemaErrors[clinicalType],
+        ),
       ),
     fileErrors: fileErrors,
     schemaErrors: () =>
-      Object.entries(schemaErrors).map(([clinicalType, error]) => ({
-        ...error,
-        clinicalType,
-      })),
+      flattenDeep(
+        Object.entries(schemaErrors).map(([clinicalType, errors]) =>
+          errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
+        ),
+      ),
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors = []) => {
+const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchemaErrors = []) => {
   return {
-    clinicalType: type,
+    clinicalType,
     batchName: entity.batchName || null,
     creator: entity.creator || null,
     records: () =>
@@ -328,7 +330,10 @@ const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors =
         convertClinicalSubmissionRecordToGql(index, record),
       ),
     stats: entity.stats || null,
-    schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
+    schemaErrors: () =>
+      entitySchemaErrors.map(error =>
+        convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
+      ),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
@@ -358,6 +363,11 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     donorId: errorData.info.donorSubmitterId,
   };
 };
+
+const convertClinicalSubmissionSchemaErrorToGql = (clinicalType, errorData) => ({
+  ...convertClinicalSubmissionErrorToGql(errorData),
+  clinicalType,
+});
 
 const convertClinicalSubmissionUpdateToGql = updateData => {
   return {
