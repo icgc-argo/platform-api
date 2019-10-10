@@ -15,7 +15,7 @@ paths:
                 type: string
                 format: binary
         '500':
-          description: Server error
+          description: Internal server error
 
   '/clinical/template/{schema}':
     parameters:
@@ -35,10 +35,6 @@ paths:
               schema:
                 example: 'program_id\tsubmitter_donor_id\tgender\tsubmitter_specimen_id\tspecimen_type\ttumour_normal_designation\tsubmitter_sample_id\tsample_type'
                 type: string
-            application/zip:
-              schema:
-                type: string
-                format: binary
         '404':
           description: The errror message indicating the schema could not be found
           content:
@@ -47,9 +43,4 @@ paths:
                 example: '{"message": "no schema named ''invalidName'' found"}'
                 type: string
         '500':
-          description: Server error
-
-components:
-  responses:
-    ServerError:
-      description: Server error
+          description: Internal server error
