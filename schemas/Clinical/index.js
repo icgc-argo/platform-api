@@ -111,7 +111,7 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     stats: ClinicalSubmissionStats
-    dataErrors: [ClinicalSubmissionError]!
+    dataErrors: [ClinicalSubmissionDataError]!
     schemaErrors: [ClinicalSubmissionSchemaError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
@@ -143,7 +143,7 @@ const typeDefs = gql`
     donorId: String!
   }
 
-  type ClinicalSubmissionError implements ClinicalEntityError @cost(complexity: 5) {
+  type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
     type: String!
     message: String!
     row: Int!
