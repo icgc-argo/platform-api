@@ -316,9 +316,10 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     version: submission.version || null,
     clinicalEntities: async () => {
       const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
-      const filledClinicalEntities = clinicalSubmissionTypeList.map(
-        clinicalType => clinicalEntities[clinicalType] || { clinicalType },
-      );
+      const filledClinicalEntities = clinicalSubmissionTypeList.map(clinicalType => ({
+        clinicalType,
+        ...(clinicalEntities[clinicalType] || {}),
+      }));
       return filledClinicalEntities.map(clinicalEntity =>
         convertClinicalSubmissionEntityToGql(
           clinicalEntity.clinicalType,
