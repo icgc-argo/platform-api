@@ -2,6 +2,7 @@ import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
+import flattenDeep from 'lodash/flattenDeep';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -95,6 +96,7 @@ const typeDefs = gql`
     version: String
     clinicalEntities: [ClinicalEntityData]!
     fileErrors: [ClinicalError]
+    schemaErrors: [ClinicalSubmissionSchemaError]!
   }
 
   type ClinicalError @cost(complexity: 5) {
@@ -109,8 +111,8 @@ const typeDefs = gql`
     creator: String
     records: [ClinicalSubmissionRecord]!
     stats: ClinicalSubmissionStats
-    dataErrors: [ClinicalSubmissionError]!
-    schemaErrors: [ClinicalSubmissionError]!
+    dataErrors: [ClinicalSubmissionDataError]!
+    schemaErrors: [ClinicalSubmissionSchemaError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
   }
@@ -132,13 +134,32 @@ const typeDefs = gql`
     errorsFound: [Int]!
   }
 
-  type ClinicalSubmissionError @cost(complexity: 5) {
+  interface ClinicalEntityError {
     type: String!
     message: String!
     row: Int!
     field: String!
     value: String!
     donorId: String!
+  }
+
+  type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+  }
+
+  type ClinicalSubmissionSchemaError implements ClinicalEntityError @cost(complexity: 10) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+    clinicalType: String!
   }
 
   type ClinicalSubmissionUpdate @cost(complexity: 5) {
@@ -274,29 +295,34 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
-  // convert clinical entities for gql
-  const clinicalEntities = Object.entries(submission.clinicalEntities || {}).map(
-    ([clinicalType, clinicalEntity]) =>
-      convertClinicalSubmissionEntityToGql(
-        clinicalType,
-        clinicalEntity,
-        schemaErrors[clinicalType],
-      ),
-  );
+  const clinicalEntities = get(data, 'clinicalEntities', {});
 
   return {
     id: submission._id || null,
     programShortName,
     state: submission.state || null,
     version: submission.version || null,
-    clinicalEntities: clinicalEntities,
+    clinicalEntities: () =>
+      Object.entries(clinicalEntities).map(([clinicalType, clinicalEntity]) =>
+        convertClinicalSubmissionEntityToGql(
+          clinicalType,
+          clinicalEntity,
+          schemaErrors[clinicalType],
+        ),
+      ),
     fileErrors: fileErrors,
+    schemaErrors: () =>
+      flattenDeep(
+        Object.entries(schemaErrors).map(([clinicalType, errors]) =>
+          errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
+        ),
+      ),
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors = []) => {
+const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchemaErrors = []) => {
   return {
-    clinicalType: type,
+    clinicalType,
     batchName: entity.batchName || null,
     creator: entity.creator || null,
     records: () =>
@@ -304,7 +330,10 @@ const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors =
         convertClinicalSubmissionRecordToGql(index, record),
       ),
     stats: entity.stats || null,
-    schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
+    schemaErrors: () =>
+      entitySchemaErrors.map(error =>
+        convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
+      ),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
@@ -334,6 +363,11 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     donorId: errorData.info.donorSubmitterId,
   };
 };
+
+const convertClinicalSubmissionSchemaErrorToGql = (clinicalType, errorData) => ({
+  ...convertClinicalSubmissionErrorToGql(errorData),
+  clinicalType,
+});
 
 const convertClinicalSubmissionUpdateToGql = updateData => {
   return {
