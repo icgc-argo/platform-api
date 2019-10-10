@@ -95,7 +95,7 @@ const typeDefs = gql`
     version: String
     clinicalEntities: [ClinicalEntityData]!
     fileErrors: [ClinicalError]
-    schemaErrors: [ClinicalSubmissionError]!
+    schemaErrors: [ClinicalSubmissionSchemaError]!
   }
 
   type ClinicalError @cost(complexity: 5) {
@@ -111,7 +111,7 @@ const typeDefs = gql`
     records: [ClinicalSubmissionRecord]!
     stats: ClinicalSubmissionStats
     dataErrors: [ClinicalSubmissionError]!
-    schemaErrors: [ClinicalSubmissionError]!
+    schemaErrors: [ClinicalSubmissionSchemaError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
   }
@@ -133,13 +133,32 @@ const typeDefs = gql`
     errorsFound: [Int]!
   }
 
-  type ClinicalSubmissionError @cost(complexity: 5) {
+  interface ClinicalEntityError {
     type: String!
     message: String!
     row: Int!
     field: String!
     value: String!
     donorId: String!
+  }
+
+  type ClinicalSubmissionError implements ClinicalEntityError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+  }
+
+  type ClinicalSubmissionSchemaError implements ClinicalEntityError {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+    clinicalType: String!
   }
 
   type ClinicalSubmissionUpdate @cost(complexity: 5) {
@@ -275,6 +294,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
+  const clinicalEntities = get(data, 'clinicalEntities', {});
   // convert clinical entities for gql
 
   return {
@@ -283,15 +303,18 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     state: submission.state || null,
     version: submission.version || null,
     clinicalEntities: () =>
-      Object.entries(submission.clinicalEntities || {}).map(([clinicalType, clinicalEntity]) =>
-        convertClinicalSubmissionEntityToGql(
+      Object.entries(clinicalEntities).map(([clinicalType, clinicalEntity]) =>
+        convertClinicalSubmissionEntityToGql(clinicalType, clinicalEntity, {
+          ...schemaErrors[clinicalType],
           clinicalType,
-          clinicalEntity,
-          schemaErrors[clinicalType],
-        ),
+        }),
       ),
     fileErrors: fileErrors,
-    schemaErrors: schemaErrors || [],
+    schemaErrors: () =>
+      Object.entries(schemaErrors).map(([clinicalType, error]) => ({
+        ...error,
+        clinicalType,
+      })),
   };
 };
 
