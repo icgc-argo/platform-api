@@ -276,21 +276,20 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
   // convert clinical entities for gql
-  const clinicalEntities = Object.entries(submission.clinicalEntities || {}).map(
-    ([clinicalType, clinicalEntity]) =>
-      convertClinicalSubmissionEntityToGql(
-        clinicalType,
-        clinicalEntity,
-        schemaErrors[clinicalType],
-      ),
-  );
 
   return {
     id: submission._id || null,
     programShortName,
     state: submission.state || null,
     version: submission.version || null,
-    clinicalEntities: clinicalEntities,
+    clinicalEntities: () =>
+      Object.entries(submission.clinicalEntities || {}).map(([clinicalType, clinicalEntity]) =>
+        convertClinicalSubmissionEntityToGql(
+          clinicalType,
+          clinicalEntity,
+          schemaErrors[clinicalType],
+        ),
+      ),
     fileErrors: fileErrors,
     schemaErrors: schemaErrors || [],
   };
