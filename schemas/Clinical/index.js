@@ -152,7 +152,7 @@ const typeDefs = gql`
     donorId: String!
   }
 
-  type ClinicalSubmissionSchemaError implements ClinicalEntityError {
+  type ClinicalSubmissionSchemaError implements ClinicalEntityError @cost(complexity: 10) {
     type: String!
     message: String!
     row: Int!
