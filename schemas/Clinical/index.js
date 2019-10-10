@@ -307,7 +307,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
-  const clinicalEntities = get(data, 'clinicalEntities', {});
+  const clinicalEntities = get(submission, 'clinicalEntities', {});
 
   return {
     id: submission._id || null,
