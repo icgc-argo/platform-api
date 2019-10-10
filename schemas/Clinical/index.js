@@ -95,6 +95,7 @@ const typeDefs = gql`
     version: String
     clinicalEntities: [ClinicalEntityData]!
     fileErrors: [ClinicalError]
+    schemaErrors: [ClinicalSubmissionError]!
   }
 
   type ClinicalError @cost(complexity: 5) {
@@ -291,6 +292,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     version: submission.version || null,
     clinicalEntities: clinicalEntities,
     fileErrors: fileErrors,
+    schemaErrors: schemaErrors || [],
   };
 };
 
