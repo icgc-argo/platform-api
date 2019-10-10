@@ -314,14 +314,19 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     programShortName,
     state: submission.state || null,
     version: submission.version || null,
-    clinicalEntities: () =>
-      Object.entries(clinicalEntities).map(([clinicalType, clinicalEntity]) =>
+    clinicalEntities: async () => {
+      const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
+      const filledClinicalEntities = clinicalSubmissionTypeList.map(
+        clinicalType => clinicalEntities[clinicalType] || { clinicalType },
+      );
+      return filledClinicalEntities.map(clinicalEntity =>
         convertClinicalSubmissionEntityToGql(
-          clinicalType,
+          clinicalEntity.clinicalType,
           clinicalEntity,
-          schemaErrors[clinicalType],
+          schemaErrors[clinicalEntity.clinicalType],
         ),
-      ),
+      );
+    },
     fileErrors: fileErrors,
     schemaErrors: () =>
       flattenDeep(
