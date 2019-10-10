@@ -2,9 +2,21 @@ openapi: 3.0.0
 info:
   title: Platform-API
   version: 1.0.0
-security:
-  - bearerAuth: ['PROGRAMDATA-${programId}.WRITE', 'CLINICALSERVICE.WRITE']
 paths:
+  '/clinical/template/all.zip':
+    get:
+      summary: Download a zip file with templates for all schema
+      responses:
+        '200':
+          description: 'A zip file with all schema templates'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Server error
+
   '/clinical/template/{schema}':
     parameters:
       - name: schema
@@ -23,6 +35,10 @@ paths:
               schema:
                 example: 'program_id\tsubmitter_donor_id\tgender\tsubmitter_specimen_id\tspecimen_type\ttumour_normal_designation\tsubmitter_sample_id\tsample_type'
                 type: string
+            application/zip:
+              schema:
+                type: string
+                format: binary
         '404':
           description: The errror message indicating the schema could not be found
           content:
@@ -30,8 +46,10 @@ paths:
               schema:
                 example: '{"message": "no schema named ''invalidName'' found"}'
                 type: string
+        '500':
+          description: Server error
 
-      description: returns the current in progress registration for a program if any
-
-  servers:
-    - url: /
+components:
+  responses:
+    ServerError:
+      description: Server error
