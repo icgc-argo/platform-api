@@ -127,6 +127,9 @@ const typeDefs = gql`
     value: String
   }
 
+  """
+  Each field is an array of row index referenced in ClinicalSubmissionRecord
+  """
   type ClinicalSubmissionStats {
     noUpdate: [Int]!
     new: [Int]!
@@ -225,8 +228,17 @@ const typeDefs = gql`
       version: String!
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
+    """
+    - If there is update: makes a clinical submission ready for approval by a DCC member,
+    returning submission data with updated state
+    - If there is NO update: merges clinical data to system, returning an empty submission
+    """
     commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
+
+    """
+    Available for DCC members to approve a clinical submission
+    """
     approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
       @cost(complexity: 30)
   }
