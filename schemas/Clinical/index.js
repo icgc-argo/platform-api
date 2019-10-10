@@ -94,7 +94,7 @@ const typeDefs = gql`
     programShortName: ID
     state: SubmissionState
     version: String
-    clinicalEntities: [ClinicalEntityData]!
+    clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
     fileErrors: [ClinicalError]
     schemaErrors: [ClinicalSubmissionSchemaError]!
   }
