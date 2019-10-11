@@ -2,6 +2,7 @@ import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 import omit from 'lodash/omit';
+import flattenDeep from 'lodash/flattenDeep';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -90,10 +91,12 @@ const typeDefs = gql`
 
   type ClinicalSubmissionData @cost(complexity: 10) {
     id: ID
+    programShortName: ID
     state: SubmissionState
     version: String
-    clinicalEntities: [ClinicalEntityData]!
+    clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
     fileErrors: [ClinicalError]
+    schemaErrors: [ClinicalSubmissionSchemaError]!
   }
 
   type ClinicalError @cost(complexity: 5) {
@@ -107,8 +110,9 @@ const typeDefs = gql`
     batchName: String
     creator: String
     records: [ClinicalSubmissionRecord]!
-    dataErrors: [ClinicalSubmissionError]!
-    schemaErrors: [ClinicalSubmissionError]!
+    stats: ClinicalSubmissionStats
+    dataErrors: [ClinicalSubmissionDataError]!
+    schemaErrors: [ClinicalSubmissionSchemaError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
     createdAt: DateTime
   }
@@ -123,13 +127,42 @@ const typeDefs = gql`
     value: String
   }
 
-  type ClinicalSubmissionError @cost(complexity: 5) {
+  """
+  Each field is an array of row index referenced in ClinicalSubmissionRecord
+  """
+  type ClinicalSubmissionStats {
+    noUpdate: [Int]!
+    new: [Int]!
+    updated: [Int]!
+    errorsFound: [Int]!
+  }
+
+  interface ClinicalEntityError {
     type: String!
     message: String!
     row: Int!
     field: String!
     value: String!
     donorId: String!
+  }
+
+  type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+  }
+
+  type ClinicalSubmissionSchemaError implements ClinicalEntityError @cost(complexity: 10) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    donorId: String!
+    clinicalType: String!
   }
 
   type ClinicalSubmissionUpdate @cost(complexity: 5) {
@@ -195,8 +228,17 @@ const typeDefs = gql`
       version: String!
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
+    """
+    - If there is update: makes a clinical submission ready for approval by a DCC member,
+    returning submission data with updated state
+    - If there is NO update: merges clinical data to system, returning an empty submission
+    """
     commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
+
+    """
+    Available for DCC members to approve a clinical submission
+    """
     approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
       @cost(complexity: 30)
   }
@@ -261,39 +303,54 @@ const convertRegistrationDataToGql = data => {
   };
 };
 
-const convertClinicalSubmissionDataToGql = data => {
+const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
-  // convert clinical entities for gql
-  const clinicalEntities = Object.entries(submission.clinicalEntities || {}).map(
-    ([clinicalType, clinicalEntity]) =>
-      convertClinicalSubmissionEntityToGql(
-        clinicalType,
-        clinicalEntity,
-        schemaErrors[clinicalType],
-      ),
-  );
-
+  const clinicalEntities = get(submission, 'clinicalEntities', {});
   return {
     id: submission._id || null,
+    programShortName,
     state: submission.state || null,
     version: submission.version || null,
-    clinicalEntities: clinicalEntities,
+    clinicalEntities: async () => {
+      const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
+      const filledClinicalEntities = clinicalSubmissionTypeList.map(clinicalType => ({
+        clinicalType,
+        ...(clinicalEntities[clinicalType] || {}),
+      }));
+      return filledClinicalEntities.map(clinicalEntity =>
+        convertClinicalSubmissionEntityToGql(
+          clinicalEntity.clinicalType,
+          clinicalEntity,
+          schemaErrors[clinicalEntity.clinicalType],
+        ),
+      );
+    },
     fileErrors: fileErrors,
+    schemaErrors: () =>
+      flattenDeep(
+        Object.entries(schemaErrors).map(([clinicalType, errors]) =>
+          errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
+        ),
+      ),
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (type, entity, entitySchemaErrors = []) => {
+const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchemaErrors = []) => {
   return {
-    clinicalType: type,
+    clinicalType,
     batchName: entity.batchName || null,
     creator: entity.creator || null,
     records: () =>
       get(entity, 'records', []).map((record, index) =>
         convertClinicalSubmissionRecordToGql(index, record),
       ),
-    schemaErrors: () => entitySchemaErrors.map(error => convertClinicalSubmissionErrorToGql(error)),
+    stats: entity.stats || null,
+    schemaErrors: () =>
+      entitySchemaErrors.map(error =>
+        convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
+      ),
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
     dataUpdates: () =>
@@ -319,10 +376,17 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     message: get(ERROR_MESSAGES, errorData.type, ''),
     row: errorData.index,
     field: errorData.fieldName,
-    value: errorData.info.value,
-    donorId: errorData.info.donorSubmitterId,
+    donorId: get(errorData, 'info.donorSubmitterId', ''),
+
+    // errorData.info.value may come back as null if not provided in uploaded file
+    value: get(errorData, 'info.value', ''),
   };
 };
+
+const convertClinicalSubmissionSchemaErrorToGql = (clinicalType, errorData) => ({
+  ...convertClinicalSubmissionErrorToGql(errorData),
+  clinicalType,
+});
 
 const convertClinicalSubmissionUpdateToGql = updateData => {
   return {
@@ -364,7 +428,7 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql({ submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     clinicalSubmissionTypesList: async (obj, args, context, info) => {
       return await clinicalService.getClinicalSubmissionTypesList();
@@ -446,7 +510,7 @@ const resolvers = {
         filesMap,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(response);
+      return convertClinicalSubmissionDataToGql(programShortName, response);
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -456,7 +520,7 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(response);
+      return convertClinicalSubmissionDataToGql(programShortName, response);
     },
     commitClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -466,7 +530,7 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql({ submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     approveClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization } = context;
