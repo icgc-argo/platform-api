@@ -308,7 +308,6 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'fileErrors', []);
   const clinicalEntities = get(submission, 'clinicalEntities', {});
-
   return {
     id: submission._id || null,
     programShortName,
@@ -377,8 +376,10 @@ const convertClinicalSubmissionErrorToGql = errorData => {
     message: get(ERROR_MESSAGES, errorData.type, ''),
     row: errorData.index,
     field: errorData.fieldName,
-    value: errorData.info.value,
-    donorId: errorData.info.donorSubmitterId,
+    donorId: get(errorData, 'info.donorSubmitterId', ''),
+
+    // errorData.info.value may come back as null if not provided in uploaded file
+    value: get(errorData, 'info.value', ''),
   };
 };
 
