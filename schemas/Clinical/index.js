@@ -221,6 +221,16 @@ const typeDefs = gql`
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
+    Clear Clinical Submission
+    fileType is optional, if it is not provided all fileTypes will be cleared. The values for fileType are the same as the file names from each template (ex. donor, specimen)
+    """
+    clearClinicalSubmission(
+      programShortName: String!
+      version: String!
+      fileType: String
+    ): ClinicalSubmissionData! @cost(complexity: 20)
+
+    """
     Validate the uploaded clinical files
     """
     validateClinicalSubmissions(
@@ -511,6 +521,19 @@ const resolvers = {
         Authorization,
       );
       return convertClinicalSubmissionDataToGql(programShortName, response);
+    },
+    clearClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { programShortName, fileType, version } = args;
+
+      const response = await clinicalService.clearClinicalSubmissionData(
+        programShortName,
+        version,
+        fileType || 'all',
+        Authorization,
+      );
+
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
