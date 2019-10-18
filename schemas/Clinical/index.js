@@ -431,7 +431,7 @@ const resolvers = {
       return convertRegistrationDataToGql({ ...response, shortName });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
-      const { Authorization, egoToken } = context;
+      const { Authorization } = context;
       const { programShortName } = args;
 
       const response = await clinicalService.getClinicalSubmissionData(
@@ -523,7 +523,7 @@ const resolvers = {
       return convertClinicalSubmissionDataToGql(programShortName, response);
     },
     clearClinicalSubmission: async (obj, args, context, info) => {
-      const { Authorization, egoToken } = context;
+      const { Authorization } = context;
       const { programShortName, fileType, version } = args;
 
       const response = await clinicalService.clearClinicalSubmissionData(
