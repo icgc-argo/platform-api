@@ -3,7 +3,7 @@ info:
   title: Platform-API
   version: 1.0.0
 paths:
-  '/clinical/template/all.zip':
+  '/clinical/template/all':
     get:
       summary: Download a zip file with templates for all schema
       responses:
