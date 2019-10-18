@@ -434,9 +434,6 @@ const resolvers = {
       const { Authorization, egoToken } = context;
       const { programShortName } = args;
 
-      logger.debug(`Auth: ${Authorization}`);
-      logger.debug(`Token: ${egoToken}`);
-
       const response = await clinicalService.getClinicalSubmissionData(
         programShortName,
         Authorization,
@@ -528,9 +525,6 @@ const resolvers = {
     clearClinicalSubmission: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
       const { programShortName, fileType, version } = args;
-
-      logger.debug(`Auth: ${Authorization}`);
-      logger.debug(`Token: ${egoToken}`);
 
       const response = await clinicalService.clearClinicalSubmissionData(
         programShortName,

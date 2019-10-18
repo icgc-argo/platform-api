@@ -109,7 +109,6 @@ const clearClinicalSubmissionData = async (
   fileType,
   Authorization,
 ) => {
-  console.log(`Auth: ${Authorization}`);
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/${versionId}/${fileType}`,
     {
