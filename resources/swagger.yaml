@@ -6,6 +6,7 @@ paths:
   '/clinical/template/all':
     get:
       summary: Download a zip file with templates for all schema
+      description: '- the file name of the zip file is not determined by this endpoint'
       responses:
         '200':
           description: 'A zip file with all schema templates'
@@ -27,6 +28,9 @@ paths:
           type: string
     get:
       summary: Download the template file for a given schema
+      description: |
+        - the file name of tsv file is not determined by this endpoint
+        - this endpoint will accept /{schema} or /{schema}.tsv
       responses:
         '200':
           description: 'A tsv template file for the given schemaName'
