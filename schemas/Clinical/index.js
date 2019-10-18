@@ -247,6 +247,12 @@ const typeDefs = gql`
       @cost(complexity: 30)
 
     """
+    Available for DCC members to reopen a clinical submission
+    """
+    reopenClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
+      @cost(complexity: 30)
+
+    """
     Available for DCC members to approve a clinical submission
     """
     approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
@@ -549,6 +555,16 @@ const resolvers = {
       const { Authorization } = context;
       const { programShortName, version } = args;
       const response = await clinicalService.commitClinicalSubmissionData(
+        programShortName,
+        version,
+        Authorization,
+      );
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+    },
+    reopenClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { programShortName, version } = args;
+      const response = await clinicalService.reopenClinicalSubmissionData(
         programShortName,
         version,
         Authorization,
