@@ -103,6 +103,24 @@ const uploadClinicalSubmissionData = async (programShortName, filesMap, Authoriz
   return response;
 };
 
+const clearClinicalSubmissionData = async (
+  programShortName,
+  versionId,
+  fileType,
+  Authorization,
+) => {
+  const response = await fetch(
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/${versionId}/${fileType}`,
+    {
+      method: 'delete',
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
 const validateClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/validate/${versionId}`,
@@ -119,6 +137,19 @@ const validateClinicalSubmissionData = async (programShortName, versionId, Autho
 const commitClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/commit/${versionId}`,
+    {
+      method: 'post',
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const reopenClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+  const response = await fetch(
+    `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/reopen/${versionId}`,
     {
       method: 'post',
       headers: { Authorization },
@@ -150,7 +181,9 @@ export default {
   getClinicalSubmissionTypesList,
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
+  clearClinicalSubmissionData,
   validateClinicalSubmissionData,
   commitClinicalSubmissionData,
+  reopenClinicalSubmissionData,
   approveClinicalSubmissionData,
 };

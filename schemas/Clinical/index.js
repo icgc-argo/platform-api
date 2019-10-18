@@ -221,6 +221,16 @@ const typeDefs = gql`
     ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
+    Clear Clinical Submission
+    fileType is optional, if it is not provided all fileTypes will be cleared. The values for fileType are the same as the file names from each template (ex. donor, specimen)
+    """
+    clearClinicalSubmission(
+      programShortName: String!
+      version: String!
+      fileType: String
+    ): ClinicalSubmissionData! @cost(complexity: 20)
+
+    """
     Validate the uploaded clinical files
     """
     validateClinicalSubmissions(
@@ -234,6 +244,12 @@ const typeDefs = gql`
     - If there is NO update: merges clinical data to system, returning an empty submission
     """
     commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
+      @cost(complexity: 30)
+
+    """
+    Available for DCC members to reopen a clinical submission
+    """
+    reopenClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
       @cost(complexity: 30)
 
     """
@@ -512,6 +528,19 @@ const resolvers = {
       );
       return convertClinicalSubmissionDataToGql(programShortName, response);
     },
+    clearClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { programShortName, fileType, version } = args;
+
+      const response = await clinicalService.clearClinicalSubmissionData(
+        programShortName,
+        version,
+        fileType || 'all',
+        Authorization,
+      );
+
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+    },
     validateClinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
       const { programShortName, version } = args;
@@ -526,6 +555,16 @@ const resolvers = {
       const { Authorization } = context;
       const { programShortName, version } = args;
       const response = await clinicalService.commitClinicalSubmissionData(
+        programShortName,
+        version,
+        Authorization,
+      );
+      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+    },
+    reopenClinicalSubmission: async (obj, args, context, info) => {
+      const { Authorization } = context;
+      const { programShortName, version } = args;
+      const response = await clinicalService.reopenClinicalSubmissionData(
         programShortName,
         version,
         Authorization,
