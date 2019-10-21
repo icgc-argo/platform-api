@@ -378,7 +378,8 @@ const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchema
 const convertClinicalSubmissionRecordToGql = (index, record) => {
   const fields = [];
   for (var field in record) {
-    fields.push({ name: field, value: record[field] });
+    const value = (record[field] === undefined || record[field] === null) ? undefined : `${record[field]}`;
+    fields.push({ name: field, value: value });
   }
   return {
     row: index,
