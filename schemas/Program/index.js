@@ -5,6 +5,7 @@ import programService from '../../services/programService';
 import { grpcToGql } from '../../utils/grpcUtils';
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import customScalars from '../customScalars';
+import logger from '../../utils/logger';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -159,7 +160,7 @@ const typeDefs = gql`
     For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
     Returns Program object details of created program
     """
-    createProgram(program: ProgramInput!): Boolean @cost(complexity: 20)
+    createProgram(program: ProgramInput!): [Program!] @cost(complexity: 20)
 
     """
     Update Program
@@ -224,6 +225,12 @@ const convertGrpcUserToGql = userDetails => ({
   inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
 
+const resolveProgramList = async egoToken => {
+  const response = await programService.listPrograms(egoToken);
+  const programs = get(response, 'programs', []);
+  return programs.map(program => convertGrpcProgramToGql(program));
+};
+
 const resolvers = {
   ProgramOptions: {
     cancerTypes: async (constants, args, context, info) => {
@@ -279,9 +286,7 @@ const resolvers = {
     },
     programs: async (obj, args, context, info) => {
       const { egoToken } = context;
-      const response = await programService.listPrograms(egoToken);
-      const programs = get(response, 'programs', []);
-      return programs.map(program => convertGrpcProgramToGql(program));
+      return resolveProgramList(egoToken);
     },
     joinProgramInvite: async (obj, args, context, info) => {
       const { egoToken } = context;
@@ -299,10 +304,10 @@ const resolvers = {
       const program = { ...get(args, 'program', {}), submittedDonors: 0, genomicDonors: 0 };
       try {
         const createResponse = await programService.createProgram(program, egoToken);
-        return true;
       } catch (e) {
-        return false;
+        logger.warn(e);
       }
+      return resolveProgramList(egoToken);
     },
 
     updateProgram: async (obj, args, context, info) => {
