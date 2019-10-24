@@ -6,6 +6,7 @@ import { grpcToGql } from '../../utils/grpcUtils';
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import customScalars from '../customScalars';
 import logger from '../../utils/logger';
+import { UserInputError, ApolloError } from 'apollo-server-express';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -160,7 +161,7 @@ const typeDefs = gql`
     For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
     Returns Program object details of created program
     """
-    createProgram(program: ProgramInput!): Program! @cost(complexity: 40)
+    createProgram(program: ProgramInput!): Program @cost(complexity: 40)
 
     """
     Update Program
@@ -307,8 +308,19 @@ const resolvers = {
 
       // Submitted and Genomic donors are not part of input, need to be set to 0 to start.
       const program = { ...get(args, 'program', {}), submittedDonors: 0, genomicDonors: 0 };
-      const createResponse = await programService.createProgram(program, egoToken);
-      return resolveSingleProgram(egoToken, program.shortName);
+
+      try {
+        const createResponse = await programService.createProgram(program, egoToken);
+        return resolveSingleProgram(egoToken, program.shortName);
+      } catch (err) {
+        const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
+        if (err.code === GRPC_INVALID_ARGUMENT_ERROR_CODE) {
+          //this just wraps it into standard apollo semantics
+          throw new UserInputError(err);
+        } else {
+          throw new ApolloError(err);
+        }
+      }
     },
 
     updateProgram: async (obj, args, context, info) => {
