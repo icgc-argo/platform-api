@@ -5,6 +5,8 @@ import programService from '../../services/programService';
 import { grpcToGql } from '../../utils/grpcUtils';
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import customScalars from '../customScalars';
+import logger from '../../utils/logger';
+import { UserInputError, ApolloError } from 'apollo-server-express';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -159,7 +161,7 @@ const typeDefs = gql`
     For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
     Returns Program object details of created program
     """
-    createProgram(program: ProgramInput!): Boolean @cost(complexity: 20)
+    createProgram(program: ProgramInput!): Program @cost(complexity: 40)
 
     """
     Update Program
@@ -224,6 +226,18 @@ const convertGrpcUserToGql = userDetails => ({
   inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
 
+const resolveProgramList = async egoToken => {
+  const response = await programService.listPrograms(egoToken);
+  const programs = get(response, 'programs', []);
+  return programs.map(program => convertGrpcProgramToGql(program));
+};
+
+const resolveSingleProgram = async (egoToken, programShortName) => {
+  const response = await programService.getProgram(programShortName, egoToken);
+  const programDetails = get(response, 'program');
+  return response ? convertGrpcProgramToGql(programDetails) : null;
+};
+
 const resolvers = {
   ProgramOptions: {
     cancerTypes: async (constants, args, context, info) => {
@@ -273,15 +287,12 @@ const resolvers = {
   Query: {
     program: async (obj, args, context, info) => {
       const { egoToken } = context;
-      const response = await programService.getProgram(args.shortName, egoToken);
-      const programDetails = get(response, 'program');
-      return response ? convertGrpcProgramToGql(programDetails) : null;
+      const { shortName } = args;
+      return resolveSingleProgram(egoToken, shortName);
     },
     programs: async (obj, args, context, info) => {
       const { egoToken } = context;
-      const response = await programService.listPrograms(egoToken);
-      const programs = get(response, 'programs', []);
-      return programs.map(program => convertGrpcProgramToGql(program));
+      return resolveProgramList(egoToken);
     },
     joinProgramInvite: async (obj, args, context, info) => {
       const { egoToken } = context;
@@ -297,11 +308,18 @@ const resolvers = {
 
       // Submitted and Genomic donors are not part of input, need to be set to 0 to start.
       const program = { ...get(args, 'program', {}), submittedDonors: 0, genomicDonors: 0 };
+
       try {
         const createResponse = await programService.createProgram(program, egoToken);
-        return true;
-      } catch (e) {
-        return false;
+        return resolveSingleProgram(egoToken, program.shortName);
+      } catch (err) {
+        const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
+        if (err.code === GRPC_INVALID_ARGUMENT_ERROR_CODE) {
+          //this just wraps it into standard apollo semantics
+          throw new UserInputError(err);
+        } else {
+          throw new ApolloError(err);
+        }
       }
     },
 
