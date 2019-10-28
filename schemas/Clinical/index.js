@@ -279,11 +279,11 @@ const convertRegistrationStatsToGql = statsEntry => {
     names: [],
     values: [],
   };
-  const names = Object.keys(statsEntry) || [];
+  const names = statsEntry.map(se => se.submitterId) || [];
   output.count = names.length;
   names.forEach(name => {
     output.names.push(name);
-    const rows = statsEntry[name];
+    const rows = statsEntry.find(se => se.submitterId == name).rowNumbers || [];
     rows.forEach(row => !output.rows.includes(row) && output.rows.push(row));
     output.values.push({ name, rows });
   });
@@ -313,11 +313,11 @@ const convertRegistrationDataToGql = data => {
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
       get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
-    newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', {})),
-    newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', {})),
-    newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', {})),
+    newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', [])),
+    newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', [])),
+    newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', [])),
     alreadyRegistered: () =>
-      convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', {})),
+      convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', [])),
   };
 };
 
