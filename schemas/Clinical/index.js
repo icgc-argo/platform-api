@@ -94,6 +94,8 @@ const typeDefs = gql`
     programShortName: ID
     state: SubmissionState
     version: String
+    updatedBy: String
+    updatedAt: DateTime
     clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
     fileErrors: [ClinicalError]
     schemaErrors: [ClinicalSubmissionSchemaError]!
@@ -329,6 +331,8 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
     programShortName,
     state: submission.state || null,
     version: submission.version || null,
+    updatedBy: submission.updatedBy || null,
+    updatedAt: submission.updatedAt ? new Date(submission.updatedAt) : null,
     clinicalEntities: async () => {
       const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
       const filledClinicalEntities = clinicalSubmissionTypeList.map(clinicalType => ({
@@ -378,7 +382,9 @@ const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchema
 const convertClinicalSubmissionRecordToGql = (index, record) => {
   const fields = [];
   for (var field in record) {
-    fields.push({ name: field, value: record[field] });
+    const value =
+      record[field] === undefined || record[field] === null ? undefined : `${record[field]}`;
+    fields.push({ name: field, value: value });
   }
   return {
     row: index,
