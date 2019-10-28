@@ -293,7 +293,7 @@ const convertRegistrationStatsToGql = statsEntry => {
 
 const convertRegistrationErrorToGql = errorData => ({
   type: errorData.type,
-  message: get(ERROR_MESSAGES, errorData.type, ''), // Empty String if we don't have a message for the given type
+  message: get(ERROR_MESSAGES, errorData.type, errorData.type), // Empty String if we don't have a message for the given type
   row: errorData.index,
   field: errorData.fieldName,
   value: errorData.info.value,
@@ -395,7 +395,7 @@ const convertClinicalSubmissionRecordToGql = (index, record) => {
 const convertClinicalSubmissionErrorToGql = errorData => {
   return {
     type: errorData.type,
-    message: get(ERROR_MESSAGES, errorData.type, ''),
+    message: get(ERROR_MESSAGES, errorData.type, errorData.type),
     row: errorData.index,
     field: errorData.fieldName,
     donorId: get(errorData, 'info.donorSubmitterId', ''),
