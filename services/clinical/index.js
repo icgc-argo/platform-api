@@ -74,7 +74,7 @@ const getClinicalSubmissionTypesList = async () => {
 };
 
 const getClinicalSubmissionData = async (programShortName, Authorization) => {
-  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/upload`;
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/  `;
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
