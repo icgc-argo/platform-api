@@ -347,13 +347,21 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
         ),
       );
     },
-    fileErrors: fileErrors,
+    fileErrors: fileErrors.map(fileError => convertClinicalSubmissionFileErrorrToGql(fileError)),
     schemaErrors: () =>
       flattenDeep(
         Object.entries(schemaErrors).map(([clinicalType, errors]) =>
           errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
         ),
       ),
+  };
+};
+
+const convertClinicalSubmissionFileErrorrToGql = fileError => {
+  return {
+    msg: fileError.msg,
+    fileNames: fileError.batchNames,
+    code: fileError.code,
   };
 };
 
