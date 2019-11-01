@@ -12,7 +12,6 @@ const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
 
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
-import { ERROR_MESSAGES } from '../../services/clinical/messages';
 import customScalars from '../customScalars';
 import { ERROR_CODES } from '../../constants/clinical';
 import logger from '../../utils/logger';
@@ -293,7 +292,7 @@ const convertRegistrationStatsToGql = statsEntry => {
 
 const convertRegistrationErrorToGql = errorData => ({
   type: errorData.type,
-  message: get(ERROR_MESSAGES, errorData.type, ''), // Empty String if we don't have a message for the given type
+  message: errorData.message,
   row: errorData.index,
   field: errorData.fieldName,
   value: errorData.info.value,
@@ -347,13 +346,21 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
         ),
       );
     },
-    fileErrors: fileErrors,
+    fileErrors: fileErrors.map(fileError => convertClinicalSubmissionFileErrorrToGql(fileError)),
     schemaErrors: () =>
       flattenDeep(
         Object.entries(schemaErrors).map(([clinicalType, errors]) =>
           errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
         ),
       ),
+  };
+};
+
+const convertClinicalSubmissionFileErrorrToGql = fileError => {
+  return {
+    msg: fileError.msg,
+    fileNames: fileError.batchNames,
+    code: fileError.code,
   };
 };
 
@@ -395,7 +402,7 @@ const convertClinicalSubmissionRecordToGql = (index, record) => {
 const convertClinicalSubmissionErrorToGql = errorData => {
   return {
     type: errorData.type,
-    message: get(ERROR_MESSAGES, errorData.type, ''),
+    message: errorData.message,
     row: errorData.index,
     field: errorData.fieldName,
     donorId: get(errorData, 'info.donorSubmitterId', ''),
@@ -484,7 +491,11 @@ const resolvers = {
       } catch (err) {
         // errors that don't go into error table
         if (err.code) {
-          return { error: err.msg, code: ERROR_CODES[err.code], shortName };
+          return {
+            error: err.msg,
+            code: ERROR_CODES[err.code],
+            shortName,
+          };
         } else {
           // catch all error
           logger.error('uploadClinicalRegistration error', err);
@@ -524,6 +535,7 @@ const resolvers = {
       }
 
       const filesMap = {};
+
       await Promise.all(clinicalFiles).then(val =>
         val.forEach(file => (filesMap[file.filename] = file.createReadStream())),
       );
