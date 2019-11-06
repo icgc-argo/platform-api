@@ -323,7 +323,7 @@ const convertRegistrationDataToGql = data => {
 const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const schemaErrors = get(data, 'schemaErrors', {});
-  const fileErrors = get(data, 'fileErrors', []);
+  const fileErrors = get(data, 'batchErrors', []);
   const clinicalEntities = get(submission, 'clinicalEntities', {});
   return {
     id: submission._id || null,
@@ -346,7 +346,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
         ),
       );
     },
-    fileErrors: fileErrors.map(fileError => convertClinicalSubmissionFileErrorrToGql(fileError)),
+    fileErrors: fileErrors.map(convertClinicalSubmissionFileErrorrToGql),
     schemaErrors: () =>
       flattenDeep(
         Object.entries(schemaErrors).map(([clinicalType, errors]) =>
