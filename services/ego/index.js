@@ -9,6 +9,7 @@ import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/gr
 import fetch, { Response } from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
+import memoize from 'lodash/memoize';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
 const packageDefinition = loader.loadSync(PROTO_PATH, {
@@ -24,6 +25,10 @@ const proto = grpc.loadPackageDefinition(packageDefinition).bio.overture.ego.grp
 const userService = withRetries(
   new proto.UserService(EGO_ROOT_GRPC, grpc.credentials.createInsecure()),
 );
+
+let memoizedGetDacoIds = null;
+let dacoIdsCalled = new Date();
+const dacoGroupIdExpiry = 86400000; // 24hours
 
 const getUser = async (id, jwt = null) => {
   return await new Promise((resolve, reject) => {
@@ -105,34 +110,44 @@ const deleteKeys = async (keys, Authorization) => {
   return Promise.all(ps);
 };
 
-const getDacoIds = async (userId, Authorization) => {
-  // TODO: memo here
-  // TODO: Expiry
-  const queryUrl = `${EGO_ROOT_REST}/groups?query=`;
-  const dacoQueryUrl = queryUrl + 'daco';
-  const cloudQueryUrl = queryUrl + 'cloud';
+// check for new group id over 24hours otherwise use memo func
+const getDacoIds = (userId, Authorization) => {
+  const checkIdExpiry = new Date() - dacoIdsCalled >= dacoGroupIdExpiry;
+  if (!memoizedGetDacoIds || checkIdExpiry) {
+    memoizedGetDacoIds = getMemoizedDacoIds();
+    dacoIdsCalled = new Date();
+  }
 
-  // query param will search descriptions too, so filter on name also
-  // TOOD: One query?
-  const response = await fetch(dacoQueryUrl, {
-    method: 'get',
-    headers: { Authorization },
-  })
-    .then(resp => resp.json())
-    .then(({ resultSet = [] }) => resultSet.filter(data => data.name === 'DACO'))
-    .then(group => {
-      if (group.length === 0) {
-        throw new Error('DACO group id not found');
-      } else {
-        return group[0].id;
-      }
-    })
-    .catch(err => {
-      logger.error(err);
-      return null;
-    });
-  return response;
+  return memoizedGetDacoIds(userId, Authorization);
 };
+
+const getMemoizedDacoIds = () =>
+  memoize(async (userId, Authorization) => {
+    const queryUrl = `${EGO_ROOT_REST}/groups?query=`;
+    const dacoQueryUrl = queryUrl + 'daco';
+    const cloudQueryUrl = queryUrl + 'cloud';
+
+    // query param will search descriptions too, so filter on name also
+    // TOOD: One query?
+    const response = await fetch(dacoQueryUrl, {
+      method: 'get',
+      headers: { Authorization },
+    })
+      .then(resp => resp.json())
+      .then(({ resultSet = [] }) => resultSet.filter(data => data.name === 'DACO'))
+      .then(group => {
+        if (group.length === 0) {
+          throw new Error('DACO group id not found');
+        } else {
+          return group[0].id;
+        }
+      })
+      .catch(err => {
+        logger.error(err);
+        return null;
+      });
+    return response;
+  });
 
 export default {
   getUser,
