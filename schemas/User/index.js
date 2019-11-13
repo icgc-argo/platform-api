@@ -125,8 +125,13 @@ const resolvers = {
       const { Authorization, egoToken } = context;
       const decodedToken = TokenUtils.decodeToken(egoToken);
       const userId = decodedToken.sub;
+      console.log('decoded token', decodedToken);
+      const userGroups = decodedToken.context.user.groups;
       // Retrieve DACO and CLOUD group ids
-      const x = await egoService.getDACOIds(userId, Authorization);
+      const dacoGroupId = await egoService.getDacoIds(userId, Authorization);
+      const hasDacoAccess = userGroups.includes(dacoGroupId);
+      console.log('dacoId', dacoGroupId, 'userGroups', userGroups, 'hasDacoAccess', hasDacoAccess);
+      // const hasCloudAccess = userGroups.includes(cloudKey);
       console.log('daco id', x);
       return '';
     },

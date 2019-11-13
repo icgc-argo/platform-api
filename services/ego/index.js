@@ -105,8 +105,9 @@ const deleteKeys = async (keys, Authorization) => {
   return Promise.all(ps);
 };
 
-const getDACOIds = async (userId, Authorization) => {
+const getDacoIds = async (userId, Authorization) => {
   // TODO: memo here
+  // TODO: Expiry
   const queryUrl = `${EGO_ROOT_REST}/groups?query=`;
   const dacoQueryUrl = queryUrl + 'daco';
   const cloudQueryUrl = queryUrl + 'cloud';
@@ -118,10 +119,17 @@ const getDACOIds = async (userId, Authorization) => {
     headers: { Authorization },
   })
     .then(resp => resp.json())
-    .then(resp => resp.resultSet.filter(data => data.name === 'DACO'))
-    .then(group => (group ? group[0].id : null))
+    .then(({ resultSet = [] }) => resultSet.filter(data => data.name === 'DACO'))
+    .then(group => {
+      if (group.length === 0) {
+        throw new Error('DACO group id not found');
+      } else {
+        return group[0].id;
+      }
+    })
     .catch(err => {
       logger.error(err);
+      return null;
     });
   return response;
 };
@@ -133,5 +141,5 @@ export default {
   getScopes,
   getEgoAccessKeys,
   deleteKeys,
-  getDACOIds,
+  getDacoIds,
 };
