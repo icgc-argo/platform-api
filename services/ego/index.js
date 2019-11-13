@@ -125,10 +125,8 @@ const getMemoizedDacoIds = () =>
   memoize(async (userId, Authorization) => {
     const queryUrl = `${EGO_ROOT_REST}/groups?query=`;
     const dacoQueryUrl = queryUrl + 'daco';
-    const cloudQueryUrl = queryUrl + 'cloud';
 
     // query param will search descriptions too, so filter on name also
-    // TOOD: One query?
     const response = await fetch(dacoQueryUrl, {
       method: 'get',
       headers: { Authorization },
