@@ -54,9 +54,9 @@ const typeDefs = gql`
     users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
 
     """
-    retrive access key for ego
+    retrive user profile data
     """
-    accessKey: AccessKeyResp
+    profile: String
   }
 
   type Mutation {
@@ -100,6 +100,7 @@ const resolvers = {
       const egoUserList = get(response, 'users', []);
       return egoUserList.map(egoUser => convertEgoUser(egoUser));
     },
+    /*
     accessKey: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
       const decodedToken = TokenUtils.decodeToken(egoToken);
@@ -119,6 +120,15 @@ const resolvers = {
       } else {
         return errorResponse;
       }
+    },*/
+    profile: async (obj, args, context, info) => {
+      const { Authorization, egoToken } = context;
+      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const userId = decodedToken.sub;
+      // Retrieve DACO and CLOUD group ids
+      const x = await egoService.getDACOIds(userId, Authorization);
+      console.log('daco id', x);
+      return '';
     },
   },
   Mutation: {

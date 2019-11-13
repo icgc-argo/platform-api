@@ -105,6 +105,27 @@ const deleteKeys = async (keys, Authorization) => {
   return Promise.all(ps);
 };
 
+const getDACOIds = async (userId, Authorization) => {
+  // TODO: memo here
+  const queryUrl = `${EGO_ROOT_REST}/groups?query=`;
+  const dacoQueryUrl = queryUrl + 'daco';
+  const cloudQueryUrl = queryUrl + 'cloud';
+
+  // query param will search descriptions too, so filter on name also
+  // TOOD: One query?
+  const response = await fetch(dacoQueryUrl, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(resp => resp.json())
+    .then(resp => resp.resultSet.filter(data => data.name === 'DACO'))
+    .then(group => (group ? group[0].id : null))
+    .catch(err => {
+      logger.error(err);
+    });
+  return response;
+};
+
 export default {
   getUser,
   listUsers,
@@ -112,4 +133,5 @@ export default {
   getScopes,
   getEgoAccessKeys,
   deleteKeys,
+  getDACOIds,
 };
