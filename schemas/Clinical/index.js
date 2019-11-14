@@ -40,6 +40,7 @@ const typeDefs = gql`
     createdAt: DateTime
     records: [ClinicalRegistrationRecord]!
     errors: [ClinicalRegistrationError]!
+    fileErrors: [ClinicalRegistrationFileError]
 
     newDonors: ClinicalRegistrationStats!
     newSpecimens: ClinicalRegistrationStats!
@@ -47,13 +48,10 @@ const typeDefs = gql`
     alreadyRegistered: ClinicalRegistrationStats!
   }
 
-  type ClinicalRegistrationInvalid {
-    programShortName: String
-    error: String
+  type ClinicalRegistrationFileError {
+    message: String
     code: String
   }
-
-  union ClinicalRegistrationResp = ClinicalRegistrationData | ClinicalRegistrationInvalid
 
   type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
@@ -198,7 +196,7 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationResp! @cost(complexity: 30)
+    ): ClinicalRegistrationData! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
@@ -312,6 +310,7 @@ const convertRegistrationDataToGql = data => {
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
       get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
+    fileErrors: () => get(data, 'fileErrors', []),
     newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', [])),
     newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', [])),
     newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', [])),
@@ -428,19 +427,6 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 };
 
 const resolvers = {
-  ClinicalRegistrationResp: {
-    __resolveType(obj, context, info) {
-      if ('error' in obj) {
-        return 'ClinicalRegistrationInvalid';
-      }
-
-      if ('id' in obj) {
-        return 'ClinicalRegistrationData';
-      }
-
-      return null;
-    },
-  },
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -469,7 +455,7 @@ const resolvers = {
       const { shortName, registrationFile } = args;
 
       // Here we are confirming that the user has at least some ability to write Program Data
-      //  This is to reduce the opportunity for spamming the gateway with file uploads
+      // This is to reduce the opportunity for spamming the gateway with file uploads
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
@@ -489,17 +475,11 @@ const resolvers = {
         const data = { ...response.registration, errors: response.errors, shortName };
         return convertRegistrationDataToGql(data);
       } catch (err) {
-        // errors that don't go into error table
-        if (err.code) {
-          return {
-            error: err.msg,
-            code: ERROR_CODES[err.code],
-            shortName,
-          };
-        } else {
-          // catch all error
-          logger.error('uploadClinicalRegistration error', err);
-        }
+        // file error
+        return convertRegistrationDataToGql({
+          shortName,
+          fileErrors: [{ message: err.msg, code: err.code }],
+        });
       }
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
