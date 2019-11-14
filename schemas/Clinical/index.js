@@ -477,6 +477,7 @@ const resolvers = {
       } catch (err) {
         // file error
         return convertRegistrationDataToGql({
+          shortName,
           fileErrors: [{ message: err.msg, code: err.code }],
         });
       }
