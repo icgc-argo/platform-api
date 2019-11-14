@@ -36,10 +36,15 @@ const typeDefs = gql`
     lastLogin: String
   }
 
-  type AccessKeyResp {
+  type AccessKey {
     key: String
     error: String
     exp: Int
+  }
+
+  type Profile {
+    isDacoApproved: Boolean
+    apiKey: AccessKey
   }
 
   type Query {
@@ -54,16 +59,16 @@ const typeDefs = gql`
     users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
 
     """
-    retrive access key for ego
+    retrive user profile data
     """
-    accessKey: AccessKeyResp
+    self: Profile
   }
 
   type Mutation {
     """
     Generate Ego access key
     """
-    generateAccessKey: AccessKeyResp!
+    generateAccessKey: AccessKey!
   }
 `;
 
@@ -83,6 +88,11 @@ const convertEgoUser = user => ({
   scopes: get(user, 'scopes'),
 });
 
+const createProfile = ({ apiKey, isDacoApproved }) => ({
+  apiKey,
+  isDacoApproved,
+});
+
 // Provide resolver functions for your schema fields
 const resolvers = {
   Query: {
@@ -100,25 +110,30 @@ const resolvers = {
       const egoUserList = get(response, 'users', []);
       return egoUserList.map(egoUser => convertEgoUser(egoUser));
     },
-    accessKey: async (obj, args, context, info) => {
+    self: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
       const decodedToken = TokenUtils.decodeToken(egoToken);
       const userId = decodedToken.sub;
+      const userGroups = decodedToken.context.user.groups;
 
-      const errorMsg = 'An error has been found with your API key. Please generate a new API key';
+      // Retrieve DACO group ids
+      const dacoGroupId = await egoService.getDacoIds(userId, Authorization);
+      const isDacoApproved = userGroups.includes(dacoGroupId);
+
+      // API access keys
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
-
-      const errorResponse = { key: null, exp: null, error: errorMsg };
+      let apiKey = null;
 
       // a user should have only one key
       if (keys.length === 1) {
-        const key = keys[0];
-        return { key: key.accessToken, exp: key.exp, error: '' };
-      } else if (keys.length === 0) {
-        return null;
+        const { accessToken, exp } = keys[0];
+        apiKey = { key: accessToken, exp: exp, error: '' };
       } else {
-        return errorResponse;
+        const errorMsg = 'An error has been found with your API key. Please generate a new API key';
+        apiKey = { key: null, exp: null, error: errorMsg };
       }
+
+      return createProfile({ apiKey, isDacoApproved });
     },
   },
   Mutation: {
