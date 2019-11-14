@@ -310,6 +310,7 @@ const convertRegistrationDataToGql = data => {
       get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
     errors: () =>
       get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
+    fileErrors: () => get(data, 'fileErrors', []),
     newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', [])),
     newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', [])),
     newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', [])),
@@ -454,7 +455,7 @@ const resolvers = {
       const { shortName, registrationFile } = args;
 
       // Here we are confirming that the user has at least some ability to write Program Data
-      //  This is to reduce the opportunity for spamming the gateway with file uploads
+      // This is to reduce the opportunity for spamming the gateway with file uploads
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
@@ -474,17 +475,10 @@ const resolvers = {
         const data = { ...response.registration, errors: response.errors, shortName };
         return convertRegistrationDataToGql(data);
       } catch (err) {
-        // errors that don't go into error table
-        if (err.code) {
-          return {
-            error: err.msg,
-            code: ERROR_CODES[err.code],
-            shortName,
-          };
-        } else {
-          // catch all error
-          logger.error('uploadClinicalRegistration error', err);
-        }
+        // file error
+        return convertRegistrationDataToGql({
+          fileErrors: [{ message: err.msg, code: err.code }],
+        });
       }
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
