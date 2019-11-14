@@ -40,6 +40,7 @@ const typeDefs = gql`
     createdAt: DateTime
     records: [ClinicalRegistrationRecord]!
     errors: [ClinicalRegistrationError]!
+    fileErrors: [ClinicalRegistrationFileError]
 
     newDonors: ClinicalRegistrationStats!
     newSpecimens: ClinicalRegistrationStats!
@@ -47,13 +48,10 @@ const typeDefs = gql`
     alreadyRegistered: ClinicalRegistrationStats!
   }
 
-  type ClinicalRegistrationInvalid {
-    programShortName: String
-    error: String
+  type ClinicalRegistrationFileError {
+    message: String
     code: String
   }
-
-  union ClinicalRegistrationResp = ClinicalRegistrationData | ClinicalRegistrationInvalid
 
   type ClinicalRegistrationRecord @cost(complexity: 5) {
     row: Int!
@@ -198,7 +196,7 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationResp! @cost(complexity: 30)
+    ): ClinicalRegistrationData! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
@@ -428,19 +426,6 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 };
 
 const resolvers = {
-  ClinicalRegistrationResp: {
-    __resolveType(obj, context, info) {
-      if ('error' in obj) {
-        return 'ClinicalRegistrationInvalid';
-      }
-
-      if ('id' in obj) {
-        return 'ClinicalRegistrationData';
-      }
-
-      return null;
-    },
-  },
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
