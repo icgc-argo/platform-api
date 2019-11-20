@@ -38,31 +38,14 @@ const typeDefs = gql`
     creator: String
     fileName: String
     createdAt: DateTime
-    records: [ClinicalRegistrationRecord]!
+    records: [ClinicalRecord]!
     errors: [ClinicalRegistrationError]!
+    fileErrors: [ClinicalFileError]
 
     newDonors: ClinicalRegistrationStats!
     newSpecimens: ClinicalRegistrationStats!
     newSamples: ClinicalRegistrationStats!
     alreadyRegistered: ClinicalRegistrationStats!
-  }
-
-  type ClinicalRegistrationInvalid {
-    programShortName: String
-    error: String
-    code: String
-  }
-
-  union ClinicalRegistrationResp = ClinicalRegistrationData | ClinicalRegistrationInvalid
-
-  type ClinicalRegistrationRecord @cost(complexity: 5) {
-    row: Int!
-    fields: [ClinicalRegistrationRecordField!]
-  }
-
-  type ClinicalRegistrationRecordField {
-    name: String!
-    value: String!
   }
 
   type ClinicalRegistrationStats @cost(complexity: 10) {
@@ -77,17 +60,6 @@ const typeDefs = gql`
     rows: [Int]!
   }
 
-  type ClinicalRegistrationError @cost(complexity: 5) {
-    type: String!
-    message: String!
-    row: Int!
-    field: String!
-    value: String
-    sampleId: String
-    donorId: String!
-    specimenId: String
-  }
-
   type ClinicalSubmissionData @cost(complexity: 10) {
     id: ID
     programShortName: ID
@@ -96,21 +68,15 @@ const typeDefs = gql`
     updatedBy: String
     updatedAt: DateTime
     clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
-    fileErrors: [ClinicalError]
+    fileErrors: [ClinicalFileError]
     schemaErrors: [ClinicalSubmissionSchemaError]!
-  }
-
-  type ClinicalError @cost(complexity: 5) {
-    msg: String!
-    fileNames: [String]!
-    code: String!
   }
 
   type ClinicalEntityData {
     clinicalType: String!
     batchName: String
     creator: String
-    records: [ClinicalSubmissionRecord]!
+    records: [ClinicalRecord]!
     stats: ClinicalSubmissionStats
     dataErrors: [ClinicalSubmissionDataError]!
     schemaErrors: [ClinicalSubmissionSchemaError]!
@@ -118,12 +84,14 @@ const typeDefs = gql`
     createdAt: DateTime
   }
 
-  type ClinicalSubmissionRecord {
+  """
+  Generic schema of clinical tsv records
+  """
+  type ClinicalRecord {
     row: Int!
-    fields: [ClinicalSubmissionRecordField!]!
+    fields: [ClinicalRecordField!]!
   }
-
-  type ClinicalSubmissionRecordField {
+  type ClinicalRecordField {
     name: String!
     value: String
   }
@@ -138,6 +106,15 @@ const typeDefs = gql`
     errorsFound: [Int]!
   }
 
+  """
+  All schemas below describe clinical errors
+  """
+  type ClinicalFileError @cost(complexity: 5) {
+    message: String!
+    fileNames: [String]!
+    code: String!
+  }
+
   interface ClinicalEntityError {
     type: String!
     message: String!
@@ -145,6 +122,17 @@ const typeDefs = gql`
     field: String!
     value: String!
     donorId: String!
+  }
+
+  type ClinicalRegistrationError implements ClinicalEntityError @cost(complexity: 5) {
+    type: String!
+    message: String!
+    row: Int!
+    field: String!
+    value: String!
+    sampleId: String
+    donorId: String!
+    specimenId: String
   }
 
   type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
@@ -198,7 +186,7 @@ const typeDefs = gql`
     uploadClinicalRegistration(
       shortName: String!
       registrationFile: Upload!
-    ): ClinicalRegistrationResp! @cost(complexity: 30)
+    ): ClinicalRegistrationData! @cost(complexity: 30)
 
     """
     Remove the Clinical Registration data currently uploaded and not committed
@@ -261,16 +249,6 @@ const typeDefs = gql`
   }
 `;
 
-const convertRegistrationRecordToGql = (record, row) => {
-  const fields = [];
-
-  for (const field in record) {
-    fields.push({ name: field, value: record[field] });
-  }
-
-  return { row, fields };
-};
-
 const convertRegistrationStatsToGql = statsEntry => {
   const output = {
     count: 0,
@@ -302,21 +280,25 @@ const convertRegistrationErrorToGql = errorData => ({
 });
 
 const convertRegistrationDataToGql = data => {
+  const registration = get(data, 'registration', {});
+  const schemaAndValidationErrors = get(data, 'errors', []);
+  const fileErrors = get(data, 'batchErrors', []);
   return {
-    id: data._id || null,
+    id: registration._id || null,
     programShortName: data.shortName,
-    creator: data.creator || null,
-    fileName: data.batchName || null,
-    createdAt: data.createdAt || null,
+    creator: registration.creator || null,
+    fileName: registration.batchName || null,
+    createdAt: registration.createdAt || null,
     records: () =>
-      get(data, 'records', []).map((record, i) => convertRegistrationRecordToGql(record, i)),
-    errors: () =>
-      get(data, 'errors', []).map((errorData, i) => convertRegistrationErrorToGql(errorData, i)),
-    newDonors: () => convertRegistrationStatsToGql(get(data, 'stats.newDonorIds', [])),
-    newSpecimens: () => convertRegistrationStatsToGql(get(data, 'stats.newSpecimenIds', [])),
-    newSamples: () => convertRegistrationStatsToGql(get(data, 'stats.newSampleIds', [])),
+      get(registration, 'records', []).map((record, i) => convertClinicalRecordToGql(i, record)),
+    errors: schemaAndValidationErrors.map(convertRegistrationErrorToGql),
+    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql),
+    newDonors: () => convertRegistrationStatsToGql(get(registration, 'stats.newDonorIds', [])),
+    newSpecimens: () =>
+      convertRegistrationStatsToGql(get(registration, 'stats.newSpecimenIds', [])),
+    newSamples: () => convertRegistrationStatsToGql(get(registration, 'stats.newSampleIds', [])),
     alreadyRegistered: () =>
-      convertRegistrationStatsToGql(get(data, 'stats.alreadyRegistered', [])),
+      convertRegistrationStatsToGql(get(registration, 'stats.alreadyRegistered', [])),
   };
 };
 
@@ -346,7 +328,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
         ),
       );
     },
-    fileErrors: fileErrors.map(convertClinicalSubmissionFileErrorrToGql),
+    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql),
     schemaErrors: () =>
       flattenDeep(
         Object.entries(schemaErrors).map(([clinicalType, errors]) =>
@@ -356,9 +338,10 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   };
 };
 
-const convertClinicalSubmissionFileErrorrToGql = fileError => {
+const convertClinicalFileErrorrToGql = fileError => {
+  console.log(JSON.stringify(fileError));
   return {
-    msg: fileError.msg,
+    message: fileError.message,
     fileNames: fileError.batchNames,
     code: fileError.code,
   };
@@ -370,23 +353,21 @@ const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchema
     batchName: entity.batchName || null,
     creator: entity.creator || null,
     records: () =>
-      get(entity, 'records', []).map((record, index) =>
-        convertClinicalSubmissionRecordToGql(index, record),
-      ),
+      get(entity, 'records', []).map((record, index) => convertClinicalRecordToGql(index, record)),
     stats: entity.stats || null,
     schemaErrors: () =>
       entitySchemaErrors.map(error =>
         convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
       ),
     dataErrors: () =>
-      get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionErrorToGql(error)),
+      get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionDataErrorToGql(error)),
     dataUpdates: () =>
       get(entity, 'dataUpdates', []).map(update => convertClinicalSubmissionUpdateToGql(update)),
     createdAt: entity.createdAt ? new Date(entity.createdAt) : null,
   };
 };
 
-const convertClinicalSubmissionRecordToGql = (index, record) => {
+const convertClinicalRecordToGql = (index, record) => {
   const fields = [];
   for (var field in record) {
     const value =
@@ -399,7 +380,7 @@ const convertClinicalSubmissionRecordToGql = (index, record) => {
   };
 };
 
-const convertClinicalSubmissionErrorToGql = errorData => {
+const convertClinicalSubmissionDataErrorToGql = errorData => {
   return {
     type: errorData.type,
     message: errorData.message,
@@ -413,7 +394,7 @@ const convertClinicalSubmissionErrorToGql = errorData => {
 };
 
 const convertClinicalSubmissionSchemaErrorToGql = (clinicalType, errorData) => ({
-  ...convertClinicalSubmissionErrorToGql(errorData),
+  ...convertClinicalSubmissionDataErrorToGql(errorData),
   clinicalType,
 });
 
@@ -428,19 +409,6 @@ const convertClinicalSubmissionUpdateToGql = updateData => {
 };
 
 const resolvers = {
-  ClinicalRegistrationResp: {
-    __resolveType(obj, context, info) {
-      if ('error' in obj) {
-        return 'ClinicalRegistrationInvalid';
-      }
-
-      if ('id' in obj) {
-        return 'ClinicalRegistrationData';
-      }
-
-      return null;
-    },
-  },
   Query: {
     clinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -469,7 +437,7 @@ const resolvers = {
       const { shortName, registrationFile } = args;
 
       // Here we are confirming that the user has at least some ability to write Program Data
-      //  This is to reduce the opportunity for spamming the gateway with file uploads
+      // This is to reduce the opportunity for spamming the gateway with file uploads
       if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
@@ -477,30 +445,16 @@ const resolvers = {
       const { filename, createReadStream } = await registrationFile;
       const fileStream = createReadStream();
 
-      try {
-        const response = await clinicalService.uploadRegistrationData(
-          shortName,
-          filename,
-          fileStream,
-          Authorization,
-        );
+      // try {
+      const response = await clinicalService.uploadRegistrationData(
+        shortName,
+        filename,
+        fileStream,
+        Authorization,
+      );
 
-        // Success data is inside the key "registration", error data is in the root level
-        const data = { ...response.registration, errors: response.errors, shortName };
-        return convertRegistrationDataToGql(data);
-      } catch (err) {
-        // errors that don't go into error table
-        if (err.code) {
-          return {
-            error: err.msg,
-            code: ERROR_CODES[err.code],
-            shortName,
-          };
-        } else {
-          // catch all error
-          logger.error('uploadClinicalRegistration error', err);
-        }
-      }
+      const data = { ...response, shortName };
+      return convertRegistrationDataToGql(data);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
