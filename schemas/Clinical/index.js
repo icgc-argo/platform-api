@@ -279,13 +279,13 @@ const convertRegistrationErrorToGql = errorData => ({
   specimenId: errorData.info.specimenSubmitterId,
 });
 
-const convertRegistrationDataToGql = data => {
+const convertRegistrationDataToGql = (programShortName, data) => {
   const registration = get(data, 'registration', {});
   const schemaAndValidationErrors = get(data, 'errors', []);
   const fileErrors = get(data, 'batchErrors', []);
   return {
     id: registration._id || null,
-    programShortName: data.shortName,
+    programShortName,
     creator: registration.creator || null,
     fileName: registration.batchName || null,
     createdAt: registration.createdAt || null,
@@ -415,7 +415,7 @@ const resolvers = {
       const { shortName } = args;
 
       const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql({ ...response, shortName });
+      return convertRegistrationDataToGql(shortName, { registration: response });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -453,8 +453,7 @@ const resolvers = {
         Authorization,
       );
 
-      const data = { ...response, shortName };
-      return convertRegistrationDataToGql(data);
+      return convertRegistrationDataToGql(shortName, response);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
