@@ -415,7 +415,7 @@ const resolvers = {
       const { shortName } = args;
 
       const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql({ ...response, shortName });
+      return convertRegistrationDataToGql({ registration: response, shortName });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
