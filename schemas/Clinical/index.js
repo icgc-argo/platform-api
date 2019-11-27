@@ -340,7 +340,6 @@ const convertClinicalFileErrorrToGql = fileError => {
 };
 
 const convertClinicalSubmissionEntityToGql = (clinicalType, entity) => {
-  console.log(JSON.stringify(entity));
   return {
     clinicalType,
     batchName: entity.batchName || null,
