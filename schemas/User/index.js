@@ -126,7 +126,7 @@ const resolvers = {
 
       // a user should have only one key
       if (keys.length === 1) {
-        const { accessToken, exp } = keys[0];
+        const { apiKey: accessToken, exp } = keys[0];
         apiKey = { key: accessToken, exp: exp, error: '' };
       } else {
         const errorMsg = 'An error has been found with your API key. Please generate a new API key';
@@ -146,12 +146,15 @@ const resolvers = {
       // delete old keys
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
       const deletions = await egoService.deleteKeys(keys, Authorization);
-
       // get scopes for new token
       const { scopes } = await egoService.getScopes(userName, Authorization);
 
       const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
-      return { exp: response.exp, key: response.accessToken, error: '' };
+      return {
+        exp: response.exp,
+        key: response.apiKey,
+        error: '',
+      };
     },
   },
 };
