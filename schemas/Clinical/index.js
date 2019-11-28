@@ -69,7 +69,6 @@ const typeDefs = gql`
     updatedAt: DateTime
     clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
     fileErrors: [ClinicalFileError]
-    schemaErrors: [ClinicalSubmissionSchemaError]!
   }
 
   type ClinicalEntityData {
@@ -279,13 +278,13 @@ const convertRegistrationErrorToGql = errorData => ({
   specimenId: errorData.info.specimenSubmitterId,
 });
 
-const convertRegistrationDataToGql = data => {
+const convertRegistrationDataToGql = (programShortName, data) => {
   const registration = get(data, 'registration', {});
   const schemaAndValidationErrors = get(data, 'errors', []);
   const fileErrors = get(data, 'batchErrors', []);
   return {
     id: registration._id || null,
-    programShortName: data.shortName,
+    programShortName,
     creator: registration.creator || null,
     fileName: registration.batchName || null,
     createdAt: registration.createdAt || null,
@@ -304,9 +303,9 @@ const convertRegistrationDataToGql = data => {
 
 const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
-  const schemaErrors = get(data, 'schemaErrors', {});
   const fileErrors = get(data, 'batchErrors', []);
   const clinicalEntities = get(submission, 'clinicalEntities', {});
+  
   return {
     id: submission._id || null,
     programShortName,
@@ -323,18 +322,11 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
       return filledClinicalEntities.map(clinicalEntity =>
         convertClinicalSubmissionEntityToGql(
           clinicalEntity.clinicalType,
-          clinicalEntity,
-          schemaErrors[clinicalEntity.clinicalType],
+          clinicalEntity
         ),
       );
     },
-    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql),
-    schemaErrors: () =>
-      flattenDeep(
-        Object.entries(schemaErrors).map(([clinicalType, errors]) =>
-          errors.map(error => convertClinicalSubmissionSchemaErrorToGql(clinicalType, error)),
-        ),
-      ),
+    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql)
   };
 };
 
@@ -347,7 +339,7 @@ const convertClinicalFileErrorrToGql = fileError => {
   };
 };
 
-const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchemaErrors = []) => {
+const convertClinicalSubmissionEntityToGql = (clinicalType, entity) => {
   return {
     clinicalType,
     batchName: entity.batchName || null,
@@ -355,10 +347,12 @@ const convertClinicalSubmissionEntityToGql = (clinicalType, entity, entitySchema
     records: () =>
       get(entity, 'records', []).map((record, index) => convertClinicalRecordToGql(index, record)),
     stats: entity.stats || null,
-    schemaErrors: () =>
-      entitySchemaErrors.map(error =>
+    schemaErrors: () => {
+      const entityErrors = entity.schemaErrors || [];
+      return entityErrors.map(error =>
         convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
-      ),
+      )
+    },
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionDataErrorToGql(error)),
     dataUpdates: () =>
@@ -415,7 +409,7 @@ const resolvers = {
       const { shortName } = args;
 
       const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql({ ...response, shortName });
+      return convertRegistrationDataToGql(shortName, { registration: response });
     },
     clinicalSubmissions: async (obj, args, context, info) => {
       const { Authorization } = context;
@@ -453,8 +447,7 @@ const resolvers = {
         Authorization,
       );
 
-      const data = { ...response, shortName };
-      return convertRegistrationDataToGql(data);
+      return convertRegistrationDataToGql(shortName, response);
     },
     clearClinicalRegistration: async (obj, args, context, info) => {
       const { Authorization } = context;
