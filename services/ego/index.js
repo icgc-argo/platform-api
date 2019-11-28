@@ -79,7 +79,7 @@ const getEgoAccessKeys = async (userId, Authorization) => {
  * @param {string} userId
  * @param {Array<string>} scopes
  * @param {string} Authorization
- * @returns {Array<EgoAccessKeyResponse>}
+ * @returns {Promise<EgoAccessKeyResponse>}
  */
 const generateEgoAccessKey = async (userId, scopes, Authorization) => {
   const url = urlJoin(
