@@ -10,8 +10,10 @@ import fetch, { Response } from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
 import memoize from 'lodash/memoize';
+import urlJoin from 'url-join';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
+const EGO_API_KEY_ENDPOINT = urlJoin(EGO_ROOT_REST, '/o/api_key');
 const packageDefinition = loader.loadSync(PROTO_PATH, {
   keepCase: true,
   longs: String,
@@ -56,8 +58,14 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
+/**
+ * @typedef {{ apiKey: string; exp: number; description: string; scope: string[] }} EgoAccessKeyResponse
+ * @param {string} userId
+ * @param {string} Authorization
+ * @returns {Promise<Array<EgoAccessKeyResponse>>}
+ */
 const getEgoAccessKeys = async (userId, Authorization) => {
-  const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}`;
+  const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`);
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
@@ -67,10 +75,17 @@ const getEgoAccessKeys = async (userId, Authorization) => {
   return response;
 };
 
+/**
+ * @param {string} userId
+ * @param {Array<string>} scopes
+ * @param {string} Authorization
+ * @returns {Array<EgoAccessKeyResponse>}
+ */
 const generateEgoAccessKey = async (userId, scopes, Authorization) => {
-  const url = `${EGO_ROOT_REST}/o/token?user_id=${userId}&scopes=${encodeURIComponent(
-    scopes.join(),
-  )}`;
+  const url = urlJoin(
+    EGO_API_KEY_ENDPOINT,
+    `?user_id=${userId}&scopes=${encodeURIComponent(scopes.join())}`,
+  );
   const response = await fetch(url, {
     method: 'POST',
     headers: { Authorization },
@@ -80,6 +95,12 @@ const generateEgoAccessKey = async (userId, scopes, Authorization) => {
   return response;
 };
 
+/**
+ *
+ * @param {string} userName
+ * @param {string} Authorization
+ * @returns {Promise<{scopes: string[]}>}
+ */
 const getScopes = async (userName, Authorization) => {
   const url = `${EGO_ROOT_REST}/o/scopes?userName=${userName}`;
   const response = await fetch(url, {
@@ -91,10 +112,15 @@ const getScopes = async (userName, Authorization) => {
   return response;
 };
 
+/**
+ * @param {Array<EgoAccessKeyResponse>} keys
+ * @param {string} Authorization
+ * @returns {Promise<{key: string; success: boolean}[]>}
+ */
 const deleteKeys = async (keys, Authorization) => {
-  const accessKeys = keys.map(k => k.accessToken);
+  const accessKeys = keys.map(k => k.apiKey);
   const ps = accessKeys.map(async key => {
-    const url = `${EGO_ROOT_REST}/o/token?token=${encodeURIComponent(key)}`;
+    const url = urlJoin(EGO_API_KEY_ENDPOINT, `?token=${encodeURIComponent(key)}`);
     const promise = fetch(url, {
       method: 'delete',
       headers: { Authorization },
