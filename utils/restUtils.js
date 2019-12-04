@@ -10,10 +10,11 @@ export const restErrorResponseHandler = async response => {
     try {
       responseBody = await response.json();
     } catch {
-      responseBody = { message: '' };
+      responseBody = response;
     }
-    logger.debug(`Server 5xx response: ${JSON.stringify(responseBody)}`);
-    throw new ApolloError(responseBody.message || '', response.status);
+    logger.debug(`Server 5xx response status: ${response.status}`);
+    logger.debug(`Server 5xx response body: ${JSON.stringify(responseBody)}`);
+    throw new ApolloError(); // will return Apollo code INTERNAL_SERVER_ERROR
   }
 
   switch (response.status) {
