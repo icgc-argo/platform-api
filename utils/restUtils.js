@@ -4,6 +4,18 @@ import logger from './logger';
 convert the REST status codes to GQL errors, or return the response if passing
 */
 export const restErrorResponseHandler = async response => {
+  // Generic handle 5xx errors
+  if (response.status >= 500 && response.status <= 599) {
+    let responseBody;
+    try {
+      responseBody = await response.json();
+    } catch {
+      responseBody = { message: '' };
+    }
+    logger.debug(`Server 5xx response: ${JSON.stringify(responseBody)}`);
+    throw new ApolloError(responseBody.message || '', response.status);
+  }
+
   switch (response.status) {
     case 200:
     case 201:
@@ -22,10 +34,6 @@ export const restErrorResponseHandler = async response => {
       }
       // throw error with message and properties in response (if any)
       throw new UserInputError(notFoundData.message, notFoundData);
-    case 500:
-    case 503:
-      logger.debug(`Server 5xx response: ${JSON.stringify(await response.json())}`);
-      throw new ApolloError();
     default:
       return response;
   }
