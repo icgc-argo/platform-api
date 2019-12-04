@@ -1,4 +1,5 @@
-import { AuthenticationError, UserInputError, ServerError } from 'apollo-server-express';
+import { AuthenticationError, UserInputError, ApolloError } from 'apollo-server-express';
+import logger from './logger';
 /*
 convert the REST status codes to GQL errors, or return the response if passing
 */
@@ -22,7 +23,9 @@ export const restErrorResponseHandler = async response => {
       // throw error with message and properties in response (if any)
       throw new UserInputError(notFoundData.message, notFoundData);
     case 500:
-      throw new ServerError();
+    case 503:
+      logger.debug(`Server 5xx response: ${JSON.stringify(await response.json())}`);
+      throw new ApolloError();
     default:
       return response;
   }

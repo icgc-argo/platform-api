@@ -1,8 +1,6 @@
 import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
-import omit from 'lodash/omit';
-import flattenDeep from 'lodash/flattenDeep';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -12,8 +10,6 @@ const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
 
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
-import customScalars from '../customScalars';
-import { ERROR_CODES } from '../../constants/clinical';
 import logger from '../../utils/logger';
 
 const typeDefs = gql`
@@ -305,7 +301,7 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
   const submission = get(data, 'submission', {});
   const fileErrors = get(data, 'batchErrors', []);
   const clinicalEntities = get(submission, 'clinicalEntities', {});
-  
+
   return {
     id: submission._id || null,
     programShortName,
@@ -320,13 +316,10 @@ const convertClinicalSubmissionDataToGql = (programShortName, data) => {
         ...(clinicalEntities[clinicalType] || {}),
       }));
       return filledClinicalEntities.map(clinicalEntity =>
-        convertClinicalSubmissionEntityToGql(
-          clinicalEntity.clinicalType,
-          clinicalEntity
-        ),
+        convertClinicalSubmissionEntityToGql(clinicalEntity.clinicalType, clinicalEntity),
       );
     },
-    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql)
+    fileErrors: fileErrors.map(convertClinicalFileErrorrToGql),
   };
 };
 
@@ -351,7 +344,7 @@ const convertClinicalSubmissionEntityToGql = (clinicalType, entity) => {
       const entityErrors = entity.schemaErrors || [];
       return entityErrors.map(error =>
         convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
-      )
+      );
     },
     dataErrors: () =>
       get(entity, 'dataErrors', []).map(error => convertClinicalSubmissionDataErrorToGql(error)),
