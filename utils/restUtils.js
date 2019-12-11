@@ -1,8 +1,16 @@
-import { AuthenticationError, UserInputError, ServerError } from 'apollo-server-express';
+import { AuthenticationError, UserInputError, ApolloError } from 'apollo-server-express';
+import logger from './logger';
 /*
 convert the REST status codes to GQL errors, or return the response if passing
 */
 export const restErrorResponseHandler = async response => {
+  // Generic handle 5xx errors
+  if (response.status >= 500 && response.status <= 599) {
+    const responseBody = await response.text();
+    logger.debug(`Server 5xx response: ${responseBody}`);
+    throw new ApolloError(); // will return Apollo code INTERNAL_SERVER_ERROR
+  }
+
   switch (response.status) {
     case 200:
     case 201:
@@ -21,8 +29,6 @@ export const restErrorResponseHandler = async response => {
       }
       // throw error with message and properties in response (if any)
       throw new UserInputError(notFoundData.message, notFoundData);
-    case 500:
-      throw new ServerError();
     default:
       return response;
   }
