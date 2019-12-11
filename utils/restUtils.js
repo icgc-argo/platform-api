@@ -6,14 +6,8 @@ convert the REST status codes to GQL errors, or return the response if passing
 export const restErrorResponseHandler = async response => {
   // Generic handle 5xx errors
   if (response.status >= 500 && response.status <= 599) {
-    let responseBody;
-    try {
-      responseBody = await response.json();
-    } catch {
-      responseBody = response;
-    }
-    logger.debug(`Server 5xx response status: ${response.status}`);
-    logger.debug(`Server 5xx response body: ${JSON.stringify(responseBody)}`);
+    const responseBody = await response.text();
+    logger.debug(`Server 5xx response: ${responseBody}`);
     throw new ApolloError(); // will return Apollo code INTERNAL_SERVER_ERROR
   }
 
