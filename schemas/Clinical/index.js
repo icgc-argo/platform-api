@@ -22,6 +22,7 @@ const typeDefs = gql`
     VALID
     INVALID
     PENDING_APPROVAL
+    INVALID_BY_MIGRATION
   }
 
   """
@@ -172,6 +173,11 @@ const typeDefs = gql`
     Retrieve current stored Clinical Submission Types list
     """
     clinicalSubmissionTypesList: [String!]
+
+    """
+    Retrieve current stored Clinical Submission Data Dictionary Schema version
+    """
+    clinicalSubmissionSchemaVersion: String!
   }
 
   type Mutation {
@@ -416,6 +422,9 @@ const resolvers = {
     },
     clinicalSubmissionTypesList: async (obj, args, context, info) => {
       return await clinicalService.getClinicalSubmissionTypesList();
+    },
+    clinicalSubmissionSchemaVersion: async (obj, args, context, info) => {
+      return await clinicalService.getClinicalSubmissionSchemaVersion();
     },
   },
   Mutation: {
