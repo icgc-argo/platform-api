@@ -73,6 +73,20 @@ const getClinicalSubmissionTypesList = async () => {
   return response;
 };
 
+/**
+ * @returns {Promise<string>}
+ */
+const getClinicalSubmissionSchemaVersion = async () => {
+  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema`;
+  const response = await fetch(url, {
+    method: 'get',
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  console.log(response.version);
+  return response.version;
+};
+
 const getClinicalSubmissionData = async (programShortName, Authorization) => {
   const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/`;
   const response = await fetch(url, {
@@ -179,6 +193,7 @@ export default {
   clearRegistrationData,
   commitRegistrationData,
   getClinicalSubmissionTypesList,
+  getClinicalSubmissionSchemaVersion,
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
   clearClinicalSubmissionData,
