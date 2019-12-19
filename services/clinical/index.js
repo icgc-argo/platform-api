@@ -73,6 +73,9 @@ const getClinicalSubmissionTypesList = async () => {
   return response;
 };
 
+/**
+ * @returns {Promise<string>}
+ */
 const getClinicalSubmissionSchemaVersion = async () => {
   const url = `${CLINICAL_SERVICE_ROOT}/submission/schema`;
   const response = await fetch(url, {
