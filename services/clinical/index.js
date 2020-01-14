@@ -93,7 +93,7 @@ const getClinicalSubmissionSchemaVersion = async () => {
 /**
  * @returns {Promise<boolean>}
  */
-const getClinicalSubmissionSystemState = async () => {
+const getClinicalSubmissionSystemDisabled = async () => {
   const url = `${CLINICAL_SERVICE_ROOT}/submission/configs/submission-disabled`;
   const response = await fetch(url, {
     method: 'get',
@@ -210,7 +210,7 @@ export default {
   commitRegistrationData,
   getClinicalSubmissionTypesList,
   getClinicalSubmissionSchemaVersion,
-  getClinicalSubmissionSystemState,
+  getClinicalSubmissionSystemDisabled,
   getClinicalSubmissionData,
   uploadClinicalSubmissionData,
   clearClinicalSubmissionData,

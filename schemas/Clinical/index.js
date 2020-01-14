@@ -180,9 +180,9 @@ const typeDefs = gql`
     clinicalSubmissionSchemaVersion: String!
 
     """
-    Retrieve current Clinical Submission System disabled state
+    Retrieve current Clinical Submission disabled state for both sample_registration and clinical entity files
     """
-    clinicalSubmissionSystemState: Boolean!
+    clinicalSubmissionSystemDisabled: Boolean!
   }
 
   type Mutation {
@@ -431,7 +431,7 @@ const resolvers = {
     clinicalSubmissionSchemaVersion: async (obj, args, context, info) => {
       return await clinicalService.getClinicalSubmissionSchemaVersion();
     },
-    clinicalSubmissionSystemState: async (obj, args, context, info) => {
+    clinicalSubmissionSystemDisabled: async (obj, args, context, info) => {
       return await clinicalService.getClinicalSubmissionSystemState();
     },
   },
