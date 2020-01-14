@@ -432,7 +432,7 @@ const resolvers = {
       return await clinicalService.getClinicalSubmissionSchemaVersion();
     },
     clinicalSubmissionSystemDisabled: async (obj, args, context, info) => {
-      return await clinicalService.getClinicalSubmissionSystemState();
+      return await clinicalService.getClinicalSubmissionSystemDisabled();
     },
   },
   Mutation: {
