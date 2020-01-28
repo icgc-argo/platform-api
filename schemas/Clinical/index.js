@@ -387,7 +387,7 @@ const convertClinicalSubmissionDataErrorToGql = errorData => {
     donorId: get(errorData, 'info.donorSubmitterId', ''),
 
     // errorData.info.value may come back as null if not provided in uploaded file
-    value: get(errorData, 'info.value', ''),
+    value: get(errorData, 'info.value', '') || '',
   };
 };
 
