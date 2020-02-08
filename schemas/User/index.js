@@ -145,7 +145,9 @@ const resolvers = {
 
       // delete old keys
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
-      const deletions = await egoService.deleteKeys(keys, Authorization);
+      if (keys) {
+        await egoService.deleteKeys(keys, Authorization);
+      }
       // get scopes for new token
       const { scopes } = await egoService.getScopes(userName, Authorization);
 

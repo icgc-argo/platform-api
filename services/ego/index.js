@@ -115,7 +115,7 @@ const getScopes = async (userName, Authorization) => {
 /**
  * @param {Array<EgoAccessKeyResponse>} keys
  * @param {string} Authorization
- * @returns {Promise<{key: string; success: boolean}[]>}
+ * @returns {Promise<{key: string; success: boolean}[]> | null}
  */
 const deleteKeys = async (keys, Authorization) => {
   const accessKeys = keys.map(k => k.apiKey);
