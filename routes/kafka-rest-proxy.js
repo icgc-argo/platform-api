@@ -13,8 +13,7 @@ const apiRoot = KAFKA_REST_PROXY_ROOT;
 router.use((req, res, next) => {
   const jwt = (req.headers.authorization || '').split(' ')[1] || ''
   if (jwt === '') {
-    return res.status(401).send(
-      {
+    return res.status(401).send({
         message: "this endpoint needs a valid jwt token"
     });
   }
