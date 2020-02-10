@@ -1,15 +1,20 @@
 import { KAFKA_REST_PROXY_ROOT, EGO_PUBLIC_KEY } from '../config';
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 import urlJoin from 'url-join';
-import request from 'request';
+import logger from '../utils/logger';
+import fetch from 'node-fetch';
+import { json } from 'body-parser';
 
 const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY); 
 var express = require('express');
 var router = express.Router();
 const apiRoot = KAFKA_REST_PROXY_ROOT;
 
+// fetch needs to use the json body parser
+router.use(json())
+
 // middleware to secure the kafka proxy endpoint
-// it expects a valid jwt 
+// it expects a valid jwt
 router.use((req, res, next) => {
   const jwt = (req.headers.authorization || '').split(' ')[1] || ''
   if (jwt === '') {
@@ -17,25 +22,37 @@ router.use((req, res, next) => {
         message: "this endpoint needs a valid jwt token"
     });
   }
-  const decodedToken = TokenUtils.decodeToken(jwt);
-  if (decodedToken.exp > new Date().getUTCMilliseconds()){
-    return next();
+  let decodedToken = ''
+  try {
+    decodedToken = TokenUtils.decodeToken(jwt);
+  } catch (err) {
+    logger.error('failed to decode token')
   }
-
-  return res.status(401).send({
+  
+  if (!decodedToken || decodedToken.exp < new Date().getUTCMilliseconds()) {
+    return res.status(401).send({
       message: "expired token"
-  });
+    });
+  }
+  return next();
 });
 
-router.post('/:topic', (req, res) => {
+router.post('/:topic', async (req, res) => {
   const url = urlJoin(apiRoot, "topics" , req.params.topic)
-  return req.pipe(
-    request.post(url, { headers: {
-        'Content-Type': 'application/vnd.kafka.json.v2+json',
-        'Accept': 'application/vnd.kafka.v2+json'
-      }, json: true, body: req.body 
-    }), { end: true })
-    .pipe(res);
+  console.log(req.body);
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/vnd.kafka.json.v2+json',
+      'Accept': 'application/vnd.kafka.v2+json'
+    },
+    body: JSON.stringify(req.body)
+  }).then(response => {
+    res.contentType('application/vnd.kafka.v2+json')
+    return response.body.pipe(res);
+  }).catch(e => {
+    return res.status(500).send(e);
+  });
 });
 
 module.exports = router;

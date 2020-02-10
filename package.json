@@ -39,8 +39,7 @@
     "swagger-ui-express": "^4.0.7",
     "url-join": "^4.0.0",
     "winston": "^3.2.1",
-    "yamljs": "^0.3.0",
-    "request": "2.88.0"
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.10",

@@ -3,6 +3,44 @@ info:
   title: Platform-API
   version: 1.0.0
 paths:
+  '/kafka/{topic}':
+    parameters:
+      - name: topic
+        description: the name of the target topic in kafka 
+        in: path
+        required: true
+        schema: 
+          type: string
+    post:
+      security:
+      - bearerAuth: []
+      summary: proxies json messages to kafka rest proxy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                records:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '200':
+          description: 'the successful response from kafka rest proxy'
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: invalid/missing jwt token
+          content:
+            application/json:
+              schema:
+                example: '{"message": "invalid jwt"}'
+                type: string
+        '500':
+          description: Internal server error
   '/clinical/template/all':
     get:
       summary: Download a zip file with templates for all schema
@@ -48,3 +86,9 @@ paths:
                 type: string
         '500':
           description: Internal server error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  
