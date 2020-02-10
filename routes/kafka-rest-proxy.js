@@ -39,18 +39,26 @@ router.use((req, res, next) => {
 
 router.post('/:topic', async (req, res) => {
   const url = urlJoin(apiRoot, "topics" , req.params.topic)
-  console.log(req.body);
+  const msg = req.body
+  logger.debug(`received message in kafka proxy ${JSON.stringify(msg)}`);
+  const kafkaRestProxyBody = JSON.stringify({
+    records: [{
+      value: msg
+    }]
+  });
   return fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/vnd.kafka.json.v2+json',
       'Accept': 'application/vnd.kafka.v2+json'
     },
-    body: JSON.stringify(req.body)
+    body: kafkaRestProxyBody
   }).then(response => {
     res.contentType('application/vnd.kafka.v2+json')
+    res.status(response.status)
     return response.body.pipe(res);
   }).catch(e => {
+    logger.error('failed to send message to kafka proxy' + e)
     return res.status(500).send(e);
   });
 });
