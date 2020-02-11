@@ -15,6 +15,7 @@ import clinicalSchema from './schemas/Clinical';
 import config from './package.json';
 import logger from './utils/logger';
 const clinical = require('./routes/clinical');
+const kafkaProxyRoute = require('./routes/kafka-rest-proxy');
 
 const { version } = config;
 
@@ -70,7 +71,8 @@ const init = async () => {
   app.get('/status', (req, res) => {
     res.json(version);
   });
-
+  
+  app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinical);
 
   app.use(
