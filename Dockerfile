@@ -11,4 +11,6 @@ RUN npm ci
 
 EXPOSE 9000
 
+# we're using numeric user to fit kubernetes. this is the same node user
+USER 1000
 CMD ["node", "index.js"]
