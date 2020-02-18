@@ -10,5 +10,5 @@ COPY . .
 RUN npm ci
 
 EXPOSE 9000
-
+USER 1000
 CMD ["node", "index.js"]
