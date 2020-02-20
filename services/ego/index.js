@@ -59,19 +59,20 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
- * @typedef {{ apiKey: string; exp: number; description: string; scope: string[] }} EgoAccessKeyResponse
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[] }} EgoAccessKeyResponse
  * @param {string} userId
  * @param {string} Authorization
  * @returns {Promise<Array<EgoAccessKeyResponse>>}
  */
 const getEgoAccessKeys = async (userId, Authorization) => {
-  const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`);
+  const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}&limit=10000`);
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then(response => response.json())
+    .then(data => data.resultSet.filter(({ isRevoked }) => !isRevoked));
   return response;
 };
 
@@ -113,27 +114,27 @@ const getScopes = async (userName, Authorization) => {
 };
 
 /**
- * @param {Array<EgoAccessKeyResponse>} keys
+ * @param { EgoAccessKeyResponse[] } keys
  * @param {string} Authorization
  * @returns {Promise<{key: string; success: boolean}[]> | null}
  */
 const deleteKeys = async (keys, Authorization) => {
-  const accessKeys = keys.map(k => k.apiKey);
-  const ps = accessKeys.map(async key => {
-    const url = urlJoin(EGO_API_KEY_ENDPOINT, `?token=${encodeURIComponent(key)}`);
-    const promise = fetch(url, {
-      method: 'delete',
-      headers: { Authorization },
-    })
-      .then(resp => ({ key, success: true }))
-      .catch(err => {
-        logger.error(err);
-        return { key, success: false };
-      });
-    return promise;
-  });
-
-  return Promise.all(ps);
+  const accessKeys = keys.map(k => k.name);
+  const ps = await Promise.all(
+    accessKeys.map(async key => {
+      const url = urlJoin(EGO_API_KEY_ENDPOINT, `?apiKey=${encodeURIComponent(key)}`);
+      return fetch(url, {
+        method: 'delete',
+        headers: { Authorization },
+      })
+        .then(resp => ({ key, success: true }))
+        .catch(err => {
+          logger.error(err);
+          return { key, success: false };
+        });
+    }),
+  );
+  return ps;
 };
 
 // check for new group id over 24hours otherwise use memo func
@@ -173,6 +174,11 @@ const getMemoizedDacoIds = () =>
     return response;
   });
 
+/**
+ * @param {string} str
+ */
+const toTimestamp = str => Math.round(new Date(str).getTime() / 1000);
+
 export default {
   getUser,
   listUsers,
@@ -181,4 +187,5 @@ export default {
   getEgoAccessKeys,
   deleteKeys,
   getDacoIds,
+  toTimestamp,
 };
