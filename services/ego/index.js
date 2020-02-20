@@ -59,21 +59,46 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
- * @typedef {{ name: string; expiryDate: string; description: string; scope: string[] }} EgoAccessKeyResponse
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyResponse
+ * @param {string} userId
+ * @param {string} Authorization
+ * @returns {AsyncGenerator<Array<EgoAccessKeyResponse>>}
+ */
+const egoAccessKeyStream = async function*(userId, Authorization) {
+  const chunkSize = 100;
+  let currentPage = 0;
+  while (true) {
+    const url = urlJoin(
+      EGO_API_KEY_ENDPOINT,
+      `?user_id=${userId}&limit=${chunkSize}&offset=${currentPage * chunkSize}`,
+    );
+    const data = await fetch(url, {
+      method: 'get',
+      headers: { Authorization },
+    })
+      .then(restErrorResponseHandler)
+      .then(response => response.json());
+    const keys = data.resultSet;
+    yield keys;
+    if (keys.length < chunkSize) {
+      break;
+    } else {
+      currentPage++;
+    }
+  }
+};
+
+/**
  * @param {string} userId
  * @param {string} Authorization
  * @returns {Promise<Array<EgoAccessKeyResponse>>}
  */
 const getEgoAccessKeys = async (userId, Authorization) => {
-  const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}&limit=10000`);
-  const response = await fetch(url, {
-    method: 'get',
-    headers: { Authorization },
-  })
-    .then(restErrorResponseHandler)
-    .then(response => response.json())
-    .then(data => data.resultSet.filter(({ isRevoked }) => !isRevoked));
-  return response;
+  let unrevokedKeys = [];
+  for await (const chunk of egoAccessKeyStream(userId, Authorization)) {
+    unrevokedKeys = unrevokedKeys.concat(chunk.filter(({ isRevoked }) => !isRevoked));
+  }
+  return unrevokedKeys;
 };
 
 /**
