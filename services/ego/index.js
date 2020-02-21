@@ -68,8 +68,6 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 const getEgoAccessKeys = async (userId, Authorization) => {
   const RESULT_SET_KEY = 'resultSet';
   const COUNT_KEY = 'count';
-
-  const pageSize = 10;
   const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
     headers: { Authorization },
   })
@@ -77,27 +75,22 @@ const getEgoAccessKeys = async (userId, Authorization) => {
     .then(response => response.json());
   const totalCount = firstResponse[COUNT_KEY];
   const firstResult = firstResponse[RESULT_SET_KEY];
-  const remainingPageIndices = chunk(range(firstResult.length, totalCount), pageSize).map(
-    ([pageIndex]) => pageIndex,
-  );
-  const remainingResponses = await Promise.all(
-    remainingPageIndices.map(async pageIndex => {
-      const data = await fetch(
-        urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}&limit=${pageSize}&offset=${pageIndex}`),
-        {
-          headers: { Authorization },
-        },
-      )
-        .then(restErrorResponseHandler)
-        .then(response => response.json());
-      return data;
-    }),
-  );
-  const remainingResults = remainingResponses
-    .map(x => x[RESULT_SET_KEY]) // x[RESULT_SET_KEY] is an array, hence reducing to flatmap
-    .reduce((acc, keyObjs) => [...acc, ...keyObjs], []);
+  const remainingPageIndex = firstResult.length;
+  const remainingResponse = await fetch(
+    urlJoin(
+      EGO_API_KEY_ENDPOINT,
+      `?user_id=${userId}&limit=${totalCount - remainingPageIndex}&offset=${remainingPageIndex}`,
+    ),
+    {
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
 
-  return [firstResult, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
+  const remainingResults = remainingResponse[RESULT_SET_KEY];
+
+  return [...firstResult, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
 };
 
 /**
