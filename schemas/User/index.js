@@ -37,6 +37,10 @@ const typeDefs = gql`
   type AccessKey {
     key: String
     error: String
+
+    """
+    Time till expiry in milliseconds
+    """
     exp: Int
   }
 
@@ -123,8 +127,9 @@ const resolvers = {
       let apiKey = null;
 
       if (keys.length === 1) {
-        const { name: accessToken, expiryDate } = keys[0];
-        apiKey = { key: accessToken, exp: egoService.toTimestamp(expiryDate), error: '' };
+        const egoApiKeyObj = keys[0];
+        const { name: accessToken } = egoApiKeyObj;
+        apiKey = { key: accessToken, exp: egoService.getTimeToExpiry(egoApiKeyObj), error: '' };
       } else {
         const errorMsg = 'An error has been found with your API key. Please generate a new API key';
         apiKey = { key: null, exp: null, error: errorMsg };
@@ -148,9 +153,9 @@ const resolvers = {
       // get scopes for new token
       const { scopes } = await egoService.getScopes(userName, Authorization);
 
-      const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
+      const egoApiKeyObj = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
       return {
-        exp: egoService.toTimestamp(response.expiryDate),
+        exp: egoService.getTimeToExpiry(egoApiKeyObj),
         key: response.name,
         error: '',
       };
