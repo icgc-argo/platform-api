@@ -59,10 +59,10 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
- * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyResponse
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyObj
  * @param {string} userId
  * @param {string} Authorization
- * @returns {Promise<Array<EgoAccessKeyResponse>>}
+ * @returns {Promise<Array<EgoAccessKeyObj>>}
  */
 const getEgoAccessKeys = async (userId, Authorization) => {
   const RESULT_SET_KEY = 'resultSet';
@@ -96,7 +96,7 @@ const getEgoAccessKeys = async (userId, Authorization) => {
  * @param {string} userId
  * @param {Array<string>} scopes
  * @param {string} Authorization
- * @returns {Promise<EgoAccessKeyResponse>}
+ * @returns {Promise<EgoAccessKeyObj>}
  */
 const generateEgoAccessKey = async (userId, scopes, Authorization) => {
   const url = urlJoin(
@@ -130,7 +130,7 @@ const getScopes = async (userName, Authorization) => {
 };
 
 /**
- * @param { EgoAccessKeyResponse[] } keys
+ * @param { EgoAccessKeyObj[] } keys
  * @param {string} Authorization
  * @returns {Promise<{key: string; success: boolean}[]> | null}
  */
