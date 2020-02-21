@@ -199,8 +199,8 @@ const toTimestamp = str => Math.round(new Date(str).getTime() / 1000);
  * @param {EgoAccessKeyObj} accessKeyObj
  * @returns {number}
  */
-const getExpiry = accessKeyObj => {
-  return toTimestamp(accessKeyObj.expiryDate) - toTimestamp(accessKeyObj.issueDate);
+const getTimeToExpiry = accessKeyObj => {
+  return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
 };
 
 export default {
@@ -211,5 +211,5 @@ export default {
   getEgoAccessKeys,
   deleteKeys,
   getDacoIds,
-  getExpiry,
+  getTimeToExpiry,
 };
