@@ -6,12 +6,10 @@ import grpc from 'grpc';
 import * as loader from '@grpc/proto-loader';
 import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
-import fetch, { Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
 import memoize from 'lodash/memoize';
-import chunk from 'lodash/chunk';
-import range from 'lodash/range';
 import urlJoin from 'url-join';
 
 const PROTO_PATH = __dirname + '/Ego.proto';
