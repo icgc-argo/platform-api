@@ -6,7 +6,7 @@ import grpc from 'grpc';
 import * as loader from '@grpc/proto-loader';
 import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
-import fetch, { Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
 import memoize from 'lodash/memoize';
@@ -59,27 +59,44 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
- * @typedef {{ apiKey: string; exp: number; description: string; scope: string[] }} EgoAccessKeyResponse
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyObj
  * @param {string} userId
  * @param {string} Authorization
- * @returns {Promise<Array<EgoAccessKeyResponse>>}
+ * @returns {Promise<Array<EgoAccessKeyObj>>}
  */
 const getEgoAccessKeys = async (userId, Authorization) => {
-  const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`);
-  const response = await fetch(url, {
-    method: 'get',
+  const RESULT_SET_KEY = 'resultSet';
+  const COUNT_KEY = 'count';
+  const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
     .then(response => response.json());
-  return response;
+  const totalCount = firstResponse[COUNT_KEY];
+  const firstResults = firstResponse[RESULT_SET_KEY];
+  const remainingPageIndex = firstResults.length;
+  const remainingResponse = await fetch(
+    urlJoin(
+      EGO_API_KEY_ENDPOINT,
+      `?user_id=${userId}&limit=${totalCount - remainingPageIndex}&offset=${remainingPageIndex}`,
+    ),
+    {
+      headers: { Authorization },
+    },
+  )
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+
+  const remainingResults = remainingResponse[RESULT_SET_KEY];
+
+  return [...firstResults, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
 };
 
 /**
  * @param {string} userId
  * @param {Array<string>} scopes
  * @param {string} Authorization
- * @returns {Promise<EgoAccessKeyResponse>}
+ * @returns {Promise<EgoAccessKeyObj>}
  */
 const generateEgoAccessKey = async (userId, scopes, Authorization) => {
   const url = urlJoin(
@@ -113,27 +130,27 @@ const getScopes = async (userName, Authorization) => {
 };
 
 /**
- * @param {Array<EgoAccessKeyResponse>} keys
+ * @param { EgoAccessKeyObj[] } keys
  * @param {string} Authorization
  * @returns {Promise<{key: string; success: boolean}[]> | null}
  */
 const deleteKeys = async (keys, Authorization) => {
-  const accessKeys = keys.map(k => k.apiKey);
-  const ps = accessKeys.map(async key => {
-    const url = urlJoin(EGO_API_KEY_ENDPOINT, `?token=${encodeURIComponent(key)}`);
-    const promise = fetch(url, {
-      method: 'delete',
-      headers: { Authorization },
-    })
-      .then(resp => ({ key, success: true }))
-      .catch(err => {
-        logger.error(err);
-        return { key, success: false };
-      });
-    return promise;
-  });
-
-  return Promise.all(ps);
+  const accessKeys = keys.map(k => k.name);
+  const ps = await Promise.all(
+    accessKeys.map(async key => {
+      const url = urlJoin(EGO_API_KEY_ENDPOINT, `?apiKey=${encodeURIComponent(key)}`);
+      return fetch(url, {
+        method: 'delete',
+        headers: { Authorization },
+      })
+        .then(resp => ({ key, success: true }))
+        .catch(err => {
+          logger.error(err);
+          return { key, success: false };
+        });
+    }),
+  );
+  return ps;
 };
 
 // check for new group id over 24hours otherwise use memo func
@@ -173,6 +190,11 @@ const getMemoizedDacoIds = () =>
     return response;
   });
 
+/**
+ * @param {string} str
+ */
+const toTimestamp = str => Math.round(new Date(str).getTime() / 1000);
+
 export default {
   getUser,
   listUsers,
@@ -181,4 +203,5 @@ export default {
   getEgoAccessKeys,
   deleteKeys,
   getDacoIds,
+  toTimestamp,
 };
