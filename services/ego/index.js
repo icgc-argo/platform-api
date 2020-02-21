@@ -73,8 +73,8 @@ const getEgoAccessKeys = async (userId, Authorization) => {
     .then(restErrorResponseHandler)
     .then(response => response.json());
   const totalCount = firstResponse[COUNT_KEY];
-  const firstResult = firstResponse[RESULT_SET_KEY];
-  const remainingPageIndex = firstResult.length;
+  const firstResults = firstResponse[RESULT_SET_KEY];
+  const remainingPageIndex = firstResults.length;
   const remainingResponse = await fetch(
     urlJoin(
       EGO_API_KEY_ENDPOINT,
@@ -89,7 +89,7 @@ const getEgoAccessKeys = async (userId, Authorization) => {
 
   const remainingResults = remainingResponse[RESULT_SET_KEY];
 
-  return [...firstResult, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
+  return [...firstResults, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
 };
 
 /**
