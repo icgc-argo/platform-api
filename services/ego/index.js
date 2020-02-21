@@ -61,6 +61,7 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyResponse
  * @param {string} userId
  * @param {string} Authorization
  * @returns {Promise<Array<EgoAccessKeyResponse>>}
