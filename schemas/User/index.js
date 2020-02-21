@@ -156,7 +156,7 @@ const resolvers = {
       const egoApiKeyObj = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
       return {
         exp: egoService.getTimeToExpiry(egoApiKeyObj),
-        key: response.name,
+        key: egoApiKeyObj.name,
         error: '',
       };
     },
