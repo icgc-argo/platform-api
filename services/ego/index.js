@@ -59,7 +59,7 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
 };
 
 /**
- * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean }} EgoAccessKeyObj
+ * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean, issueDate: string }} EgoAccessKeyObj
  * @param {string} userId
  * @param {string} Authorization
  * @returns {Promise<Array<EgoAccessKeyObj>>}
@@ -195,6 +195,14 @@ const getMemoizedDacoIds = () =>
  */
 const toTimestamp = str => Math.round(new Date(str).getTime() / 1000);
 
+/**
+ * @param {EgoAccessKeyObj} accessKeyObj
+ * @returns {number}
+ */
+const getExpiry = accessKeyObj => {
+  return toTimestamp(accessKeyObj.expiryDate) - toTimestamp(accessKeyObj.issueDate);
+};
+
 export default {
   getUser,
   listUsers,
@@ -203,5 +211,5 @@ export default {
   getEgoAccessKeys,
   deleteKeys,
   getDacoIds,
-  toTimestamp,
+  getExpiry,
 };
