@@ -1,7 +1,5 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import DataLoader from 'dataloader';
-import { get } from 'lodash';
 
 import egoService from '../../services/ego';
 
@@ -39,6 +37,10 @@ const typeDefs = gql`
   type AccessKey {
     key: String
     error: String
+
+    """
+    Time till expiry in milliseconds
+    """
     exp: Int
   }
 
@@ -124,10 +126,10 @@ const resolvers = {
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
       let apiKey = null;
 
-      // a user should have only one key
       if (keys.length === 1) {
-        const { apiKey: accessToken, exp } = keys[0];
-        apiKey = { key: accessToken, exp: exp, error: '' };
+        const egoApiKeyObj = keys[0];
+        const { name: accessToken } = egoApiKeyObj;
+        apiKey = { key: accessToken, exp: egoService.getTimeToExpiry(egoApiKeyObj), error: '' };
       } else {
         const errorMsg = 'An error has been found with your API key. Please generate a new API key';
         apiKey = { key: null, exp: null, error: errorMsg };
@@ -151,10 +153,10 @@ const resolvers = {
       // get scopes for new token
       const { scopes } = await egoService.getScopes(userName, Authorization);
 
-      const response = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
+      const egoApiKeyObj = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
       return {
-        exp: response.exp,
-        key: response.apiKey,
+        exp: egoService.getTimeToExpiry(egoApiKeyObj),
+        key: egoApiKeyObj.name,
         error: '',
       };
     },
