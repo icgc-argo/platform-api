@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"no test specified\" && exit 0",
     "dev": "nodemon index.js",
-    "build": "rm -rf dist && tsc -p ./tsconfig.json",
-    "start::prod": "cd dist && node index.js"
+    "build": "rm -rf dist && tsc -p ./tsconfig.json && cp -r ./src/resources ./dist",
+    "start::prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +28,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "form-data": "^2.5.0",
     "graphql": "^14.5.4",
