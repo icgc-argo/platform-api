@@ -71,7 +71,7 @@ const init = async () => {
   app.get('/status', (req, res) => {
     res.json(version);
   });
-  
+
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinical);
 
@@ -86,4 +86,4 @@ const init = async () => {
   );
 };
 
-init();
+export default init;
