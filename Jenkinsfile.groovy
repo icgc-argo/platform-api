@@ -54,8 +54,10 @@ spec:
         }
 
         stage('Builds Image') {
-            container('docker') {
-                sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${commit}"
+            steps {
+                container('docker') {
+                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${commit}"
+                }
             }
         }
 
