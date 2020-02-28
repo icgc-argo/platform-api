@@ -2,7 +2,8 @@ import urlJoin from 'url-join';
 import { CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH } from '../config';
 import fetch from 'node-fetch';
 import logger from '../utils/logger';
-var express = require('express');
+import express from 'express';
+
 var router = express.Router();
 
 // Our specification download service can't use GraphQL because GraphQL specification requires the content-type

@@ -53,6 +53,14 @@ spec:
             }
         }
 
+        stage('Builds Image') {
+            steps {
+                container('docker') {
+                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${commit}"
+                }
+            }
+        }
+
         stage('Deploy to argo-dev') {
             when {
                 branch "develop"
@@ -63,8 +71,11 @@ spec:
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                     }
                     // DNS error if --network is default
-                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:${version}-${commit}"
+                    sh "docker tag ${dockerHubRepo}:${commit} ${dockerHubRepo}:${version}-${commit}"
+                    sh "docker tag ${dockerHubRepo}:${commit} ${dockerHubRepo}:edge"
+
                     sh "docker push ${dockerHubRepo}:${version}-${commit}"
+                    sh "docker push ${dockerHubRepo}:edge"
                 }
                 build(job: "/ARGO/provision/gateway", parameters: [
                      [$class: 'StringParameterValue', name: 'AP_ARGO_ENV', value: 'dev' ],
@@ -87,7 +98,10 @@ spec:
                     withCredentials([usernamePassword(credentialsId:'argoDockerHub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                     }
-                    sh "docker build --network=host -f Dockerfile . -t ${dockerHubRepo}:latest -t ${dockerHubRepo}:${version}"
+                    
+                    sh "docker tag ${dockerHubRepo}:${commit} ${dockerHubRepo}:${version}"
+                    sh "docker tag ${dockerHubRepo}:${commit} ${dockerHubRepo}:latest"
+
                     sh "docker push ${dockerHubRepo}:${version}"
                     sh "docker push ${dockerHubRepo}:latest"
                 }

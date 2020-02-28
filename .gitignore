@@ -71,3 +71,4 @@ chromedriver.log
 
 # VSCode
 .vscode
+dist

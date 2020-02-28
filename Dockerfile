@@ -13,7 +13,7 @@ WORKDIR /appDir
 COPY . .
 
 RUN npm ci
-
+RUN npm run build
 EXPOSE 9000
 
-CMD ["node", "index.js"]
+CMD ["npm", "run", "start::prod"]
