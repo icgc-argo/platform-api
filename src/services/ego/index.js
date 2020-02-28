@@ -4,15 +4,17 @@
  */
 import grpc from 'grpc';
 import * as loader from '@grpc/proto-loader';
-import { EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
+import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import fetch from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
 import memoize from 'lodash/memoize';
 import urlJoin from 'url-join';
+import path from 'path';
 
-const PROTO_PATH = __dirname + '/Ego.proto';
+const PROTO_PATH = path.join(APP_DIR, '/resources/Ego.proto');
+
 const EGO_API_KEY_ENDPOINT = urlJoin(EGO_ROOT_REST, '/o/api_key');
 const packageDefinition = loader.loadSync(PROTO_PATH, {
   keepCase: true,

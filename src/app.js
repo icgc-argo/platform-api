@@ -8,14 +8,13 @@ import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
-
-import { PORT, NODE_ENV, GQL_MAX_COST } from './config';
+import clinical from './routes/clinical';
+import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
 import clinicalSchema from './schemas/Clinical';
-
-import config from './package.json';
 import logger from './utils/logger';
-const clinical = require('./routes/clinical');
-const kafkaProxyRoute = require('./routes/kafka-rest-proxy');
+
+const config = require(path.join(APP_DIR, '../package.json'));
 
 const { version } = config;
 
@@ -71,7 +70,7 @@ const init = async () => {
   app.get('/status', (req, res) => {
     res.json(version);
   });
-  
+
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinical);
 
@@ -86,4 +85,4 @@ const init = async () => {
   );
 };
 
-init();
+export default init;

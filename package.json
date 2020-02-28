@@ -1,11 +1,13 @@
 {
   "name": "server",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"no test specified\" && exit 0",
-    "dev": "nodemon index.js"
+    "dev": "ts-node-dev ./src/index.ts -p ./tsconfig.json",
+    "build": "rm -rf dist && tsc -p ./tsconfig.json && cp -r ./src/resources ./dist",
+    "start::prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -26,7 +28,7 @@
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "form-data": "^2.5.0",
     "graphql": "^14.5.4",
@@ -43,7 +45,9 @@
   },
   "devDependencies": {
     "nodemon": "^1.18.10",
-    "prettier": "1.18.2"
+    "prettier": "1.18.2",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.2"
   },
   "prettier": {
     "printWidth": 100,
