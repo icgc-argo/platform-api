@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export const PORT = Number(process.env.PORT) || 9000;
 export const NODE_ENV = String(process.env.NODE_ENV || 'development').toLowerCase();
 export const GQL_MAX_COST = Number(process.env.GQL_MAX_COST) || 1000;
