@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 
 import egoService from '../../services/ego';
+import { EGO_DACO_ID } from '../../config';
 
 import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
 
@@ -118,10 +119,7 @@ const resolvers = {
       const userId = decodedToken.sub;
       const userGroups = decodedToken.context.user.groups;
 
-      // Retrieve DACO group ids
-      const dacoGroupId = await egoService.getDacoIds(userId, Authorization);
-      const isDacoApproved = userGroups.includes(dacoGroupId);
-
+      const isDacoApproved = userGroups.includes(EGO_DACO_ID);
       // API access keys
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
       let apiKey = null;

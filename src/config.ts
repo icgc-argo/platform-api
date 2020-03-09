@@ -10,6 +10,7 @@ export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'test';
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
 export const EGO_ROOT_GRPC = process.env.EGO_ROOT_GRPC || 'localhost:50051';
 export const EGO_JWT_SECRET = process.env.EGO_JWT_SECRET;
+export const EGO_DACO_ID = process.env.EGO_DACO_ID;
 
 // Default ego public key value is the example value provided in the application.yml of the public overture repository
 export const EGO_PUBLIC_KEY =
