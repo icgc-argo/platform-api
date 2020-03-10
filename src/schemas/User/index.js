@@ -119,8 +119,8 @@ const resolvers = {
       const userId = decodedToken.sub;
       const userScopes = decodedToken.context.scope;
       const isDacoApproved =
-        userScopes.includes(`${EGO_DACO_NAME}.WRITE`) ||
-        userScopes.includes(`${EGO_DACO_NAME}.READ`);
+        (userScopes || []).includes(`${EGO_DACO_NAME}.WRITE`) ||
+        (userScopes || []).includes(`${EGO_DACO_NAME}.READ`);
 
       // API access keys
       const keys = await egoService.getEgoAccessKeys(userId, Authorization);
