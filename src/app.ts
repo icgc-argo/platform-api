@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
-import costAnalysis from 'graphql-cost-analysis';
 import * as swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
 import userSchema from './schemas/User';
@@ -12,17 +11,19 @@ import clinical from './routes/clinical';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
 import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
 import clinicalSchema from './schemas/Clinical';
+import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
+// @ts-ignore
+import costAnalysis from 'graphql-cost-analysis';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 
 const { version } = config;
 
-ApolloServer.prototype._createGraphQLServerOptions =
-  ApolloServer.prototype.createGraphQLServerOptions;
+const _createGraphQLServerOptions = ApolloServer.prototype.createGraphQLServerOptions;
 
 ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
-  const options = await this._createGraphQLServerOptions(req, res);
+  const options = await _createGraphQLServerOptions.bind(this)(req, res);
   logger.debug(
     `
 ==== gql request ====
@@ -40,14 +41,14 @@ variables: ${JSON.stringify(req.body.variables)}
         variables: req.body.variables,
         maximumCost: GQL_MAX_COST,
         // logs out complexity so we can later on come back and decide on appropriate limit
-        onComplete: cost => logger.info(`QUERY_COST: ${cost}`),
+        onComplete: (cost: number) => logger.info(`QUERY_COST: ${cost}`),
       }),
     ],
   };
 };
 
 const init = async () => {
-  const schemas = [userSchema, programSchema, clinicalSchema];
+  const schemas = [userSchema, programSchema, clinicalSchema, ProgramDashboardSummarySchema];
 
   const server = new ApolloServer({
     schema: mergeSchemas({
