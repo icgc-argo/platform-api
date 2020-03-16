@@ -26,5 +26,6 @@ export const SUBMISSION_TEMPLATE_PATH =
   process.env.SUBMISSION_TEMPLATE_PATH || '/submission/schema/template/';
 
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
+export const ELASTICSEARCH_ROOT = process.env.ELASTICSEARCH_ROOT || 'http://localhost:9200';
 
 export const APP_DIR = __dirname;
