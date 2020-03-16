@@ -35,12 +35,28 @@ export default gql`
     sangerVcsCompleted: Int!
     sangerVcsRunning: Int!
     sangerVcsFailed: Int!
-    processingStatus: DonorProcessingStatus!!
-    updatedAt: DateTime!!
-    createdAt: DateTime!!
+    processingStatus: DonorProcessingStatus!
+    updatedAt: DateTime!
+    createdAt: DateTime!
+  }
+
+  type ProgramDonorSummaryStats {
+    registeredDonorsCount: Int!
+    percentageCoreClinical: Float!
+    percentageTumorAndNormal: Float!
+    donorsProcessingMolecularDataCount: Int!
+    filesToQcCount: Int!
+    donorsWithReleasedFilesCount: Int!
+    allFilesCount: Int!
   }
 
   type Query {
-    donorSummaryEntries: [DonorSummaryEntry]!
+    programDonorSummaryVersion(programId: String!): String
+    programDonorSummaryEntries(
+      programId: String!
+      first: Int = 20
+      offset: Int = 0
+    ): [DonorSummaryEntry]!
+    programDonorSummaryStats(programId: String!): ProgramDonorSummaryStats
   }
 `;

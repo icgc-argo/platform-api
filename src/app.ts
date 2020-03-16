@@ -47,6 +47,13 @@ variables: ${JSON.stringify(req.body.variables)}
   };
 };
 
+export type GlobalGqlContext = {
+  isUserRequest: boolean;
+  egoToken: string;
+  Authorization: string;
+  dataLoaders: {};
+};
+
 const init = async () => {
   const schemas = [userSchema, programSchema, clinicalSchema, ProgramDashboardSummarySchema];
 
@@ -54,7 +61,7 @@ const init = async () => {
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }) => ({
+    context: ({ req }): GlobalGqlContext => ({
       isUserRequest: true,
       egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
       Authorization:
