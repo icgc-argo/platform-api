@@ -29,3 +29,7 @@ export const SUBMISSION_TEMPLATE_PATH =
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
 
 export const APP_DIR = __dirname;
+
+// Feature flags
+export const PROGRAM_DASHBOARD_SUMMARY_ENABLED =
+  process.env.PROGRAM_DASHBOARD_SUMMARY_ENABLED === 'true';
