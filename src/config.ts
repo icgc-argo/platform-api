@@ -2,6 +2,9 @@ export const PORT = Number(process.env.PORT) || 9000;
 export const NODE_ENV = String(process.env.NODE_ENV || 'development').toLowerCase();
 export const GQL_MAX_COST = Number(process.env.GQL_MAX_COST) || 1000;
 
+// Elasticsearch config
+export const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'http://localhost:9200';
+
 // Arranger configs
 export const ARRANGER_ROOT = process.env.ARRANGER_ROOT || 'http://localhost:5050';
 export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'test';
@@ -26,3 +29,7 @@ export const SUBMISSION_TEMPLATE_PATH =
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
 
 export const APP_DIR = __dirname;
+
+// Feature flags
+export const PROGRAM_DASHBOARD_SUMMARY_ENABLED =
+  process.env.PROGRAM_DASHBOARD_SUMMARY_ENABLED === 'true';
