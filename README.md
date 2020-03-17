@@ -1,6 +1,10 @@
 # Platform Gateway
 
-[![Build Status](https://jenkins.qa.cancercollaboratory.org/buildStatus/icon?job=ARGO%2Fgateway%2Fdevelop)](https://jenkins.qa.cancercollaboratory.org/job/ARGO/job/gateway/job/develop/)
+
+| Release    | Build Status                                                                                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Edge**   | [![Build Status](https://jenkins.qa.cancercollaboratory.org/buildStatus/icon?job=ARGO%2Fgateway%2Fdevelop)](https://jenkins.qa.cancercollaboratory.org/job/ARGO/job/gateway/job/develop/) |
+| **Latest** | [![Build Status](https://jenkins.qa.cancercollaboratory.org/buildStatus/icon?job=ARGO%2Fgateway%2Fmaster)](https://jenkins.qa.cancercollaboratory.org/job/ARGO/job/gateway/job/master/)   |
 
 GraphQL endpoint providing a single endpoint to access data from Argo's many services.
 
