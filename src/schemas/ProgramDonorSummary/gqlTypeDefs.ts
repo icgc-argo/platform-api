@@ -17,12 +17,41 @@ export default gql`
     UNKNOWN
   }
 
+  enum ProgramDonorSummaryEntryField {
+    donorId
+    validWithCurrentDictionary
+    releaseStatus
+    submitterDonorId
+    programId
+    submittedCoreDataPercent
+    submittedExtendedDataPercent
+    registeredNormalSamples
+    registeredTumourSamples
+    publishedNormalAnalysis
+    publishedTumourAnalysis
+    alignmentsCompleted
+    alignmentsRunning
+    alignmentsFailed
+    sangerVcsCompleted
+    sangerVcsRunning
+    sangerVcsFailed
+    processingStatus
+    updatedAt
+    createdAt
+  }
+
+  input ProgramDonorSummaryFilter {
+    field: ProgramDonorSummaryEntryField!
+    values: [String!]!
+  }
+
   type DonorSummaryEntry {
-    donorId: ID!
+    id: ID!
+    donorId: String!
+    programId: String!
     validWithCurrentDictionary: Boolean!
     releaseStatus: DonorReleaseStatus!
     submitterDonorId: String!
-    programId: String!
     submittedCoreDataPercent: Float!
     submittedExtendedDataPercent: Float!
     registeredNormalSamples: Int!
@@ -41,6 +70,7 @@ export default gql`
   }
 
   type ProgramDonorSummaryStats {
+    programId: String!
     registeredDonorsCount: Int!
     percentageCoreClinical: Float!
     percentageTumorAndNormal: Float!
@@ -48,6 +78,10 @@ export default gql`
     filesToQcCount: Int!
     donorsWithReleasedFilesCount: Int!
     allFilesCount: Int!
+    totalDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    fullyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    partiallyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    noReleaseDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
   }
 
   type Query {
@@ -56,6 +90,7 @@ export default gql`
       programId: String!
       first: Int = 20
       offset: Int = 0
+      filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
     programDonorSummaryStats(programId: String!): ProgramDonorSummaryStats
   }

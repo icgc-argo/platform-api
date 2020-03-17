@@ -6,6 +6,7 @@ export type DonorReleaseStatus = 'FULLY_RELEASED' | 'PARTIALLY_RELEASED' | 'NO_R
 export type DonorProcessingStatus = 'COMPLETED' | 'PROCESSING' | 'REGISTERED' | 'UNKNOWN';
 
 export type DonorSummaryEntry = {
+  id: string;
   donorId: string;
   validWithCurrentDictionary: boolean;
   releaseStatus: DonorReleaseStatus;
@@ -28,7 +29,15 @@ export type DonorSummaryEntry = {
   createdAt: Date;
 };
 
+type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry;
+
+export type ProgramDonorSummaryFilter = {
+  field: ProgramDonorSummaryEntryField;
+  values: string[];
+};
+
 export type ProgramDonorSummaryStats = {
+  programId: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
   percentageTumorAndNormal: number;
