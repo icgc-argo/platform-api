@@ -1,6 +1,6 @@
 import { IResolvers } from 'apollo-server-express';
 import { GlobalGqlContext } from 'app';
-import { GraphQLFieldResolver, GraphQLObjectType } from 'graphql';
+import { GraphQLFieldResolver } from 'graphql';
 import { DonorSummaryEntry, ProgramDonorSummaryStats, ProgramDonorSummaryFilter } from './types';
 
 const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
@@ -18,18 +18,6 @@ const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
   console.log('args: ', args.filters);
 
   return [];
-};
-
-const programDonorSummaryVersionResolver: GraphQLFieldResolver<
-  unknown,
-  GlobalGqlContext,
-  {
-    programId: string;
-  }
-> = (source, args, context): string => {
-  const { programId } = args;
-
-  return 'something';
 };
 
 const totalDonorsCountResolver: GraphQLFieldResolver<
@@ -86,7 +74,6 @@ const resolvers: IResolvers<unknown, GlobalGqlContext> = {
     noReleaseDonorsCount: noReleaseDonorsCountResolver,
   },
   Query: {
-    programDonorSummaryVersion: programDonorSummaryVersionResolver,
     programDonorSummaryEntries: programDonorSummaryEntriesResolver,
     programDonorSummaryStats: programDonorSummaryStatsResolver,
   },

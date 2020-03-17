@@ -85,7 +85,6 @@ export default gql`
   }
 
   type Query {
-    programDonorSummaryVersion(programId: String!): String
     programDonorSummaryEntries(
       programId: String!
       first: Int = 20
