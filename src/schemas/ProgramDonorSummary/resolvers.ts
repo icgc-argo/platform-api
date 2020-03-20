@@ -56,13 +56,13 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
 
   return {
     programId: programId,
-    allFilesCount: 1,
-    donorsProcessingMolecularDataCount: 3,
-    donorsWithReleasedFilesCount: 3,
-    filesToQcCount: 5,
-    percentageCoreClinical: 6,
-    percentageTumorAndNormal: 5,
-    registeredDonorsCount: 7,
+    allFilesCount: 0,
+    donorsProcessingMolecularDataCount: 0,
+    donorsWithReleasedFilesCount: 0,
+    filesToQcCount: 0,
+    percentageCoreClinical: 0,
+    percentageTumorAndNormal: 0,
+    registeredDonorsCount: 0,
   };
 };
 
