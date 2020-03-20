@@ -68,6 +68,7 @@ const typeDefs = gql`
     firstName: String!
     lastName: String!
     role: UserRole!
+    isDacoApproved: Boolean
     inviteStatus: InviteStatus
     inviteAcceptedAt: String
   }
@@ -222,6 +223,7 @@ const convertGrpcUserToGql = userDetails => ({
   firstName: get(userDetails, 'user.first_name.value'),
   lastName: get(userDetails, 'user.last_name.value'),
   role: get(userDetails, 'user.role.value'),
+  isDacoApproved: get(userDetails, 'daco_approved.value'),
   inviteStatus: get(userDetails, 'status.value'),
   inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
