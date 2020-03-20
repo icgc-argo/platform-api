@@ -11,7 +11,7 @@ export type DonorSummaryEntry = {
   validWithCurrentDictionary: boolean;
   releaseStatus: DonorReleaseStatus;
   submitterDonorId: string;
-  programId: string;
+  progrmShortName: string;
   submittedCoreDataPercent: number;
   submittedExtendedDataPercent: number;
   registeredNormalSamples: number;
@@ -37,7 +37,7 @@ export type ProgramDonorSummaryFilter = {
 };
 
 export type ProgramDonorSummaryStats = {
-  programId: string;
+  progrmShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
   percentageTumorAndNormal: number;

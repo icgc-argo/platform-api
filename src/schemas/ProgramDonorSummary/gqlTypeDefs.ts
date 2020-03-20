@@ -22,7 +22,7 @@ export default gql`
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
-    programId
+    progrmShortName
     submittedCoreDataPercent
     submittedExtendedDataPercent
     registeredNormalSamples
@@ -48,7 +48,7 @@ export default gql`
   type DonorSummaryEntry {
     id: ID!
     donorId: String!
-    programId: String!
+    progrmShortName: String!
     validWithCurrentDictionary: Boolean!
     releaseStatus: DonorReleaseStatus!
     submitterDonorId: String!
@@ -70,7 +70,7 @@ export default gql`
   }
 
   type ProgramDonorSummaryStats {
-    programId: String!
+    progrmShortName: String!
     registeredDonorsCount: Int!
     percentageCoreClinical: Float!
     percentageTumorAndNormal: Float!
@@ -86,11 +86,11 @@ export default gql`
 
   type Query {
     programDonorSummaryEntries(
-      programId: String!
+      progrmShortName: String!
       first: Int = 20
       offset: Int = 0
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
-    programDonorSummaryStats(programId: String!): ProgramDonorSummaryStats
+    programDonorSummaryStats(progrmShortName: String!): ProgramDonorSummaryStats
   }
 `;

@@ -7,13 +7,13 @@ const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {
-    programId: string;
+    progrmShortName: string;
     first: number;
     last: number;
     filters: ProgramDonorSummaryFilter[];
   }
 > = (source, args, context): DonorSummaryEntry[] => {
-  const { programId } = args;
+  const { progrmShortName } = args;
 
   console.log('args: ', args.filters);
 
@@ -49,13 +49,13 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {
-    programId: string;
+    progrmShortName: string;
   }
 > = (source, args, context): ProgramDonorSummaryStats => {
-  const { programId } = args;
+  const { progrmShortName } = args;
 
   return {
-    programId: programId,
+    progrmShortName: progrmShortName,
     allFilesCount: 0,
     donorsProcessingMolecularDataCount: 0,
     donorsWithReleasedFilesCount: 0,
