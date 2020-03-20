@@ -194,6 +194,9 @@ export default gql`
   }
 
   type Query {
+    """
+    Paginated list of donor data summary given a program
+    """
     programDonorSummaryEntries(
       programShortName: String!
       first: Int = 20
