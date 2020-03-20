@@ -73,7 +73,7 @@ export default gql`
     progrmShortName: String!
     registeredDonorsCount: Int!
     percentageCoreClinical: Float!
-    percentageTumorAndNormal: Float!
+    percentageTumourAndNormal: Float!
     donorsProcessingMolecularDataCount: Int!
     filesToQcCount: Int!
     donorsWithReleasedFilesCount: Int!

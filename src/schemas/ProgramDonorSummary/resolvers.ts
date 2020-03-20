@@ -61,7 +61,7 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
     donorsWithReleasedFilesCount: 0,
     filesToQcCount: 0,
     percentageCoreClinical: 0,
-    percentageTumorAndNormal: 0,
+    percentageTumourAndNormal: 0,
     registeredDonorsCount: 0,
   };
 };

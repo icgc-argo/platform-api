@@ -40,7 +40,7 @@ export type ProgramDonorSummaryStats = {
   progrmShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
-  percentageTumorAndNormal: number;
+  percentageTumourAndNormal: number;
   donorsProcessingMolecularDataCount: number;
   filesToQcCount: number;
   donorsWithReleasedFilesCount: number;
