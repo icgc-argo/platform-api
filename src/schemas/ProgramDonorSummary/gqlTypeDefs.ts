@@ -10,7 +10,7 @@ export default gql`
     UNKNOWN
   }
 
-  enum DonorProcessingStatus {
+  enum DonorMolecularDataProcessingStatus {
     COMPLETED
     PROCESSING
     REGISTERED
@@ -22,7 +22,7 @@ export default gql`
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
-    progrmShortName
+    programShortName
     submittedCoreDataPercent
     submittedExtendedDataPercent
     registeredNormalSamples
@@ -48,49 +48,130 @@ export default gql`
   type DonorSummaryEntry {
     id: ID!
     donorId: String!
-    progrmShortName: String!
+    programShortName: String!
+    """
+    Whether the donor submitted donor is valid according to the latest data dictionary layed out at: https://docs.icgc-argo.org/dictionary
+    """
     validWithCurrentDictionary: Boolean!
     releaseStatus: DonorReleaseStatus!
     submitterDonorId: String!
+    """
+    Percentage of core clinical data fields that has been submitted for this donor. All core fields are listed at: https://docs.icgc-argo.org/dictionary
+    """
     submittedCoreDataPercent: Float!
+    """
+    Percentage of extended clinical data fields that has been submitted for this donor. All extended fields are listed at: https://docs.icgc-argo.org/dictionary
+    """
     submittedExtendedDataPercent: Float!
+    """
+    Number of normal samples registered for this donor
+    """
     registeredNormalSamples: Int!
+    """
+    Number of tumour samples registered for this donor
+    """
     registeredTumourSamples: Int!
+    """
+    Number of normal sample analysis that has been published for this donor
+    """
     publishedNormalAnalysis: Int!
+    """
+    Number of tumour sample analysis that has been published for this donor
+    """
     publishedTumourAnalysis: Int!
+    """
+    Number of alignments completed for this donor
+    """
     alignmentsCompleted: Int!
+    """
+    Number of alignments currently running for this donor
+    """
     alignmentsRunning: Int!
+    """
+    Number of alignments that is failing for this donor
+    """
     alignmentsFailed: Int!
+    """
+    Number of Sanger VCs completed for this donor
+    """
     sangerVcsCompleted: Int!
+    """
+    Number of Sanger VCs currently running for this donor
+    """
     sangerVcsRunning: Int!
+    """
+    Number of Sanger VCs that is failing for this donor
+    """
     sangerVcsFailed: Int!
-    processingStatus: DonorProcessingStatus!
+    """
+    Molecular data processing status of this donor
+    """
+    processingStatus: DonorMolecularDataProcessingStatus!
+    """
+    Timestamp of the latest update applied to this donor's clinical data
+    """
     updatedAt: DateTime!
+    """
+    Timestamp of when this donor was first registered
+    """
     createdAt: DateTime!
   }
 
   type ProgramDonorSummaryStats {
-    progrmShortName: String!
+    programShortName: String!
+    """
+    Total number of donors registered for this program
+    """
     registeredDonorsCount: Int!
+    """
+    Percentage of core clinical data fields submitted over total core clinical data fields
+    """
     percentageCoreClinical: Float!
+    """
+
+    """
     percentageTumourAndNormal: Float!
+    """
+    Number of donors whose molecular data is being processed
+    """
     donorsProcessingMolecularDataCount: Int!
+    """
+    Number of files to QC
+    """
     filesToQcCount: Int!
+    """
+    Number of donors whose files have been released
+    """
     donorsWithReleasedFilesCount: Int!
+    """
+    Total number of genomic files associated with this program
+    """
     allFilesCount: Int!
+    """
+    Total number of donors registered under this program
+    """
     totalDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    """
+    Number of donors whose genomic files have been fully released
+    """
     fullyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    """
+    Number of donors who only have some genomic files that have been released
+    """
     partiallyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    """
+    Number of donors registered to the program who currently has no released genomic file
+    """
     noReleaseDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
   }
 
   type Query {
     programDonorSummaryEntries(
-      progrmShortName: String!
+      programShortName: String!
       first: Int = 20
       offset: Int = 0
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
-    programDonorSummaryStats(progrmShortName: String!): ProgramDonorSummaryStats
+    programDonorSummaryStats(programShortName: String!): ProgramDonorSummaryStats
   }
 `;

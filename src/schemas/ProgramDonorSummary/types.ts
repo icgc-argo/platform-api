@@ -3,7 +3,11 @@
  */
 export type DonorReleaseStatus = 'FULLY_RELEASED' | 'PARTIALLY_RELEASED' | 'NO_RELEASE' | 'UNKNOWN';
 
-export type DonorProcessingStatus = 'COMPLETED' | 'PROCESSING' | 'REGISTERED' | 'UNKNOWN';
+export type DonorMolecularDataProcessingStatus =
+  | 'COMPLETED'
+  | 'PROCESSING'
+  | 'REGISTERED'
+  | 'UNKNOWN';
 
 export type DonorSummaryEntry = {
   id: string;
@@ -11,7 +15,7 @@ export type DonorSummaryEntry = {
   validWithCurrentDictionary: boolean;
   releaseStatus: DonorReleaseStatus;
   submitterDonorId: string;
-  progrmShortName: string;
+  programShortName: string;
   submittedCoreDataPercent: number;
   submittedExtendedDataPercent: number;
   registeredNormalSamples: number;
@@ -24,7 +28,7 @@ export type DonorSummaryEntry = {
   sangerVcsCompleted: number;
   sangerVcsRunning: number;
   sangerVcsFailed: number;
-  processingStatus: DonorProcessingStatus;
+  processingStatus: DonorMolecularDataProcessingStatus;
   updatedAt: Date;
   createdAt: Date;
 };
@@ -37,7 +41,7 @@ export type ProgramDonorSummaryFilter = {
 };
 
 export type ProgramDonorSummaryStats = {
-  progrmShortName: string;
+  programShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
   percentageTumourAndNormal: number;
