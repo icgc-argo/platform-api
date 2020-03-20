@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "@elastic/elasticsearch": "^7.6.1",
     "@grpc/proto-loader": "^0.5.0",
     "@icgc-argo/ego-token-utils": "^5.1.0",
-    "@icgc-argo/program-service-proto": "0.0.5",
+    "@icgc-argo/program-service-proto": "0.1.0",
     "@types/swagger-ui-express": "^4.1.1",
     "@types/yamljs": "^0.2.30",
     "apollo-link-context": "^1.0.17",
