@@ -1,7 +1,11 @@
 /**
  * Types from graphql
  */
-export type DonorReleaseStatus = 'FULLY_RELEASED' | 'PARTIALLY_RELEASED' | 'NO_RELEASE' | 'UNKNOWN';
+export type DonorMolecularDataReleaseStatus =
+  | 'FULLY_RELEASED'
+  | 'PARTIALLY_RELEASED'
+  | 'NO_RELEASE'
+  | 'UNKNOWN';
 
 export type DonorMolecularDataProcessingStatus =
   | 'COMPLETED'
@@ -13,7 +17,7 @@ export type DonorSummaryEntry = {
   id: string;
   donorId: string;
   validWithCurrentDictionary: boolean;
-  releaseStatus: DonorReleaseStatus;
+  releaseStatus: DonorMolecularDataReleaseStatus;
   submitterDonorId: string;
   programShortName: string;
   submittedCoreDataPercent: number;

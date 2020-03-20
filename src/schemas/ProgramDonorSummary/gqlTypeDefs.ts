@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-express';
 export default gql`
   scalar DateTime
 
-  enum DonorReleaseStatus {
+  enum DonorMolecularDataReleaseStatus {
     FULLY_RELEASED
     PARTIALLY_RELEASED
     NO_RELEASE
@@ -45,15 +45,33 @@ export default gql`
     values: [String!]!
   }
 
+  """
+  Includes status summary of clinical and molecular data processing for the given donor
+  """
   type DonorSummaryEntry {
+    """
+    Unique object ID for this summary object
+    """
     id: ID!
+    """
+    Donor id of the donor within the program
+    """
     donorId: String!
+    """
+    Short name of the program in which this donor is registered
+    """
     programShortName: String!
     """
     Whether the donor submitted donor is valid according to the latest data dictionary layed out at: https://docs.icgc-argo.org/dictionary
     """
     validWithCurrentDictionary: Boolean!
-    releaseStatus: DonorReleaseStatus!
+    """
+    Release status of the donor's molecular data
+    """
+    releaseStatus: DonorMolecularDataReleaseStatus!
+    """
+
+    """
     submitterDonorId: String!
     """
     Percentage of core clinical data fields that has been submitted for this donor. All core fields are listed at: https://docs.icgc-argo.org/dictionary
@@ -117,7 +135,17 @@ export default gql`
     createdAt: DateTime!
   }
 
+  """
+  Contains summary of aggregate clinical and molecular data processing status for the given program
+  """
   type ProgramDonorSummaryStats {
+    """
+    Unique ID of this summary object
+    """
+    id: ID!
+    """
+    Short name of the program which this summary object is associated with
+    """
     programShortName: String!
     """
     Total number of donors registered for this program
