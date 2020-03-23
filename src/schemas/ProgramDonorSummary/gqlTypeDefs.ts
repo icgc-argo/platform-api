@@ -7,14 +7,12 @@ export default gql`
     FULLY_RELEASED
     PARTIALLY_RELEASED
     NO_RELEASE
-    UNKNOWN
   }
 
   enum DonorMolecularDataProcessingStatus {
     COMPLETED
     PROCESSING
     REGISTERED
-    UNKNOWN
   }
 
   enum ProgramDonorSummaryEntryField {

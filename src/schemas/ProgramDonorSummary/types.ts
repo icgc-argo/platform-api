@@ -4,14 +4,9 @@
 export type DonorMolecularDataReleaseStatus =
   | 'FULLY_RELEASED'
   | 'PARTIALLY_RELEASED'
-  | 'NO_RELEASE'
-  | 'UNKNOWN';
+  | 'NO_RELEASE';
 
-export type DonorMolecularDataProcessingStatus =
-  | 'COMPLETED'
-  | 'PROCESSING'
-  | 'REGISTERED'
-  | 'UNKNOWN';
+export type DonorMolecularDataProcessingStatus = 'COMPLETED' | 'PROCESSING' | 'REGISTERED';
 
 export type DonorSummaryEntry = {
   id: string;
