@@ -176,21 +176,17 @@ export default gql`
     """
     allFilesCount: Int!
     """
-    Total number of donors registered under this program
-    """
-    totalDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
-    """
     Number of donors whose genomic files have been fully released
     """
-    fullyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    fullyReleasedDonorsCount: Int!
     """
     Number of donors who only have some genomic files that have been released
     """
-    partiallyReleasedDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    partiallyReleasedDonorsCount: Int!
     """
     Number of donors registered to the program who currently has no released genomic file
     """
-    noReleaseDonorsCount(filters: [ProgramDonorSummaryFilter!] = []): Int!
+    noReleaseDonorsCount: Int!
   }
 
   type Query {
@@ -203,6 +199,9 @@ export default gql`
       offset: Int = 0
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
-    programDonorSummaryStats(programShortName: String!): ProgramDonorSummaryStats
+    programDonorSummaryStats(
+      programShortName: String!
+      filters: [ProgramDonorSummaryFilter!] = []
+    ): ProgramDonorSummaryStats
   }
 `;

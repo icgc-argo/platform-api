@@ -19,13 +19,6 @@ const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
 
   return [];
 };
-
-const totalDonorsCountResolver: GraphQLFieldResolver<
-  ProgramDonorSummaryStats,
-  GlobalGqlContext
-> = () => {
-  return 0;
-};
 const fullyReleasedDonorsCountResolver: GraphQLFieldResolver<
   ProgramDonorSummaryStats,
   GlobalGqlContext
@@ -50,9 +43,10 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
   GlobalGqlContext,
   {
     programShortName: string;
+    filters: ProgramDonorSummaryFilter[];
   }
 > = (source, args, context): ProgramDonorSummaryStats => {
-  const { programShortName } = args;
+  const { programShortName, filters } = args;
 
   return {
     programShortName: programShortName,
@@ -63,16 +57,13 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
     percentageCoreClinical: 0,
     percentageTumourAndNormal: 0,
     registeredDonorsCount: 0,
+    fullyReleasedDonorsCount: 0,
+    partiallyReleasedDonorsCount: 0,
+    noReleaseDonorsCount: 0,
   };
 };
 
 const resolvers: IResolvers<unknown, GlobalGqlContext> = {
-  ProgramDonorSummaryStats: {
-    totalDonorsCount: totalDonorsCountResolver,
-    fullyReleasedDonorsCount: fullyReleasedDonorsCountResolver,
-    partiallyReleasedDonorsCount: partiallyReleasedDonorsCountResolver,
-    noReleaseDonorsCount: noReleaseDonorsCountResolver,
-  },
   Query: {
     programDonorSummaryEntries: programDonorSummaryEntriesResolver,
     programDonorSummaryStats: programDonorSummaryStatsResolver,

@@ -53,4 +53,7 @@ export type ProgramDonorSummaryStats = {
   filesToQcCount: number;
   donorsWithReleasedFilesCount: number;
   allFilesCount: number;
+  fullyReleasedDonorsCount: number;
+  partiallyReleasedDonorsCount: number;
+  noReleaseDonorsCount: number;
 };
