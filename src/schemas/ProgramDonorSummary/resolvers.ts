@@ -5,8 +5,12 @@ import { IResolvers } from 'apollo-server-express';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import { DonorSummaryEntry, ProgramDonorSummaryStats, ProgramDonorSummaryFilter } from './types';
+import { createEsClient } from 'services/elasticsearch';
+import { Client } from '@elastic/elasticsearch';
 
-const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
+const programDonorSummaryEntriesResolver: (
+  esClient: Client,
+) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {
@@ -15,40 +19,24 @@ const programDonorSummaryEntriesResolver: GraphQLFieldResolver<
     last: number;
     filters: ProgramDonorSummaryFilter[];
   }
-> = (source, args, context): DonorSummaryEntry[] => {
+> = esClient => (source, args, context): DonorSummaryEntry[] => {
   const { programShortName } = args;
 
   console.log('args: ', args.filters);
 
   return [];
 };
-const fullyReleasedDonorsCountResolver: GraphQLFieldResolver<
-  ProgramDonorSummaryStats,
-  GlobalGqlContext
-> = () => {
-  return 0;
-};
-const partiallyReleasedDonorsCountResolver: GraphQLFieldResolver<
-  ProgramDonorSummaryStats,
-  GlobalGqlContext
-> = () => {
-  return 0;
-};
-const noReleaseDonorsCountResolver: GraphQLFieldResolver<
-  ProgramDonorSummaryStats,
-  GlobalGqlContext
-> = () => {
-  return 0;
-};
 
-const programDonorSummaryStatsResolver: GraphQLFieldResolver<
+const programDonorSummaryStatsResolver: (
+  esClient: Client,
+) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {
     programShortName: string;
     filters: ProgramDonorSummaryFilter[];
   }
-> = (source, args, context): ProgramDonorSummaryStats => {
+> = esClient => (source, args, context): ProgramDonorSummaryStats => {
   const { programShortName, filters } = args;
 
   return {
@@ -67,11 +55,14 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
   };
 };
 
-const resolvers: IResolvers<unknown, GlobalGqlContext> = {
-  Query: {
-    programDonorSummaryEntries: programDonorSummaryEntriesResolver,
-    programDonorSummaryStats: programDonorSummaryStatsResolver,
-  },
+const resolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
+  const esClient = await createEsClient();
+  return {
+    Query: {
+      programDonorSummaryEntries: programDonorSummaryEntriesResolver(esClient),
+      programDonorSummaryStats: programDonorSummaryStatsResolver(esClient),
+    },
+  };
 };
 
 export default resolvers;

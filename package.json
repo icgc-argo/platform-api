@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"no test specified\" && exit 0",
-    "dev": "ts-node-dev ./src/index.ts -p ./tsconfig.json",
+    "dev": "NODE_PATH=./src ts-node-dev ./src/index.ts -p ./tsconfig.json",
     "build": "rm -rf dist && tsc -p ./tsconfig.json && cp -r ./src/resources ./dist",
-    "start::prod": "node dist/index.js"
+    "start::prod": "NODE_PATH=./dist node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,7 @@
     "@icgc-argo/ego-token-utils": "^5.1.0",
     "@icgc-argo/program-service-proto": "0.1.0",
     "@types/lodash": "^4.14.149",
+    "@types/request": "^2.48.4",
     "@types/swagger-ui-express": "^4.1.1",
     "@types/yamljs": "^0.2.30",
     "apollo-link-context": "^1.0.17",
