@@ -53,3 +53,29 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
 };
+
+/**
+ * Types from Elasticsearch
+ */
+export type ElasticsearchDonorDocument = {
+  alignmentsCompleted: number;
+  alignmentsFailed: number;
+  alignmentsRunning: number;
+  createdAt: string;
+  donorId: string;
+  processingStatus: string;
+  programId: string;
+  publishedNormalAnalysis: number;
+  publishedTumourAnalysis: number;
+  registeredNormalSamples: number;
+  registeredTumourSamples: number;
+  releaseStatus: string;
+  sangerVcsCompleted: number;
+  sangerVcsFailed: number;
+  sangerVcsRunning: number;
+  submittedCoreDataPercent: number;
+  submittedExtendedDataPercent: number;
+  submitterDonorId: string;
+  updatedAt: string;
+  validWithCurrentDictionary: boolean;
+};

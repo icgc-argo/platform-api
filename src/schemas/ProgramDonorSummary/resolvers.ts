@@ -5,32 +5,14 @@ import esb from 'elastic-builder';
 import { IResolvers } from 'apollo-server-express';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
-import { DonorSummaryEntry, ProgramDonorSummaryStats, ProgramDonorSummaryFilter } from './types';
+import {
+  DonorSummaryEntry,
+  ProgramDonorSummaryStats,
+  ProgramDonorSummaryFilter,
+  ElasticsearchDonorDocument,
+} from './types';
 import { createEsClient } from 'services/elasticsearch';
 import { Client } from '@elastic/elasticsearch';
-
-type ElasticsearchDonorDocument = {
-  alignmentsCompleted: number;
-  alignmentsFailed: number;
-  alignmentsRunning: number;
-  createdAt: string;
-  donorId: string;
-  processingStatus: string;
-  programId: string;
-  publishedNormalAnalysis: number;
-  publishedTumourAnalysis: number;
-  registeredNormalSamples: number;
-  registeredTumourSamples: number;
-  releaseStatus: string;
-  sangerVcsCompleted: number;
-  sangerVcsFailed: number;
-  sangerVcsRunning: number;
-  submittedCoreDataPercent: number;
-  submittedExtendedDataPercent: number;
-  submitterDonorId: string;
-  updatedAt: string;
-  validWithCurrentDictionary: boolean;
-};
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
