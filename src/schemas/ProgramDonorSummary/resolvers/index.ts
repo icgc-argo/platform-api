@@ -4,7 +4,7 @@ import { createEsClient } from 'services/elasticsearch';
 import programDonorSummaryEntriesResolver from './programDonorSummaryEntries';
 import programDonorSummaryStatsResolver from './programDonorSummaryStats';
 
-const resolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
+const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   const esClient = await createEsClient();
   return {
     Query: {
@@ -14,4 +14,4 @@ const resolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   };
 };
 
-export default resolvers;
+export default createResolvers;
