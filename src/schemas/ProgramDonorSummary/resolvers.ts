@@ -1,3 +1,6 @@
+//@ts-ignore no type defs
+import stringify from 'json-stringify-deterministic';
+
 import { IResolvers } from 'apollo-server-express';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
@@ -49,6 +52,7 @@ const programDonorSummaryStatsResolver: GraphQLFieldResolver<
   const { programShortName, filters } = args;
 
   return {
+    id: () => `${programShortName}::${stringify(filters)}`,
     programShortName: programShortName,
     allFilesCount: 0,
     donorsProcessingMolecularDataCount: 0,
