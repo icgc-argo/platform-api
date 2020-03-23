@@ -7,6 +7,7 @@ import { GraphQLFieldResolver } from 'graphql';
 import { DonorSummaryEntry, ProgramDonorSummaryStats, ProgramDonorSummaryFilter } from './types';
 import { createEsClient } from 'services/elasticsearch';
 import { Client } from '@elastic/elasticsearch';
+import { toEsFilter } from './utils';
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -19,12 +20,33 @@ const programDonorSummaryEntriesResolver: (
     last: number;
     filters: ProgramDonorSummaryFilter[];
   }
-> = esClient => (source, args, context): DonorSummaryEntry[] => {
-  const { programShortName } = args;
+> = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
+  const { programShortName, filters } = args;
 
-  console.log('args: ', args.filters);
+  console.log('programShortName: ', programShortName);
 
-  return [];
+  // const esFilter = toEsFilter(filters);
+
+  const x = await esClient.search({
+    index: 'donor_centric',
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                programId: programShortName,
+              },
+            },
+          ],
+        },
+      },
+    },
+  });
+  const output = x.body.hits.hits.map(({ _source }: { _source: {} }) => _source);
+
+  console.log('output: ', output);
+  return output;
 };
 
 const programDonorSummaryStatsResolver: (

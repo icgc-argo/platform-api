@@ -24,14 +24,14 @@ const _createGraphQLServerOptions = ApolloServer.prototype.createGraphQLServerOp
 
 ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
   const options = await _createGraphQLServerOptions.bind(this)(req, res);
-  logger.debug(
-    `
-==== gql request ====
-query: ${req.body.query}
-variables: ${JSON.stringify(req.body.variables)}
-=====================
-    `,
-  );
+  //   logger.debug(
+  //     `
+  // ==== gql request ====
+  // query: ${req.body.query}
+  // variables: ${JSON.stringify(req.body.variables)}
+  // =====================
+  //     `,
+  //   );
 
   return {
     ...options,
