@@ -45,6 +45,7 @@ export type ProgramDonorSummaryFilter = {
 };
 
 export type ProgramDonorSummaryStats = {
+  id: () => string;
   programShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
