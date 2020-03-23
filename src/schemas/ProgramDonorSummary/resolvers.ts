@@ -1,5 +1,6 @@
 //@ts-ignore no type defs
 import stringify from 'json-stringify-deterministic';
+import esb from 'elastic-builder';
 
 import { IResolvers } from 'apollo-server-express';
 import { GlobalGqlContext } from 'app';
@@ -7,7 +8,29 @@ import { GraphQLFieldResolver } from 'graphql';
 import { DonorSummaryEntry, ProgramDonorSummaryStats, ProgramDonorSummaryFilter } from './types';
 import { createEsClient } from 'services/elasticsearch';
 import { Client } from '@elastic/elasticsearch';
-import { toEsFilter } from './utils';
+
+type ElasticsearchDonorDocument = {
+  alignmentsCompleted: number;
+  alignmentsFailed: number;
+  alignmentsRunning: number;
+  createdAt: string;
+  donorId: string;
+  processingStatus: string;
+  programId: string;
+  publishedNormalAnalysis: number;
+  publishedTumourAnalysis: number;
+  registeredNormalSamples: number;
+  registeredTumourSamples: number;
+  releaseStatus: string;
+  sangerVcsCompleted: number;
+  sangerVcsFailed: number;
+  sangerVcsRunning: number;
+  submittedCoreDataPercent: number;
+  submittedExtendedDataPercent: number;
+  submitterDonorId: string;
+  updatedAt: string;
+  validWithCurrentDictionary: boolean;
+};
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -17,35 +40,58 @@ const programDonorSummaryEntriesResolver: (
   {
     programShortName: string;
     first: number;
-    last: number;
+    offset: number;
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
-  const { programShortName, filters } = args;
+  const { programShortName } = args;
 
-  console.log('programShortName: ', programShortName);
+  const esQuery = esb
+    .requestBodySearch()
+    .query(
+      esb.boolQuery().must([esb.matchQuery('programId', programShortName)]), //using an array to accommodate filters in the future
+    )
+    .from(args.offset)
+    .size(args.first);
 
-  // const esFilter = toEsFilter(filters);
+  const esHits: Array<{
+    _source: ElasticsearchDonorDocument;
+  }> = await esClient
+    .search({
+      index: 'donor_centric',
+      body: esQuery,
+    })
+    .then(res => res.body.hits.hits);
+  const output = esHits
+    .map(({ _source }) => _source)
+    .map(
+      doc =>
+        ({
+          id: `${programShortName}::${doc.donorId}`,
+          programShortName: doc.programId,
+          alignmentsCompleted: doc.alignmentsCompleted,
+          alignmentsFailed: doc.alignmentsFailed,
+          alignmentsRunning: doc.alignmentsRunning,
+          donorId: doc.donorId,
+          processingStatus: doc.processingStatus || 'REGISTERED',
+          programId: doc.programId,
+          publishedNormalAnalysis: doc.publishedNormalAnalysis,
+          publishedTumourAnalysis: doc.publishedTumourAnalysis,
+          registeredNormalSamples: doc.registeredNormalSamples,
+          registeredTumourSamples: doc.registeredTumourSamples,
+          releaseStatus: doc.releaseStatus || 'NO_RELEASE',
+          sangerVcsCompleted: doc.sangerVcsCompleted,
+          sangerVcsFailed: doc.sangerVcsFailed,
+          sangerVcsRunning: doc.sangerVcsRunning,
+          submittedCoreDataPercent: doc.submittedCoreDataPercent,
+          submittedExtendedDataPercent: doc.submittedExtendedDataPercent,
+          submitterDonorId: doc.submitterDonorId,
+          validWithCurrentDictionary: doc.validWithCurrentDictionary,
+          createdAt: new Date(doc.createdAt),
+          updatedAt: new Date(doc.updatedAt),
+        } as DonorSummaryEntry),
+    );
 
-  const x = await esClient.search({
-    index: 'donor_centric',
-    body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                programId: programShortName,
-              },
-            },
-          ],
-        },
-      },
-    },
-  });
-  const output = x.body.hits.hits.map(({ _source }: { _source: {} }) => _source);
-
-  console.log('output: ', output);
   return output;
 };
 
