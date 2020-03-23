@@ -1,17 +1,25 @@
 /**
  * Types from graphql
  */
-export type DonorReleaseStatus = 'FULLY_RELEASED' | 'PARTIALLY_RELEASED' | 'NO_RELEASE' | 'UNKNOWN';
+export type DonorMolecularDataReleaseStatus =
+  | 'FULLY_RELEASED'
+  | 'PARTIALLY_RELEASED'
+  | 'NO_RELEASE'
+  | 'UNKNOWN';
 
-export type DonorProcessingStatus = 'COMPLETED' | 'PROCESSING' | 'REGISTERED' | 'UNKNOWN';
+export type DonorMolecularDataProcessingStatus =
+  | 'COMPLETED'
+  | 'PROCESSING'
+  | 'REGISTERED'
+  | 'UNKNOWN';
 
 export type DonorSummaryEntry = {
   id: string;
   donorId: string;
   validWithCurrentDictionary: boolean;
-  releaseStatus: DonorReleaseStatus;
+  releaseStatus: DonorMolecularDataReleaseStatus;
   submitterDonorId: string;
-  programId: string;
+  programShortName: string;
   submittedCoreDataPercent: number;
   submittedExtendedDataPercent: number;
   registeredNormalSamples: number;
@@ -24,7 +32,7 @@ export type DonorSummaryEntry = {
   sangerVcsCompleted: number;
   sangerVcsRunning: number;
   sangerVcsFailed: number;
-  processingStatus: DonorProcessingStatus;
+  processingStatus: DonorMolecularDataProcessingStatus;
   updatedAt: Date;
   createdAt: Date;
 };
@@ -37,12 +45,16 @@ export type ProgramDonorSummaryFilter = {
 };
 
 export type ProgramDonorSummaryStats = {
-  programId: string;
+  id: () => string;
+  programShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
-  percentageTumorAndNormal: number;
+  percentageTumourAndNormal: number;
   donorsProcessingMolecularDataCount: number;
   filesToQcCount: number;
   donorsWithReleasedFilesCount: number;
   allFilesCount: number;
+  fullyReleasedDonorsCount: number;
+  partiallyReleasedDonorsCount: number;
+  noReleaseDonorsCount: number;
 };
