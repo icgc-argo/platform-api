@@ -10,7 +10,7 @@ export default gql`
   }
 
   enum DonorMolecularDataProcessingStatus {
-    COMPLETED
+    COMPLETE
     PROCESSING
     REGISTERED
   }

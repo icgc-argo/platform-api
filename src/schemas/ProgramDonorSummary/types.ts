@@ -6,7 +6,7 @@ export type DonorMolecularDataReleaseStatus =
   | 'PARTIALLY_RELEASED'
   | 'NO_RELEASE';
 
-export type DonorMolecularDataProcessingStatus = 'COMPLETED' | 'PROCESSING' | 'REGISTERED';
+export type DonorMolecularDataProcessingStatus = 'COMPLETE' | 'PROCESSING' | 'REGISTERED';
 
 export type DonorSummaryEntry = {
   id: string;
