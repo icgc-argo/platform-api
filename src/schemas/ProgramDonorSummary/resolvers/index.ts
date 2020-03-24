@@ -1,8 +1,8 @@
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
 import { createEsClient } from 'services/elasticsearch';
-import programDonorSummaryEntriesResolver from './programDonorSummaryEntries';
-import programDonorSummaryStatsResolver from './programDonorSummaryStats';
+import programDonorSummaryEntriesResolver from './summaryEntries';
+import programDonorSummaryStatsResolver from './summaryStats';
 
 const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   const esClient = await createEsClient();
