@@ -63,13 +63,13 @@ export type ElasticsearchDonorDocument = {
   alignmentsRunning: number;
   createdAt: string;
   donorId: string;
-  processingStatus: string;
+  processingStatus: DonorMolecularDataProcessingStatus | '';
   programId: string;
   publishedNormalAnalysis: number;
   publishedTumourAnalysis: number;
   registeredNormalSamples: number;
   registeredTumourSamples: number;
-  releaseStatus: string;
+  releaseStatus: DonorMolecularDataReleaseStatus | '';
   sangerVcsCompleted: number;
   sangerVcsFailed: number;
   sangerVcsRunning: number;
