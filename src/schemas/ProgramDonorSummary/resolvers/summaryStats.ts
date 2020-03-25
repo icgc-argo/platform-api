@@ -42,6 +42,13 @@ const programDonorSummaryStatsResolver: (
         ),
       ),
       esb.filterAggregation(
+        'noReleaseDonorsCount' as keyof ProgramDonorSummaryStats,
+        esb.termsQuery(
+          'releaseStatus' as keyof ElasticsearchDonorDocument,
+          ['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][],
+        ),
+      ),
+      esb.filterAggregation(
         'donorsProcessingMolecularDataCount' as keyof ProgramDonorSummaryStats,
         esb.termsQuery(
           'processingStatus' as keyof ElasticsearchDonorDocument,
@@ -57,7 +64,7 @@ const programDonorSummaryStatsResolver: (
       ),
     ]);
 
-  const body: {
+  const esResponseBody: {
     hits: {
       total: { value: number; relation: string };
     };
@@ -66,6 +73,9 @@ const programDonorSummaryStatsResolver: (
         doc_count: number;
       };
       partiallyReleasedDonorsCount: {
+        doc_count: number;
+      };
+      noReleaseDonorsCount: {
         doc_count: number;
       };
       donorsProcessingMolecularDataCount: {
@@ -90,16 +100,18 @@ const programDonorSummaryStatsResolver: (
     id: () => `${programShortName}::${stringify(filters)}`,
     programShortName: programShortName,
     allFilesCount: 0,
-    registeredDonorsCount: body.hits.total.value,
-    fullyReleasedDonorsCount: body.aggregations.fullyReleasedDonorsCount.doc_count,
-    partiallyReleasedDonorsCount: body.aggregations.partiallyReleasedDonorsCount.doc_count,
+    registeredDonorsCount: esResponseBody.hits.total.value,
+    fullyReleasedDonorsCount: esResponseBody.aggregations.fullyReleasedDonorsCount.doc_count,
+    partiallyReleasedDonorsCount:
+      esResponseBody.aggregations.partiallyReleasedDonorsCount.doc_count,
+    noReleaseDonorsCount: esResponseBody.aggregations.noReleaseDonorsCount.doc_count,
     donorsProcessingMolecularDataCount:
-      body.aggregations.donorsProcessingMolecularDataCount.doc_count,
-    donorsWithReleasedFilesCount: body.aggregations.donorsWithReleasedFilesCount.doc_count,
-    filesToQcCount: 0,
+      esResponseBody.aggregations.donorsProcessingMolecularDataCount.doc_count,
+    donorsWithReleasedFilesCount:
+      esResponseBody.aggregations.donorsWithReleasedFilesCount.doc_count,
     percentageCoreClinical: 0,
     percentageTumourAndNormal: 0,
-    noReleaseDonorsCount: 0,
+    filesToQcCount: 0,
   };
 };
 

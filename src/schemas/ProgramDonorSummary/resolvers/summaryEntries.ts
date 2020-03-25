@@ -35,7 +35,7 @@ const programDonorSummaryEntriesResolver: (
       body: esQuery,
     })
     .then(res => res.body.hits.hits);
-  const output = esHits
+  return esHits
     .map(({ _source }) => _source)
     .map(
       doc =>
@@ -64,8 +64,6 @@ const programDonorSummaryEntriesResolver: (
           updatedAt: new Date(doc.updatedAt),
         } as DonorSummaryEntry),
     );
-
-  return output;
 };
 
 export default programDonorSummaryEntriesResolver;
