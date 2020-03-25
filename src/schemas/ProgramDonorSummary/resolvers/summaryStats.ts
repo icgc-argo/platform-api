@@ -120,7 +120,7 @@ const programDonorSummaryStatsResolver: (
       size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
     })
-      .then(response => response.body);
+    .then(response => response.body);
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,
@@ -131,9 +131,12 @@ const programDonorSummaryStatsResolver: (
     noReleaseDonorsCount: aggregations.noReleaseDonorsCount.doc_count,
     donorsProcessingMolecularDataCount: aggregations.donorsProcessingMolecularDataCount.doc_count,
     donorsWithReleasedFilesCount: aggregations.donorsWithReleasedFilesCount.doc_count,
-    percentageTumourAndNormal:
-      aggregations.donorsWithRegisteredNormalAndTumourSamples.doc_count / hits.total.value,
-    percentageCoreClinical: aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value,
+    percentageTumourAndNormal: hits.total.value
+      ? aggregations.donorsWithRegisteredNormalAndTumourSamples.doc_count / hits.total.value
+      : 0,
+    percentageCoreClinical: hits.total.value
+      ? aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value
+      : 0,
     allFilesCount: aggregations.allFilesCount.value,
     filesToQcCount: aggregations.filesToQcCount.value,
   };
