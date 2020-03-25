@@ -86,10 +86,10 @@ const programDonorSummaryStatsResolver: (
       ),
       esb
         .sumAggregation('allFilesCount' as AggregationName)
-        .field('filesCount' as EsDonorDocumentField),
+        .field('totalFilesCount' as EsDonorDocumentField),
       esb
         .sumAggregation('filesToQcCount' as AggregationName)
-        .field('filesToQc' as EsDonorDocumentField),
+        .field('filesToQcCount' as EsDonorDocumentField),
     ]);
 
   type FilterAggregationResult = { doc_count: number };
