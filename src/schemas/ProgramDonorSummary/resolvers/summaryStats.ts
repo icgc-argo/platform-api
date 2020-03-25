@@ -120,9 +120,7 @@ const programDonorSummaryStatsResolver: (
       size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
     })
-    .then(response => {
-      return response.body;
-    });
+      .then(response => response.body);
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,
