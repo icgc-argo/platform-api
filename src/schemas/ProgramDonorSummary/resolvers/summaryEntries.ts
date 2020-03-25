@@ -27,7 +27,10 @@ const programDonorSummaryEntriesResolver: (
   const esQuery = esb
     .requestBodySearch()
     .query(
-      esb.boolQuery().must([esb.matchQuery('programId' as EsDonorDocumentField, programShortName)]), //using an array to accommodate filters in the future
+      esb.boolQuery().must([
+        //using an array to accommodate filters in the future
+        esb.matchQuery('programId' as EsDonorDocumentField, programShortName),
+      ]),
     )
     .from(args.offset)
     .size(args.first);
