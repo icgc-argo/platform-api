@@ -193,6 +193,9 @@ export default gql`
     """
     programDonorSummaryEntries(
       programShortName: String!
+      """
+      Maximum page size of 500
+      """
       first: Int = 20
       offset: Int = 0
       filters: [ProgramDonorSummaryFilter!] = []

@@ -11,6 +11,7 @@ import {
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import { UserInputError } from 'apollo-server-express';
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
 ) => GraphQLFieldResolver<
@@ -24,6 +25,13 @@ const programDonorSummaryEntriesResolver: (
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
   const { programShortName } = args;
+
+  const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
+  if (args.first > MAXIMUM_SUMMARY_PAGE_SIZE) {
+    throw new UserInputError(`Max page size of ${MAXIMUM_SUMMARY_PAGE_SIZE} exceeded`, {
+      first: args.first,
+    });
+  }
 
   const esQuery = esb
     .requestBodySearch()
