@@ -81,5 +81,7 @@ export type ElasticsearchDonorDocument = {
   submitterDonorId: string;
   updatedAt: string;
   validWithCurrentDictionary: boolean;
+  filesCount: number;
+  filesToQc: number;
 };
 export type EsDonorDocumentField = keyof ElasticsearchDonorDocument;

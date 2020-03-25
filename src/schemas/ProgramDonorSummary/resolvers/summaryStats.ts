@@ -25,7 +25,7 @@ const programDonorSummaryStatsResolver: (
 > = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
   const { programShortName, filters } = args;
 
-  type AggregationName = keyof ProgramDonorSummaryStats;
+  type AggregationName = keyof ProgramDonorSummaryStats | 'donorsWithAllCoreClinicalData';
 
   const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
     esb.filterAggregation(name, filterQuery);
@@ -36,43 +36,37 @@ const programDonorSummaryStatsResolver: (
       esb.boolQuery().must([esb.matchQuery('programId' as EsDonorDocumentField, programShortName)]),
     )
     .aggs([
-      filterAggregation(
-        'fullyReleasedDonorsCount',
+      filterAggregation('fullyReleasedDonorsCount').filter(
         esb
           .termsQuery()
           .field('releaseStatus' as EsDonorDocumentField)
           .values(['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
-      filterAggregation(
-        'partiallyReleasedDonorsCount',
+      filterAggregation('partiallyReleasedDonorsCount').filter(
         esb
           .termsQuery()
           .field('releaseStatus' as EsDonorDocumentField)
           .values(['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
-      filterAggregation(
-        'noReleaseDonorsCount',
+      filterAggregation('noReleaseDonorsCount').filter(
         esb
           .termsQuery()
           .field('releaseStatus' as EsDonorDocumentField)
           .values(['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
-      filterAggregation(
-        'donorsProcessingMolecularDataCount',
+      filterAggregation('donorsProcessingMolecularDataCount').filter(
         esb
           .termsQuery()
           .field('processingStatus' as EsDonorDocumentField)
           .values(['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
-      filterAggregation(
-        'donorsWithReleasedFilesCount',
+      filterAggregation('donorsWithReleasedFilesCount').filter(
         esb
           .termsQuery()
           .field('processingStatus' as EsDonorDocumentField)
           .values(['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
-      esb.filterAggregation(
-        'donorsWithRegisteredNormalAndTumourSamples',
+      filterAggregation('donorsWithRegisteredNormalAndTumourSamples' as AggregationName).filter(
         esb.boolQuery().must([
           esb
             .rangeQuery()
@@ -84,8 +78,7 @@ const programDonorSummaryStatsResolver: (
             .gt(0),
         ]),
       ),
-      esb.filterAggregation(
-        'donorsWithAllCoreClinicalData',
+      filterAggregation('donorsWithAllCoreClinicalData').filter(
         esb
           .rangeQuery()
           .field('submittedCoreDataPercent' as EsDonorDocumentField)
@@ -94,10 +87,13 @@ const programDonorSummaryStatsResolver: (
       esb
         .sumAggregation('allFilesCount' as AggregationName)
         .field('filesCount' as EsDonorDocumentField),
+      esb
+        .sumAggregation('filesToQcCount' as AggregationName)
+        .field('filesToQc' as EsDonorDocumentField),
     ]);
 
   type FilterAggregationResult = { doc_count: number };
-  type NumbericAggregationResult = { value: number };
+  type NumericAggregationResult = { value: number };
   const {
     aggregations,
     hits,
@@ -113,7 +109,8 @@ const programDonorSummaryStatsResolver: (
       donorsWithReleasedFilesCount: FilterAggregationResult;
       donorsWithRegisteredNormalAndTumourSamples: FilterAggregationResult;
       donorsWithAllCoreClinicalData: FilterAggregationResult;
-      allFilesCount: NumbericAggregationResult;
+      allFilesCount: NumericAggregationResult;
+      filesToQcCount: NumericAggregationResult;
     };
   } = await esClient
     .search({
@@ -125,8 +122,6 @@ const programDonorSummaryStatsResolver: (
     .then(response => {
       return response.body;
     });
-
-  console.log('esQuery: ', JSON.stringify(esQuery.toJSON()));
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,
@@ -141,7 +136,7 @@ const programDonorSummaryStatsResolver: (
       aggregations.donorsWithRegisteredNormalAndTumourSamples.doc_count / hits.total.value,
     percentageCoreClinical: aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value,
     allFilesCount: aggregations.allFilesCount.value,
-    filesToQcCount: 0,
+    filesToQcCount: aggregations.filesToQcCount.value,
   };
 };
 
