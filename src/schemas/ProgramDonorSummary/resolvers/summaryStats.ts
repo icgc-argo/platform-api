@@ -38,79 +38,109 @@ const programDonorSummaryStatsResolver: (
     .aggs([
       filterAggregation(
         'fullyReleasedDonorsCount',
-        esb.termsQuery(
-          'releaseStatus' as EsDonorDocumentField,
-          ['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][],
-        ),
+        esb
+          .termsQuery()
+          .field('releaseStatus' as EsDonorDocumentField)
+          .values(['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation(
         'partiallyReleasedDonorsCount',
-        esb.termsQuery(
-          'releaseStatus' as EsDonorDocumentField,
-          ['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][],
-        ),
+        esb
+          .termsQuery()
+          .field('releaseStatus' as EsDonorDocumentField)
+          .values(['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation(
         'noReleaseDonorsCount',
-        esb.termsQuery(
-          'releaseStatus' as EsDonorDocumentField,
-          ['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][],
-        ),
+        esb
+          .termsQuery()
+          .field('releaseStatus' as EsDonorDocumentField)
+          .values(['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation(
         'donorsProcessingMolecularDataCount',
-        esb.termsQuery(
-          'processingStatus' as EsDonorDocumentField,
-          ['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][],
-        ),
+        esb
+          .termsQuery()
+          .field('processingStatus' as EsDonorDocumentField)
+          .values(['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
       filterAggregation(
         'donorsWithReleasedFilesCount',
-        esb.termsQuery(
-          'processingStatus' as EsDonorDocumentField,
-          ['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][],
-        ),
+        esb
+          .termsQuery()
+          .field('processingStatus' as EsDonorDocumentField)
+          .values(['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
+      esb.filterAggregation(
+        'donorsWithRegisteredNormalAndTumourSamples',
+        esb.boolQuery().must([
+          esb
+            .rangeQuery()
+            .field('registeredNormalSamples' as EsDonorDocumentField)
+            .gt(0),
+          esb
+            .rangeQuery()
+            .field('registeredTumourSamples' as EsDonorDocumentField)
+            .gt(0),
+        ]),
+      ),
+      esb.filterAggregation(
+        'donorsWithAllCoreClinicalData',
+        esb
+          .rangeQuery()
+          .field('submittedCoreDataPercent' as EsDonorDocumentField)
+          .gte(1),
+      ),
+      esb
+        .sumAggregation('allFilesCount' as AggregationName)
+        .field('filesCount' as EsDonorDocumentField),
     ]);
 
-  const esResponseBody = await esClient
+  type FilterAggregationResult = { doc_count: number };
+  type NumbericAggregationResult = { value: number };
+  const {
+    aggregations,
+    hits,
+  }: {
+    hits: {
+      total: { value: number; relation: string };
+    };
+    aggregations: {
+      fullyReleasedDonorsCount: FilterAggregationResult;
+      partiallyReleasedDonorsCount: FilterAggregationResult;
+      noReleaseDonorsCount: FilterAggregationResult;
+      donorsProcessingMolecularDataCount: FilterAggregationResult;
+      donorsWithReleasedFilesCount: FilterAggregationResult;
+      donorsWithRegisteredNormalAndTumourSamples: FilterAggregationResult;
+      donorsWithAllCoreClinicalData: FilterAggregationResult;
+      allFilesCount: NumbericAggregationResult;
+    };
+  } = await esClient
     .search({
       index: 'donor_centric',
       track_total_hits: true,
       size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
     })
-    .then(
-      response =>
-        response.body as {
-          hits: {
-            total: { value: number; relation: string };
-          };
-          aggregations: {
-            [key in AggregationName]: {
-              doc_count: number;
-            };
-          };
-        },
-    );
+    .then(response => {
+      return response.body;
+    });
 
   console.log('esQuery: ', JSON.stringify(esQuery.toJSON()));
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,
     programShortName: programShortName,
-    allFilesCount: 0,
-    registeredDonorsCount: esResponseBody.hits.total.value,
-    fullyReleasedDonorsCount: esResponseBody.aggregations.fullyReleasedDonorsCount.doc_count,
-    partiallyReleasedDonorsCount:
-      esResponseBody.aggregations.partiallyReleasedDonorsCount.doc_count,
-    noReleaseDonorsCount: esResponseBody.aggregations.noReleaseDonorsCount.doc_count,
-    donorsProcessingMolecularDataCount:
-      esResponseBody.aggregations.donorsProcessingMolecularDataCount.doc_count,
-    donorsWithReleasedFilesCount:
-      esResponseBody.aggregations.donorsWithReleasedFilesCount.doc_count,
-    percentageCoreClinical: 0,
-    percentageTumourAndNormal: 0,
+    registeredDonorsCount: hits.total.value,
+    fullyReleasedDonorsCount: aggregations.fullyReleasedDonorsCount.doc_count,
+    partiallyReleasedDonorsCount: aggregations.partiallyReleasedDonorsCount.doc_count,
+    noReleaseDonorsCount: aggregations.noReleaseDonorsCount.doc_count,
+    donorsProcessingMolecularDataCount: aggregations.donorsProcessingMolecularDataCount.doc_count,
+    donorsWithReleasedFilesCount: aggregations.donorsWithReleasedFilesCount.doc_count,
+    percentageTumourAndNormal:
+      aggregations.donorsWithRegisteredNormalAndTumourSamples.doc_count / hits.total.value,
+    percentageCoreClinical: aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value,
+    allFilesCount: aggregations.allFilesCount.value,
     filesToQcCount: 0,
   };
 };
