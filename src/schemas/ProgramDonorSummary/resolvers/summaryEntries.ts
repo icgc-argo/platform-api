@@ -10,6 +10,7 @@ import {
   EsDonorDocumentField,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
+import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
 ) => GraphQLFieldResolver<
@@ -39,7 +40,7 @@ const programDonorSummaryEntriesResolver: (
     _source: ElasticsearchDonorDocument;
   }> = await esClient
     .search({
-      index: 'donor_centric',
+      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
     })
     .then(res => res.body.hits.hits);

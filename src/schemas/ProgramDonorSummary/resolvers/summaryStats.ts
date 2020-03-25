@@ -12,6 +12,7 @@ import {
   EsDonorDocumentField,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
+import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 
 const programDonorSummaryStatsResolver: (
   esClient: Client,
@@ -114,7 +115,7 @@ const programDonorSummaryStatsResolver: (
     };
   } = await esClient
     .search({
-      index: 'donor_centric',
+      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       track_total_hits: true,
       size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
