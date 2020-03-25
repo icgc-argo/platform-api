@@ -8,6 +8,7 @@ import {
   ProgramDonorSummaryStats,
   ProgramDonorSummaryFilter,
   ElasticsearchDonorDocument,
+  ProgramDonorSummaryStatsGqlResponse,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 
@@ -20,79 +21,76 @@ const programDonorSummaryStatsResolver: (
     programShortName: string;
     filters: ProgramDonorSummaryFilter[];
   }
-> = esClient => async (source, args, context): Promise<ProgramDonorSummaryStats> => {
+> = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
   const { programShortName, filters } = args;
+
+  type AggregationName = keyof ProgramDonorSummaryStats;
+  type EsDonorDocumentField = keyof ElasticsearchDonorDocument;
+
+  const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
+    esb.filterAggregation(name, filterQuery);
 
   const esQuery = esb
     .requestBodySearch()
     .query(esb.boolQuery().must([esb.matchQuery('programId', programShortName)]))
     .aggs([
-      esb.filterAggregation(
-        'fullyReleasedDonorsCount' as keyof ProgramDonorSummaryStats,
+      filterAggregation(
+        'fullyReleasedDonorsCount',
         esb.termsQuery(
-          'releaseStatus' as keyof ElasticsearchDonorDocument,
+          'releaseStatus' as EsDonorDocumentField,
           ['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][],
         ),
       ),
-      esb.filterAggregation(
-        'partiallyReleasedDonorsCount' as keyof ProgramDonorSummaryStats,
+      filterAggregation(
+        'partiallyReleasedDonorsCount',
         esb.termsQuery(
-          'releaseStatus' as keyof ElasticsearchDonorDocument,
+          'releaseStatus' as EsDonorDocumentField,
           ['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][],
         ),
       ),
-      esb.filterAggregation(
-        'noReleaseDonorsCount' as keyof ProgramDonorSummaryStats,
+      filterAggregation(
+        'noReleaseDonorsCount',
         esb.termsQuery(
-          'releaseStatus' as keyof ElasticsearchDonorDocument,
+          'releaseStatus' as EsDonorDocumentField,
           ['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][],
         ),
       ),
-      esb.filterAggregation(
-        'donorsProcessingMolecularDataCount' as keyof ProgramDonorSummaryStats,
+      filterAggregation(
+        'donorsProcessingMolecularDataCount',
         esb.termsQuery(
-          'processingStatus' as keyof ElasticsearchDonorDocument,
+          'processingStatus' as EsDonorDocumentField,
           ['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][],
         ),
       ),
-      esb.filterAggregation(
-        'donorsWithReleasedFilesCount' as keyof ProgramDonorSummaryStats,
+      filterAggregation(
+        'donorsWithReleasedFilesCount',
         esb.termsQuery(
-          'processingStatus' as keyof ElasticsearchDonorDocument,
+          'processingStatus' as EsDonorDocumentField,
           ['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][],
         ),
       ),
     ]);
 
-  const esResponseBody: {
-    hits: {
-      total: { value: number; relation: string };
-    };
-    aggregations: {
-      fullyReleasedDonorsCount: {
-        doc_count: number;
-      };
-      partiallyReleasedDonorsCount: {
-        doc_count: number;
-      };
-      noReleaseDonorsCount: {
-        doc_count: number;
-      };
-      donorsProcessingMolecularDataCount: {
-        doc_count: number;
-      };
-      donorsWithReleasedFilesCount: {
-        doc_count: number;
-      };
-    };
-  } = await esClient
+  const esResponseBody = await esClient
     .search({
       index: 'donor_centric',
       track_total_hits: true,
-      size: 0, // we're not interested in hits
+      size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
     })
-    .then(response => response.body);
+    .then(
+      response =>
+        response.body as {
+          hits: {
+            total: { value: number; relation: string };
+          };
+          aggregations: {
+            [key in AggregationName]: {
+              doc_count: number;
+            };
+          };
+        },
+    );
 
   console.log('esQuery: ', JSON.stringify(esQuery.toJSON()));
 

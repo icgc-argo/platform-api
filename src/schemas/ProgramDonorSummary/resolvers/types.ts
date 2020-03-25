@@ -40,8 +40,6 @@ export type ProgramDonorSummaryFilter = {
 };
 
 export type ProgramDonorSummaryStats = {
-  id: () => string;
-  programShortName: string;
   registeredDonorsCount: number;
   percentageCoreClinical: number;
   percentageTumourAndNormal: number;
@@ -52,6 +50,11 @@ export type ProgramDonorSummaryStats = {
   fullyReleasedDonorsCount: number;
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
+};
+
+export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
+  id: () => string;
+  programShortName: string;
 };
 
 /**
