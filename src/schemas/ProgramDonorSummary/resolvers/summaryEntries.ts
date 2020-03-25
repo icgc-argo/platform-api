@@ -8,6 +8,7 @@ import {
   ProgramDonorSummaryFilter,
   ElasticsearchDonorDocument,
   EsDonorDocumentField,
+  DonorSummaryEntrySort,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -21,6 +22,7 @@ const programDonorSummaryEntriesResolver: (
     programShortName: string;
     first: number;
     offset: number;
+    sorts: DonorSummaryEntrySort[];
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
@@ -41,6 +43,7 @@ const programDonorSummaryEntriesResolver: (
         esb.matchQuery('programId' as EsDonorDocumentField, programShortName),
       ]),
     )
+    .sorts(args.sorts.map(({ field, order }) => esb.sort(field, order)))
     .from(args.offset)
     .size(args.first);
 

@@ -57,6 +57,13 @@ export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
   programShortName: string;
 };
 
+export type SortOrder = 'asc' | 'desc';
+
+export type DonorSummaryEntrySort = {
+  field: keyof ElasticsearchDonorDocument;
+  order: SortOrder;
+};
+
 /**
  * Types from Elasticsearch
  */

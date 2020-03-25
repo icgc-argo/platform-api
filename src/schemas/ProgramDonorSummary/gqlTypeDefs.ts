@@ -43,6 +43,16 @@ export default gql`
     values: [String!]!
   }
 
+  enum SortOrder {
+    asc
+    desc
+  }
+
+  input DonorSummaryEntrySort {
+    field: ProgramDonorSummaryEntryField!
+    order: SortOrder
+  }
+
   """
   Includes status summary of clinical and molecular data processing for the given donor
   """
@@ -198,6 +208,7 @@ export default gql`
       """
       first: Int = 20
       offset: Int = 0
+      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
     programDonorSummaryStats(
