@@ -3,7 +3,12 @@ import esb from 'elastic-builder';
 
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
-import { DonorSummaryEntry, ProgramDonorSummaryFilter, ElasticsearchDonorDocument } from './types';
+import {
+  DonorSummaryEntry,
+  ProgramDonorSummaryFilter,
+  ElasticsearchDonorDocument,
+  EsDonorDocumentField,
+} from './types';
 import { Client } from '@elastic/elasticsearch';
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -22,7 +27,7 @@ const programDonorSummaryEntriesResolver: (
   const esQuery = esb
     .requestBodySearch()
     .query(
-      esb.boolQuery().must([esb.matchQuery('programId', programShortName)]), //using an array to accommodate filters in the future
+      esb.boolQuery().must([esb.matchQuery('programId' as EsDonorDocumentField, programShortName)]), //using an array to accommodate filters in the future
     )
     .from(args.offset)
     .size(args.first);

@@ -82,3 +82,4 @@ export type ElasticsearchDonorDocument = {
   updatedAt: string;
   validWithCurrentDictionary: boolean;
 };
+export type EsDonorDocumentField = keyof ElasticsearchDonorDocument;

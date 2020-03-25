@@ -9,6 +9,7 @@ import {
   ProgramDonorSummaryFilter,
   ElasticsearchDonorDocument,
   ProgramDonorSummaryStatsGqlResponse,
+  EsDonorDocumentField,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 
@@ -25,14 +26,15 @@ const programDonorSummaryStatsResolver: (
   const { programShortName, filters } = args;
 
   type AggregationName = keyof ProgramDonorSummaryStats;
-  type EsDonorDocumentField = keyof ElasticsearchDonorDocument;
 
   const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
     esb.filterAggregation(name, filterQuery);
 
   const esQuery = esb
     .requestBodySearch()
-    .query(esb.boolQuery().must([esb.matchQuery('programId', programShortName)]))
+    .query(
+      esb.boolQuery().must([esb.matchQuery('programId' as EsDonorDocumentField, programShortName)]),
+    )
     .aggs([
       filterAggregation(
         'fullyReleasedDonorsCount',
