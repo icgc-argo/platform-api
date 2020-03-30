@@ -63,7 +63,7 @@ const programDonorSummaryStatsResolver: (
       filterAggregation('donorsWithReleasedFilesCount').filter(
         esb
           .termsQuery()
-          .field(EsDonorDocumentField.processingStatus)
+          .field(EsDonorDocumentField.releaseStatus)
           .values([
             DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED,
             DonorMolecularDataReleaseStatus.FULLY_RELEASED,
