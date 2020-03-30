@@ -40,7 +40,7 @@ const programDonorSummaryEntriesResolver: (
     .query(
       esb.boolQuery().must([
         //using an array to accommodate filters in the future
-        esb.matchQuery('programId' as EsDonorDocumentField, programShortName),
+        esb.matchQuery(EsDonorDocumentField.programId, programShortName),
       ]),
     )
     .sorts(args.sorts.map(({ field, order }) => esb.sort(field, order)))

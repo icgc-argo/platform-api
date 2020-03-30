@@ -33,64 +33,62 @@ const programDonorSummaryStatsResolver: (
 
   const esQuery = esb
     .requestBodySearch()
-    .query(
-      esb.boolQuery().must([esb.matchQuery('programId' as EsDonorDocumentField, programShortName)]),
-    )
+    .query(esb.boolQuery().must([esb.matchQuery(EsDonorDocumentField.programId, programShortName)]))
     .aggs([
       filterAggregation('fullyReleasedDonorsCount').filter(
         esb
           .termsQuery()
-          .field('releaseStatus' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.releaseStatus)
           .values(['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation('partiallyReleasedDonorsCount').filter(
         esb
           .termsQuery()
-          .field('releaseStatus' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.releaseStatus)
           .values(['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation('noReleaseDonorsCount').filter(
         esb
           .termsQuery()
-          .field('releaseStatus' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.releaseStatus)
           .values(['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][]),
       ),
       filterAggregation('donorsProcessingMolecularDataCount').filter(
         esb
           .termsQuery()
-          .field('processingStatus' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.processingStatus)
           .values(['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
       filterAggregation('donorsWithReleasedFilesCount').filter(
         esb
           .termsQuery()
-          .field('processingStatus' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.processingStatus)
           .values(['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][]),
       ),
       filterAggregation('donorsWithRegisteredNormalAndTumourSamples' as AggregationName).filter(
         esb.boolQuery().must([
           esb
             .rangeQuery()
-            .field('registeredNormalSamples' as EsDonorDocumentField)
+            .field(EsDonorDocumentField.registeredNormalSamples)
             .gt(0),
           esb
             .rangeQuery()
-            .field('registeredTumourSamples' as EsDonorDocumentField)
+            .field(EsDonorDocumentField.registeredTumourSamples)
             .gt(0),
         ]),
       ),
       filterAggregation('donorsWithAllCoreClinicalData').filter(
         esb
           .rangeQuery()
-          .field('submittedCoreDataPercent' as EsDonorDocumentField)
+          .field(EsDonorDocumentField.submittedCoreDataPercent)
           .gte(1),
       ),
       esb
         .sumAggregation('allFilesCount' as AggregationName)
-        .field('totalFilesCount' as EsDonorDocumentField),
+        .field(EsDonorDocumentField.totalFilesCount),
       esb
         .sumAggregation('filesToQcCount' as AggregationName)
-        .field('filesToQcCount' as EsDonorDocumentField),
+        .field(EsDonorDocumentField.filesToQcCount),
     ]);
 
   type FilterAggregationResult = { doc_count: number };

@@ -64,31 +64,55 @@ export type DonorSummaryEntrySort = {
   order: SortOrder;
 };
 
+export enum EsDonorDocumentField {
+  alignmentsCompleted = 'alignmentsCompleted',
+  alignmentsFailed = 'alignmentsFailed',
+  alignmentsRunning = 'alignmentsRunning',
+  createdAt = 'createdAt',
+  donorId = 'donorId',
+  processingStatus = 'processingStatus',
+  programId = 'programId',
+  publishedNormalAnalysis = 'publishedNormalAnalysis',
+  publishedTumourAnalysis = 'publishedTumourAnalysis',
+  registeredNormalSamples = 'registeredNormalSamples',
+  registeredTumourSamples = 'registeredTumourSamples',
+  releaseStatus = 'releaseStatus',
+  sangerVcsCompleted = 'sangerVcsCompleted',
+  sangerVcsFailed = 'sangerVcsFailed',
+  sangerVcsRunning = 'sangerVcsRunning',
+  submittedCoreDataPercent = 'submittedCoreDataPercent',
+  submittedExtendedDataPercent = 'submittedExtendedDataPercent',
+  submitterDonorId = 'submitterDonorId',
+  updatedAt = 'updatedAt',
+  validWithCurrentDictionary = 'validWithCurrentDictionary',
+  totalFilesCount = 'totalFilesCount',
+  filesToQcCount = 'filesToQcCount',
+}
+
 /**
  * Types from Elasticsearch
  */
 export type ElasticsearchDonorDocument = {
-  alignmentsCompleted: number;
-  alignmentsFailed: number;
-  alignmentsRunning: number;
-  createdAt: string;
-  donorId: string;
-  processingStatus: DonorMolecularDataProcessingStatus | '';
-  programId: string;
-  publishedNormalAnalysis: number;
-  publishedTumourAnalysis: number;
-  registeredNormalSamples: number;
-  registeredTumourSamples: number;
-  releaseStatus: DonorMolecularDataReleaseStatus | '';
-  sangerVcsCompleted: number;
-  sangerVcsFailed: number;
-  sangerVcsRunning: number;
-  submittedCoreDataPercent: number;
-  submittedExtendedDataPercent: number;
-  submitterDonorId: string;
-  updatedAt: string;
-  validWithCurrentDictionary: boolean;
-  totalFilesCount: number;
-  filesToQcCount: number;
+  [EsDonorDocumentField.alignmentsCompleted]: number;
+  [EsDonorDocumentField.alignmentsFailed]: number;
+  [EsDonorDocumentField.alignmentsRunning]: number;
+  [EsDonorDocumentField.createdAt]: string;
+  [EsDonorDocumentField.donorId]: string;
+  [EsDonorDocumentField.processingStatus]: DonorMolecularDataProcessingStatus | '';
+  [EsDonorDocumentField.programId]: string;
+  [EsDonorDocumentField.publishedNormalAnalysis]: number;
+  [EsDonorDocumentField.publishedTumourAnalysis]: number;
+  [EsDonorDocumentField.registeredNormalSamples]: number;
+  [EsDonorDocumentField.registeredTumourSamples]: number;
+  [EsDonorDocumentField.releaseStatus]: DonorMolecularDataReleaseStatus | '';
+  [EsDonorDocumentField.sangerVcsCompleted]: number;
+  [EsDonorDocumentField.sangerVcsFailed]: number;
+  [EsDonorDocumentField.sangerVcsRunning]: number;
+  [EsDonorDocumentField.submittedCoreDataPercent]: number;
+  [EsDonorDocumentField.submittedExtendedDataPercent]: number;
+  [EsDonorDocumentField.submitterDonorId]: string;
+  [EsDonorDocumentField.updatedAt]: string;
+  [EsDonorDocumentField.validWithCurrentDictionary]: boolean;
+  [EsDonorDocumentField.totalFilesCount]: number;
+  [EsDonorDocumentField.filesToQcCount]: number;
 };
-export type EsDonorDocumentField = keyof ElasticsearchDonorDocument;
