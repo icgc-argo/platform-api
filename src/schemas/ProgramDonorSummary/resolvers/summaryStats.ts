@@ -1,7 +1,6 @@
 //@ts-ignore no type defs
 import stringify from 'json-stringify-deterministic';
 import esb from 'elastic-builder';
-
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {

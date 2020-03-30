@@ -1,6 +1,4 @@
-//@ts-ignore no type defs
 import esb from 'elastic-builder';
-
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
@@ -15,6 +13,7 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
+
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
 ) => GraphQLFieldResolver<
