@@ -4,6 +4,13 @@ export const GQL_MAX_COST = Number(process.env.GQL_MAX_COST) || 1000;
 
 // Elasticsearch config
 export const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'http://localhost:9200';
+export const ELASTICSEARCH_VAULT_SECRET_PATH = process.env
+  .ELASTICSEARCH_VAULT_SECRET_PATH as string;
+export const ELASTICSEARCH_CLIENT_TRUST_SSL_CERT =
+  process.env.ELASTICSEARCH_CLIENT_TRUST_SSL_CERT === 'true';
+
+export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
+  process.env.ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX || 'donor_centric';
 
 // Arranger configs
 export const ARRANGER_ROOT = process.env.ARRANGER_ROOT || 'http://localhost:5050';
@@ -14,6 +21,13 @@ export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081
 export const EGO_ROOT_GRPC = process.env.EGO_ROOT_GRPC || 'localhost:50051';
 export const EGO_JWT_SECRET = process.env.EGO_JWT_SECRET;
 export const EGO_DACO_POLICY_NAME = process.env.EGO_DACO_POLICY_NAME || 'DACO';
+
+// Vault
+export const USE_VAULT = process.env.USE_VAULT === 'true';
+export const VAULT_TOKEN = process.env.VAULT_TOKEN as string;
+export const VAULT_AUTH_METHOD = process.env.VAULT_AUTH_METHOD as 'token' | 'kubernetes';
+export const VAULT_URL = (process.env.VAULT_URL as string) || 'http://localhost:8200';
+export const VAULT_ROLE = process.env.VAULT_ROLE as string;
 
 // Default ego public key value is the example value provided in the application.yml of the public overture repository
 export const EGO_PUBLIC_KEY =

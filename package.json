@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"no test specified\" && exit 0",
-    "dev": "ts-node-dev ./src/index.ts -p ./tsconfig.json",
+    "dev": "NODE_PATH=./src ts-node-dev ./src/index.ts -p ./tsconfig.json",
     "build": "rm -rf dist && tsc -p ./tsconfig.json && cp -r ./src/resources ./dist",
-    "start::prod": "node dist/index.js"
+    "start::prod": "NODE_PATH=./dist node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,8 @@
     "@grpc/proto-loader": "^0.5.0",
     "@icgc-argo/ego-token-utils": "^5.1.0",
     "@icgc-argo/program-service-proto": "0.1.0",
+    "@types/lodash": "^4.14.149",
+    "@types/request": "^2.48.4",
     "@types/swagger-ui-express": "^4.1.1",
     "@types/yamljs": "^0.2.30",
     "apollo-link-context": "^1.0.17",
@@ -32,6 +34,7 @@
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",
     "dotenv": "^8.2.0",
+    "elastic-builder": "^2.6.0",
     "express": "^4.16.4",
     "form-data": "^2.5.0",
     "graphql": "^14.6.0",
@@ -41,6 +44,7 @@
     "json-stringify-deterministic": "^1.0.1",
     "lodash": "^4.17.14",
     "node-fetch": "^2.3.0",
+    "node-vault": "^0.9.13",
     "retry": "^0.12.0",
     "swagger-ui-express": "^4.0.7",
     "url-join": "^4.0.0",
