@@ -26,7 +26,7 @@ export const EGO_DACO_POLICY_NAME = process.env.EGO_DACO_POLICY_NAME || 'DACO';
 export const USE_VAULT = process.env.USE_VAULT === 'true';
 export const VAULT_TOKEN = process.env.VAULT_TOKEN as string;
 export const VAULT_AUTH_METHOD = process.env.VAULT_AUTH_METHOD as 'token' | 'kubernetes';
-export const VAULT_URL = process.env.VAULT_URL as string;
+export const VAULT_URL = (process.env.VAULT_URL as string) || 'http://localhost:8200';
 export const VAULT_ROLE = process.env.VAULT_ROLE as string;
 
 // Default ego public key value is the example value provided in the application.yml of the public overture repository
