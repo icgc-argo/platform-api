@@ -1,12 +1,17 @@
 /**
  * Types from graphql
  */
-export type DonorMolecularDataReleaseStatus =
-  | 'FULLY_RELEASED'
-  | 'PARTIALLY_RELEASED'
-  | 'NO_RELEASE';
+export enum DonorMolecularDataReleaseStatus {
+  FULLY_RELEASED = 'FULLY_RELEASED',
+  PARTIALLY_RELEASED = 'PARTIALLY_RELEASED',
+  NO_RELEASE = 'NO_RELEASE',
+}
 
-export type DonorMolecularDataProcessingStatus = 'COMPLETE' | 'PROCESSING' | 'REGISTERED';
+export enum DonorMolecularDataProcessingStatus {
+  COMPLETE = 'COMPLETE',
+  PROCESSING = 'PROCESSING',
+  REGISTERED = 'REGISTERED',
+}
 
 export type DonorSummaryEntry = {
   id: string;

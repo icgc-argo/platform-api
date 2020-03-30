@@ -9,6 +9,8 @@ import {
   ElasticsearchDonorDocument,
   EsDonorDocumentField,
   DonorSummaryEntrySort,
+  DonorMolecularDataProcessingStatus,
+  DonorMolecularDataReleaseStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -66,13 +68,13 @@ const programDonorSummaryEntriesResolver: (
           alignmentsFailed: doc.alignmentsFailed,
           alignmentsRunning: doc.alignmentsRunning,
           donorId: doc.donorId,
-          processingStatus: doc.processingStatus || 'REGISTERED',
+          processingStatus: doc.processingStatus || DonorMolecularDataProcessingStatus.REGISTERED,
           programId: doc.programId,
           publishedNormalAnalysis: doc.publishedNormalAnalysis,
           publishedTumourAnalysis: doc.publishedTumourAnalysis,
           registeredNormalSamples: doc.registeredNormalSamples,
           registeredTumourSamples: doc.registeredTumourSamples,
-          releaseStatus: doc.releaseStatus || 'NO_RELEASE',
+          releaseStatus: doc.releaseStatus || DonorMolecularDataReleaseStatus.NO_RELEASE,
           sangerVcsCompleted: doc.sangerVcsCompleted,
           sangerVcsFailed: doc.sangerVcsFailed,
           sangerVcsRunning: doc.sangerVcsRunning,

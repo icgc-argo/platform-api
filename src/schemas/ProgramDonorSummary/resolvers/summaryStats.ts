@@ -7,9 +7,10 @@ import { GraphQLFieldResolver } from 'graphql';
 import {
   ProgramDonorSummaryStats,
   ProgramDonorSummaryFilter,
-  ElasticsearchDonorDocument,
   ProgramDonorSummaryStatsGqlResponse,
   EsDonorDocumentField,
+  DonorMolecularDataProcessingStatus,
+  DonorMolecularDataReleaseStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -39,31 +40,34 @@ const programDonorSummaryStatsResolver: (
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
-          .values(['FULLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
+          .values([DonorMolecularDataReleaseStatus.FULLY_RELEASED]),
       ),
       filterAggregation('partiallyReleasedDonorsCount').filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
-          .values(['PARTIALLY_RELEASED'] as ElasticsearchDonorDocument['releaseStatus'][]),
+          .values([DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED]),
       ),
       filterAggregation('noReleaseDonorsCount').filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
-          .values(['NO_RELEASE', ''] as ElasticsearchDonorDocument['releaseStatus'][]),
+          .values([DonorMolecularDataReleaseStatus.NO_RELEASE, '']),
       ),
       filterAggregation('donorsProcessingMolecularDataCount').filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.processingStatus)
-          .values(['PROCESSING'] as ElasticsearchDonorDocument['processingStatus'][]),
+          .values([DonorMolecularDataProcessingStatus.PROCESSING]),
       ),
       filterAggregation('donorsWithReleasedFilesCount').filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.processingStatus)
-          .values(['COMPLETE'] as ElasticsearchDonorDocument['processingStatus'][]),
+          .values([
+            DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED,
+            DonorMolecularDataReleaseStatus.FULLY_RELEASED,
+          ]),
       ),
       filterAggregation('donorsWithRegisteredNormalAndTumourSamples' as AggregationName).filter(
         esb.boolQuery().must([
