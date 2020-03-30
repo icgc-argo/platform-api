@@ -64,6 +64,9 @@ export type DonorSummaryEntrySort = {
   order: SortOrder;
 };
 
+/**
+ * Types from Elasticsearch
+ */
 export enum EsDonorDocumentField {
   alignmentsCompleted = 'alignmentsCompleted',
   alignmentsFailed = 'alignmentsFailed',
@@ -89,9 +92,6 @@ export enum EsDonorDocumentField {
   filesToQcCount = 'filesToQcCount',
 }
 
-/**
- * Types from Elasticsearch
- */
 export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.alignmentsCompleted]: number;
   [EsDonorDocumentField.alignmentsFailed]: number;
