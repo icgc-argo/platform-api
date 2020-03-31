@@ -7,14 +7,12 @@ export default gql`
     FULLY_RELEASED
     PARTIALLY_RELEASED
     NO_RELEASE
-    UNKNOWN
   }
 
   enum DonorMolecularDataProcessingStatus {
-    COMPLETED
+    COMPLETE
     PROCESSING
     REGISTERED
-    UNKNOWN
   }
 
   enum ProgramDonorSummaryEntryField {
@@ -43,6 +41,16 @@ export default gql`
   input ProgramDonorSummaryFilter {
     field: ProgramDonorSummaryEntryField!
     values: [String!]!
+  }
+
+  enum SortOrder {
+    asc
+    desc
+  }
+
+  input DonorSummaryEntrySort {
+    field: ProgramDonorSummaryEntryField!
+    order: SortOrder
   }
 
   """
@@ -195,8 +203,12 @@ export default gql`
     """
     programDonorSummaryEntries(
       programShortName: String!
+      """
+      Maximum page size of 500
+      """
       first: Int = 20
       offset: Int = 0
+      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
     programDonorSummaryStats(
