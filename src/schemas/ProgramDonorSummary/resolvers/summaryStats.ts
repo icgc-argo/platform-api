@@ -13,6 +13,7 @@ import {
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import { esAliasNotFound } from './common';
 
 const programDonorSummaryStatsResolver: (
   esClient: Client,
@@ -25,6 +26,10 @@ const programDonorSummaryStatsResolver: (
   }
 > = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
   const { programShortName, filters } = args;
+
+  if (await esAliasNotFound(esClient)) {
+    return getEmptySummaryStats(programShortName, filters);
+  }
 
   type AggregationName = keyof ProgramDonorSummaryStats | 'donorsWithAllCoreClinicalData';
 
@@ -140,6 +145,35 @@ const programDonorSummaryStatsResolver: (
       : 0,
     allFilesCount: aggregations.allFilesCount.value,
     filesToQcCount: aggregations.filesToQcCount.value,
+  };
+};
+
+export const emptyProgramStatsResolver: () => GraphQLFieldResolver<
+  unknown,
+  GlobalGqlContext,
+  {
+    programShortName: string;
+    filters: ProgramDonorSummaryFilter[];
+  }
+> = () => (source, args, context) => {
+  const { programShortName, filters } = args;
+  return getEmptySummaryStats(programShortName, filters);
+};
+
+const getEmptySummaryStats = (programShortName: string, filters: ProgramDonorSummaryFilter[]) => {
+  return {
+    id: () => `${programShortName}::${stringify(filters)}`,
+    programShortName: programShortName,
+    registeredDonorsCount: 0,
+    percentageCoreClinical: 0,
+    percentageTumourAndNormal: 0,
+    donorsProcessingMolecularDataCount: 0,
+    filesToQcCount: 0,
+    donorsWithReleasedFilesCount: 0,
+    allFilesCount: 0,
+    fullyReleasedDonorsCount: 0,
+    partiallyReleasedDonorsCount: 0,
+    noReleaseDonorsCount: 0,
   };
 };
 

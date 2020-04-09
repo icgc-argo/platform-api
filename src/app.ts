@@ -59,7 +59,7 @@ const init = async () => {
     userSchema,
     programSchema,
     clinicalSchema,
-    ...(PROGRAM_DASHBOARD_SUMMARY_ENABLED ? [await ProgramDashboardSummarySchema()] : []),
+    ...[await ProgramDashboardSummarySchema()],
   ];
 
   const server = new ApolloServer({

@@ -13,6 +13,7 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
+import { esAliasNotFound } from './common';
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -28,6 +29,10 @@ const programDonorSummaryEntriesResolver: (
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
   const { programShortName } = args;
+
+  if (await esAliasNotFound(esClient)) {
+    return getEmptySummaryData();
+  }
 
   const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
   if (args.first > MAXIMUM_SUMMARY_PAGE_SIZE) {
@@ -86,5 +91,21 @@ const programDonorSummaryEntriesResolver: (
         } as DonorSummaryEntry),
     );
 };
+
+export const emptyDonoSummariesResolver: () => GraphQLFieldResolver<
+  unknown,
+  GlobalGqlContext,
+  {
+    programShortName: string;
+    first: number;
+    offset: number;
+    sorts: DonorSummaryEntrySort[];
+    filters: ProgramDonorSummaryFilter[];
+  }
+> = () => () => {
+  return getEmptySummaryData();
+};
+
+const getEmptySummaryData = () => [];
 
 export default programDonorSummaryEntriesResolver;
