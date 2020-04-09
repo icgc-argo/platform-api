@@ -12,10 +12,7 @@ import {
   DonorMolecularDataReleaseStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
-import {
-  ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-  PROGRAM_DASHBOARD_SUMMARY_ENABLED,
-} from 'config';
+import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 
 const programDonorSummaryStatsResolver: (
   esClient: Client,
@@ -123,11 +120,9 @@ const programDonorSummaryStatsResolver: (
       body: esQuery,
     })
     .then(response => response.body)
-    .catch(err => {
-      if (PROGRAM_DASHBOARD_SUMMARY_ENABLED) {
-        throw err;
-      } else {
-        return {
+    .catch(
+      err =>
+        ({
           aggregations: {
             fullyReleasedDonorsCount: { doc_count: 0 },
             partiallyReleasedDonorsCount: { doc_count: 0 },
@@ -145,9 +140,8 @@ const programDonorSummaryStatsResolver: (
               value: 0,
             },
           },
-        } as QueryResult;
-      }
-    });
+        } as QueryResult),
+    );
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,

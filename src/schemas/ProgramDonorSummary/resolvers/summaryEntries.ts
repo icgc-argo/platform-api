@@ -11,10 +11,7 @@ import {
   DonorMolecularDataReleaseStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
-import {
-  ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-  PROGRAM_DASHBOARD_SUMMARY_ENABLED,
-} from 'config';
+import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 
 const programDonorSummaryEntriesResolver: (
@@ -61,13 +58,7 @@ const programDonorSummaryEntriesResolver: (
       body: esQuery,
     })
     .then(res => res.body.hits.hits)
-    .catch(err => {
-      if (PROGRAM_DASHBOARD_SUMMARY_ENABLED) {
-        throw err;
-      } else {
-        return [] as EsHits;
-      }
-    });
+    .catch(err => [] as EsHits);
   return esHits
     .map(({ _source }) => _source)
     .map(
