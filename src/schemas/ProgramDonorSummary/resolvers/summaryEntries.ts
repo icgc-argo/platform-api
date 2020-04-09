@@ -11,7 +11,10 @@ import {
   DonorMolecularDataReleaseStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
-import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import {
+  ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
+  PROGRAM_DASHBOARD_SUMMARY_ENABLED,
+} from 'config';
 import { UserInputError } from 'apollo-server-express';
 
 const programDonorSummaryEntriesResolver: (
@@ -48,14 +51,23 @@ const programDonorSummaryEntriesResolver: (
     .from(args.offset)
     .size(args.first);
 
-  const esHits: Array<{
+  type EsHits = Array<{
     _source: ElasticsearchDonorDocument;
-  }> = await esClient
+  }>;
+
+  const esHits: EsHits = await esClient
     .search({
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
     })
-    .then(res => res.body.hits.hits);
+    .then(res => res.body.hits.hits)
+    .catch(err => {
+      if (PROGRAM_DASHBOARD_SUMMARY_ENABLED) {
+        throw err;
+      } else {
+        return [] as EsHits;
+      }
+    });
   return esHits
     .map(({ _source }) => _source)
     .map(
