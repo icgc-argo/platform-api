@@ -1,8 +1,12 @@
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
 import { createEsClient } from 'services/elasticsearch';
-import programDonorSummaryEntriesResolver, { emptyDonoSummariesResolver } from './summaryEntries';
-import programDonorSummaryStatsResolver, { emptyProgramStatsResolver } from './summaryStats';
+import programDonorSummaryEntriesResolver, {
+  emptyProgramDonorSummaryEntriesResolver,
+} from './summaryEntries';
+import programDonorSummaryStatsResolver, {
+  emptyProgramDonorSumaryStatsResolver,
+} from './summaryStats';
 import { PROGRAM_DASHBOARD_SUMMARY_ENABLED } from 'config';
 
 const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
@@ -10,10 +14,10 @@ const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>>
   return {
     Query: {
       programDonorSummaryEntries: !PROGRAM_DASHBOARD_SUMMARY_ENABLED
-        ? emptyDonoSummariesResolver()
+        ? emptyProgramDonorSummaryEntriesResolver()
         : programDonorSummaryEntriesResolver(esClient),
       programDonorSummaryStats: !PROGRAM_DASHBOARD_SUMMARY_ENABLED
-        ? emptyProgramStatsResolver()
+        ? emptyProgramDonorSumaryStatsResolver()
         : programDonorSummaryStatsResolver(esClient),
     },
   };

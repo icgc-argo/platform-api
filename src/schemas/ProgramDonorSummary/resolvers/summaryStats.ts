@@ -148,7 +148,7 @@ const programDonorSummaryStatsResolver: (
   };
 };
 
-export const emptyProgramStatsResolver: () => GraphQLFieldResolver<
+export const emptyProgramDonorSumaryStatsResolver: () => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {

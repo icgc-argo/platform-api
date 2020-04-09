@@ -92,7 +92,7 @@ const programDonorSummaryEntriesResolver: (
     );
 };
 
-export const emptyDonoSummariesResolver: () => GraphQLFieldResolver<
+export const emptyProgramDonorSummaryEntriesResolver: () => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   {
