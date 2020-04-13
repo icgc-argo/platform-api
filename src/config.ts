@@ -13,7 +13,7 @@ export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
   process.env.ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX || 'donor_centric';
 
 // Arranger configs
-export const ARRANGER_ROOT = process.env.ARRANGER_ROOT || 'http://localhost:5050';
+export const ARRANGER_SCHEMA_ENABLED = process.env.ARRANGER_SCHEMA_ENABLED === 'true';
 export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'test';
 
 // Ego config
