@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import logger from '../utils/logger';
 import express from 'express';
 
-var router = express.Router();
+const router = express.Router();
 
 // Our specification download service can't use GraphQL because GraphQL specification requires the content-type
 // that it returns be json, and we want to be able to return other content types, such as tab-separated-values,

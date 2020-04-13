@@ -1,6 +1,6 @@
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
-import { createEsClient } from 'services/elasticsearch';
+import { getEsClient } from 'services/elasticsearch';
 import programDonorSummaryEntriesResolver from './summaryEntries';
 import programDonorSummaryStatsResolver from './summaryStats';
 import { GraphQLFieldResolver } from 'graphql';
@@ -66,7 +66,7 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
 };
 
 const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
-  const esClient = await createEsClient();
+  const esClient = await getEsClient();
   return {
     Query: {
       programDonorSummaryEntries: (...resolverArguments) =>

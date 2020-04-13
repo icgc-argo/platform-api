@@ -1,17 +1,32 @@
+import 'babel-polyfill'; // needed for arranger imported functions
 import express from 'express';
 import cors from 'cors';
+import { Client } from '@elastic/elasticsearch';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
 import * as swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
-import userSchema from './schemas/User';
-import programSchema from './schemas/Program';
 import path from 'path';
+
+import {
+  PORT,
+  NODE_ENV,
+  GQL_MAX_COST,
+  APP_DIR,
+  ARRANGER_SCHEMA_ENABLED,
+  ARRANGER_PROJECT_ID,
+} from './config';
+
 import clinical from './routes/clinical';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
-import clinicalSchema from './schemas/Clinical';
+import UserSchema from './schemas/User';
+import ProgramSchema from './schemas/Program';
+import ClinicalSchema from './schemas/Clinical';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
+import ArrangerSchema from './schemas/Arranger';
+
+import { getEsClient } from 'services/elasticsearch';
+
 import logger from './utils/logger';
 // @ts-ignore
 import costAnalysis from 'graphql-cost-analysis';
@@ -46,14 +61,19 @@ export type GlobalGqlContext = {
   egoToken: string;
   Authorization: string;
   dataLoaders: {};
+  es?: Client; // needed for arranger schema
+  projectId?: string; // needed for arranger schema
 };
 
 const init = async () => {
+  const esClient = await getEsClient();
+
   const schemas = [
-    userSchema,
-    programSchema,
-    clinicalSchema,
+    UserSchema,
+    ProgramSchema,
+    ClinicalSchema,
     await ProgramDashboardSummarySchema(),
+    ...(ARRANGER_SCHEMA_ENABLED ? [await ArrangerSchema()] : []),
   ];
 
   const server = new ApolloServer({
@@ -66,6 +86,7 @@ const init = async () => {
       Authorization:
         `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
+      ...(ARRANGER_SCHEMA_ENABLED ? { es: esClient, projectId: ARRANGER_PROJECT_ID } : undefined),
     }),
     introspection: true,
     tracing: NODE_ENV !== 'production',

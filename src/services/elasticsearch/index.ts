@@ -8,6 +8,7 @@ import {
   ELASTICSEARCH_HOST,
 } from 'config';
 import { loadVaultSecret } from 'services/vault';
+import memoize from 'lodash/memoize';
 
 type EsSecret = {
   user: string;
@@ -18,7 +19,7 @@ const isEsSecret = (data: { [k: string]: any }): data is EsSecret => {
   return typeof data['user'] === 'string' && typeof data['pass'] === 'string';
 };
 
-export const createEsClient = async (): Promise<Client> => {
+const createEsClient = async (): Promise<Client> => {
   let esClient: Client;
   if (USE_VAULT) {
     const secretData = await loadVaultSecret()(ELASTICSEARCH_VAULT_SECRET_PATH).catch(err => {
@@ -58,3 +59,5 @@ export const createEsClient = async (): Promise<Client> => {
   logger.info(`successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`);
   return esClient;
 };
+
+export const getEsClient = memoize(createEsClient);
