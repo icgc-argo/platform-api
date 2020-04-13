@@ -1,7 +1,5 @@
 // @ts-ignore
-import { getTypesWithMappings, initializeSets } from '@arranger/server/dist/startProject';
-// @ts-ignore
-import makeSchema from '@arranger/schema';
+import { createProjectSchema } from '@arranger/server/dist/startProject';
 
 import { GraphQLSchema } from 'graphql';
 import { transformSchema, TransformRootFields } from 'graphql-tools';
@@ -19,15 +17,10 @@ const getArrangerGqlSchema = async () => {
   const es = await getEsClient();
 
   // Create arranger schema
-  const typesWithMappings = await getTypesWithMappings({ es, id });
-
-  await initializeSets({ es });
-
-  const argoArrangerSchema = (await makeSchema({
-    types: typesWithMappings,
-    rootTypes: [],
-    scalarTypes: [],
-    middleware: [],
+  const argoArrangerSchema = (await createProjectSchema({
+    es,
+    id,
+    graphqlOptions: {},
     enableAdmin: false,
   })) as GraphQLSchema;
 
