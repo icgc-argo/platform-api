@@ -13,6 +13,7 @@ import {
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import logger from 'utils/logger';
 
 const programDonorSummaryStatsResolver: (
   esClient: Client,
@@ -120,28 +121,28 @@ const programDonorSummaryStatsResolver: (
       body: esQuery,
     })
     .then(response => response.body)
-    .catch(
-      err =>
-        ({
-          aggregations: {
-            fullyReleasedDonorsCount: { doc_count: 0 },
-            partiallyReleasedDonorsCount: { doc_count: 0 },
-            noReleaseDonorsCount: { doc_count: 0 },
-            donorsProcessingMolecularDataCount: { doc_count: 0 },
-            donorsWithReleasedFilesCount: { doc_count: 0 },
-            donorsWithRegisteredNormalAndTumourSamples: { doc_count: 0 },
-            donorsWithAllCoreClinicalData: { doc_count: 0 },
-            allFilesCount: { value: 0 },
-            filesToQcCount: { value: 0 },
+    .catch(err => {
+      logger.error('error reading data from Elasticsearch: ', err);
+      return {
+        aggregations: {
+          fullyReleasedDonorsCount: { doc_count: 0 },
+          partiallyReleasedDonorsCount: { doc_count: 0 },
+          noReleaseDonorsCount: { doc_count: 0 },
+          donorsProcessingMolecularDataCount: { doc_count: 0 },
+          donorsWithReleasedFilesCount: { doc_count: 0 },
+          donorsWithRegisteredNormalAndTumourSamples: { doc_count: 0 },
+          donorsWithAllCoreClinicalData: { doc_count: 0 },
+          allFilesCount: { value: 0 },
+          filesToQcCount: { value: 0 },
+        },
+        hits: {
+          total: {
+            relation: '',
+            value: 0,
           },
-          hits: {
-            total: {
-              relation: '',
-              value: 0,
-            },
-          },
-        } as QueryResult),
-    );
+        },
+      } as QueryResult;
+    });
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,

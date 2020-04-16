@@ -13,6 +13,7 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
+import logger from 'utils/logger';
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -58,7 +59,10 @@ const programDonorSummaryEntriesResolver: (
       body: esQuery,
     })
     .then(res => res.body.hits.hits)
-    .catch(err => [] as EsHits);
+    .catch(err => {
+      logger.error('error reading data from Elasticsearch: ', err);
+      return [] as EsHits;
+    });
   return esHits
     .map(({ _source }) => _source)
     .map(
