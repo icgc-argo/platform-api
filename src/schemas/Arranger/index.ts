@@ -1,7 +1,7 @@
 // @ts-ignore
-import { createProjectSchema } from '@arranger/server/dist/startProject';
+import { createProjectSchema } from 'arranger-server-jaserud/dist/startProject';
 
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, printSchema } from 'graphql';
 import { transformSchema, TransformRootFields } from 'graphql-tools';
 import { getEsClient } from 'services/elasticsearch';
 import { ARRANGER_PROJECT_ID } from 'config';
@@ -17,12 +17,14 @@ const getArrangerGqlSchema = async () => {
   const es = await getEsClient();
 
   // Create arranger schema
-  const argoArrangerSchema = (await createProjectSchema({
+  const { schema: argoArrangerSchema } = (await createProjectSchema({
     es,
     id,
     graphqlOptions: {},
     enableAdmin: false,
-  })) as GraphQLSchema;
+  })) as { schema: GraphQLSchema };
+
+  printSchema(argoArrangerSchema);
 
   // Arranger schema has a recursive field called 'viewer' inside of type 'Root'
   // there is bug in graphql-tools which is unable to interpret this so 'mergeSchema' doesn't work
