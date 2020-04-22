@@ -80,7 +80,7 @@ const init = async () => {
     UserSchema,
     ProgramSchema,
     ClinicalSchema,
-    ...(PROGRAM_DASHBOARD_SUMMARY_ENABLED ? [await ProgramDashboardSummarySchema()] : []),
+    await ProgramDashboardSummarySchema(),
     ...(ARRANGER_SCHEMA_ENABLED ? [await ArrangerSchema()] : []),
   ];
 

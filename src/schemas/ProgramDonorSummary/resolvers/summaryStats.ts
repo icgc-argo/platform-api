@@ -13,6 +13,7 @@ import {
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import logger from 'utils/logger';
 
 const programDonorSummaryStatsResolver: (
   esClient: Client,
@@ -96,10 +97,7 @@ const programDonorSummaryStatsResolver: (
 
   type FilterAggregationResult = { doc_count: number };
   type NumericAggregationResult = { value: number };
-  const {
-    aggregations,
-    hits,
-  }: {
+  type QueryResult = {
     hits: {
       total: { value: number; relation: string };
     };
@@ -114,14 +112,37 @@ const programDonorSummaryStatsResolver: (
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
     };
-  } = await esClient
+  };
+  const { aggregations, hits }: QueryResult = await esClient
     .search({
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       track_total_hits: true,
       size: 0, // number of hits to retrieve, we're not interested in hits
       body: esQuery,
     })
-    .then(response => response.body);
+    .then(response => response.body)
+    .catch(err => {
+      logger.error('error reading data from Elasticsearch: ', err);
+      return {
+        aggregations: {
+          fullyReleasedDonorsCount: { doc_count: 0 },
+          partiallyReleasedDonorsCount: { doc_count: 0 },
+          noReleaseDonorsCount: { doc_count: 0 },
+          donorsProcessingMolecularDataCount: { doc_count: 0 },
+          donorsWithReleasedFilesCount: { doc_count: 0 },
+          donorsWithRegisteredNormalAndTumourSamples: { doc_count: 0 },
+          donorsWithAllCoreClinicalData: { doc_count: 0 },
+          allFilesCount: { value: 0 },
+          filesToQcCount: { value: 0 },
+        },
+        hits: {
+          total: {
+            relation: '',
+            value: 0,
+          },
+        },
+      } as QueryResult;
+    });
 
   return {
     id: () => `${programShortName}::${stringify(filters)}`,

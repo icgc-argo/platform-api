@@ -13,6 +13,7 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
+import logger from 'utils/logger';
 
 const programDonorSummaryEntriesResolver: (
   esClient: Client,
@@ -48,14 +49,20 @@ const programDonorSummaryEntriesResolver: (
     .from(args.offset)
     .size(args.first);
 
-  const esHits: Array<{
+  type EsHits = Array<{
     _source: ElasticsearchDonorDocument;
-  }> = await esClient
+  }>;
+
+  const esHits: EsHits = await esClient
     .search({
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
     })
-    .then(res => res.body.hits.hits);
+    .then(res => res.body.hits.hits)
+    .catch(err => {
+      logger.error('error reading data from Elasticsearch: ', err);
+      return [] as EsHits;
+    });
   return esHits
     .map(({ _source }) => _source)
     .map(
