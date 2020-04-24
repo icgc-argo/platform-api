@@ -10,6 +10,7 @@ import {
   EsDonorDocumentField,
   DonorMolecularDataProcessingStatus,
   DonorMolecularDataReleaseStatus,
+  BaseQueryArguments,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -20,8 +21,7 @@ const programDonorSummaryStatsResolver: (
 ) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
-  {
-    programShortName: string;
+  BaseQueryArguments & {
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
