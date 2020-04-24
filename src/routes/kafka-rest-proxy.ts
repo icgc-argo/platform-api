@@ -1,12 +1,11 @@
-import { KAFKA_REST_PROXY_ROOT, EGO_PUBLIC_KEY } from '../config';
-import createEgoUtils from '@icgc-argo/ego-token-utils';
+import { KAFKA_REST_PROXY_ROOT } from '../config';
 import urlJoin from 'url-join';
 import logger from '../utils/logger';
 import fetch from 'node-fetch';
 import { json } from 'body-parser';
 import express from 'express';
+import egoTokenUtils from 'utils/egoTokenUtils';
 
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
 var router = express.Router();
 const apiRoot = KAFKA_REST_PROXY_ROOT;
 
@@ -22,17 +21,17 @@ router.use((req, res, next) => {
       message: 'this endpoint needs a valid jwt token',
     });
   }
-  let decodedToken: ReturnType<typeof TokenUtils.decodeToken> | null = null;
+  let decodedToken: ReturnType<typeof egoTokenUtils.decodeToken> | null = null;
   try {
-    decodedToken = TokenUtils.decodeToken(jwt);
+    decodedToken = egoTokenUtils.decodeToken(jwt);
   } catch (err) {
     logger.error('failed to decode token');
   }
 
   if (
     !decodedToken ||
-    decodedToken.exp < new Date().getUTCMilliseconds() ||
-    !TokenUtils.isValidJwt(jwt)
+    egoTokenUtils.isExpiredToken(decodedToken) ||
+    !egoTokenUtils.isValidJwt(jwt)
   ) {
     return res.status(401).send({
       message: 'expired token',
