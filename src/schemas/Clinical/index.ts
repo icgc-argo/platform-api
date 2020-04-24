@@ -325,11 +325,6 @@ const resolvers = {
         registrationId,
         Authorization,
       );
-      //@ts-ignore consult Jaser on modifying clearRegistrationData or remove this check altogether
-      if (response.error) {
-        //@ts-ignore
-        throw new UserInputError(response.message);
-      }
       return true;
     },
     commitClinicalRegistration: async (
