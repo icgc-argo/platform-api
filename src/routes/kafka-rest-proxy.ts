@@ -1,5 +1,5 @@
 import { KAFKA_REST_PROXY_ROOT, EGO_PUBLIC_KEY } from '../config';
-import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
+import createEgoUtils from '@icgc-argo/ego-token-utils';
 import urlJoin from 'url-join';
 import logger from '../utils/logger';
 import fetch from 'node-fetch';
@@ -22,14 +22,18 @@ router.use((req, res, next) => {
       message: 'this endpoint needs a valid jwt token',
     });
   }
-  let decodedToken = '';
+  let decodedToken: ReturnType<typeof TokenUtils.decodeToken> | null = null;
   try {
     decodedToken = TokenUtils.decodeToken(jwt);
   } catch (err) {
     logger.error('failed to decode token');
   }
 
-  if (!decodedToken || decodedToken.exp < new Date().getUTCMilliseconds()) {
+  if (
+    !decodedToken ||
+    decodedToken.exp < new Date().getUTCMilliseconds() ||
+    !TokenUtils.isValidJwt(jwt)
+  ) {
     return res.status(401).send({
       message: 'expired token',
     });
