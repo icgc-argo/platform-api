@@ -2,15 +2,9 @@ import { gql, AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 
-import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
-
-import { EGO_PUBLIC_KEY } from '../../config';
-
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
-
 import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import clinicalService from '../../services/clinical';
-import logger from '../../utils/logger';
+import egoTokenUtils from 'utils/egoTokenUtils';
 
 const typeDefs = gql`
   ${costDirectiveTypeDef}
@@ -442,7 +436,7 @@ const resolvers = {
 
       // Here we are confirming that the user has at least some ability to write Program Data
       // This is to reduce the opportunity for spamming the gateway with file uploads
-      if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
+      if (!egoTokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
 
@@ -487,7 +481,7 @@ const resolvers = {
       const { programShortName, clinicalFiles } = args;
 
       // see reason in uploadRegistration
-      if (!TokenUtils.canWriteSomeProgramData(egoToken)) {
+      if (!egoTokenUtils.canWriteSomeProgramData(egoToken)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
 

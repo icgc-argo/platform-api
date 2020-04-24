@@ -3,11 +3,7 @@ import { makeExecutableSchema } from 'graphql-tools';
 
 import egoService from '../../services/ego';
 import { EGO_DACO_POLICY_NAME } from '../../config';
-
-import createEgoUtils from '@icgc-argo/ego-token-utils/dist/lib/ego-token-utils';
-
-import { EGO_PUBLIC_KEY } from '../../config';
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+import egoTokenUtils from 'utils/egoTokenUtils';
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
@@ -115,7 +111,7 @@ const resolvers = {
     },
     self: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const decodedToken = egoTokenUtils.decodeToken(egoToken);
       const userId = decodedToken.sub;
       const userScopes = decodedToken.context.scope;
       const isDacoApproved =
@@ -141,7 +137,7 @@ const resolvers = {
   Mutation: {
     generateAccessKey: async (obj, args, context, info) => {
       const { Authorization, egoToken } = context;
-      const decodedToken = TokenUtils.decodeToken(egoToken);
+      const decodedToken = egoTokenUtils.decodeToken(egoToken);
       const userName = decodedToken.context.user.name;
       const userId = decodedToken.sub;
 
