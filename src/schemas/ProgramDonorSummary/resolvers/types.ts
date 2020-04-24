@@ -68,6 +68,9 @@ export type DonorSummaryEntrySort = {
   field: keyof ElasticsearchDonorDocument;
   order: SortOrder;
 };
+export type BaseQueryArguments = {
+  programShortName: string;
+};
 
 /**
  * Types from Elasticsearch

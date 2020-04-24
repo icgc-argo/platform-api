@@ -6,6 +6,7 @@ import programDonorSummaryStatsResolver from './summaryStats';
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
+import { BaseQueryArguments } from './types';
 
 class UnauthorizedError extends ApolloError {
   extensions = {
@@ -14,10 +15,10 @@ class UnauthorizedError extends ApolloError {
 }
 
 const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>>(
-  context: GlobalGqlContext,
-  args: { programShortName: string },
   resolver: ResolverType,
+  gqlResolverArguments: [unknown, BaseQueryArguments, GlobalGqlContext, unknown],
 ): ResolverType => {
+  const [_, args, context] = gqlResolverArguments;
   const { egoToken } = context;
   const {
     decodeToken,
@@ -68,10 +69,16 @@ const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>>
   const esClient = await createEsClient();
   return {
     Query: {
-      programDonorSummaryEntries: (_, args, context) =>
-        resolveWithProgramAuth(context, args, programDonorSummaryEntriesResolver(esClient)),
-      programDonorSummaryStats: (_, args, context) =>
-        resolveWithProgramAuth(context, args, programDonorSummaryStatsResolver(esClient)),
+      programDonorSummaryEntries: (...resolverArguments) =>
+        resolveWithProgramAuth(
+          programDonorSummaryEntriesResolver(esClient)(...resolverArguments),
+          resolverArguments,
+        ),
+      programDonorSummaryStats: (...resolverArguments) =>
+        resolveWithProgramAuth(
+          programDonorSummaryStatsResolver(esClient)(...resolverArguments),
+          resolverArguments,
+        ),
     },
   };
 };

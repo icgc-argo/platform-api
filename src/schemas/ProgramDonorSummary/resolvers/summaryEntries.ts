@@ -9,6 +9,7 @@ import {
   DonorSummaryEntrySort,
   DonorMolecularDataProcessingStatus,
   DonorMolecularDataReleaseStatus,
+  BaseQueryArguments,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -20,8 +21,7 @@ const programDonorSummaryEntriesResolver: (
 ) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
-  {
-    programShortName: string;
+  BaseQueryArguments & {
     first: number;
     offset: number;
     sorts: DonorSummaryEntrySort[];
