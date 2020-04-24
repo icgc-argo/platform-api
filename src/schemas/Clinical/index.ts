@@ -533,10 +533,10 @@ const resolvers = {
     ) => {
       const { Authorization, egoToken } = context;
       const { shortName, registrationFile } = args;
-
+      const permissions = egoTokenUtils.getPermissionsFromToken(egoToken);
       // Here we are confirming that the user has at least some ability to write Program Data
       // This is to reduce the opportunity for spamming the gateway with file uploads
-      if (!egoTokenUtils.canWriteSomeProgramData(egoToken)) {
+      if (!egoTokenUtils.canWriteSomeProgramData(permissions)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
 
@@ -596,9 +596,10 @@ const resolvers = {
     ) => {
       const { Authorization, egoToken } = context;
       const { programShortName, clinicalFiles } = args;
+      const permissions = egoTokenUtils.getPermissionsFromToken(egoToken)
 
       // see reason in uploadRegistration
-      if (!egoTokenUtils.canWriteSomeProgramData(egoToken)) {
+      if (!egoTokenUtils.canWriteSomeProgramData(permissions)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
 
