@@ -48,8 +48,7 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
         programId: args.programShortName,
       });
 
-    const authorized =
-      egoToken && isValidJwt(egoToken) && !isExpiredToken(decodedToken) && hasPermission;
+    const authorized = egoToken && isValidJwt(egoToken) && !isExpired && hasPermission;
 
     if (authorized) {
       return resolver;
