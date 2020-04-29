@@ -6,14 +6,14 @@ paths:
   '/kafka/{topic}':
     parameters:
       - name: topic
-        description: the name of the target topic in kafka 
+        description: the name of the target topic in kafka
         in: path
         required: true
-        schema: 
+        schema:
           type: string
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: proxies json messages to kafka rest proxy
       requestBody:
         content:
@@ -78,11 +78,41 @@ paths:
                 example: 'program_id\tsubmitter_donor_id\tgender\tsubmitter_specimen_id\tspecimen_type\ttumour_normal_designation\tsubmitter_sample_id\tsample_type'
                 type: string
         '404':
-          description: The errror message indicating the schema could not be found
+          description: The error message indicating the schema could not be found
           content:
             application/json:
               schema:
                 example: '{"message": "no schema named ''invalidName'' found"}'
+                type: string
+        '500':
+          description: Internal server error
+
+  '/download/dashboard/{programId}':
+    parameters:
+      - name: programId
+        description: id of the program as a short name to download donor data
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Download all donor data for the given program id
+      description: |
+        - returns a tsv file containing all donor data for a program
+      responses:
+        '200':
+          description: 'A tsv file containing all the donor data for a given program id'
+          content:
+            text/tab-separated-vales:
+              schema:
+                example: ''
+                type: string
+        '404':
+          description: Error message indicating the program id could not be found
+          content:
+            application/json:
+              schema:
+                example: '{"message": "no program with id ''invalidId'' could be found"}'
                 type: string
         '500':
           description: Internal server error
@@ -91,4 +121,4 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT  
+      bearerFormat: JWT

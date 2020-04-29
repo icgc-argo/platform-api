@@ -9,6 +9,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinical from './routes/clinical';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import downloadRoute from './routes/download';
 import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
 import clinicalSchema from './schemas/Clinical';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
@@ -80,6 +81,7 @@ const init = async () => {
 
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinical);
+  app.use('/download', downloadRoute);
 
   app.use(
     '/api-docs',

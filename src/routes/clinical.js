@@ -11,7 +11,7 @@ var router = express.Router();
 // so that the user is automatically prompted to save the file from their browser.
 const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
 
-// This is mostly passthrough, so file names and response will be set in clincial
+// This is mostly passthrough, so file names and response will be set in clinical
 // 'all' will retrieve the zip file with all templates
 // for specific templates 'templateName'.tsv or 'templateName' will get the tsv from clinical
 router.get('/template/:template', async (req, res) => {
