@@ -54,6 +54,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.5.7",
     "nodemon": "^1.18.10",
     "prettier": "1.18.2",
     "ts-node-dev": "^1.0.0-pre.44",

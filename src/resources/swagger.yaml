@@ -41,6 +41,29 @@ paths:
                 type: string
         '500':
           description: Internal server error
+  '/clinical/program/{programId}/all-clincial-data':
+    parameters:
+      - name: programId
+        description: the short name of the program
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      security:
+      - bearerAuth: []
+      summary: Download a zip file with tsv files for all clinical data in program
+      description: '- the file name of the zip file is not determined by this endpoint'
+      responses:
+        '200':
+          description: 'A zip file with all the stuff'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Internal server error
   '/clinical/template/all':
     get:
       summary: Download a zip file with templates for all schema
