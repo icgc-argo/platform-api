@@ -56,7 +56,7 @@ paths:
       description: '- the file name of the zip file is not determined by this endpoint'
       responses:
         '200':
-          description: 'A zip file with all the stuff'
+          description: 'A zip file with all program submitted data'
           content:
             application/zip:
               schema:
