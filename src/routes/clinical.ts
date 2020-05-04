@@ -10,7 +10,6 @@ const router = express.Router();
 // Our specification download service can't use GraphQL because GraphQL specification requires the content-type
 // that it returns be json, and we want to be able to return other content types, such as tab-separated-values,
 // so that the user is automatically prompted to save the file from their browser.
-const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
 
 // All router paths are passthrough so params verification, auth checking and response will be set in clincial
 
@@ -18,7 +17,8 @@ const apiRoot = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
 // for specific templates 'templateName'.tsv or 'templateName' will get the tsv from clinical
 router.get('/template/:template', async (req: Request, res: Response) => {
   const name = req.params.template.replace(/.tsv$/, '');
-  fetch(urlJoin(apiRoot, name))
+  const url = urlJoin(CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH);
+  fetch(urlJoin(url, name))
     .then(r => covertFetchResToBuffer(r, res))
     .then(bufferedData => res.send(bufferedData))
     .catch(err => handleError(err, res));
@@ -35,7 +35,7 @@ router.get('/program/:programId/all-clincial-data', async (req: Request, res: Re
   fetch(url, {
     method: 'GET',
     headers: req.headers,
-  } as any) // type this
+  } as any)
     .then(r => covertFetchResToBuffer(r, res))
     .then(bufferedData => res.send(bufferedData))
     .catch(err => handleError(err, res));
