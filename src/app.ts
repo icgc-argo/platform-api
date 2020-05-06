@@ -9,12 +9,14 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinical from './routes/clinical';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
+import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR, ARRANGER_PROJECT_ID } from './config';
 import clinicalSchema from './schemas/Clinical';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
 // @ts-ignore
 import costAnalysis from 'graphql-cost-analysis';
+import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
+import { createEsClient } from 'services/elasticsearch';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 
@@ -49,23 +51,27 @@ export type GlobalGqlContext = {
 };
 
 const init = async () => {
+  const esClient = await createEsClient();
   const schemas = [
     userSchema,
     programSchema,
     clinicalSchema,
-    await ProgramDashboardSummarySchema(),
+    await ProgramDashboardSummarySchema(esClient),
+    await getArrangerGqlSchema(esClient),
   ];
 
   const server = new ApolloServer({
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }): GlobalGqlContext => ({
+    context: ({ req }): GlobalGqlContext & ArrangerGqlContext => ({
       isUserRequest: true,
       egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
       Authorization:
         `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
+      es: esClient,
+      projectId: ARRANGER_PROJECT_ID,
     }),
     introspection: true,
     tracing: NODE_ENV !== 'production',

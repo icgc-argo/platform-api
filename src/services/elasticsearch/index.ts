@@ -18,7 +18,7 @@ const isEsSecret = (data: { [k: string]: any }): data is EsSecret => {
   return typeof data['user'] === 'string' && typeof data['pass'] === 'string';
 };
 
-export const createEsClient = async (): Promise<Client> => {
+export const createEsClient = async ({ node = ELASTICSEARCH_HOST } = {}): Promise<Client> => {
   let esClient: Client;
   if (USE_VAULT) {
     const secretData = await loadVaultSecret()(ELASTICSEARCH_VAULT_SECRET_PATH).catch(err => {
@@ -29,7 +29,7 @@ export const createEsClient = async (): Promise<Client> => {
     });
     if (isEsSecret(secretData)) {
       esClient = new Client({
-        node: ELASTICSEARCH_HOST,
+        node,
         ssl: {
           rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
         },
@@ -43,7 +43,7 @@ export const createEsClient = async (): Promise<Client> => {
     }
   } else {
     esClient = new Client({
-      node: ELASTICSEARCH_HOST,
+      node,
       ssl: {
         rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
       },

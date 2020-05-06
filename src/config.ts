@@ -14,7 +14,7 @@ export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
 
 // Arranger configs
 export const ARRANGER_ROOT = process.env.ARRANGER_ROOT || 'http://localhost:5050';
-export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'test';
+export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 
 // Ego config
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
@@ -43,7 +43,3 @@ export const SUBMISSION_TEMPLATE_PATH =
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
 
 export const APP_DIR = __dirname;
-
-// Feature flags
-export const PROGRAM_DASHBOARD_SUMMARY_ENABLED =
-  process.env.PROGRAM_DASHBOARD_SUMMARY_ENABLED === 'true';
