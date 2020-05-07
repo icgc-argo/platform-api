@@ -43,17 +43,26 @@ export default async (esClient: Client) => {
       logger.warn('failed to index metadata, will now check ES to confirm data');
     }
 
-    const projectManifestInEs = (await esClient.get({
-      index: ARRANGER_PROJECTS_INDEX,
-      id: ARRANGER_PROJECT_ID,
-    })).body._source;
-    const fileCentricArrangerSetting = (await esClient.get({
-      index: ARRANGER_PROJECT_METADATA_INDEX,
-      id: FILE_CENTRIC_INDEX,
-    })).body._source;
+    const [projectManifestInEs, fileCentricArrangerSetting]: [
+      typeof metadata.projectManifest,
+      typeof metadata.projectIndexConfigs.file_centric,
+    ] = await Promise.all([
+      esClient
+        .get({
+          index: ARRANGER_PROJECTS_INDEX,
+          id: ARRANGER_PROJECT_ID,
+        })
+        .then(response => response.body._source),
+      esClient
+        .get({
+          index: ARRANGER_PROJECT_METADATA_INDEX,
+          id: FILE_CENTRIC_INDEX,
+        })
+        .then(response => response.body._source),
+    ]);
 
-    logger.info(`created data: ${JSON.stringify(projectManifestInEs)}`);
-    logger.info(`created data: ${JSON.stringify(fileCentricArrangerSetting)}`);
+    logger.info(`projectManifestInEs: ${JSON.stringify(projectManifestInEs)}`);
+    logger.info(`fileCentricArrangerSetting: ${JSON.stringify(fileCentricArrangerSetting)}`);
 
     if (
       isEqual(projectManifestInEs, metadata.projectManifest) &&
@@ -61,7 +70,7 @@ export default async (esClient: Client) => {
     ) {
       return true;
     } else {
-      throw new Error("couldn't index data properly");
+      throw new Error('arranger metadata mismatch in elasticsearch');
     }
   };
   logger.info('initializing arranger metadata');
