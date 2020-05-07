@@ -11,15 +11,16 @@ import indexData from './file_centric/sample_file_centric.json';
     await esClient.indices.delete({
       index: TEST_INDEX,
     });
-    await esClient.indices.create({
-      index: TEST_INDEX,
-      body: indexSettings,
-    });
   } catch (err) {
-    if (!(await esClient.indices.exists({ index: TEST_INDEX }))) {
+    if ((await esClient.indices.exists({ index: TEST_INDEX })).body) {
       throw err;
     }
   }
+
+  await esClient.indices.create({
+    index: TEST_INDEX,
+    body: indexSettings,
+  });
 
   await Promise.all(
     indexData.map(doc =>

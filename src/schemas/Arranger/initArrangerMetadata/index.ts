@@ -25,15 +25,17 @@ export default async (esClient: Client) => {
 
     try {
       await Promise.all([
-        await esClient.index({
+        esClient.index({
           index: ARRANGER_PROJECTS_INDEX,
           id: ARRANGER_PROJECT_ID,
           body: metadata.projectManifest,
+          refresh: 'wait_for',
         }),
-        await esClient.index({
+        esClient.index({
           index: ARRANGER_PROJECT_METADATA_INDEX,
           id: FILE_CENTRIC_INDEX,
           body: metadata.projectIndexConfigs.file_centric,
+          refresh: 'wait_for',
         }),
       ]);
     } catch (err) {
@@ -50,6 +52,9 @@ export default async (esClient: Client) => {
       id: FILE_CENTRIC_INDEX,
     })).body._source;
 
+    logger.info(`created data: ${JSON.stringify(projectManifestInEs)}`);
+    logger.info(`created data: ${JSON.stringify(fileCentricArrangerSetting)}`);
+
     if (
       isEqual(projectManifestInEs, metadata.projectManifest) &&
       isEqual(fileCentricArrangerSetting, metadata.projectIndexConfigs.file_centric)
@@ -59,5 +64,6 @@ export default async (esClient: Client) => {
       throw new Error("couldn't index data properly");
     }
   };
+  logger.info('initializing arranger metadata');
   return retry(initMetadata, { retries: 10 });
 };
