@@ -9,7 +9,14 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinical from './routes/clinical';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR, ARRANGER_PROJECT_ID } from './config';
+import {
+  PORT,
+  NODE_ENV,
+  GQL_MAX_COST,
+  APP_DIR,
+  ARRANGER_PROJECT_ID,
+  FEATURE_ARRANGER_SCHEMA_ENABLED,
+} from './config';
 import clinicalSchema from './schemas/Clinical';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
@@ -57,7 +64,7 @@ const init = async () => {
     programSchema,
     clinicalSchema,
     await ProgramDashboardSummarySchema(esClient),
-    await getArrangerGqlSchema(esClient),
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [await getArrangerGqlSchema(esClient)] : []),
   ];
 
   const server = new ApolloServer({
