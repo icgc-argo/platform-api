@@ -77,8 +77,8 @@ const init = async () => {
       Authorization:
         `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
-      es: esClient,
-      projectId: ARRANGER_PROJECT_ID,
+      es: esClient, // for arranger only
+      projectId: ARRANGER_PROJECT_ID, // for arranger only
     }),
     introspection: true,
     tracing: NODE_ENV !== 'production',
