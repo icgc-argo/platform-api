@@ -7,12 +7,6 @@ import { ARRANGER_PROJECT_ID } from 'config';
 import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
 
-// note: Setting up ES for arranger (has to be done before gateway is deployed)
-// 1. Setup up index with mapping in ES
-//    - index name should follow `/[_A-Za-z][_0-9A-Za-z]*/` because grapql only accepts feilds formatted as such
-// 2. Setup arranger project indices
-// This process is manual for now because the es setup is still a wip
-
 export type ArrangerGqlContext = {
   es: Client;
   projectId: string;
