@@ -63,9 +63,9 @@
     "jest": "^26.0.1",
     "nodemon": "^1.18.10",
     "prettier": "1.18.2",
-    "ts-node": "^8.9.1",
-    "testcontainers": "^2.8.1",
+    "testcontainers": "^2.6.0",
     "ts-jest": "^25.5.0",
+    "ts-node": "^8.9.1",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.8.2"
   },
