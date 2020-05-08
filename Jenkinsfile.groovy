@@ -14,11 +14,9 @@ spec:
   - name: node
     image: node:12.6.0
     tty: true
-  - name: helm
-    image: alpine/helm:2.12.3
-    tty: true
-    command:
-    - cat
+    env:
+    - name: DOCKER_HOST
+      value: tcp://localhost:2375
   - name: docker
     image: docker:18-git
     tty: true
