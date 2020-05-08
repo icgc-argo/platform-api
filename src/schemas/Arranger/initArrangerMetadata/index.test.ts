@@ -88,6 +88,7 @@ describe('initArrangerMetadata', () => {
       })).body._source,
     ).toEqual(harmonizedFileCentricConfig);
   });
+
   test('ARRANGER_FILE_CENTRIC_INDEX config must be set in ES', async () => {
     expect(
       (await esClient.get({

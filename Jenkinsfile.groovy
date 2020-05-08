@@ -25,11 +25,20 @@ spec:
     volumeMounts:
     - mountPath: /var/run/docker.sock
       name: docker-sock
+  - name: dind-daemon
+    image: docker:18.06-dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-graph-storage
+      mountPath: /var/lib/docker
   volumes:
   - name: docker-sock
     hostPath:
       path: /var/run/docker.sock
       type: File
+  - name: docker-graph-storage
+    emptyDir: {}
 """
         }
     }
@@ -48,7 +57,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm ci"
-                    sh "npm run test"
+                    sh "DEBUG=testcontainers npm run test"
                 }
             }
         }
