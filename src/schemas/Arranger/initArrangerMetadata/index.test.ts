@@ -2,12 +2,13 @@ import initArrangerMetadata, {
   ARRANGER_PROJECT_METADATA_INDEX,
   ARRANGER_PROJECTS_INDEX,
   FILE_CENTRIC_INDEX,
+  harmonizedFileCentricConfig,
 } from './index';
 import { createEsClient } from 'services/elasticsearch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Duration, TemporalUnit } from 'node-duration';
 import { Client } from '@elastic/elasticsearch';
-import { ARRANGER_PROJECT_ID } from 'config';
+import { ARRANGER_PROJECT_ID, ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import metadata from 'resources/arranger_es_metadata.json';
 
 describe('initArrangerMetadata', () => {
@@ -55,7 +56,7 @@ describe('initArrangerMetadata', () => {
         index: ARRANGER_PROJECT_METADATA_INDEX,
         id: FILE_CENTRIC_INDEX,
       })).body._source,
-    ).toEqual(metadata.projectIndexConfigs.file_centric);
+    ).toEqual(harmonizedFileCentricConfig);
   });
 
   test('must handle parallel runs without failing', async () => {
@@ -85,6 +86,14 @@ describe('initArrangerMetadata', () => {
         index: ARRANGER_PROJECT_METADATA_INDEX,
         id: FILE_CENTRIC_INDEX,
       })).body._source,
-    ).toEqual(metadata.projectIndexConfigs.file_centric);
+    ).toEqual(harmonizedFileCentricConfig);
+  });
+  test('ARRANGER_FILE_CENTRIC_INDEX config must be set in ES', async () => {
+    expect(
+      (await esClient.get({
+        index: ARRANGER_PROJECT_METADATA_INDEX,
+        id: FILE_CENTRIC_INDEX,
+      })).body._source.index,
+    ).toEqual(ARRANGER_FILE_CENTRIC_INDEX);
   });
 });

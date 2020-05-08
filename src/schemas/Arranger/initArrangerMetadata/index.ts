@@ -1,7 +1,7 @@
 import { Client } from '@elastic/elasticsearch';
 import isEqual from 'lodash/isEqual';
 import retry from 'async-retry';
-import { ARRANGER_PROJECT_ID } from 'config';
+import { ARRANGER_PROJECT_ID, ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import logger from 'utils/logger';
 import metadata from 'resources/arranger_es_metadata.json';
 
@@ -9,6 +9,13 @@ export const ARRANGER_PROJECT_METADATA_INDEX = `arranger-projects-${ARRANGER_PRO
 export const ARRANGER_PROJECTS_INDEX = `arranger-projects`;
 
 export const FILE_CENTRIC_INDEX = 'file_centric';
+
+export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric = {
+  ...metadata.projectIndexConfigs.file_centric,
+  index: ARRANGER_FILE_CENTRIC_INDEX || metadata.projectIndexConfigs.file_centric.index,
+};
+
+const { projectManifest } = metadata;
 
 export default async (esClient: Client) => {
   const initMetadata = async () => {
@@ -28,13 +35,13 @@ export default async (esClient: Client) => {
         esClient.index({
           index: ARRANGER_PROJECTS_INDEX,
           id: ARRANGER_PROJECT_ID,
-          body: metadata.projectManifest,
+          body: projectManifest,
           refresh: 'wait_for',
         }),
         esClient.index({
           index: ARRANGER_PROJECT_METADATA_INDEX,
           id: FILE_CENTRIC_INDEX,
-          body: metadata.projectIndexConfigs.file_centric,
+          body: harmonizedFileCentricConfig,
           refresh: 'wait_for',
         }),
       ]);
@@ -44,7 +51,7 @@ export default async (esClient: Client) => {
     }
 
     const [projectManifestInEs, fileCentricArrangerSetting]: [
-      typeof metadata.projectManifest,
+      typeof projectManifest,
       typeof metadata.projectIndexConfigs.file_centric,
     ] = await Promise.all([
       esClient
@@ -61,12 +68,9 @@ export default async (esClient: Client) => {
         .then(response => response.body._source),
     ]);
 
-    logger.info(`projectManifestInEs: ${JSON.stringify(projectManifestInEs)}`);
-    logger.info(`fileCentricArrangerSetting: ${JSON.stringify(fileCentricArrangerSetting)}`);
-
     if (
-      isEqual(projectManifestInEs, metadata.projectManifest) &&
-      isEqual(fileCentricArrangerSetting, metadata.projectIndexConfigs.file_centric)
+      isEqual(projectManifestInEs, projectManifest) &&
+      isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
     ) {
       return true;
     } else {
