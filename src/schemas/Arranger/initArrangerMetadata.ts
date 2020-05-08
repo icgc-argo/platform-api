@@ -8,8 +8,6 @@ import metadata from 'resources/arranger_es_metadata.json';
 export const ARRANGER_PROJECT_METADATA_INDEX = `arranger-projects-${ARRANGER_PROJECT_ID}`;
 export const ARRANGER_PROJECTS_INDEX = `arranger-projects`;
 
-export const FILE_CENTRIC_INDEX = 'file_centric';
-
 export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric = {
   ...metadata.projectIndexConfigs.file_centric,
   index: ARRANGER_FILE_CENTRIC_INDEX || metadata.projectIndexConfigs.file_centric.index,
@@ -40,7 +38,7 @@ export default async (esClient: Client) => {
         }),
         esClient.index({
           index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: FILE_CENTRIC_INDEX,
+          id: harmonizedFileCentricConfig.name,
           body: harmonizedFileCentricConfig,
           refresh: 'wait_for',
         }),
@@ -63,7 +61,7 @@ export default async (esClient: Client) => {
       esClient
         .get({
           index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: FILE_CENTRIC_INDEX,
+          id: harmonizedFileCentricConfig.name,
         })
         .then(response => response.body._source),
     ]);

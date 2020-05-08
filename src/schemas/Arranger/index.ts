@@ -1,3 +1,5 @@
+import 'babel-polyfill';
+
 // @ts-ignore
 import { createProjectSchema } from '@arranger/server/dist/startProject';
 
