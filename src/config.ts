@@ -13,7 +13,8 @@ export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
   process.env.ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX || 'donor_centric';
 
 // Arranger configs
-export const ARRANGER_FILE_CENTRIC_INDEX = process.env.ARRANGER_FILE_CENTRIC_INDEX || 'whatever';
+export const ARRANGER_FILE_CENTRIC_INDEX =
+  process.env.ARRANGER_FILE_CENTRIC_INDEX || 'file_centric';
 export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 
 // Ego config
