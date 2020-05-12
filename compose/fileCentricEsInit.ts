@@ -26,7 +26,17 @@ import indexData from './file_centric/sample_file_centric.json';
     indexData.map(doc =>
       esClient.index({
         index: TEST_INDEX,
-        body: doc,
+        body: {
+          ...doc,
+          donors: [doc.donors].map(donor => ({
+            ...donor,
+            specimens: [donor.specimens].map(specimen => ({
+              ...specimen,
+              samples: [specimen.samples],
+            })),
+          })),
+          repositories: [doc.repositories],
+        },
       }),
     ),
   );
