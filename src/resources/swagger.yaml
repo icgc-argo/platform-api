@@ -41,7 +41,7 @@ paths:
                 type: string
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/all-clincial-data':
+  '/clinical/program/{programId}/all-clinical-data':
     parameters:
       - name: programId
         description: the short name of the program

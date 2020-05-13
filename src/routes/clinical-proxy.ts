@@ -31,7 +31,7 @@ const programTsvExportPathRewrite = (pathName: string, req: Request) => {
   return urlJoin('/clinical/program/', programId, '/tsv-export');
 };
 router.use(
-  '/program/:programId/all-clincial-data',
+  '/program/:programId/all-clinical-data',
   createProxyMiddleware({
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: programTsvExportPathRewrite,
