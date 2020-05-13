@@ -7,7 +7,7 @@ import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
-import clinical from './routes/clinical';
+import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
 import {
   PORT,
@@ -93,7 +93,7 @@ const init = async () => {
   });
 
   app.use('/kafka', kafkaProxyRoute);
-  app.use('/clinical', clinical);
+  app.use('/clinical', clinicalProxyRoute);
 
   app.use(
     '/api-docs',
@@ -101,7 +101,8 @@ const init = async () => {
     swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
   );
 
-  app.listen(PORT, () =>
+  app.listen(PORT, () =>  
+    // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
   );
 };
