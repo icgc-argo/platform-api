@@ -55,8 +55,10 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
       return resolver;
     } else {
       if (isExpired) {
+        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('expired jwt');
       } else {
+        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('unauthorized');
       }
     }
