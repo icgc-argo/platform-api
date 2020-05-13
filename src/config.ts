@@ -13,8 +13,9 @@ export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
   process.env.ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX || 'donor_centric';
 
 // Arranger configs
-export const ARRANGER_ROOT = process.env.ARRANGER_ROOT || 'http://localhost:5050';
-export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'test';
+export const ARRANGER_FILE_CENTRIC_INDEX =
+  process.env.ARRANGER_FILE_CENTRIC_INDEX || 'file_centric';
+export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 
 // Ego config
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
@@ -45,5 +46,5 @@ export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http:
 export const APP_DIR = __dirname;
 
 // Feature flags
-export const PROGRAM_DASHBOARD_SUMMARY_ENABLED =
-  process.env.PROGRAM_DASHBOARD_SUMMARY_ENABLED === 'true';
+export const FEATURE_ARRANGER_SCHEMA_ENABLED =
+  process.env.FEATURE_ARRANGER_SCHEMA_ENABLED === 'true';
