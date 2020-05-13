@@ -10,7 +10,7 @@ export const ARRANGER_PROJECTS_INDEX = `arranger-projects`;
 
 export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric = {
   ...metadata.projectIndexConfigs.file_centric,
-  index: ARRANGER_FILE_CENTRIC_INDEX || metadata.projectIndexConfigs.file_centric.index,
+  index: ARRANGER_FILE_CENTRIC_INDEX,
 };
 
 const { projectManifest } = metadata;
