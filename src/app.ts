@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
@@ -68,14 +68,15 @@ const init = async () => {
   ];
 
   const server = new ApolloServer({
+    // @ts-ignore ApolloServer type is missing this for some reason
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }): GlobalGqlContext & ArrangerGqlContext => ({
+    context: ({ req }: {req: Request}): GlobalGqlContext & ArrangerGqlContext => ({
       isUserRequest: true,
-      egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
+      egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
       Authorization:
-        `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
+        `Bearer ${(req.headers?.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
       es: esClient, // for arranger only
       projectId: ARRANGER_PROJECT_ID, // for arranger only
