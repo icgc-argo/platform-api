@@ -6,7 +6,7 @@
   },
   "projectIndexConfigs": {
     "file_centric": {
-      "index": "file_centric",
+      "index": "file-centric",
       "name": "file",
       "timestamp": "2020-05-06T18:42:28.951Z",
       "active": true,
