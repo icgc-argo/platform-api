@@ -39,7 +39,7 @@ export const createEsClient = async ({ node = ELASTICSEARCH_HOST } = {}): Promis
         },
       });
     } else {
-      throw new Error(`vault secret at ${ELASTICSEARCH_VAULT_SECRET_PATH} could not be read`);
+      throw new Error(`vault secret at ${ELASTICSEARCH_VAULT_SECRET_PATH} is malformed`);
     }
   } else {
     esClient = new Client({
@@ -50,6 +50,7 @@ export const createEsClient = async ({ node = ELASTICSEARCH_HOST } = {}): Promis
     });
   }
   try {
+    logger.info(`attempting to ping elasticsearch at ${ELASTICSEARCH_HOST}`);
     await esClient.ping();
   } catch (err) {
     logger.error(`esClient failed to connect to cluster`);

@@ -32,6 +32,7 @@ export const loadVaultSecret = (
   vaultClient: ReturnType<typeof createVaultClient> = createVaultClient(),
 ) => async (path: string) => {
   const result = await (await vaultClient).read(path);
-  logger.info(`Loaded Vault secret at ${path}`);
-  return result.data as { [k: string]: any };
+  const secretData = result.data as { [k: string]: any };
+  logger.info(`Loaded Vault secret at ${path}: ${Object.keys(secretData)}`);
+  return secretData;
 };
