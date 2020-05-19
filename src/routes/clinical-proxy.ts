@@ -28,6 +28,7 @@ router.use(
       return urlJoin(SUBMISSION_TEMPLATE_PATH, name);
     },
     onError: handleError,
+    changeOrigin: true,
   }),
 );
 
@@ -40,6 +41,7 @@ router.use(
       return urlJoin('/clinical/program/', programId, '/tsv-export');
     },
     onError: handleError,
+    changeOrigin: true,
   }),
 );
 
