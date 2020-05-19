@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
@@ -7,14 +7,23 @@ import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
-import clinical from './routes/clinical';
+import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import { PORT, NODE_ENV, GQL_MAX_COST, APP_DIR } from './config';
+import {
+  PORT,
+  NODE_ENV,
+  GQL_MAX_COST,
+  APP_DIR,
+  ARRANGER_PROJECT_ID,
+  FEATURE_ARRANGER_SCHEMA_ENABLED,
+} from './config';
 import clinicalSchema from './schemas/Clinical';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
 // @ts-ignore
 import costAnalysis from 'graphql-cost-analysis';
+import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
+import { createEsClient } from 'services/elasticsearch';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 
@@ -49,23 +58,28 @@ export type GlobalGqlContext = {
 };
 
 const init = async () => {
+  const esClient = await createEsClient();
   const schemas = [
     userSchema,
     programSchema,
     clinicalSchema,
-    await ProgramDashboardSummarySchema(),
+    await ProgramDashboardSummarySchema(esClient),
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [await getArrangerGqlSchema(esClient)] : []),
   ];
 
   const server = new ApolloServer({
+    // @ts-ignore ApolloServer type is missing this for some reason
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }): GlobalGqlContext => ({
+    context: ({ req }: {req: Request}): GlobalGqlContext & ArrangerGqlContext => ({
       isUserRequest: true,
-      egoToken: (req.headers.authorization || '').split('Bearer ').join(''),
+      egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
       Authorization:
-        `Bearer ${(req.headers.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
+        `Bearer ${(req.headers?.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
+      es: esClient, // for arranger only
+      projectId: ARRANGER_PROJECT_ID, // for arranger only
     }),
     introspection: true,
     tracing: NODE_ENV !== 'production',
@@ -79,7 +93,7 @@ const init = async () => {
   });
 
   app.use('/kafka', kafkaProxyRoute);
-  app.use('/clinical', clinical);
+  app.use('/clinical', clinicalProxyRoute);
 
   app.use(
     '/api-docs',
@@ -87,7 +101,8 @@ const init = async () => {
     swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
   );
 
-  app.listen(PORT, () =>
+  app.listen(PORT, () =>  
+    // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
   );
 };

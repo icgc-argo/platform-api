@@ -1,12 +1,12 @@
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
-import { createEsClient } from 'services/elasticsearch';
 import programDonorSummaryEntriesResolver from './summaryEntries';
 import programDonorSummaryStatsResolver from './summaryStats';
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
 import { BaseQueryArguments } from './types';
+import { Client } from '@elastic/elasticsearch';
 
 class UnauthorizedError extends ApolloError {
   extensions = {
@@ -55,8 +55,10 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
       return resolver;
     } else {
       if (isExpired) {
+        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('expired jwt');
       } else {
+        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('unauthorized');
       }
     }
@@ -65,8 +67,9 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
   }
 };
 
-const createResolvers = async (): Promise<IResolvers<unknown, GlobalGqlContext>> => {
-  const esClient = await createEsClient();
+const createResolvers = async (
+  esClient: Client,
+): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   return {
     Query: {
       programDonorSummaryEntries: (...resolverArguments) =>

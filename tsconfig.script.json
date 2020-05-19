@@ -5,17 +5,10 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "allowJs": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["src/*", "node_modules/*"]
-    }
-  },
-  "include": ["src/**/*"]
+    "allowJs": true
+  }
 }
