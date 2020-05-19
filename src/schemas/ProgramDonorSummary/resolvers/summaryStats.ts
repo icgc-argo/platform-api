@@ -69,15 +69,15 @@ const programDonorSummaryStatsResolver: (
             DonorMolecularDataReleaseStatus.FULLY_RELEASED,
           ]),
       ),
-      filterAggregation('donorsWithRegisteredNormalAndTumourSamples' as AggregationName).filter(
+      filterAggregation('donorsWithPublishedNormalAndTumourSamples' as AggregationName).filter(
         esb.boolQuery().must([
           esb
             .rangeQuery()
-            .field(EsDonorDocumentField.registeredNormalSamples)
+            .field(EsDonorDocumentField.publishedTumourAnalysis)
             .gt(0),
           esb
             .rangeQuery()
-            .field(EsDonorDocumentField.registeredTumourSamples)
+            .field(EsDonorDocumentField.publishedTumourAnalysis)
             .gt(0),
         ]),
       ),
@@ -107,7 +107,7 @@ const programDonorSummaryStatsResolver: (
       noReleaseDonorsCount: FilterAggregationResult;
       donorsProcessingMolecularDataCount: FilterAggregationResult;
       donorsWithReleasedFilesCount: FilterAggregationResult;
-      donorsWithRegisteredNormalAndTumourSamples: FilterAggregationResult;
+      donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
       donorsWithAllCoreClinicalData: FilterAggregationResult;
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
@@ -130,7 +130,7 @@ const programDonorSummaryStatsResolver: (
           noReleaseDonorsCount: { doc_count: 0 },
           donorsProcessingMolecularDataCount: { doc_count: 0 },
           donorsWithReleasedFilesCount: { doc_count: 0 },
-          donorsWithRegisteredNormalAndTumourSamples: { doc_count: 0 },
+          donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
           donorsWithAllCoreClinicalData: { doc_count: 0 },
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
@@ -154,7 +154,7 @@ const programDonorSummaryStatsResolver: (
     donorsProcessingMolecularDataCount: aggregations.donorsProcessingMolecularDataCount.doc_count,
     donorsWithReleasedFilesCount: aggregations.donorsWithReleasedFilesCount.doc_count,
     percentageTumourAndNormal: hits.total.value
-      ? aggregations.donorsWithRegisteredNormalAndTumourSamples.doc_count / hits.total.value
+      ? aggregations.donorsWithPublishedNormalAndTumourSamples.doc_count / hits.total.value
       : 0,
     percentageCoreClinical: hits.total.value
       ? aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value
