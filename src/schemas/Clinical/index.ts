@@ -8,6 +8,11 @@ import { GlobalGqlContext } from 'app';
 import { FileUpload } from 'graphql-upload';
 import typeDefs from './gqlTypeDefs'
 
+
+function normalizeValue(val: unknown) {
+  return val === undefined || val === null ? undefined : `${val}`;
+}
+
 const convertRegistrationStatsToGql = (
   statsEntry: {
     submitterId: string;
@@ -45,7 +50,7 @@ const convertRegistrationErrorToGql = (errorData: RegistrationErrorData) => ({
   message: errorData.message,
   row: errorData.index,
   field: errorData.fieldName,
-  value: errorData.info.value,
+  value: normalizeValue(errorData.info.value),
   sampleId: errorData.info.sampleSubmitterId,
   donorId: errorData.info.donorSubmitterId,
   specimenId: errorData.info.specimenSubmitterId,
@@ -186,8 +191,7 @@ type EntityRecord = { [k: string]: unknown };
 const convertClinicalRecordToGql = (index: number | string, record: EntityRecord) => {
   const fields = [];
   for (var field in record) {
-    const value =
-      record[field] === undefined || record[field] === null ? undefined : `${record[field]}`;
+    const value = normalizeValue(record[field]);
     fields.push({ name: field, value: value });
   }
   return {
@@ -203,15 +207,15 @@ type ErrorData = {
   fieldName: string;
 };
 const convertClinicalSubmissionDataErrorToGql = (errorData: ErrorData) => {
+    // errorData.info.value may come back as null if not provided in uploaded file
+  const errorValue = get(errorData, 'info.value', '') || '';
   return {
     type: errorData.type,
     message: errorData.message,
     row: errorData.index,
     field: errorData.fieldName,
-    donorId: get(errorData, 'info.donorSubmitterId', '') || '',
-
-    // errorData.info.value may come back as null if not provided in uploaded file
-    value: get(errorData, 'info.value', '') || '',
+    donorId: get(errorData, 'info.donorSubmitterId', '') || '',    
+    value: normalizeValue(errorValue), 
   };
 };
 
@@ -236,8 +240,8 @@ const convertClinicalSubmissionUpdateToGql = (updateData: UpdateData) => {
   return {
     row: updateData.index,
     field: updateData.fieldName,
-    newValue: updateData.info.newValue,
-    oldValue: updateData.info.oldValue,
+    newValue: normalizeValue(updateData.info.newValue),
+    oldValue: normalizeValue(updateData.info.oldValue),
     donorId: updateData.info.donorSubmitterId,
   };
 };
