@@ -105,7 +105,7 @@ export default gql`
     message: String!
     row: Int!
     field: String!
-    value: String
+    value: String!
     donorId: String!
   }
 
@@ -114,7 +114,7 @@ export default gql`
     message: String!
     row: Int!
     field: String!
-    value: String
+    value: String!
     sampleId: String
     donorId: String!
     specimenId: String
@@ -125,7 +125,7 @@ export default gql`
     message: String!
     row: Int!
     field: String!
-    value: String
+    value: String!
     donorId: String!
   }
 
@@ -134,7 +134,7 @@ export default gql`
     message: String!
     row: Int!
     field: String!
-    value: String
+    value: String!
     donorId: String!
     clinicalType: String!
   }
@@ -142,8 +142,8 @@ export default gql`
   type ClinicalSubmissionUpdate @cost(complexity: 5) {
     row: Int!
     field: String!
-    newValue: String
-    oldValue: String
+    newValue: String!
+    oldValue: String!
     donorId: String!
   }
 

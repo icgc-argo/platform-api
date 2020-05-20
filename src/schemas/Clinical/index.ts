@@ -10,7 +10,7 @@ import typeDefs from './gqlTypeDefs'
 
 
 function normalizeValue(val: unknown) {
-  return val === undefined || val === null ? undefined : `${val}`;
+  return val === undefined || val === null ? '' : `${val}`;
 }
 
 const convertRegistrationStatsToGql = (
