@@ -45,6 +45,18 @@ export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http:
 
 export const APP_DIR = __dirname;
 
+// Helpdesk auth
+export const JIRA_ADMIN_VAULT_CREDENTIALS_PATH = process.env
+  .JIRA_ADMIN_VAULT_CREDENTIALS_PATH as string;
+
+export const JIRA_REST_URI =
+  process.env.JIRA_REST_URI || 'https://extsd.oicr.on.ca/rest/servicedeskapi';
+export const JIRA_SERVICEDESK_ID = process.env.JIRA_SERVICEDESK_ID || '9';
+
+export const JIRA_ADMIN_EMAIL = process.env.JIRA_ADMIN_EMAIL;
+export const JIRA_ADMIN_PASS = process.env.JIRA_ADMIN_PASS;
+export const JIRA_ORGANIZATION_ID = process.env.JIRA_ORGANIZATION_ID;
+
 // Feature flags
 export const FEATURE_ARRANGER_SCHEMA_ENABLED =
   process.env.FEATURE_ARRANGER_SCHEMA_ENABLED === 'true';
