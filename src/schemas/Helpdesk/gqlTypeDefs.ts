@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-express';
 
 export default gql`
-  enum Category {
+  enum JiraTicketCategory {
     APPLYING_ACCESS
     DATA_DOWNLOAD
     DATA_SUBMISSION
@@ -24,15 +24,10 @@ export default gql`
 
   type Mutation {
     createJiraTicket(
-      messageCategory: Category!
+      messageCategory: JiraTicketCategory!
       emailAddress: String!
       requestText: String!
       displayName: String
     ): TicketCreationResponse!
-  }
-
-  # one query declaration required
-  type Query {
-    _dummy: String
   }
 `;

@@ -67,7 +67,7 @@ const init = async () => {
     clinicalSchema,
     await ProgramDashboardSummarySchema(esClient),
     ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [await getArrangerGqlSchema(esClient)] : []),
-    helpdeskSchema
+    await helpdeskSchema(),
   ];
 
   const server = new ApolloServer({

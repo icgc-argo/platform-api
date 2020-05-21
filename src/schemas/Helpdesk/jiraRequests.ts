@@ -69,8 +69,11 @@ const getJiraBasicAuth = async (): Promise<string> => {
 
   return encodedAuthString
 };
-
-export const createJiraClient = async () => {
+export type JiraClient = {
+  createServiceRequest: (customerIdentifier: string, requestTypeId: string, requestText: string, summaryPrependText: string) => Promise<any>;
+  createCustomer: (email: string, displayName: string) => Promise<any>
+}
+export const createJiraClient = async ():Promise<JiraClient> => {
 
   const basicAuthentication = await getJiraBasicAuth();
 

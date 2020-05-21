@@ -1,9 +1,9 @@
 import typeDefs from './gqlTypeDefs';
 import { GlobalGqlContext } from 'app';
 import { makeExecutableSchema } from 'graphql-tools';
-import { createJiraClient } from './jiraRequests';
+import { createJiraClient, JiraClient } from './jiraRequests';
 
-enum Category {
+enum JiraTicketCategory {
   APPLYING_ACCESS,
   DATA_DOWNLOAD,
   DATA_SUBMISSION,
@@ -14,7 +14,7 @@ enum Category {
 }
 
 type CategoryMapper = {
-  [key in keyof typeof Category]: string;
+  [key in keyof typeof JiraTicketCategory]: string;
 };
 
 const MESSAGE_CATEGORY_MAPPER: CategoryMapper = {
@@ -52,7 +52,7 @@ const resolvers = {
     ) => {
       const { messageCategory, emailAddress, requestText, displayName } = args;
 
-      const messageCategoryKey = messageCategory as keyof typeof Category;
+      const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
       const jiraClient = await createJiraClient();
 
       const serviceRequestResponse = await jiraClient.createServiceRequest(
@@ -67,7 +67,40 @@ const resolvers = {
   },
 };
 
-export default makeExecutableSchema({
-  typeDefs,
-  resolvers,
-});
+const createResolvers = (client: JiraClient) => {
+  return {
+    Mutation: {
+      createJiraTicket: async (
+        obj: unknown,
+        args: {
+          messageCategory: string;
+          emailAddress: string;
+          requestText: string;
+          displayName: string;
+        },
+        context: GlobalGqlContext,
+      ) => {
+        const { messageCategory, emailAddress, requestText, displayName } = args;
+
+        const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
+
+        const serviceRequestResponse = await client.createServiceRequest(
+          emailAddress,
+          REQUEST_TYPE_MAPPER[messageCategoryKey],
+          requestText,
+          MESSAGE_CATEGORY_MAPPER[messageCategoryKey],
+        );
+
+        return serviceRequestResponse;
+      },
+    },
+  };
+};
+
+export default async () => {
+  const client = await createJiraClient();
+  return makeExecutableSchema({
+    typeDefs,
+    resolvers: createResolvers(client),
+  });
+};
