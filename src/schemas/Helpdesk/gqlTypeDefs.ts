@@ -30,4 +30,8 @@ export default gql`
       displayName: String
     ): TicketCreationResponse!
   }
+
+  type Query {
+    _jiraRootQuery: String!
+  }
 `;
