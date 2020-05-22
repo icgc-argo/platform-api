@@ -58,5 +58,6 @@ export const JIRA_ADMIN_PASS = process.env.JIRA_ADMIN_PASS;
 export const JIRA_ORGANIZATION_ID = process.env.JIRA_ORGANIZATION_ID;
 
 // Feature flags
+export const FEATURE_HELP_DESK_ENABLED = process.env.FEATURE_HELP_DESK_ENABLED === 'true';
 export const FEATURE_ARRANGER_SCHEMA_ENABLED =
   process.env.FEATURE_ARRANGER_SCHEMA_ENABLED === 'true';
