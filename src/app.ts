@@ -18,6 +18,8 @@ import {
   FEATURE_ARRANGER_SCHEMA_ENABLED,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
+import helpdeskSchema from './schemas/Helpdesk';
+
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
 // @ts-ignore
@@ -65,6 +67,7 @@ const init = async () => {
     clinicalSchema,
     await ProgramDashboardSummarySchema(esClient),
     ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [await getArrangerGqlSchema(esClient)] : []),
+    await helpdeskSchema(),
   ];
 
   const server = new ApolloServer({
