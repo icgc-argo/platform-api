@@ -9,6 +9,9 @@ import { BaseQueryArguments } from './types';
 import { Client } from '@elastic/elasticsearch';
 
 class UnauthorizedError extends ApolloError {
+  constructor(message: string) {
+    super(message);
+  }
   extensions = {
     code: 'UNAUTHORIZED',
   };
@@ -55,10 +58,8 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
       return resolver;
     } else {
       if (isExpired) {
-        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('expired jwt');
       } else {
-        // @ts-ignore ApolloServer type is missing this for some reason
         throw new UnauthorizedError('unauthorized');
       }
     }
