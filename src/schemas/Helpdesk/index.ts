@@ -2,6 +2,8 @@ import typeDefs from './gqlTypeDefs';
 import { GlobalGqlContext } from 'app';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createJiraClient, JiraClient } from './jiraRequests';
+import { FEATURE_HELP_DESK_ENABLED } from 'config';
+import { AuthenticationError, ApolloError } from 'apollo-server-express';
 
 enum JiraTicketCategory {
   APPLYING_ACCESS,
@@ -97,10 +99,22 @@ const createResolvers = (client: JiraClient) => {
   };
 };
 
+const disabledResolvers = {
+  Mutation: {
+    createJiraTicket: () => {
+      throw new ApolloError(
+        `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
+      );
+    },
+  },
+};
+
 export default async () => {
-  const client = await createJiraClient();
+  const resolvers = FEATURE_HELP_DESK_ENABLED
+    ? createResolvers(await createJiraClient())
+    : disabledResolvers;
   return makeExecutableSchema({
     typeDefs,
-    resolvers: createResolvers(client),
+    resolvers,
   });
 };
