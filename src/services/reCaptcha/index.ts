@@ -17,19 +17,41 @@ type ReCaptchaVerificationResult = {
   hostname?: string;
   'error-codes'?: Array<ReCaptchaVerificationErrorCode>;
 };
-
+type ReCaptchaVaultSecret = {
+  secret_key: string;
+};
 export type ReCaptchaClient = {
   verifyUserResponse: (response: string) => Promise<ReCaptchaVerificationResult>;
 };
 
+const isReCaptchaSecretData = (data: { [k: string]: unknown }): data is ReCaptchaVaultSecret => {
+  return typeof data['secret_key'] === 'string';
+};
+
+const getReCaptchaSecret = async () => {
+  let secret: string;
+  if (USE_VAULT) {
+    const vaultData = await loadVaultSecret()(RECAPTCHA_VAULT_SECRET_PATH);
+    if (isReCaptchaSecretData(vaultData)) {
+      secret = vaultData.secret_key;
+    } else {
+      throw new Error('invalid reCaptcha secret retrieved from vault');
+    }
+  } else {
+    secret = RECAPTCHA_SECRET_KEY;
+  }
+  return secret;
+};
+
 const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
-  const secret = USE_VAULT
-    ? await loadVaultSecret()(RECAPTCHA_VAULT_SECRET_PATH)
-    : RECAPTCHA_SECRET_KEY;
+  let reCaptchaSecretKey = await getReCaptchaSecret();
   const verifyUserResponse = async (response: string): Promise<ReCaptchaVerificationResult> =>
-    fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${response}`, {
-      method: 'POST',
-    }).then(res => res.json());
+    fetch(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${reCaptchaSecretKey}&response=${response}`,
+      {
+        method: 'POST',
+      },
+    ).then(res => res.json());
 
   logger.info('verifying reCaptcha secret');
   const testVerificationResponse = await verifyUserResponse('');
