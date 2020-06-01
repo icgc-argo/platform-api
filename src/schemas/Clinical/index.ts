@@ -9,8 +9,17 @@ import { FileUpload } from 'graphql-upload';
 import typeDefs from './gqlTypeDefs'
 
 
-function normalizeValue(val: unknown) {
+const ARRAY_DELIMETER_CHAR = '|';
+
+function convertToString(val: unknown) {
   return val === undefined || val === null ? '' : `${val}`;
+}
+
+function normalizeValue(val: unknown) {
+  if (Array.isArray(val)) {
+    return val.map(convertToString).join(ARRAY_DELIMETER_CHAR);
+  }
+  return convertToString(val);
 }
 
 const convertRegistrationStatsToGql = (
