@@ -85,10 +85,6 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
   return {
     Mutation: {
       createJiraTicketWithReCaptcha: resolveWithReCaptcha(jiraTicketCreationResolver),
-      /**
-       * @TODO remove this resolver once UI usage is switched to createJiraTicketWithReCaptcha
-       */
-      createJiraTicket: jiraTicketCreationResolver,
     },
   };
 };
@@ -96,11 +92,6 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
 const disabledResolvers = {
   Mutation: {
     createJiraTicketWithReCaptcha: () => {
-      throw new ApolloError(
-        `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
-      );
-    },
-    createJiraTicket: () => {
       throw new ApolloError(
         `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
       );
