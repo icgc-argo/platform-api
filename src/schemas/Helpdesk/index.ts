@@ -3,7 +3,9 @@ import { GlobalGqlContext } from 'app';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createJiraClient, JiraClient } from './jiraRequests';
 import { FEATURE_HELP_DESK_ENABLED } from 'config';
-import { AuthenticationError, ApolloError } from 'apollo-server-express';
+import { ApolloError, UserInputError } from 'apollo-server-express';
+import createReCaptchaClient, { ReCaptchaClient } from 'services/reCaptcha';
+import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql';
 
 enum JiraTicketCategory {
   APPLYING_ACCESS,
@@ -40,67 +42,64 @@ const REQUEST_TYPE_MAPPER: CategoryMapper = {
   OTHER: '91',
 };
 
-const resolvers = {
-  Mutation: {
-    createJiraTicket: async (
-      obj: unknown,
-      args: {
-        messageCategory: string;
-        emailAddress: string;
-        requestText: string;
-        displayName: string;
-      },
-      context: GlobalGqlContext,
-    ) => {
-      const { messageCategory, emailAddress, requestText, displayName } = args;
+const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClient) => {
+  const jiraTicketCreationResolver: GraphQLFieldResolver<unknown, GlobalGqlContext, {
+      messageCategory: string;
+      emailAddress: string;
+      requestText: string;
+      displayName: string;
+    }> = async (
+    obj,
+    args,
+    context,
+  ) => {
+    const { messageCategory, emailAddress, requestText, displayName } = args;
+    const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
+    const serviceRequestResponse = await jiraClient.createServiceRequest(
+      emailAddress,
+      REQUEST_TYPE_MAPPER[messageCategoryKey],
+      requestText,
+      MESSAGE_CATEGORY_MAPPER[messageCategoryKey],
+    );
+    return serviceRequestResponse;
+  };
 
-      const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
-      const jiraClient = await createJiraClient();
+  const resolveWithReCaptcha = (resolverFn: GraphQLFieldResolver<unknown, unknown>) => async (
+    ...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]
+  ) => {
+    const { reCaptchaResponse } = resolverArgs[1];
+    const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(
+      reCaptchaResponse,
+    );
+    if (success) {
+      return resolverFn(...resolverArgs);
+    } else {
+      if (errorCodes?.includes("invalid-input-response") || errorCodes?.includes("missing-input-response")) {
+        throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
+      } else {
+        throw new ApolloError(`failed to verify reCaptcha response`);
+      }
+    }
+  };
 
-      const serviceRequestResponse = await jiraClient.createServiceRequest(
-        emailAddress,
-        REQUEST_TYPE_MAPPER[messageCategoryKey],
-        requestText,
-        MESSAGE_CATEGORY_MAPPER[messageCategoryKey],
-      );
-
-      return serviceRequestResponse;
-    },
-  },
-};
-
-const createResolvers = (client: JiraClient) => {
   return {
     Mutation: {
-      createJiraTicket: async (
-        obj: unknown,
-        args: {
-          messageCategory: string;
-          emailAddress: string;
-          requestText: string;
-          displayName: string;
-        },
-        context: GlobalGqlContext,
-      ) => {
-        const { messageCategory, emailAddress, requestText, displayName } = args;
-
-        const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
-
-        const serviceRequestResponse = await client.createServiceRequest(
-          emailAddress,
-          REQUEST_TYPE_MAPPER[messageCategoryKey],
-          requestText,
-          MESSAGE_CATEGORY_MAPPER[messageCategoryKey],
-        );
-
-        return serviceRequestResponse;
-      },
+      createJiraTicketWithReCaptcha: resolveWithReCaptcha(jiraTicketCreationResolver),
+      /**
+       * @TODO remove this resolver once UI usage is switched to createJiraTicketWithReCaptcha
+       */
+      createJiraTicket: jiraTicketCreationResolver,
     },
   };
 };
 
 const disabledResolvers = {
   Mutation: {
+    createJiraTicketWithReCaptcha: () => {
+      throw new ApolloError(
+        `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
+      );
+    },
     createJiraTicket: () => {
       throw new ApolloError(
         `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
@@ -110,8 +109,9 @@ const disabledResolvers = {
 };
 
 export default async () => {
+  const reCaptchaClient = await createReCaptchaClient() // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
   const resolvers = FEATURE_HELP_DESK_ENABLED
-    ? createResolvers(await createJiraClient())
+    ? createResolvers(await createJiraClient(), reCaptchaClient)
     : disabledResolvers;
   return makeExecutableSchema({
     typeDefs,

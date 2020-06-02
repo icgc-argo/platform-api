@@ -29,6 +29,14 @@ export default gql`
       requestText: String!
       displayName: String
     ): TicketCreationResponse!
+      @deprecated(reason: "Now requires reCaptcha. Use createJiraTicketWithReCaptcha instead")
+    createJiraTicketWithReCaptcha(
+      reCaptchaResponse: String!
+      messageCategory: JiraTicketCategory!
+      emailAddress: String!
+      requestText: String!
+      displayName: String
+    ): TicketCreationResponse!
   }
 
   type Query {
