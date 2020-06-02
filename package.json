@@ -28,6 +28,7 @@
     "@types/async-retry": "^1.4.2",
     "@types/graphql-upload": "^8.0.3",
     "@types/lodash": "^4.14.149",
+    "@types/promise-queue": "^2.2.0",
     "@types/request": "^2.48.4",
     "@types/swagger-ui-express": "^4.1.1",
     "@types/url-join": "^4.0.0",
