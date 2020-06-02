@@ -18,7 +18,7 @@ import {
   FEATURE_ARRANGER_SCHEMA_ENABLED,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
-import helpdeskSchema from './schemas/Helpdesk';
+import createHelpdeskSchema from './schemas/Helpdesk';
 
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
@@ -61,14 +61,15 @@ export type GlobalGqlContext = {
 
 const init = async () => {
   const esClient = await createEsClient();
-  const schemas = [
+  
+  const schemas = await Promise.all([
     userSchema,
     programSchema,
     clinicalSchema,
-    await ProgramDashboardSummarySchema(esClient),
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [await getArrangerGqlSchema(esClient)] : []),
-    await helpdeskSchema(),
-  ];
+    ProgramDashboardSummarySchema(esClient), 
+    createHelpdeskSchema(), 
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
+  ])
 
   const server = new ApolloServer({
     // @ts-ignore ApolloServer type is missing this for some reason

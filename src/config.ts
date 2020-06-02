@@ -48,14 +48,16 @@ export const APP_DIR = __dirname;
 // Helpdesk auth
 export const JIRA_ADMIN_VAULT_CREDENTIALS_PATH = process.env
   .JIRA_ADMIN_VAULT_CREDENTIALS_PATH as string;
-
 export const JIRA_REST_URI =
   process.env.JIRA_REST_URI || 'https://extsd.oicr.on.ca/rest/servicedeskapi';
 export const JIRA_SERVICEDESK_ID = process.env.JIRA_SERVICEDESK_ID || '9';
-
 export const JIRA_ADMIN_EMAIL = process.env.JIRA_ADMIN_EMAIL;
 export const JIRA_ADMIN_PASS = process.env.JIRA_ADMIN_PASS;
 export const JIRA_ORGANIZATION_ID = process.env.JIRA_ORGANIZATION_ID;
+
+// RECAPTCHA CREDENTIALS
+export const RECAPTCHA_SECRET_KEY = String(process.env.RECAPTCHA_SECRET_KEY);
+export const RECAPTCHA_VAULT_SECRET_PATH = String(process.env.RECAPTCHA_VAULT_SECRET_PATH);
 
 // Feature flags
 export const FEATURE_HELP_DESK_ENABLED = process.env.FEATURE_HELP_DESK_ENABLED === 'true';
