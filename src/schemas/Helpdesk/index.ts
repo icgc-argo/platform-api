@@ -42,17 +42,41 @@ const REQUEST_TYPE_MAPPER: CategoryMapper = {
   OTHER: '91',
 };
 
+const resolveWithReCaptcha = (
+  resolverFn: GraphQLFieldResolver<unknown, unknown>,
+  reCaptchaClient: ReCaptchaClient,
+) => async (
+  ...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]
+) => {
+  const { reCaptchaResponse } = resolverArgs[1];
+  const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(
+    reCaptchaResponse,
+  );
+  if (success) {
+    return resolverFn(...resolverArgs);
+  } else {
+    if (
+      errorCodes?.includes('invalid-input-response') ||
+      errorCodes?.includes('missing-input-response')
+    ) {
+      throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
+    } else {
+      throw new ApolloError(`failed to verify reCaptcha response`);
+    }
+  }
+};
+
 const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClient) => {
-  const jiraTicketCreationResolver: GraphQLFieldResolver<unknown, GlobalGqlContext, {
+  const jiraTicketCreationResolver: GraphQLFieldResolver<
+    unknown,
+    GlobalGqlContext,
+    {
       messageCategory: string;
       emailAddress: string;
       requestText: string;
       displayName: string;
-    }> = async (
-    obj,
-    args,
-    context,
-  ) => {
+    }
+  > = async (obj, args, context) => {
     const { messageCategory, emailAddress, requestText, displayName } = args;
     const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
     const serviceRequestResponse = await jiraClient.createServiceRequest(
@@ -64,27 +88,12 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
     return serviceRequestResponse;
   };
 
-  const resolveWithReCaptcha = (resolverFn: GraphQLFieldResolver<unknown, unknown>) => async (
-    ...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]
-  ) => {
-    const { reCaptchaResponse } = resolverArgs[1];
-    const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(
-      reCaptchaResponse,
-    );
-    if (success) {
-      return resolverFn(...resolverArgs);
-    } else {
-      if (errorCodes?.includes("invalid-input-response") || errorCodes?.includes("missing-input-response")) {
-        throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
-      } else {
-        throw new ApolloError(`failed to verify reCaptcha response`);
-      }
-    }
-  };
-
   return {
     Mutation: {
-      createJiraTicketWithReCaptcha: resolveWithReCaptcha(jiraTicketCreationResolver),
+      createJiraTicketWithReCaptcha: resolveWithReCaptcha(
+        jiraTicketCreationResolver,
+        reCaptchaClient,
+      ),
       /**
        * @TODO remove this resolver once UI usage is switched to createJiraTicketWithReCaptcha
        */
@@ -93,26 +102,26 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
   };
 };
 
-const disabledResolvers = {
+const createDisabledResolvers = (reCaptchaClient: ReCaptchaClient) => ({
   Mutation: {
-    createJiraTicketWithReCaptcha: () => {
+    createJiraTicketWithReCaptcha: resolveWithReCaptcha(() => {
       throw new ApolloError(
         `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
       );
-    },
+    }, reCaptchaClient),
     createJiraTicket: () => {
       throw new ApolloError(
         `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
       );
     },
   },
-};
+});
 
 export default async () => {
-  const reCaptchaClient = await createReCaptchaClient() // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
+  const reCaptchaClient = await createReCaptchaClient(); // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
   const resolvers = FEATURE_HELP_DESK_ENABLED
     ? createResolvers(await createJiraClient(), reCaptchaClient)
-    : disabledResolvers;
+    : createDisabledResolvers(reCaptchaClient);
   return makeExecutableSchema({
     typeDefs,
     resolvers,
