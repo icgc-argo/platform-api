@@ -19,4 +19,5 @@
 - [ ] New uikit components have Storybook stories
 - [ ] Feature is minimally responsive.
 - [ ] Manual testing of UI feature.
+- [ ] Add copyrights for new files
 - [ ] Selenium test is completed and passing.
