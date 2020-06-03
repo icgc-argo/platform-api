@@ -84,16 +84,14 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
       REQUEST_TYPE_MAPPER[messageCategoryKey],
       requestText,
       MESSAGE_CATEGORY_MAPPER[messageCategoryKey],
+      displayName
     );
     return serviceRequestResponse;
   };
 
   return {
     Mutation: {
-      createJiraTicketWithReCaptcha: resolveWithReCaptcha(
-        jiraTicketCreationResolver,
-        reCaptchaClient,
-      ),
+      createJiraTicketWithReCaptcha: jiraTicketCreationResolver,
       /**
        * @TODO remove this resolver once UI usage is switched to createJiraTicketWithReCaptcha
        */
