@@ -45,7 +45,7 @@ import logger from './utils/logger';
 import costAnalysis from 'graphql-cost-analysis';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient } from 'services/elasticsearch';
-import createManifestDownloadRouter from 'routes/manifest';
+import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 
@@ -118,7 +118,7 @@ const init = async () => {
 
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinicalProxyRoute);
-  app.use('/manifest', createManifestDownloadRouter(esClient))
+  app.use('/file-centric-tsv', createFileCentricTsvRoute(esClient))
 
   app.use(
     '/api-docs',
