@@ -1,6 +1,6 @@
 import express, { Response, RequestHandler } from 'express';
 import { Client } from '@elastic/elasticsearch';
-import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import { ARRANGER_FILE_CENTRIC_INDEX, DEFAULT_TSV_STREAM_CHUNK_SIZE } from 'config';
 import esb from 'elastic-builder';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
@@ -14,11 +14,11 @@ const createFileCentricDocumentStream = async function*(configs: {
   esClient: Client;
   shouldContinue: () => boolean;
   esQuery?: object;
+  pageSize?: number;
 }) {
-  const { esClient, shouldContinue, esQuery } = configs;
+  const { esClient, shouldContinue, esQuery, pageSize = DEFAULT_TSV_STREAM_CHUNK_SIZE } = configs;
   let currentPage = 0;
   let completed = false;
-  const pageSize = 2;
   while (!completed && shouldContinue()) {
     const {
       body: { hits },
