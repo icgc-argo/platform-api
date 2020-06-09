@@ -86,9 +86,9 @@ const init = async () => {
     userSchema,
     programSchema,
     clinicalSchema,
-    ProgramDashboardSummarySchema(esClient), 
-    createHelpdeskSchema(), 
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
+    // ProgramDashboardSummarySchema(esClient), 
+    // createHelpdeskSchema(), 
+    // ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
   ])
 
   const server = new ApolloServer({
@@ -118,7 +118,7 @@ const init = async () => {
 
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinicalProxyRoute);
-  app.use('/file-centric-tsv', createFileCentricTsvRoute(esClient))
+  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
   app.use(
     '/api-docs',

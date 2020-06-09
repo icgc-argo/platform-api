@@ -28,6 +28,7 @@ import { EsFileDocument, TsvFileSchema } from './types';
 import { buildQuery } from '@arranger/middleware/dist';
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
+import { getNestedFields, EsIndexMapping } from 'services/elasticsearch';
 
 const createFileCentricDocumentStream = async function*(configs: {
   esClient: Client;
@@ -47,8 +48,9 @@ const createFileCentricDocumentStream = async function*(configs: {
         query: esQuery,
         ...esb
           .requestBodySearch()
-          .from(currentPage)
+          .from(currentPage * pageSize)
           .size(pageSize)
+          .sort(esb.sort('object_id' as keyof EsFileDocument))
           .toJSON(),
       },
     });
@@ -63,13 +65,9 @@ const createFileCentricDocumentStream = async function*(configs: {
   }
 };
 
-const parseFilterString = (filterString: unknown): {} => {
+const parseFilterString = (filterString: string): {} => {
   try {
-    if (typeof filterString === 'string') {
-      return JSON.parse(filterString) as {};
-    } else {
-      throw new Error(`expected ${filterString} to be a string`);
-    }
+    return JSON.parse(filterString) as {};
   } catch (err) {
     logger.error(`${filterString} is not a valid filter`);
     throw err;
@@ -83,33 +81,48 @@ const writeTsvStreamToResponse = async <Document>(
 ) => {
   res.write(tsvSchema.map(({ header }) => header).join('\t'));
   res.write('\n');
+  let documentCount = 0; // for logging
+  let chunkCount = 0; // for logging
   for await (const chunk of stream) {
     res.write(
       chunk
         .map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
         .join('\n'),
     );
+    documentCount += chunk.length;
+    chunkCount++;
   }
+  logger.info(`streamed ${documentCount} documents to tsv over ${chunkCount} chunks`);
 };
 
-const createFileCentricTsvRouter = (esClient: Client) => {
+const createFileCentricTsvRouter = async (esClient: Client) => {
   const router = express.Router();
+
+  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({
+    index: ARRANGER_FILE_CENTRIC_INDEX,
+  });
+  const [indexMapping] = Object.values(body);
+  const nestedFields = getNestedFields(indexMapping.mappings);
 
   const createDownloadRoute = (
     fileName: string,
     tsvSchema: TsvFileSchema<EsFileDocument>,
   ): RequestHandler => {
     return async (req, res) => {
-      const { filter: filterStr } = req.query;
-      const filter = parseFilterString(filterStr);
+      const { filter: filterStr }: { filter?: string } = req.query;
+      let filter: ReturnType<typeof parseFilterString> | null;
       let esQuery: object;
       try {
-        esQuery = buildQuery({
-          filters: filter,
-          nestedFields: [],
-        });
+        filter = filterStr ? parseFilterString(filterStr) : null;
+        esQuery = filter
+          ? buildQuery({
+              filters: filter,
+              nestedFields: nestedFields,
+            })
+          : undefined;
       } catch (err) {
         res.status(400).end();
+        logger.error(err);
         throw err;
       }
       const fileCentricDocumentStream = createFileCentricDocumentStream({
@@ -121,7 +134,7 @@ const createFileCentricTsvRouter = (esClient: Client) => {
       /**
        * @TODO implement time in file name
        */
-      res.setHeader('Content-disposition', `attachment; filename=${fileName}.20200520.tsv`);
+      // res.setHeader('Content-disposition', `attachment; filename=${fileName}.20200520.tsv`);
       await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
       res.end();
     };
