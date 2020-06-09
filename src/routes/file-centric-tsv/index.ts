@@ -74,29 +74,29 @@ const parseFilterString = (filterString: string): {} => {
   }
 };
 
-const createFilterStringToEsQueryParser = (esClient: Client, nestedFields: string[]) => async (
-  filterStr: string,
-): Promise<{}> => {
-  const filter = filterStr ? parseFilterString(filterStr) : null;
-  const esQuery = filter
-    ? buildQuery({
-        filters: filter,
-        nestedFields: nestedFields,
-      })
-    : undefined;
-  const {
-    body: { valid },
-  }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
-    body: {
-      query: esQuery,
-    },
-  });
-  if (!valid) {
-    throw new Error(
-      `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${filterStr}`,
-    );
-  }
-  return esQuery;
+const createFilterStringToEsQueryParser = (esClient: Client, nestedFields: string[]) => {
+  return async (filterStr: string): Promise<{}> => {
+    const filter = filterStr ? parseFilterString(filterStr) : null;
+    const esQuery = filter
+      ? buildQuery({
+          filters: filter,
+          nestedFields: nestedFields,
+        })
+      : undefined;
+    const {
+      body: { valid },
+    }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
+      body: {
+        query: esQuery,
+      },
+    });
+    if (!valid) {
+      throw new Error(
+        `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${filterStr}`,
+      );
+    }
+    return esQuery;
+  };
 };
 
 const writeTsvStreamToResponse = async <Document>(
@@ -152,10 +152,6 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
         shouldContinue: () => !req.aborted,
         esQuery,
       });
-
-      /**
-       * @TODO implement time in file name
-       */
       res.setHeader(
         'Content-disposition',
         `attachment; filename=${fileName || defaultFileName(req)}`,
