@@ -17,7 +17,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Client, ApiResponse } from '@elastic/elasticsearch';
+import { Client } from '@elastic/elasticsearch';
 import flatMap from 'lodash/flatMap';
 import logger from 'utils/logger';
 import {
