@@ -17,7 +17,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import express, { Response, RequestHandler } from 'express';
+import express, { Response, RequestHandler, Request } from 'express';
 import { Client } from '@elastic/elasticsearch';
 import { ARRANGER_FILE_CENTRIC_INDEX, DEFAULT_TSV_STREAM_CHUNK_SIZE } from 'config';
 import esb from 'elastic-builder';
@@ -104,12 +104,15 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   const [indexMapping] = Object.values(body);
   const nestedFields = getNestedFields(indexMapping.mappings);
 
-  const createDownloadRoute = (
-    fileName: string,
-    tsvSchema: TsvFileSchema<EsFileDocument>,
-  ): RequestHandler => {
+  const createDownloadRoute = ({
+    defaultFileName,
+    tsvSchema,
+  }: {
+    defaultFileName: (req: Request) => string;
+    tsvSchema: TsvFileSchema<EsFileDocument>;
+  }): RequestHandler => {
     return async (req, res) => {
-      const { filter: filterStr }: { filter?: string } = req.query;
+      const { filter: filterStr, fileName }: { filter?: string; fileName?: string } = req.query;
       let filter: ReturnType<typeof parseFilterString> | null;
       let esQuery: object;
       try {
@@ -134,14 +137,30 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
       /**
        * @TODO implement time in file name
        */
-      // res.setHeader('Content-disposition', `attachment; filename=${fileName}.20200520.tsv`);
+      res.setHeader(
+        'Content-disposition',
+        `attachment; filename=${fileName || defaultFileName(req)}`,
+      );
       await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
       res.end();
     };
   };
 
-  router.use('/manifest', createDownloadRoute('score-manifest', scoreManifestTsvSchema));
-  router.use('/demo', createDownloadRoute('demo', demoTsvSchema));
+  router.use(
+    '/manifest',
+    createDownloadRoute({
+      // defaultFileName: req => `score-manifest.20200520.tsv`,
+      defaultFileName: req => `score-manifest.${Date.now()}.tsv`,
+      tsvSchema: scoreManifestTsvSchema,
+    }),
+  );
+  router.use(
+    '/demo',
+    createDownloadRoute({
+      defaultFileName: req => 'demo',
+      tsvSchema: demoTsvSchema,
+    }),
+  );
 
   return router;
 };
