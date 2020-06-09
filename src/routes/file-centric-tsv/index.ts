@@ -74,6 +74,31 @@ const parseFilterString = (filterString: string): {} => {
   }
 };
 
+const createFilterStringToEsQueryParser = (esClient: Client, nestedFields: string[]) => async (
+  filterStr: string,
+): Promise<{}> => {
+  const filter = filterStr ? parseFilterString(filterStr) : null;
+  const esQuery = filter
+    ? buildQuery({
+        filters: filter,
+        nestedFields: nestedFields,
+      })
+    : undefined;
+  const {
+    body: { valid },
+  }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
+    body: {
+      query: esQuery,
+    },
+  });
+  if (!valid) {
+    throw new Error(
+      `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${filterStr}`,
+    );
+  }
+  return esQuery;
+};
+
 const writeTsvStreamToResponse = async <Document>(
   stream: AsyncGenerator<Document[], void, unknown>,
   res: Response,
@@ -103,6 +128,7 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   });
   const [indexMapping] = Object.values(body);
   const nestedFields = getNestedFields(indexMapping.mappings);
+  const parseFilterStringToEsQuery = createFilterStringToEsQueryParser(esClient, nestedFields);
 
   const createDownloadRoute = ({
     defaultFileName,
@@ -113,18 +139,11 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   }): RequestHandler => {
     return async (req, res) => {
       const { filter: filterStr, fileName }: { filter?: string; fileName?: string } = req.query;
-      let filter: ReturnType<typeof parseFilterString> | null;
-      let esQuery: object;
+      let esQuery: object | undefined;
       try {
-        filter = filterStr ? parseFilterString(filterStr) : null;
-        esQuery = filter
-          ? buildQuery({
-              filters: filter,
-              nestedFields: nestedFields,
-            })
-          : undefined;
+        esQuery = filterStr ? await parseFilterStringToEsQuery(filterStr) : undefined;
       } catch (err) {
-        res.status(400).end();
+        res.status(400).send(`${filterStr} is not a valid filter`);
         logger.error(err);
         throw err;
       }

@@ -3,17 +3,17 @@ info:
   title: Platform-API
   version: 1.0.0
 paths:
-  '/kafka/{topic}':
+  "/kafka/{topic}":
     parameters:
       - name: topic
-        description: the name of the target topic in kafka 
+        description: the name of the target topic in kafka
         in: path
         required: true
-        schema: 
+        schema:
           type: string
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: proxies json messages to kafka rest proxy
       requestBody:
         content:
@@ -26,22 +26,22 @@ paths:
                   items:
                     type: object
       responses:
-        '200':
-          description: 'the successful response from kafka rest proxy'
+        "200":
+          description: "the successful response from kafka rest proxy"
           content:
             application/json:
               schema:
                 type: object
-        '401':
+        "401":
           description: invalid/missing jwt token
           content:
             application/json:
               schema:
                 example: '{"message": "invalid jwt"}'
                 type: string
-        '500':
+        "500":
           description: Internal server error
-  '/clinical/program/{programId}/all-clinical-data':
+  "/clinical/program/{programId}/all-clinical-data":
     parameters:
       - name: programId
         description: the short name of the program
@@ -51,35 +51,35 @@ paths:
           type: string
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Download a zip file with tsv files for all clinical data in program
-      description: '- the file name of the zip file is not determined by this endpoint'
+      description: "- the file name of the zip file is not determined by this endpoint"
       responses:
-        '200':
-          description: 'A zip file with all program submitted data'
+        "200":
+          description: "A zip file with all program submitted data"
           content:
             application/zip:
               schema:
                 type: string
                 format: binary
-        '500':
+        "500":
           description: Internal server error
-  '/clinical/template/all':
+  "/clinical/template/all":
     get:
       summary: Download a zip file with templates for all schema
-      description: '- the file name of the zip file is not determined by this endpoint'
+      description: "- the file name of the zip file is not determined by this endpoint"
       responses:
-        '200':
-          description: 'A zip file with all schema templates'
+        "200":
+          description: "A zip file with all schema templates"
           content:
             application/zip:
               schema:
                 type: string
                 format: binary
-        '500':
+        "500":
           description: Internal server error
 
-  '/clinical/template/{schema}':
+  "/clinical/template/{schema}":
     parameters:
       - name: schema
         description: name of the schema to download the template file for
@@ -93,25 +93,55 @@ paths:
         - the file name of tsv file is not determined by this endpoint
         - this endpoint will accept /{schema} or /{schema}.tsv
       responses:
-        '200':
-          description: 'A tsv template file for the given schemaName'
+        "200":
+          description: "A tsv template file for the given schemaName"
           content:
             text/tab-separated-values:
               schema:
                 example: 'program_id\tsubmitter_donor_id\tgender\tsubmitter_specimen_id\tspecimen_type\ttumour_normal_designation\tsubmitter_sample_id\tsample_type'
                 type: string
-        '404':
+        "404":
           description: The errror message indicating the schema could not be found
           content:
             application/json:
               schema:
                 example: '{"message": "no schema named ''invalidName'' found"}'
                 type: string
-        '500':
+        "500":
           description: Internal server error
+
+  "/file-centric-tsv/manifest":
+    parameters:
+      - name: filter
+        description: JSON filter following the SQON spec
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fileName
+        description: what to name the file
+        in: query
+        required: false
+        schema:
+          type: string
+    get:
+      summary: Download the score manifest tsv file
+      responses:
+        "200":
+          description: "A tsv template file for the given schemaName"
+        "400":
+          description: The error message indicates something wrong with the request
+          content:
+            application/json:
+              schema:
+                example: "asdf is not a valid filter"
+                type: string
+        "500":
+          description: Internal server error
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT  
+      bearerFormat: JWT
