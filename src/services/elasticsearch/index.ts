@@ -47,11 +47,11 @@ export const isObjectFieldMapping = (obj: object): obj is EsObjectFieldMapping =
   Object.keys(obj).includes('properties') && !Object.keys(obj).includes('type');
 
 export const isScalarFieldMapping = (obj: object): obj is EsScalarFieldMapping =>
-  // @ts-ignore
+  // @ts-ignore This is doing run-time type check so it's ok
   Object.keys(obj).includes('type') && obj.type !== 'nested';
 
 export const isNestedFieldMapping = (obj: object): obj is EsNestedFieldMapping =>
-  // @ts-ignore
+  // @ts-ignore This is doing run-time type check so it's ok
   Object.keys(obj).includes('type') && obj.type === 'nested';
 
 export const getNestedFields = (indexMapping: EsFieldMapping, parentField?: string): string[] => {
