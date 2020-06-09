@@ -24,12 +24,11 @@ import esb from 'elastic-builder';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
 import { format } from 'date-fns';
+import { getNestedFields, EsIndexMapping } from 'services/elasticsearch';
+import { createFilterStringToEsQueryParser } from './utils';
 
-// @ts-ignore
-import { buildQuery } from '@arranger/middleware/dist';
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
-import { getNestedFields, EsIndexMapping } from 'services/elasticsearch';
 
 const createFileCentricDocumentStream = async function*(configs: {
   esClient: Client;
@@ -66,40 +65,6 @@ const createFileCentricDocumentStream = async function*(configs: {
   }
 };
 
-const parseFilterString = (filterString: string): {} => {
-  try {
-    return JSON.parse(filterString) as {};
-  } catch (err) {
-    logger.error(`${filterString} is not a valid filter`);
-    throw err;
-  }
-};
-
-const createFilterStringToEsQueryParser = (esClient: Client, nestedFields: string[]) => {
-  return async (filterStr: string): Promise<{}> => {
-    const filter = filterStr ? parseFilterString(filterStr) : null;
-    const esQuery = filter
-      ? buildQuery({
-          filters: filter,
-          nestedFields: nestedFields,
-        })
-      : undefined;
-    const {
-      body: { valid },
-    }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
-      body: {
-        query: esQuery,
-      },
-    });
-    if (!valid) {
-      throw new Error(
-        `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${filterStr}`,
-      );
-    }
-    return esQuery;
-  };
-};
-
 const writeTsvStreamToResponse = async <Document>(
   stream: AsyncGenerator<Document[], void, unknown>,
   res: Response,
@@ -121,6 +86,43 @@ const writeTsvStreamToResponse = async <Document>(
   logger.info(`streamed ${documentCount} documents to tsv over ${chunkCount} chunks`);
 };
 
+const createDownloadHandler = ({
+  defaultFileName,
+  tsvSchema,
+  parseFilterStringToEsQuery,
+  esClient,
+}: {
+  defaultFileName: (req: Request) => string;
+  tsvSchema: TsvFileSchema<EsFileDocument>;
+  parseFilterStringToEsQuery: ReturnType<typeof createFilterStringToEsQueryParser>;
+  esClient: Client;
+}): RequestHandler => {
+  return async (req, res) => {
+    const { filter: filterStr, fileName }: { filter?: string; fileName?: string } = req.query;
+    let esQuery: object | undefined;
+    try {
+      esQuery = filterStr ? await parseFilterStringToEsQuery(filterStr) : undefined;
+    } catch (err) {
+      res.status(400).send(`${filterStr} is not a valid filter`);
+      logger.error(err);
+      throw err;
+    }
+    const fileCentricDocumentStream = createFileCentricDocumentStream({
+      esClient,
+      shouldContinue: () => !req.aborted,
+      esQuery,
+    });
+    res.setHeader(
+      'Content-disposition',
+      `attachment; filename=${
+        fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
+      }`,
+    );
+    await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
+    res.end();
+  };
+};
+
 const createFileCentricTsvRouter = async (esClient: Client) => {
   /**
    * All this stuff gets initialized once at application start-up
@@ -133,42 +135,11 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   const nestedFields = getNestedFields(indexMapping.mappings);
   const parseFilterStringToEsQuery = createFilterStringToEsQueryParser(esClient, nestedFields);
 
-  const createDownloadRoute = ({
-    defaultFileName,
-    tsvSchema,
-  }: {
-    defaultFileName: (req: Request) => string;
-    tsvSchema: TsvFileSchema<EsFileDocument>;
-  }): RequestHandler => {
-    return async (req, res) => {
-      const { filter: filterStr, fileName }: { filter?: string; fileName?: string } = req.query;
-      let esQuery: object | undefined;
-      try {
-        esQuery = filterStr ? await parseFilterStringToEsQuery(filterStr) : undefined;
-      } catch (err) {
-        res.status(400).send(`${filterStr} is not a valid filter`);
-        logger.error(err);
-        throw err;
-      }
-      const fileCentricDocumentStream = createFileCentricDocumentStream({
-        esClient,
-        shouldContinue: () => !req.aborted,
-        esQuery,
-      });
-      res.setHeader(
-        'Content-disposition',
-        `attachment; filename=${
-          fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
-        }`,
-      );
-      await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
-      res.end();
-    };
-  };
-
   router.use(
     '/score-manifest',
-    createDownloadRoute({
+    createDownloadHandler({
+      esClient,
+      parseFilterStringToEsQuery,
       defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMdd')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
@@ -176,7 +147,9 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   router.use(
     /** This guy is just a demo for adding future tsv downloads */
     '/demo',
-    createDownloadRoute({
+    createDownloadHandler({
+      esClient,
+      parseFilterStringToEsQuery,
       defaultFileName: req => 'demo',
       tsvSchema: demoTsvSchema,
     }),
