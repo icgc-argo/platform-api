@@ -23,6 +23,7 @@ import { ARRANGER_FILE_CENTRIC_INDEX, DEFAULT_TSV_STREAM_CHUNK_SIZE } from 'conf
 import esb from 'elastic-builder';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
+import { format } from 'date-fns';
 
 // @ts-ignore
 import { buildQuery } from '@arranger/middleware/dist';
@@ -154,7 +155,9 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
       });
       res.setHeader(
         'Content-disposition',
-        `attachment; filename=${fileName || defaultFileName(req)}`,
+        `attachment; filename=${
+          fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
+        }`,
       );
       await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
       res.end();
@@ -162,10 +165,10 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   };
 
   router.use(
-    '/manifest',
+    '/score-manifest',
     createDownloadRoute({
       // defaultFileName: req => `score-manifest.20200520.tsv`,
-      defaultFileName: req => `score-manifest.${Date.now()}.tsv`,
+      defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMdd')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
   );
