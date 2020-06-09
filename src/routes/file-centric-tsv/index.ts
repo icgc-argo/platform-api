@@ -19,72 +19,19 @@
 
 import express, { Response, RequestHandler, Request } from 'express';
 import { Client } from '@elastic/elasticsearch';
-import { ARRANGER_FILE_CENTRIC_INDEX, DEFAULT_TSV_STREAM_CHUNK_SIZE } from 'config';
-import esb from 'elastic-builder';
+import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
 import { format } from 'date-fns';
 import { getNestedFields, EsIndexMapping } from 'services/elasticsearch';
-import { createFilterStringToEsQueryParser } from './utils';
+import {
+  createFilterStringToEsQueryParser,
+  createEsDocumentStream,
+  writeTsvStreamToResponse,
+} from './utils';
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
-
-const createFileCentricDocumentStream = async function*(configs: {
-  esClient: Client;
-  shouldContinue: () => boolean;
-  esQuery?: object;
-  pageSize?: number;
-}) {
-  const { esClient, shouldContinue, esQuery, pageSize = DEFAULT_TSV_STREAM_CHUNK_SIZE } = configs;
-  let currentPage = 0;
-  let completed = false;
-  while (!completed && shouldContinue()) {
-    const {
-      body: { hits },
-    } = await esClient.search({
-      index: ARRANGER_FILE_CENTRIC_INDEX,
-      body: {
-        query: esQuery,
-        ...esb
-          .requestBodySearch()
-          .from(currentPage * pageSize)
-          .size(pageSize)
-          .sort(esb.sort('object_id' as keyof EsFileDocument))
-          .toJSON(),
-      },
-    });
-    if (hits.hits.length) {
-      currentPage++;
-      yield hits.hits.map(
-        ({ _source }: { _source: EsFileDocument }) => _source,
-      ) as EsFileDocument[];
-    } else {
-      completed = true;
-    }
-  }
-};
-
-const writeTsvStreamToResponse = async <Document>(
-  stream: AsyncGenerator<Document[], void, unknown>,
-  res: Response,
-  tsvSchema: TsvFileSchema<Document>,
-) => {
-  res.write(tsvSchema.map(({ header }) => header).join('\t'));
-  res.write('\n');
-  let documentCount = 0; // for logging
-  let chunkCount = 0; // for logging
-  for await (const chunk of stream) {
-    res.write(
-      chunk
-        .map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
-        .join('\n'),
-    );
-    documentCount += chunk.length;
-    chunkCount++;
-  }
-  logger.info(`streamed ${documentCount} documents to tsv over ${chunkCount} chunks`);
-};
 
 const createDownloadHandler = ({
   defaultFileName,
@@ -107,10 +54,11 @@ const createDownloadHandler = ({
       logger.error(err);
       throw err;
     }
-    const fileCentricDocumentStream = createFileCentricDocumentStream({
+    const fileCentricDocumentStream = createEsDocumentStream<EsFileDocument>({
       esClient,
       shouldContinue: () => !req.aborted,
       esQuery,
+      sortField: 'object_id',
     });
     res.setHeader(
       'Content-disposition',
