@@ -125,5 +125,25 @@ describe('Arranger schema', () => {
       expect(chunkCount).toBe(1);
       expect(docCount).toBe(1);
     });
+    it('must stop when terminated', async () => {
+      let chunkCount = 0;
+      let docCount = 0;
+      let terminated = false;
+      const chunkSize = 2;
+      const stream = createEsDocumentStream<MockDocument>({
+        sortField: 'object_id',
+        esClient,
+        esIndex: testIndex,
+        shouldContinue: () => !terminated,
+        pageSize: chunkSize,
+      });
+      for await (const chunk of stream) {
+        terminated = true;
+        chunkCount++;
+        docCount += chunk.length;
+      }
+      expect(chunkCount).toBe(1);
+      expect(docCount).toBe(chunkSize);
+    });
   });
 });
