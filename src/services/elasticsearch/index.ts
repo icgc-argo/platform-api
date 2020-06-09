@@ -54,15 +54,15 @@ export const isNestedFieldMapping = (obj: object): obj is EsNestedFieldMapping =
   // @ts-ignore This is doing run-time type check so it's ok
   Object.keys(obj).includes('type') && obj.type === 'nested';
 
-export const getNestedFields = (indexMapping: EsFieldMapping, parentField?: string): string[] => {
+export const getNestedFields = (fieldMapping: EsFieldMapping, parentField?: string): string[] => {
   /**
    * @TODO maybe tail-call optimize this function
    */
-  if (isNestedFieldMapping(indexMapping) || isObjectFieldMapping(indexMapping)) {
-    const { properties } = indexMapping;
+  if (isNestedFieldMapping(fieldMapping) || isObjectFieldMapping(fieldMapping)) {
+    const { properties } = fieldMapping;
     const currentFields = Object.keys(properties);
     const nestedOrObjectFieldKey = currentFields.filter(
-      field => isNestedFieldMapping(properties[field]) || isNestedFieldMapping(properties[field]),
+      field => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
     );
     const nestedFieldKey = nestedOrObjectFieldKey.filter(field =>
       isNestedFieldMapping(properties[field]),
