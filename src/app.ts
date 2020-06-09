@@ -86,9 +86,9 @@ const init = async () => {
     userSchema,
     programSchema,
     clinicalSchema,
-    // ProgramDashboardSummarySchema(esClient), 
-    // createHelpdeskSchema(), 
-    // ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
+    ProgramDashboardSummarySchema(esClient), 
+    createHelpdeskSchema(), 
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
   ])
 
   const server = new ApolloServer({
