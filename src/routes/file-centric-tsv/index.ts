@@ -122,8 +122,10 @@ const writeTsvStreamToResponse = async <Document>(
 };
 
 const createFileCentricTsvRouter = async (esClient: Client) => {
+  /**
+   * All this stuff gets initialized once at application start-up
+   */
   const router = express.Router();
-
   const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({
     index: ARRANGER_FILE_CENTRIC_INDEX,
   });
@@ -167,12 +169,12 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
   router.use(
     '/score-manifest',
     createDownloadRoute({
-      // defaultFileName: req => `score-manifest.20200520.tsv`,
       defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMdd')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
   );
   router.use(
+    /** This guy is just a demo for adding future tsv downloads */
     '/demo',
     createDownloadRoute({
       defaultFileName: req => 'demo',
