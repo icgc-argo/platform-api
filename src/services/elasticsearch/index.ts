@@ -35,7 +35,6 @@ import {
   EsFieldMapping,
   EsIndexMapping,
 } from './types';
-import { IndicesGetMapping } from '@elastic/elasticsearch/api/requestParams';
 export {
   EsScalarFieldMapping,
   EsNestedFieldMapping,
