@@ -6,14 +6,14 @@ paths:
   '/kafka/{topic}':
     parameters:
       - name: topic
-        description: the name of the target topic in kafka 
+        description: the name of the target topic in kafka
         in: path
         required: true
-        schema: 
+        schema:
           type: string
     post:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: proxies json messages to kafka rest proxy
       requestBody:
         content:
@@ -51,7 +51,7 @@ paths:
           type: string
     get:
       security:
-      - bearerAuth: []
+        - bearerAuth: []
       summary: Download a zip file with tsv files for all clinical data in program
       description: '- the file name of the zip file is not determined by this endpoint'
       responses:
@@ -109,9 +109,39 @@ paths:
                 type: string
         '500':
           description: Internal server error
+
+  '/file-centric-tsv/score-manifest':
+    parameters:
+      - name: filter
+        description: JSON filter following the SQON spec
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: fileName
+        description: What to name the file. Will always come with .tsv extension
+        in: query
+        required: false
+        schema:
+          type: string
+    get:
+      summary: Download the score manifest tsv file
+      responses:
+        '200':
+          description: 'The manifest file for use with Score'
+        '400':
+          description: The error message indicates something wrong with the request
+          content:
+            application/json:
+              schema:
+                example: 'asdf is not a valid filter'
+                type: string
+        '500':
+          description: Internal server error
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT  
+      bearerFormat: JWT

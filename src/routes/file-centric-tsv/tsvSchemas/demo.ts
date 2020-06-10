@@ -17,14 +17,13 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-  // [...]
-  // Replace `ts-jest` with the preset you want to use
-  // from the above list
-  preset: 'ts-jest',
-  moduleDirectories: ['node_modules', 'src'],
-  setupFilesAfterEnv: ['./jest.setup.js'],
-  moduleNameMapper: {
-    paralleljs: '<rootDir>/node_modules/paralleljs/lib/parallel.js',
+import { EsFileDocument, TsvFileSchema } from '../types';
+
+const demoTsvSchema: TsvFileSchema<EsFileDocument> = [
+  {
+    header: 'file name',
+    getter: source => source.file.name,
   },
-};
+];
+
+export default demoTsvSchema;

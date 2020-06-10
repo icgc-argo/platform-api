@@ -78,6 +78,10 @@ export const JIRA_ORGANIZATION_ID = process.env.JIRA_ORGANIZATION_ID;
 export const RECAPTCHA_SECRET_KEY = String(process.env.RECAPTCHA_SECRET_KEY);
 export const RECAPTCHA_VAULT_SECRET_PATH = String(process.env.RECAPTCHA_VAULT_SECRET_PATH);
 
+// TSV download configs
+export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
+  Number(process.env.DEFAULT_TSV_STREAM_CHUNK_SIZE) || 1000;
+
 // Feature flags
 export const FEATURE_HELP_DESK_ENABLED = process.env.FEATURE_HELP_DESK_ENABLED === 'true';
 export const FEATURE_ARRANGER_SCHEMA_ENABLED =
