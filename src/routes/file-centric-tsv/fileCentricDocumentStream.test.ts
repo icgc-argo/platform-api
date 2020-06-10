@@ -25,7 +25,7 @@ import { EsFileDocument } from './types';
 import { createEsDocumentStream } from './utils';
 import esb from 'elastic-builder';
 
-describe('Arranger schema', () => {
+describe('createEsDocumentStream', () => {
   const mockMapping = {
     mappings: {
       properties: {
@@ -83,67 +83,65 @@ describe('Arranger schema', () => {
     await esContainer.stop();
   }, 120000);
 
-  describe('createEsDocumentStream', () => {
-    it('must create a stream of all documents', async () => {
-      let chunkCount = 0;
-      let docCount = 0;
-      const chunkSize = 2;
-      const stream = createEsDocumentStream<MockDocument>({
-        sortField: 'object_id',
-        esClient,
-        esIndex: testIndex,
-        shouldContinue: () => true,
-        pageSize: chunkSize,
-      });
-      for await (const chunk of stream) {
-        chunkCount++;
-        docCount += chunk.length;
-      }
-      expect(chunkCount).toBe(Math.ceil(testData.length / chunkSize));
-      expect(docCount).toBe(testData.length);
+  it('must create a stream of all documents', async () => {
+    let chunkCount = 0;
+    let docCount = 0;
+    const chunkSize = 2;
+    const stream = createEsDocumentStream<MockDocument>({
+      sortField: 'object_id',
+      esClient,
+      esIndex: testIndex,
+      shouldContinue: () => true,
+      pageSize: chunkSize,
     });
-    it('must handle elasticsearch query', async () => {
-      let chunkCount = 0;
-      let docCount = 0;
-      const chunkSize = 2;
-      const stream = createEsDocumentStream<MockDocument>({
-        sortField: 'object_id',
-        esClient,
-        esIndex: testIndex,
-        shouldContinue: () => true,
-        pageSize: chunkSize,
-        esQuery: esb
-          .requestBodySearch()
-          .query(esb.boolQuery().must(esb.matchQuery('object_id', 'object_1')))
-          //@ts-ignore
-          .toJSON().query,
-      });
-      for await (const chunk of stream) {
-        chunkCount++;
-        docCount += chunk.length;
-      }
-      expect(chunkCount).toBe(1);
-      expect(docCount).toBe(1);
+    for await (const chunk of stream) {
+      chunkCount++;
+      docCount += chunk.length;
+    }
+    expect(chunkCount).toBe(Math.ceil(testData.length / chunkSize));
+    expect(docCount).toBe(testData.length);
+  });
+  it('must handle elasticsearch query', async () => {
+    let chunkCount = 0;
+    let docCount = 0;
+    const chunkSize = 2;
+    const stream = createEsDocumentStream<MockDocument>({
+      sortField: 'object_id',
+      esClient,
+      esIndex: testIndex,
+      shouldContinue: () => true,
+      pageSize: chunkSize,
+      esQuery: esb
+        .requestBodySearch()
+        .query(esb.boolQuery().must(esb.matchQuery('object_id', 'object_1')))
+        //@ts-ignore
+        .toJSON().query,
     });
-    it('must stop when terminated', async () => {
-      let chunkCount = 0;
-      let docCount = 0;
-      let terminated = false;
-      const chunkSize = 2;
-      const stream = createEsDocumentStream<MockDocument>({
-        sortField: 'object_id',
-        esClient,
-        esIndex: testIndex,
-        shouldContinue: () => !terminated,
-        pageSize: chunkSize,
-      });
-      for await (const chunk of stream) {
-        terminated = true;
-        chunkCount++;
-        docCount += chunk.length;
-      }
-      expect(chunkCount).toBe(1);
-      expect(docCount).toBe(chunkSize);
+    for await (const chunk of stream) {
+      chunkCount++;
+      docCount += chunk.length;
+    }
+    expect(chunkCount).toBe(1);
+    expect(docCount).toBe(1);
+  });
+  it('must stop when terminated', async () => {
+    let chunkCount = 0;
+    let docCount = 0;
+    let terminated = false;
+    const chunkSize = 2;
+    const stream = createEsDocumentStream<MockDocument>({
+      sortField: 'object_id',
+      esClient,
+      esIndex: testIndex,
+      shouldContinue: () => !terminated,
+      pageSize: chunkSize,
     });
+    for await (const chunk of stream) {
+      terminated = true;
+      chunkCount++;
+      docCount += chunk.length;
+    }
+    expect(chunkCount).toBe(1);
+    expect(docCount).toBe(chunkSize);
   });
 });
