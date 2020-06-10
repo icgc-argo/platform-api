@@ -23,6 +23,7 @@ module.exports = {
   // from the above list
   preset: 'ts-jest',
   moduleDirectories: ['node_modules', 'src'],
+  setupFilesAfterEnv: ['./jest.setup.js'],
   moduleNameMapper: {
     paralleljs: '<rootDir>/node_modules/paralleljs/lib/parallel.js',
   },
