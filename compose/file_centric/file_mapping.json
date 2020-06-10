@@ -78,6 +78,18 @@
           }
         }
       },
+      "analysis_tools": {
+        "type": "keyword",
+        "copy_to": [
+          "file_autocomplete"
+        ]
+      },
+      "data_category": {
+        "type": "keyword",
+        "copy_to": [
+          "file_autocomplete"
+        ]
+      },
       "data_type": {
         "type": "keyword",
         "copy_to": [
