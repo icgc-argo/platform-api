@@ -1116,7 +1116,7 @@
             "type": "keyword",
             "displayName": "File Autocomplete",
             "active": false,
-            "isArray": false,
+            "isArray": true,
             "primaryKey": false,
             "quickSearchEnabled": false,
             "unit": null,
