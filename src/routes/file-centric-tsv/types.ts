@@ -33,6 +33,8 @@ export type EsFileDocument = {
       workflow_version: string;
     };
   };
+  analysis_tools: string;
+  data_category: string;
   data_type: string;
   donors: Array<{
     donor_id: string;
@@ -53,7 +55,7 @@ export type EsFileDocument = {
     submitter_donor_id: string;
   }>;
   file: {
-    index_file?: {
+    index_file: {
       file_type: string;
       md5sum: string;
       name: string;
@@ -65,7 +67,7 @@ export type EsFileDocument = {
     size: number;
   };
   file_access: string;
-  file_autocomplete: string;
+  file_autocomplete: string[];
   file_type: string;
   object_id: string;
   repositories: Array<{
