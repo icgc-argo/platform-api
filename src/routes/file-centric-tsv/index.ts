@@ -23,11 +23,11 @@ import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
 import { format } from 'date-fns';
-import { getNestedFields, EsIndexMapping } from 'services/elasticsearch';
 import {
   createFilterStringToEsQueryParser,
   createEsDocumentStream,
   writeTsvStreamToResponse,
+  FilterStringParser,
 } from './utils';
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
@@ -41,7 +41,7 @@ const createDownloadHandler = ({
 }: {
   defaultFileName: (req: Request) => string;
   tsvSchema: TsvFileSchema<EsFileDocument>;
-  parseFilterStringToEsQuery: ReturnType<typeof createFilterStringToEsQueryParser>;
+  parseFilterStringToEsQuery: FilterStringParser;
   esClient: Client;
 }): RequestHandler => {
   return async (req, res) => {
@@ -76,12 +76,10 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
    * All this stuff gets initialized once at application start-up
    */
   const router = express.Router();
-  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({
-    index: ARRANGER_FILE_CENTRIC_INDEX,
-  });
-  const [indexMapping] = Object.values(body);
-  const nestedFields = getNestedFields(indexMapping.mappings);
-  const parseFilterStringToEsQuery = createFilterStringToEsQueryParser(esClient, nestedFields);
+  const parseFilterStringToEsQuery = await createFilterStringToEsQueryParser(
+    esClient,
+    ARRANGER_FILE_CENTRIC_INDEX,
+  );
 
   router.use(
     '/score-manifest',

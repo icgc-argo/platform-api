@@ -26,6 +26,7 @@ import { DEFAULT_TSV_STREAM_CHUNK_SIZE, ARRANGER_FILE_CENTRIC_INDEX } from 'conf
 import esb from 'elastic-builder';
 import { TsvFileSchema } from './types';
 import { Response } from 'express';
+import { EsIndexMapping, getNestedFields } from 'services/elasticsearch';
 
 export const parseFilterString = (filterString: string): {} => {
   try {
@@ -36,8 +37,13 @@ export const parseFilterString = (filterString: string): {} => {
   }
 };
 
-export const createFilterStringToEsQueryParser = (esClient: Client, nestedFields: string[]) => {
-  return async (filterStr: string): Promise<{}> => {
+export type FilterStringParser = (filterStr: string) => Promise<{}>;
+export const createFilterStringToEsQueryParser = async (esClient: Client, index: string) => {
+  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({ index });
+  const [indexMapping] = Object.values(body);
+  const nestedFields = getNestedFields(indexMapping.mappings);
+
+  return (async (filterStr: string) => {
     const filter = filterStr ? parseFilterString(filterStr) : null;
     const esQuery = filter
       ? buildQuery({
@@ -48,6 +54,7 @@ export const createFilterStringToEsQueryParser = (esClient: Client, nestedFields
     const {
       body: { valid },
     }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
+      index,
       body: {
         query: esQuery,
       },
@@ -58,7 +65,7 @@ export const createFilterStringToEsQueryParser = (esClient: Client, nestedFields
       );
     }
     return esQuery;
-  };
+  }) as FilterStringParser;
 };
 
 export const createEsDocumentStream = async function*<DocumentType>(configs: {
