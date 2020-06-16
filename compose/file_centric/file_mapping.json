@@ -66,6 +66,9 @@
               }
             }
           },
+          "variant_class": {
+            "type": "keyword"
+          },
           "workflow": {
             "properties": {
               "workflow_name": {
@@ -259,9 +262,6 @@
         "copy_to": [
           "file_autocomplete"
         ]
-      },
-      "variant_class": {
-        "type": "keyword"
       }
     }
   }

@@ -12,8 +12,14 @@
       "active": true,
       "config": {
         "aggs-state": {
-          "timestamp": "2020-06-10T19:14:50.606Z",
+          "timestamp": "2020-06-16T14:50:58.806Z",
           "state": [
+            {
+              "field": "analysis__variant_class",
+              "show": false,
+              "active": true,
+              "type": "Aggregations"
+            },
             {
               "field": "analysis_tools",
               "show": false,
@@ -253,12 +259,6 @@
               "show": false,
               "active": true,
               "type": "Aggregations"
-            },
-            {
-              "field": "variant_class",
-              "show": false,
-              "active": true,
-              "type": "Aggregations"
             }
           ]
         },
@@ -273,6 +273,17 @@
               }
             ],
             "columns": [
+              {
+                "canChangeShow": true,
+                "field": "analysis.variant_class",
+                "query": null,
+                "show": false,
+                "accessor": "analysis.variant_class",
+                "jsonPath": null,
+                "sortable": true,
+                "id": null,
+                "type": "string"
+              },
               {
                 "canChangeShow": true,
                 "field": "analysis_tools",
@@ -756,21 +767,10 @@
                 "sortable": true,
                 "id": null,
                 "type": "string"
-              },
-              {
-                "canChangeShow": true,
-                "field": "variant_class",
-                "query": null,
-                "show": false,
-                "accessor": "variant_class",
-                "jsonPath": null,
-                "sortable": true,
-                "id": null,
-                "type": "string"
               }
             ]
           },
-          "timestamp": "2020-06-10T19:14:50.618Z"
+          "timestamp": "2020-06-16T14:50:58.807Z"
         },
         "matchbox-state": {
           "state": [
@@ -810,7 +810,7 @@
               "isActive": false
             }
           ],
-          "timestamp": "2020-06-10T19:14:50.620Z"
+          "timestamp": "2020-06-16T14:50:58.808Z"
         },
         "extended": [
           {
@@ -1381,18 +1381,6 @@
             "unit": null,
             "displayValues": {},
             "quickSearchEnabled": false,
-            "field": "variant_class",
-            "displayName": "Variant Class",
-            "active": false,
-            "isArray": false,
-            "rangeStep": 1,
-            "type": "keyword",
-            "primaryKey": false
-          },
-          {
-            "unit": null,
-            "displayValues": {},
-            "quickSearchEnabled": false,
             "field": "analysis_tools",
             "displayName": "Analysis Tools",
             "active": false,
@@ -1407,6 +1395,18 @@
             "quickSearchEnabled": false,
             "field": "data_category",
             "displayName": "Data Category",
+            "active": false,
+            "isArray": false,
+            "rangeStep": 1,
+            "type": "keyword",
+            "primaryKey": false
+          },
+          {
+            "unit": null,
+            "displayValues": {},
+            "quickSearchEnabled": false,
+            "field": "analysis.variant_class",
+            "displayName": "Variant Class",
             "active": false,
             "isArray": false,
             "rangeStep": 1,
