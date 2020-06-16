@@ -24,6 +24,7 @@ export type EsFileDocument = {
     analysis_id: string;
     analysis_type: string;
     analysis_version: number;
+    variant_class: string;
     experiment: {
       experimental_strategy: string;
       platform: string;
@@ -78,5 +79,4 @@ export type EsFileDocument = {
     url: string;
   }>;
   study_id: string;
-  variant_class: string;
 };
