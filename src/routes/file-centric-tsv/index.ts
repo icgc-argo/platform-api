@@ -26,7 +26,7 @@ import { format } from 'date-fns';
 import {
   createFilterStringToEsQueryParser,
   createEsDocumentStream,
-  writeTsvStreamToResponse,
+  writeTsvStreamToWritableTarget,
   FilterStringParser,
 } from './utils';
 
@@ -66,7 +66,7 @@ const createDownloadHandler = ({
         fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
       }`,
     );
-    await writeTsvStreamToResponse(fileCentricDocumentStream, res, tsvSchema);
+    await writeTsvStreamToWritableTarget(fileCentricDocumentStream, res, tsvSchema);
     res.end();
   };
 };

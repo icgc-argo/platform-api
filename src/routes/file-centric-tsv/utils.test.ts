@@ -26,6 +26,7 @@ import {
   createEsDocumentStream,
   createFilterStringToEsQueryParser,
   FilterStringParser,
+  writeTsvStreamToWritableTarget,
 } from './utils';
 import esb from 'elastic-builder';
 
@@ -190,6 +191,38 @@ describe('createEsDocumentStream', () => {
           }),
         ),
       ).rejects.toThrow();
+    });
+  });
+
+  describe('writeTsvStreamToWritableTarget', () => {
+    it('must generate a proper tsv', async () => {
+      const stream = (async function*() {
+        for (const entry of testData) {
+          yield [entry];
+        }
+      })();
+
+      let tsvString = '';
+      const expectedTsvStr = `${[
+        'Study ID\tObject ID',
+        'study_1\tobject_1',
+        'study_2\tobject_2',
+        'study_3\tobject_3',
+      ].join('\n')}\n`;
+
+      await writeTsvStreamToWritableTarget<typeof testData[0]>(
+        stream,
+        {
+          write: str => {
+            tsvString = `${tsvString}${str}`;
+          },
+        },
+        [
+          { header: 'Study ID', getter: e => e.study_id || '' },
+          { header: 'Object ID', getter: e => e.object_id || '' },
+        ],
+      );
+      expect(tsvString).toBe(expectedTsvStr);
     });
   });
 });
