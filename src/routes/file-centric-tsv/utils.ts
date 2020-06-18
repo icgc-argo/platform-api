@@ -117,20 +117,20 @@ type WritableTarget = {
 
 export const writeTsvStreamToWritableTarget = async <Document>(
   stream: AsyncGenerator<Document[], void, unknown>,
-  res: WritableTarget,
+  writableTarget: WritableTarget,
   tsvSchema: TsvFileSchema<Document>,
 ) => {
-  res.write(tsvSchema.map(({ header }) => header).join('\t'));
-  res.write('\n');
+  writableTarget.write(tsvSchema.map(({ header }) => header).join('\t'));
+  writableTarget.write('\n');
   let documentCount = 0; // for logging
   let chunkCount = 0; // for logging
   for await (const chunk of stream) {
-    res.write(
+    writableTarget.write(
       chunk
         .map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
         .join('\n'),
     );
-    res.write('\n');
+    writableTarget.write('\n');
     documentCount += chunk.length;
     chunkCount++;
   }
