@@ -110,21 +110,27 @@ export const createEsDocumentStream = async function*<DocumentType>(configs: {
   }
 };
 
-export const writeTsvStreamToResponse = async <Document>(
+type WritableTarget = {
+  // this is basically a subset of Express Response type, but this is easier to mock for testing
+  write: (str: string) => any;
+};
+
+export const writeTsvStreamToWritableTarget = async <Document>(
   stream: AsyncGenerator<Document[], void, unknown>,
-  res: Response,
+  writableTarget: WritableTarget,
   tsvSchema: TsvFileSchema<Document>,
 ) => {
-  res.write(tsvSchema.map(({ header }) => header).join('\t'));
-  res.write('\n');
+  writableTarget.write(tsvSchema.map(({ header }) => header).join('\t'));
+  writableTarget.write('\n');
   let documentCount = 0; // for logging
   let chunkCount = 0; // for logging
   for await (const chunk of stream) {
-    res.write(
+    writableTarget.write(
       chunk
         .map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
         .join('\n'),
     );
+    writableTarget.write('\n');
     documentCount += chunk.length;
     chunkCount++;
   }
