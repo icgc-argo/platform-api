@@ -113,11 +113,6 @@ describe('Arranger schema', () => {
           initArrangerMetadata(esClient),
           initArrangerMetadata(esClient),
           initArrangerMetadata(esClient),
-          initArrangerMetadata(esClient),
-          initArrangerMetadata(esClient),
-          initArrangerMetadata(esClient),
-          initArrangerMetadata(esClient),
-          initArrangerMetadata(esClient),
         ]),
       ).resolves.toBeDefined();
       expect(
