@@ -18,7 +18,7 @@
  */
 
 import urlJoin from 'url-join';
-import { CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH } from '../config';
+import { CLINICAL_SERVICE_ROOT } from '../config';
 import logger from '../utils/logger';
 import express from 'express';
 import { Request, Response } from 'express';
@@ -41,10 +41,10 @@ router.use(
   createProxyMiddleware({
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
-      // 'all' will retrieve the zip file with all templates
+      // 'all' will retrieve the zip file with all templates excluding sample_registration
       // for specific templates 'templateName'.tsv or 'templateName' will get the tsv from clinical
       const name = req.params.template.replace(/.tsv$/, '');
-      return urlJoin(SUBMISSION_TEMPLATE_PATH, name);
+      return urlJoin('/dictionary/template/', name);
     },
     onError: handleError,
     changeOrigin: true,

@@ -86,7 +86,7 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
  * @returns {Promise<string[]>}
  */
 const getClinicalSubmissionTypesList = async () => {
-  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema/list`;
+  const url = `${CLINICAL_SERVICE_ROOT}/dictionary/list`;
   const response = await fetch(url, {
     method: 'get',
   })
@@ -99,7 +99,7 @@ const getClinicalSubmissionTypesList = async () => {
  * @returns {Promise<string>}
  */
 const getClinicalSubmissionSchemaVersion = async () => {
-  const url = `${CLINICAL_SERVICE_ROOT}/submission/schema`;
+  const url = `${CLINICAL_SERVICE_ROOT}/dictionary`;
   const response = await fetch(url, {
     method: 'get',
   })
