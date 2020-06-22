@@ -199,6 +199,10 @@ export default gql`
     """
     donorsWithReleasedFilesCount: Int!
     """
+    Number of donors invalidated with current data dictionary version
+    """
+    donorsInvalidWithCurrentDictionaryCount: Int!
+    """
     Total number of genomic files associated with this program
     """
     allFilesCount: Int!

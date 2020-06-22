@@ -1,7 +1,7 @@
 [
   {
     "programId": "DASH-CA",
-    "validWithCurrentDictionary": true,
+    "validWithCurrentDictionary": false,
     "releaseStatus": "released",
     "donorId": "DO-DASH-1",
     "submitterDonorId": "SU-DASH-1",
