@@ -18,7 +18,7 @@
  */
 
 import urlJoin from 'url-join';
-import { CLINICAL_SERVICE_ROOT, SUBMISSION_TEMPLATE_PATH } from '../config';
+import { CLINICAL_SERVICE_ROOT } from '../config';
 import logger from '../utils/logger';
 import express from 'express';
 import { Request, Response } from 'express';
