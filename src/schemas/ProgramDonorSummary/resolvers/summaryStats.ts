@@ -58,31 +58,31 @@ const programDonorSummaryStatsResolver: (
     .requestBodySearch()
     .query(esb.boolQuery().must([esb.matchQuery(EsDonorDocumentField.programId, programShortName)]))
     .aggs([
-      filterAggregation('fullyReleasedDonorsCount').filter(
+      filterAggregation('fullyReleasedDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.FULLY_RELEASED]),
       ),
-      filterAggregation('partiallyReleasedDonorsCount').filter(
+      filterAggregation('partiallyReleasedDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED]),
       ),
-      filterAggregation('noReleaseDonorsCount').filter(
+      filterAggregation('noReleaseDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.NO_RELEASE, '']),
       ),
-      filterAggregation('donorsProcessingMolecularDataCount').filter(
+      filterAggregation('donorsProcessingMolecularDataCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.processingStatus)
           .values([DonorMolecularDataProcessingStatus.PROCESSING]),
       ),
-      filterAggregation('donorsWithReleasedFilesCount').filter(
+      filterAggregation('donorsWithReleasedFilesCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
@@ -103,13 +103,13 @@ const programDonorSummaryStatsResolver: (
             .gt(0),
         ]),
       ),
-      filterAggregation('donorsWithAllCoreClinicalData').filter(
+      filterAggregation('donorsWithAllCoreClinicalData' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.submittedCoreDataPercent)
           .gte(1),
       ),
-      filterAggregation('donorsInvalidWithCurrentDictionary').filter(
+      filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.validWithCurrentDictionary)
