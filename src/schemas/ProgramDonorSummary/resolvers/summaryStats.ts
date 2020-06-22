@@ -152,7 +152,7 @@ const programDonorSummaryStatsResolver: (
     .then(response => response.body)
     .catch(err => {
       logger.error('error reading data from Elasticsearch: ', err);
-      return {
+      const defaultQueryResult: QueryResult = {
         aggregations: {
           fullyReleasedDonorsCount: { doc_count: 0 },
           partiallyReleasedDonorsCount: { doc_count: 0 },
@@ -161,6 +161,7 @@ const programDonorSummaryStatsResolver: (
           donorsWithReleasedFilesCount: { doc_count: 0 },
           donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
           donorsWithAllCoreClinicalData: { doc_count: 0 },
+          donorsInvalidWithCurrentDictionary: { doc_count: 0 },
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
         },
@@ -170,7 +171,8 @@ const programDonorSummaryStatsResolver: (
             value: 0,
           },
         },
-      } as QueryResult;
+      };
+      return defaultQueryResult;
     });
 
   return {
