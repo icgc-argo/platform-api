@@ -74,6 +74,7 @@ export type ProgramDonorSummaryStats = {
   fullyReleasedDonorsCount: number;
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
+  donorsInvalidWithCurrentDictionaryCount: number;
 };
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
