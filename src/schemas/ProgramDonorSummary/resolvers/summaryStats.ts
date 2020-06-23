@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
  *
- * This program and the accompanying materials are made available under the terms of 
- * the GNU Affero General Public License v3.0. You should have received a copy of the 
+ * This program and the accompanying materials are made available under the terms of
+ * the GNU Affero General Public License v3.0. You should have received a copy of the
  * GNU Affero General Public License along with this program.
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY                           
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES                          
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT                           
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,                                
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED                          
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;                               
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER                              
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN                         
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
@@ -46,7 +46,10 @@ const programDonorSummaryStatsResolver: (
 > = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
   const { programShortName, filters } = args;
 
-  type AggregationName = keyof ProgramDonorSummaryStats | 'donorsWithAllCoreClinicalData';
+  type AggregationName =
+    | keyof ProgramDonorSummaryStats
+    | 'donorsWithAllCoreClinicalData'
+    | 'donorsInvalidWithCurrentDictionary';
 
   const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
     esb.filterAggregation(name, filterQuery);
@@ -55,31 +58,31 @@ const programDonorSummaryStatsResolver: (
     .requestBodySearch()
     .query(esb.boolQuery().must([esb.matchQuery(EsDonorDocumentField.programId, programShortName)]))
     .aggs([
-      filterAggregation('fullyReleasedDonorsCount').filter(
+      filterAggregation('fullyReleasedDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.FULLY_RELEASED]),
       ),
-      filterAggregation('partiallyReleasedDonorsCount').filter(
+      filterAggregation('partiallyReleasedDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED]),
       ),
-      filterAggregation('noReleaseDonorsCount').filter(
+      filterAggregation('noReleaseDonorsCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
           .values([DonorMolecularDataReleaseStatus.NO_RELEASE, '']),
       ),
-      filterAggregation('donorsProcessingMolecularDataCount').filter(
+      filterAggregation('donorsProcessingMolecularDataCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.processingStatus)
           .values([DonorMolecularDataProcessingStatus.PROCESSING]),
       ),
-      filterAggregation('donorsWithReleasedFilesCount').filter(
+      filterAggregation('donorsWithReleasedFilesCount' as AggregationName).filter(
         esb
           .termsQuery()
           .field(EsDonorDocumentField.releaseStatus)
@@ -100,11 +103,17 @@ const programDonorSummaryStatsResolver: (
             .gt(0),
         ]),
       ),
-      filterAggregation('donorsWithAllCoreClinicalData').filter(
+      filterAggregation('donorsWithAllCoreClinicalData' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.submittedCoreDataPercent)
           .gte(1),
+      ),
+      filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
+        esb
+          .termsQuery()
+          .field(EsDonorDocumentField.validWithCurrentDictionary)
+          .values([false]),
       ),
       esb
         .sumAggregation('allFilesCount' as AggregationName)
@@ -128,6 +137,7 @@ const programDonorSummaryStatsResolver: (
       donorsWithReleasedFilesCount: FilterAggregationResult;
       donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
       donorsWithAllCoreClinicalData: FilterAggregationResult;
+      donorsInvalidWithCurrentDictionary: FilterAggregationResult;
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
     };
@@ -142,7 +152,7 @@ const programDonorSummaryStatsResolver: (
     .then(response => response.body)
     .catch(err => {
       logger.error('error reading data from Elasticsearch: ', err);
-      return {
+      const defaultQueryResult: QueryResult = {
         aggregations: {
           fullyReleasedDonorsCount: { doc_count: 0 },
           partiallyReleasedDonorsCount: { doc_count: 0 },
@@ -151,6 +161,7 @@ const programDonorSummaryStatsResolver: (
           donorsWithReleasedFilesCount: { doc_count: 0 },
           donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
           donorsWithAllCoreClinicalData: { doc_count: 0 },
+          donorsInvalidWithCurrentDictionary: { doc_count: 0 },
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
         },
@@ -160,7 +171,8 @@ const programDonorSummaryStatsResolver: (
             value: 0,
           },
         },
-      } as QueryResult;
+      };
+      return defaultQueryResult;
     });
 
   return {
@@ -180,6 +192,8 @@ const programDonorSummaryStatsResolver: (
       : 0,
     allFilesCount: aggregations.allFilesCount.value,
     filesToQcCount: aggregations.filesToQcCount.value,
+    donorsInvalidWithCurrentDictionaryCount:
+      aggregations.donorsInvalidWithCurrentDictionary.doc_count,
   };
 };
 
