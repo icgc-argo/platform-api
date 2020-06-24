@@ -19,7 +19,6 @@
 
 import express, { Request } from 'express';
 import cors from 'cors';
-import { ApolloServer } from 'apollo-server-express';
 import { mergeSchemas } from 'graphql-tools';
 import * as swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
@@ -31,7 +30,6 @@ import kafkaProxyRoute from './routes/kafka-rest-proxy';
 import {
   PORT,
   NODE_ENV,
-  GQL_MAX_COST,
   APP_DIR,
   ARRANGER_PROJECT_ID,
   FEATURE_ARRANGER_SCHEMA_ENABLED,
@@ -41,36 +39,13 @@ import createHelpdeskSchema from './schemas/Helpdesk';
 
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger from './utils/logger';
-// @ts-ignore
-import costAnalysis from 'graphql-cost-analysis';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
+import ArgoApolloServer from 'utils/ArgoApolloServer';
 
 const config = require(path.join(APP_DIR, '../package.json'));
-
 const { version } = config;
-
-const _createGraphQLServerOptions = ApolloServer.prototype.createGraphQLServerOptions;
-
-ApolloServer.prototype.createGraphQLServerOptions = async function(req, res) {
-  const options = await _createGraphQLServerOptions.bind(this)(req, res);
-  logger.debug(`Query: ${req.body.query.split('\n').join(' ')}`);
-  logger.debug(`Variables: ${JSON.stringify(req.body.variables)}`);
-
-  return {
-    ...options,
-    validationRules: [
-      ...(options.validationRules || []),
-      costAnalysis({
-        variables: req.body.variables,
-        maximumCost: GQL_MAX_COST,
-        // logs out complexity so we can later on come back and decide on appropriate limit
-        onComplete: (cost: number) => logger.info(`QUERY_COST: ${cost}`),
-      }),
-    ],
-  };
-};
 
 export type GlobalGqlContext = {
   isUserRequest: boolean;
@@ -91,7 +66,7 @@ const init = async () => {
     ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
   ])
 
-  const server = new ApolloServer({
+  const server = new ArgoApolloServer({
     // @ts-ignore ApolloServer type is missing this for some reason
     schema: mergeSchemas({
       schemas,
