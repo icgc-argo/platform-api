@@ -45,7 +45,7 @@ const manifestFileFields: TsvFileSchema<EsFileDocument> = [
         ),
       ).join('|'),
   },
-  { header: 'project_id', getter: fileObj => fileObj.study_id },
+  { header: 'program_id', getter: fileObj => fileObj.study_id },
 ];
 
 export default manifestFileFields;
