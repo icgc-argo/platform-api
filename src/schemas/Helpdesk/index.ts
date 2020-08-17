@@ -128,7 +128,7 @@ const createDisabledResolvers = (reCaptchaClient: ReCaptchaClient) => ({
 });
 
 export default async () => {
-  const reCaptchaClient = DEV_RECAPTCHA_DISABLED ? await createStubReCaptchaClient() : await createReCaptchaClient(); // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
+  const reCaptchaClient = DEV_RECAPTCHA_DISABLED ? await createStubReCaptchaClient() : await createReCaptchaClient(); 
   const resolvers = FEATURE_HELP_DESK_ENABLED
     ? createResolvers(await createJiraClient(), reCaptchaClient)
     : createDisabledResolvers(reCaptchaClient);
