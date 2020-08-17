@@ -85,6 +85,7 @@ export default gql`
     dataErrors: [ClinicalSubmissionDataError]!
     schemaErrors: [ClinicalSubmissionSchemaError]!
     dataUpdates: [ClinicalSubmissionUpdate]!
+    dataWarnings: [ClinicalSubmissionSchemaError]!
     createdAt: DateTime
   }
 

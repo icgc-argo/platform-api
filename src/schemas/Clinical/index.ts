@@ -185,8 +185,10 @@ type SubmissionEntity = {
   dataUpdates: UpdateData[];
   schemaErrors: ErrorData[];
   dataErrors: ErrorData[];
+  dataWarnings: ErrorData[];
   createdAt: string | number;
 };
+
 const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: SubmissionEntity) => {
   return {
     clinicalType,
@@ -204,8 +206,12 @@ const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: Subm
       );
     },
     dataErrors: () =>
-      get(entity, 'dataErrors', [] as typeof entity.dataErrors).map(error =>
+      get(entity, 'dataErrors', [] as typeof entity.dataErrors).map((error: ErrorData) =>
         convertClinicalSubmissionDataErrorToGql(error),
+      ),
+    dataWarnings: () => 
+      get(entity, 'dataWarnings', [] as typeof entity.dataWarnings).map((warning: ErrorData) => 
+        convertClinicalSubmissionDataErrorToGql(warning)
       ),
     dataUpdates: () =>
       get(entity, 'dataUpdates', [] as typeof entity.dataUpdates).map(update =>

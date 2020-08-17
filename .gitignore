@@ -72,3 +72,5 @@ chromedriver.log
 # VSCode
 .vscode
 dist
+
+workspace.xml
