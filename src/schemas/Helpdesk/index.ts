@@ -21,7 +21,7 @@ import typeDefs from './gqlTypeDefs';
 import { GlobalGqlContext } from 'app';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createJiraClient, JiraClient } from './jiraRequests';
-import { FEATURE_HELP_DESK_ENABLED } from 'config';
+import { FEATURE_HELP_DESK_ENABLED, DEV_RECAPTCHA_DISABLED } from 'config';
 import { ApolloError, UserInputError } from 'apollo-server-express';
 import createReCaptchaClient, { ReCaptchaClient, createStubReCaptchaClient } from 'services/reCaptcha';
 import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql';
@@ -128,7 +128,7 @@ const createDisabledResolvers = (reCaptchaClient: ReCaptchaClient) => ({
 });
 
 export default async () => {
-  const reCaptchaClient = FEATURE_HELP_DESK_ENABLED ? await createReCaptchaClient(): await createStubReCaptchaClient(); // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
+  const reCaptchaClient = DEV_RECAPTCHA_DISABLED ? await createStubReCaptchaClient() : await createReCaptchaClient(); // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
   const resolvers = FEATURE_HELP_DESK_ENABLED
     ? createResolvers(await createJiraClient(), reCaptchaClient)
     : createDisabledResolvers(reCaptchaClient);
