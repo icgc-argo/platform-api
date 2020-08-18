@@ -21,9 +21,9 @@ import typeDefs from './gqlTypeDefs';
 import { GlobalGqlContext } from 'app';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createJiraClient, JiraClient } from './jiraRequests';
-import { FEATURE_HELP_DESK_ENABLED } from 'config';
+import { FEATURE_HELP_DESK_ENABLED, DEV_RECAPTCHA_DISABLED } from 'config';
 import { ApolloError, UserInputError } from 'apollo-server-express';
-import createReCaptchaClient, { ReCaptchaClient } from 'services/reCaptcha';
+import createReCaptchaClient, { ReCaptchaClient, createStubReCaptchaClient } from 'services/reCaptcha';
 import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql';
 
 enum JiraTicketCategory {
@@ -113,10 +113,6 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
         jiraTicketCreationResolver,
         reCaptchaClient,
       ),
-      /**
-       * @TODO remove this resolver once UI usage is switched to createJiraTicketWithReCaptcha
-       */
-      createJiraTicket: jiraTicketCreationResolver,
     },
   };
 };
@@ -128,16 +124,11 @@ const createDisabledResolvers = (reCaptchaClient: ReCaptchaClient) => ({
         `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
       );
     }, reCaptchaClient),
-    createJiraTicket: () => {
-      throw new ApolloError(
-        `FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
-      );
-    },
   },
 });
 
 export default async () => {
-  const reCaptchaClient = await createReCaptchaClient(); // this client is created regardless of FEATURE_HELP_DESK_ENABLED so its vault integration can be tested in dev environments
+  const reCaptchaClient = DEV_RECAPTCHA_DISABLED ? await createStubReCaptchaClient() : await createReCaptchaClient(); 
   const resolvers = FEATURE_HELP_DESK_ENABLED
     ? createResolvers(await createJiraClient(), reCaptchaClient)
     : createDisabledResolvers(reCaptchaClient);
