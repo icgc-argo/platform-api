@@ -21,7 +21,7 @@ import winston, { createLogger, LoggerOptions, transports, format } from 'winsto
 
 const { combine, timestamp, colorize, prettyPrint, json, printf } = format;
 
-const logger = winston.createLogger({
+export const loggerConfig = {
   format: combine(timestamp(), printf(info => `${info.timestamp} ${info.level}: ${info.message}`)),
   transports: [
     new transports.Console({
@@ -29,6 +29,8 @@ const logger = winston.createLogger({
     }),
     new transports.File({ filename: 'debug.log', level: 'debug' }),
   ],
-});
+};
+
+const logger = winston.createLogger(loggerConfig);
 
 export default logger;
