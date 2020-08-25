@@ -21,6 +21,7 @@ import express, { Request } from 'express';
 import cors from 'cors';
 import { mergeSchemas } from 'graphql-tools';
 import * as swaggerUi from 'swagger-ui-express';
+import expressWinston from 'express-winston'
 import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
@@ -38,7 +39,7 @@ import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
 
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
-import logger from './utils/logger';
+import logger, { loggerConfig } from './utils/logger';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
@@ -86,6 +87,7 @@ const init = async () => {
 
   const app = express();
   app.use(cors());
+  app.use(expressWinston.logger(loggerConfig))
   server.applyMiddleware({ app, path: '/graphql' });
   app.get('/status', (req, res) => {
     res.json(version);
