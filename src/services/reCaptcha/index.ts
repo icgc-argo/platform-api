@@ -63,6 +63,7 @@ const getReCaptchaSecret = async () => {
 };
 
 const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
+  logger.debug('in create Recaptcha client')
   let reCaptchaSecretKey = await getReCaptchaSecret();
   const verifyUserResponse = async (response: string): Promise<ReCaptchaVerificationResult> =>
     fetch(
@@ -91,4 +92,11 @@ const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
   };
 };
 
+export const createStubReCaptchaClient = async() => Promise.resolve({
+  verifyUserResponse: (): Promise<ReCaptchaVerificationResult> => {
+    return Promise.resolve({
+      success: true
+    });
+  }
+});
 export default createReCaptchaClient;
