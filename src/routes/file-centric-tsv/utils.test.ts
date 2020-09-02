@@ -88,7 +88,7 @@ describe('createEsDocumentStream', () => {
     await esContainer.stop();
   }, 120000);
 
-  describe('createEsDocumentStream', async () => {
+  describe('createEsDocumentStream', () => {
     it('must create a stream of all documents', async () => {
       let chunkCount = 0;
       let docCount = 0;
