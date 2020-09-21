@@ -28,6 +28,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import createScoreRoute from './routes/score-proxy';
 import {
   PORT,
   NODE_ENV,
@@ -97,16 +98,23 @@ const init = async () => {
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
+  const scoreProxyPath = '/rdpc'
+  app.use(scoreProxyPath, createScoreRoute({
+    rootPath: scoreProxyPath,
+    esClient,
+  }))
+
   app.use(
     '/api-docs',
     swaggerUi.serve,
     swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
   );
 
-  app.listen(PORT, () =>  
+  app.listen(PORT, () =>  {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
-    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
-  );
+    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+    logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+  });
 };
 
 export default init;
