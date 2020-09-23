@@ -98,9 +98,9 @@ const init = async () => {
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
-  const scoreProxyPath = '/rdpc'
-  app.use(scoreProxyPath, createScoreRoute({
-    rootPath: scoreProxyPath,
+  const rdpcRepoProxyPath = '/rdpc'
+  app.use(rdpcRepoProxyPath, createScoreRoute({
+    rootPath: rdpcRepoProxyPath,
     esClient,
   }))
 
