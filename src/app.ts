@@ -28,7 +28,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import createScoreRoute from './routes/score-proxy';
+import createRdpcRepoProxy from './routes/rdpc-repo-proxy';
 import {
   PORT,
   NODE_ENV,
@@ -99,7 +99,7 @@ const init = async () => {
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
   const rdpcRepoProxyPath = '/rdpc'
-  app.use(rdpcRepoProxyPath, createScoreRoute({
+  app.use(rdpcRepoProxyPath, createRdpcRepoProxy({
     rootPath: rdpcRepoProxyPath,
     esClient,
   }))
