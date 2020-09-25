@@ -3,6 +3,7 @@ import express, { Router, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
 import urljoin from 'url-join';
+import { ADVERTISED_HOST } from 'config';
 
 const validateAccessibility = async (egoJwt?: string, fileObjectId?: string): Promise<boolean> => {
   console.log(`egoJwt: `, !!egoJwt);
@@ -40,7 +41,7 @@ export default ({ rootPath }: { rootPath: string; esClient: Client }): Router =>
    * It really doesn't matter what's returned.
    ****************************************************************/
   router.get('/download/ping', async (req, res, next) => {
-    res.send(urljoin('http://localhost:9000', rootPath, '/yeehaw'));
+    res.send(urljoin(ADVERTISED_HOST, rootPath, '/yeehaw'));
   });
   router.get('/yeehaw', (req, res) => {
     res.send('yeehaw');
