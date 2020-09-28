@@ -25,7 +25,6 @@ import urljoin from 'url-join';
 import { ADVERTISED_HOST } from 'config';
 
 const validateAccessibility = async (egoJwt?: string, fileObjectId?: string): Promise<boolean> => {
-  console.log(`egoJwt: `, !!egoJwt);
   if (egoJwt && fileObjectId) {
     return true;
   } else {
@@ -33,12 +32,28 @@ const validateAccessibility = async (egoJwt?: string, fileObjectId?: string): Pr
   }
 };
 
-const getRdpcUrls = ({
+const getRdpcUrlsByFileObjectId = ({
   fileObjectId,
 }: {
   fileObjectId?: string;
 }): Promise<{ song: string; score: string }> => {
   console.log('fileObjectId: ', fileObjectId);
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        score: 'https://score.rdpc-dev.cancercollaboratory.org',
+        song: 'https://song.rdpc-dev.cancercollaboratory.org',
+      });
+    }, 0);
+  });
+};
+
+const getRdpcUrlsByAnalyisId = ({
+  analysisId,
+}: {
+  analysisId: string;
+}): Promise<{ song: string; score: string }> => {
+  console.log('analysisId: ', analysisId);
   return new Promise(resolve => {
     setTimeout(() => {
       resolve({
@@ -78,10 +93,10 @@ export default ({ rootPath }: { rootPath: string; esClient: Client }): Router =>
         headers: { authorization },
       } = req;
       const isAuthorized = await validateAccessibility(authorization);
-      const fileObjectId = '';
+      const { gnosId: analysisId } = req.query;
       if (isAuthorized) {
         const handleRequest = createProxyMiddleware({
-          target: (await getRdpcUrls({ fileObjectId })).song,
+          target: (await getRdpcUrlsByAnalyisId({ analysisId })).song,
           pathRewrite: normalizePath,
           onError: (err: Error, req: Request, res: Response) => {
             logger.error('Song Router Error - ' + err);
@@ -106,7 +121,7 @@ export default ({ rootPath }: { rootPath: string; esClient: Client }): Router =>
       const { fileObjectId } = req.params;
       if (isAuthorized) {
         const handleRequest = createProxyMiddleware({
-          target: (await getRdpcUrls({ fileObjectId })).song,
+          target: (await getRdpcUrlsByFileObjectId({ fileObjectId })).song,
           pathRewrite: normalizePath,
           onError: (err: Error, req: Request, res: Response) => {
             logger.error('Song Router Error - ' + err);
@@ -132,7 +147,7 @@ export default ({ rootPath }: { rootPath: string; esClient: Client }): Router =>
       const { fileObjectId } = req.params;
       if (isAuthorized) {
         const handleRequest = createProxyMiddleware({
-          target: (await getRdpcUrls({ fileObjectId })).score,
+          target: (await getRdpcUrlsByFileObjectId({ fileObjectId })).score,
           pathRewrite: normalizePath,
           onError: (err: Error, req: Request, res: Response) => {
             logger.error('Score Router Error - ' + err);
