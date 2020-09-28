@@ -35,16 +35,14 @@ const validateAccessibility = async (egoJwt?: string, fileObjectId?: string): Pr
 const getRdpcUrlsByFileObjectId = ({
   fileObjectId,
 }: {
-  fileObjectId?: string;
+  fileObjectId: string;
 }): Promise<{ song: string; score: string }> => {
   console.log('fileObjectId: ', fileObjectId);
   return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        score: 'https://score.rdpc-dev.cancercollaboratory.org',
-        song: 'https://song.rdpc-dev.cancercollaboratory.org',
-      });
-    }, 0);
+    resolve({
+      score: 'https://score.rdpc-dev.cancercollaboratory.org',
+      song: 'https://song.rdpc-dev.cancercollaboratory.org',
+    });
   });
 };
 
@@ -55,12 +53,10 @@ const getRdpcUrlsByAnalyisId = ({
 }): Promise<{ song: string; score: string }> => {
   console.log('analysisId: ', analysisId);
   return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({
-        score: 'https://score.rdpc-dev.cancercollaboratory.org',
-        song: 'https://song.rdpc-dev.cancercollaboratory.org',
-      });
-    }, 0);
+    resolve({
+      score: 'https://score.rdpc-dev.cancercollaboratory.org',
+      song: 'https://song.rdpc-dev.cancercollaboratory.org',
+    });
   });
 };
 
