@@ -28,7 +28,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import createRdpcRepoProxy from './routes/rdpc-repo-proxy';
+import createRdpcRepoProxy from './routes/rdpc-proxy';
 import {
   PORT,
   NODE_ENV,
