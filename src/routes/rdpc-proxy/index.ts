@@ -36,11 +36,10 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
    * It really doesn't matter what's returned.
    ****************************************************************/
   router.get('/download/ping', async (req, res, next) => {
-    console.log('sup!!!');
-    res.send(urljoin(ADVERTISED_HOST, rootPath, '/yo'));
+    res.send(urljoin(ADVERTISED_HOST, rootPath, '/heliograph'));
   });
-  router.get('/yo', (req, res) => {
-    res.send('yo');
+  router.get('/heliograph', (req, res) => {
+    res.send('heliograph');
   });
   /****************************************************************/
 
