@@ -23,8 +23,6 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
     fileObjectId: req.params.fileObjectId,
   });
   const { fileObjectId } = req.params;
-
-  console.log('fileObjectId: ', fileObjectId);
   if (isAuthorized) {
     const handleRequest = createProxyMiddleware({
       target: await getRdpcUrlsByFileObjectId({ fileObjectId, esClient }),
