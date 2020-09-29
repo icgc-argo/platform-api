@@ -31,6 +31,19 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
     rootPath,
   });
 
+  /****************************************************************
+   * Score client uses this to validate server availability.
+   * It really doesn't matter what's returned.
+   ****************************************************************/
+  router.get('/download/ping', async (req, res, next) => {
+    console.log('sup!!!');
+    res.send(urljoin(ADVERTISED_HOST, rootPath, '/yo'));
+  });
+  router.get('/yo', (req, res) => {
+    res.send('yo');
+  });
+  /****************************************************************/
+
   router.get('/entities', entitiesHandlers.entitiesHandler);
   router.get('/entities/:fileObjectId', entitiesHandlers.entitiesIdHandler);
   router.get(
@@ -40,18 +53,6 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
       esClient,
     }),
   );
-
-  /****************************************************************
-   * Score client uses this to validate server availability.
-   * It really doesn't matter what's returned.
-   ****************************************************************/
-  router.get('/download/ping', async (req, res, next) => {
-    res.send(urljoin(ADVERTISED_HOST, rootPath, '/yeehaw'));
-  });
-  router.get('/yeehaw', (req, res) => {
-    res.send('yeehaw');
-  });
-  /****************************************************************/
 
   return router;
 };

@@ -25,7 +25,7 @@ export default ({
       /**
        * @todo: actually implement the API
        */
-      return createProxyMiddleware({
+      const handleRequest = createProxyMiddleware({
         target: 'https://song.rdpc-dev.cancercollaboratory.org',
         pathRewrite: normalizePath(rootPath),
         onError: (err: Error, req: Request, res: Response) => {
@@ -34,12 +34,13 @@ export default ({
         },
         changeOrigin: true,
       });
+      handleRequest(req, res, next);
     },
     entitiesIdHandler: async (req: Request<{ fileObjectId: string }>, res, next) => {
       /**
        * @todo: actually implement the API
        */
-      return createProxyMiddleware({
+      const handleRequest = createProxyMiddleware({
         target: 'https://song.rdpc-dev.cancercollaboratory.org',
         pathRewrite: normalizePath(rootPath),
         onError: (err: Error, req: Request, res: Response) => {
@@ -48,6 +49,7 @@ export default ({
         },
         changeOrigin: true,
       });
+      handleRequest(req, res, next);
     },
   };
 };

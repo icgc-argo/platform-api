@@ -10,5 +10,5 @@ export default ({
   /**
    * @todo: actually implement this function
    */
-  return Promise.resolve('https://song.rdpc-dev.cancercollaboratory.org');
+  return Promise.resolve('https://score.rdpc-dev.cancercollaboratory.org');
 };
