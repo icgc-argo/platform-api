@@ -21,15 +21,12 @@ import { Client } from '@elastic/elasticsearch';
 import express, { Router } from 'express';
 import urljoin from 'url-join';
 import { ADVERTISED_HOST } from 'config';
-import downloadProxy from './downloadProxy';
-import createEntitiesHandlers from './entitiesHandlers';
+import downloadProxy from './downloadHandler';
+import createEntitiesHandler from './entitiesHandler';
+import createEntitiesIdHandler from './entitiesIdHandler';
 
 export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Router => {
   const router = express.Router();
-  const entitiesHandlers = createEntitiesHandlers({
-    esClient,
-    rootPath,
-  });
 
   /****************************************************************
    * Score client uses this to validate server availability.
@@ -43,8 +40,20 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   });
   /****************************************************************/
 
-  router.get('/entities', entitiesHandlers.entitiesHandler);
-  router.get('/entities/:fileObjectId', entitiesHandlers.entitiesIdHandler);
+  router.get(
+    '/entities',
+    createEntitiesHandler({
+      rootPath,
+      esClient,
+    }),
+  );
+  router.get(
+    '/entities/:fileObjectId',
+    createEntitiesIdHandler({
+      rootPath,
+      esClient,
+    }),
+  );
   router.get(
     '/download/:fileObjectId',
     downloadProxy({

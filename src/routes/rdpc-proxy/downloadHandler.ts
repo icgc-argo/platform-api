@@ -1,8 +1,7 @@
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
-import createAccessValidator from './accessValidator';
-import getRdpcUrlsByFileObjectId from './getRdpcUrlsByFileObjectId';
+import validateFileAccess from './validateFileAccess';
 import { Client } from '@elastic/elasticsearch';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
@@ -16,16 +15,16 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   const {
     headers: { authorization },
   } = req;
-  const [_, jwt] = (authorization || '').split(' ');
-  const isFileAccessibleByUser = createAccessValidator({ esClient });
-  const isAuthorized = await isFileAccessibleByUser({
-    egoJwt: jwt,
-    fileObjectId: req.params.fileObjectId,
+  const egoJwtOrApiKey = (authorization || "")?.split('Bearer ').join('')
+  const isAuthorized = validateFileAccess({
+    egoJwtOrApiKey,
+    file: undefined,
   });
+  /** @todo: use esClient to retrieve file to locate rdpc url for proxy */
   const { fileObjectId } = req.params;
   if (isAuthorized) {
     const handleRequest = createProxyMiddleware({
-      target: await getRdpcUrlsByFileObjectId({ fileObjectId, esClient }),
+      target: 'https://score.rdpc-dev.cancercollaboratory.org',
       pathRewrite: normalizePath(rootPath),
       onError: (err: Error, req: Request, res: Response) => {
         logger.error('Score Router Error - ' + err);
