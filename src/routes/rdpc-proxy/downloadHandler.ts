@@ -16,7 +16,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
     headers: { authorization },
   } = req;
   const egoJwtOrApiKey = (authorization || "")?.split('Bearer ').join('')
-  const isAuthorized = validateFileAccess({
+  const isAuthorized = await validateFileAccess({
     egoJwtOrApiKey,
     file: undefined,
   });

@@ -1,9 +1,9 @@
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
-const validateFileAccess = (config: {
+const validateFileAccess = async (config: {
   egoJwtOrApiKey?: string;
   file?: EsFileCentricDocument;
-}): boolean => {
+}): Promise<boolean> => {
   /**
    * @todo: actually implement this function
    */
