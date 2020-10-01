@@ -1,7 +1,7 @@
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
-import validateFileAccess from './validateFileAccess';
+import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from '../accessValidations';
 import { Client } from '@elastic/elasticsearch';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
@@ -15,11 +15,19 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   const {
     headers: { authorization },
   } = req;
-  const egoJwtOrApiKey = (authorization || "")?.split('Bearer ').join('')
-  const isAuthorized = await validateFileAccess({
-    egoJwtOrApiKey,
-    file: undefined,
-  });
+  const egoJwtOrApiKey = (authorization || '')?.split('Bearer ').join('');
+  const accessValidationResults = await Promise.all([
+    hasSufficientProgramMembershipAccess({
+      egoJwtOrApiKey,
+      file: undefined,
+    }),
+    hasSufficientDacoAccess({
+      egoJwtOrApiKey,
+      file: undefined,
+    }),
+  ]);
+  const isAuthorized = accessValidationResults.every(conditionMet => conditionMet);
+
   /** @todo: use esClient to retrieve file to locate rdpc url for proxy */
   const { fileObjectId } = req.params;
   if (isAuthorized) {

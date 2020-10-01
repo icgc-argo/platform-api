@@ -1,6 +1,6 @@
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
-const validateFileAccess = async (config: {
+export const hasSufficientProgramMembershipAccess = async (config: {
   egoJwtOrApiKey?: string;
   file?: EsFileCentricDocument;
 }): Promise<boolean> => {
@@ -14,4 +14,9 @@ const validateFileAccess = async (config: {
   }
 };
 
-export default validateFileAccess;
+export const hasSufficientDacoAccess = async (config: {
+  egoJwtOrApiKey?: string;
+  file?: EsFileCentricDocument;
+}): Promise<boolean> => {
+  return true;
+};

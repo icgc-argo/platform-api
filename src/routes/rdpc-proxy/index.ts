@@ -21,7 +21,7 @@ import { Client } from '@elastic/elasticsearch';
 import express, { Router } from 'express';
 import urljoin from 'url-join';
 import { ADVERTISED_HOST } from 'config';
-import downloadProxy from './downloadHandler';
+import downloadProxy from './handlers/downloadHandler';
 import createEntitiesHandler from './entitiesHandler';
 import createEntitiesIdHandler from './entitiesIdHandler';
 
