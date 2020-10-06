@@ -2,7 +2,7 @@
 
 tags:
   - name: File Storage Api
-    description: endpoints to support distributed object storage access
+    description: endpoints to support controlled distributed object storage access
 
 paths:
   "/entities":
