@@ -28,7 +28,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
-import createRdpcRepoProxy from './routes/rdpc-proxy';
+import createFileStorageApi from './routes/file-storage-api';
 import {
   PORT,
   NODE_ENV,
@@ -98,8 +98,8 @@ const init = async () => {
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
-  const rdpcRepoProxyPath = '/rdpc'
-  app.use(rdpcRepoProxyPath, createRdpcRepoProxy({
+  const rdpcRepoProxyPath = '/file_storage_api'
+  app.use(rdpcRepoProxyPath, createFileStorageApi({
     rootPath: rdpcRepoProxyPath,
     esClient,
   }))
