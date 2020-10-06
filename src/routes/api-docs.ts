@@ -12,13 +12,13 @@ export default () => {
   );
 
   const mergedDoc: swaggerUi.SwaggerOptions = {
-    ...mainDoc,
-    ...fileStorageApiDoc,
     paths: {
-      ...mainDoc.paths,
       ...fileStorageApiDoc.paths,
+      ...mainDoc.paths,
     },
-    tags: [...mainDoc.tags, ...fileStorageApiDoc.tags],
+    tags: [...fileStorageApiDoc.tags, ...mainDoc.tags],
+    ...fileStorageApiDoc,
+    ...mainDoc,
   };
 
   router.use('/', swaggerUi.serve, swaggerUi.setup(mergedDoc));
