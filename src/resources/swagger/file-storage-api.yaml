@@ -1,3 +1,5 @@
+# This file contains partial content from Song's Swagger doc https://song.rdpc-dev.cancercollaboratory.org/v2/api-docs
+
 tags:
   - name: File Storage Api
     description: endpoints to support distributed object storage access
@@ -37,30 +39,11 @@ paths:
           in: query
           required: false
           type: string
-        - name: offset
-          in: query
-          required: false
-          type: integer
-          format: int64
         - name: page
           in: query
           description: Results page you want to retrieve (0..N)
           required: false
           type: ref
-        - name: pageNumber
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: pageSize
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: paged
-          in: query
-          required: false
-          type: boolean
         - name: projectCode
           in: query
           required: false
@@ -70,18 +53,39 @@ paths:
           description: Number of records per page.
           required: false
           type: ref
-        - name: sort.sorted
-          in: query
-          required: false
-          type: boolean
-        - name: sort.unsorted
-          in: query
-          required: false
-          type: boolean
-        - name: unpaged
-          in: query
-          required: false
-          type: boolean
+
+        # These queries aren't actually implemented by Song
+        # - name: offset
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int64
+        # - name: pageNumber
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int32
+        # - name: sort.sorted
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: sort.unsorted
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: pageSize
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int32
+        # - name: paged
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: unpaged
+        #   in: query
+        #   required: false
+        #   type: boolean
       responses:
         "200":
           description: OK
