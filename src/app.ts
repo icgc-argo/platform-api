@@ -20,9 +20,7 @@
 import express, { Request } from 'express';
 import cors from 'cors';
 import { mergeSchemas } from 'graphql-tools';
-import * as swaggerUi from 'swagger-ui-express';
 import expressWinston from 'express-winston'
-import yaml from 'yamljs';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
@@ -45,6 +43,7 @@ import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
+import apiDocRouter from 'routes/api-docs'
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -98,17 +97,13 @@ const init = async () => {
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
 
-  const rdpcRepoProxyPath = '/file_storage_api'
+  const rdpcRepoProxyPath = '/file-storage-api'
   app.use(rdpcRepoProxyPath, createFileStorageApi({
     rootPath: rdpcRepoProxyPath,
     esClient,
   }))
 
-  app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
-  );
+  app.use( '/api-docs', apiDocRouter());
 
   app.listen(PORT, () =>  {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
