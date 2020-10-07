@@ -7,7 +7,7 @@ import { Client } from '@elastic/elasticsearch';
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
 
-export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Handler => async (
+const downloadHandler =  ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Handler => async (
   req: Request<{ fileObjectId: string }>,
   res,
   next,
@@ -45,3 +45,5 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
     res.status(403);
   }
 };
+
+export default downloadHandler;
