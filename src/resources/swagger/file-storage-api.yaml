@@ -97,11 +97,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-
   "/studies/{studyId}/analysis/{id}":
     get:
       tags:
-        - Analysis
+        - File Storage Api
       summary: ReadAnalysis
       description: Retrieve the analysis object for an analysisId
       operationId: readUsingGET
@@ -129,7 +128,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-
   "/file-storage-api/entities/{id}":
     get:
       tags:
@@ -192,10 +190,10 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/FileEntity"
-      samples:
-        type: array
-        items:
-          $ref: "#/definitions/CompositeEntity"
+      # samples:
+      #   type: array
+      #   items:
+      #     $ref: "#/definitions/CompositeEntity"
       studyId:
         type: string
   Legacy:
