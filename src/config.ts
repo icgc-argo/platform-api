@@ -85,3 +85,4 @@ export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
 export const FEATURE_HELP_DESK_ENABLED = process.env.FEATURE_HELP_DESK_ENABLED === 'true';
 export const FEATURE_ARRANGER_SCHEMA_ENABLED =
   process.env.FEATURE_ARRANGER_SCHEMA_ENABLED === 'true';
+export const FEATURE_STORAGE_API_ENABLED = process.env.FEATURE_STORAGE_API_ENABLED === 'true';

@@ -20,7 +20,7 @@
 import express, { Request } from 'express';
 import cors from 'cors';
 import { mergeSchemas } from 'graphql-tools';
-import expressWinston from 'express-winston'
+import expressWinston from 'express-winston';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
@@ -33,6 +33,7 @@ import {
   APP_DIR,
   ARRANGER_PROJECT_ID,
   FEATURE_ARRANGER_SCHEMA_ENABLED,
+  FEATURE_STORAGE_API_ENABLED,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
@@ -43,7 +44,7 @@ import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
-import apiDocRouter from 'routes/api-docs'
+import apiDocRouter from 'routes/api-docs';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -57,22 +58,22 @@ export type GlobalGqlContext = {
 
 const init = async () => {
   const esClient = await createEsClient();
-  
+
   const schemas = await Promise.all([
     userSchema,
     programSchema,
     clinicalSchema,
-    ProgramDashboardSummarySchema(esClient), 
-    createHelpdeskSchema(), 
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
-  ])
+    ProgramDashboardSummarySchema(esClient),
+    createHelpdeskSchema(),
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
+  ]);
 
   const server = new ArgoApolloServer({
     // @ts-ignore ApolloServer type is missing this for some reason
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }: {req: Request}): GlobalGqlContext & ArrangerGqlContext => ({
+    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => ({
       isUserRequest: true,
       egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
       Authorization:
@@ -87,7 +88,7 @@ const init = async () => {
 
   const app = express();
   app.use(cors());
-  app.use(expressWinston.logger(loggerConfig))
+  app.use(expressWinston.logger(loggerConfig));
   server.applyMiddleware({ app, path: '/graphql' });
   app.get('/status', (req, res) => {
     res.json(version);
@@ -95,17 +96,22 @@ const init = async () => {
 
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinicalProxyRoute);
-  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
+  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
 
-  const rdpcRepoProxyPath = '/file-storage-api'
-  app.use(rdpcRepoProxyPath, createFileStorageApi({
-    rootPath: rdpcRepoProxyPath,
-    esClient,
-  }))
+  if (FEATURE_STORAGE_API_ENABLED) {
+    const rdpcRepoProxyPath = '/storage-api';
+    app.use(
+      rdpcRepoProxyPath,
+      createFileStorageApi({
+        rootPath: rdpcRepoProxyPath,
+        esClient,
+      }),
+    );
+  }
 
-  app.use( '/api-docs', apiDocRouter());
+  app.use('/api-docs', apiDocRouter());
 
-  app.listen(PORT, () =>  {
+  app.listen(PORT, () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
