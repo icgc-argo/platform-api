@@ -1,0 +1,268 @@
+# This file contains partial content from Song's Swagger doc https://song.rdpc-dev.cancercollaboratory.org/v2/api-docs
+
+tags:
+  - name: File Storage Api
+    description: endpoints to support controlled access to distributed object storage
+
+paths:
+  "/file-storage-api/entities":
+    get:
+      tags:
+        - File Storage Api
+      summary: FindLegacyEntities
+      description: Page through LegacyEntity data
+      operationId: findUsingGET
+      produces:
+        - "*/*"
+      parameters:
+        - name: access
+          in: query
+          required: false
+          type: string
+        - name: fields
+          in: query
+          description: fields
+          required: false
+          items:
+            type: object
+            additionalProperties:
+              type: string
+        - name: fileName
+          in: query
+          required: false
+          type: string
+        - name: gnosId
+          in: query
+          required: false
+          type: string
+        - name: id
+          in: query
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Results page you want to retrieve (0..N)
+          required: false
+          type: ref
+        - name: projectCode
+          in: query
+          required: false
+          type: string
+        - name: size
+          in: query
+          description: Number of records per page.
+          required: false
+          type: ref
+
+        # These queries aren't actually implemented by Song
+        # - name: offset
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int64
+        # - name: pageNumber
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int32
+        # - name: sort.sorted
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: sort.unsorted
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: pageSize
+        #   in: query
+        #   required: false
+        #   type: integer
+        #   format: int32
+        # - name: paged
+        #   in: query
+        #   required: false
+        #   type: boolean
+        # - name: unpaged
+        #   in: query
+        #   required: false
+        #   type: boolean
+      responses:
+        "200":
+          description: OK
+          schema:
+            "$ref": "#/definitions/JsonNode"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+  "/studies/{studyId}/analysis/{id}":
+    get:
+      tags:
+        - File Storage Api
+      summary: ReadAnalysis
+      description: Retrieve the analysis object for an analysisId
+      operationId: readUsingGET
+      produces:
+        - "*/*"
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - name: studyId
+          in: path
+          description: studyId
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/Analysis"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+  "/file-storage-api/entities/{id}":
+    get:
+      tags:
+        - File Storage Api
+      summary: ReadLegacyEntity
+      description: Read entity data for a legacy entity id
+      operationId: readUsingGET_3
+      produces:
+        - "*/*"
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            "$ref": "#/definitions/Legacy"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+  "/file-storage-api/download/{id}":
+    get:
+      tags:
+        - File Storage Api
+      summary: Score proxy with access-control
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
+
+definitions:
+  Analysis:
+    title: Analysis
+    type: object
+    properties:
+      analysisId:
+        type: string
+      analysisState:
+        type: string
+      analysisType:
+        $ref: "#/definitions/AnalysisTypeId"
+      files:
+        type: array
+        items:
+          $ref: "#/definitions/FileEntity"
+      # samples:
+      #   type: array
+      #   items:
+      #     $ref: "#/definitions/CompositeEntity"
+      studyId:
+        type: string
+  Legacy:
+    type: object
+    properties:
+      access:
+        type: string
+      fileName:
+        type: string
+      gnosId:
+        type: string
+      id:
+        type: string
+      projectCode:
+        type: string
+    title: Legacy
+  JsonNode:
+    type: object
+    properties:
+      array:
+        type: boolean
+      bigDecimal:
+        type: boolean
+      bigInteger:
+        type: boolean
+      binary:
+        type: boolean
+      boolean:
+        type: boolean
+      containerNode:
+        type: boolean
+      double:
+        type: boolean
+      float:
+        type: boolean
+      floatingPointNumber:
+        type: boolean
+      int:
+        type: boolean
+      integralNumber:
+        type: boolean
+      long:
+        type: boolean
+      missingNode:
+        type: boolean
+      nodeType:
+        type: string
+        enum:
+          - ARRAY
+          - BINARY
+          - BOOLEAN
+          - MISSING
+          - "NULL"
+          - NUMBER
+          - OBJECT
+          - POJO
+          - STRING
+      "null":
+        type: boolean
+      number:
+        type: boolean
+      object:
+        type: boolean
+      pojo:
+        type: boolean
+      short:
+        type: boolean
+      textual:
+        type: boolean
+      valueNode:
+        type: boolean
+    title: JsonNode

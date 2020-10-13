@@ -20,6 +20,7 @@
 export const PORT = Number(process.env.PORT) || 9000;
 export const NODE_ENV = String(process.env.NODE_ENV || 'development').toLowerCase();
 export const GQL_MAX_COST = Number(process.env.GQL_MAX_COST) || 1000;
+export const ADVERTISED_HOST = process.env.ADVERTISED_HOST || 'http://localhost:9000';
 
 // Elasticsearch config
 export const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'http://localhost:9200';
@@ -75,7 +76,7 @@ export const JIRA_ORGANIZATION_ID = process.env.JIRA_ORGANIZATION_ID;
 export const RECAPTCHA_SECRET_KEY = String(process.env.RECAPTCHA_SECRET_KEY);
 export const RECAPTCHA_VAULT_SECRET_PATH = String(process.env.RECAPTCHA_VAULT_SECRET_PATH);
 export const DEV_RECAPTCHA_DISABLED = process.env.DEV_RECAPTCHA_DISABLED === 'true';
- 
+
 // TSV download configs
 export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
   Number(process.env.DEFAULT_TSV_STREAM_CHUNK_SIZE) || 1000;
@@ -84,3 +85,4 @@ export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
 export const FEATURE_HELP_DESK_ENABLED = process.env.FEATURE_HELP_DESK_ENABLED === 'true';
 export const FEATURE_ARRANGER_SCHEMA_ENABLED =
   process.env.FEATURE_ARRANGER_SCHEMA_ENABLED === 'true';
+export const FEATURE_STORAGE_API_ENABLED = process.env.FEATURE_STORAGE_API_ENABLED === 'true';
