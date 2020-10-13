@@ -5,8 +5,10 @@ tags:
     description: endpoints to support controlled access to distributed object storage
 
 paths:
-  "/file-storage-api/entities":
+  "/storage-api/entities":
     get:
+      security:
+        - bearerAuth: []
       tags:
         - File Storage Api
       summary: FindLegacyEntities
@@ -97,8 +99,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-  "/studies/{studyId}/analysis/{id}":
+  "/storage-api/studies/{studyId}/analysis/{id}":
     get:
+      security:
+        - bearerAuth: []
       tags:
         - File Storage Api
       summary: ReadAnalysis
@@ -128,8 +132,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-  "/file-storage-api/entities/{id}":
+  "/storage-api/entities/{id}":
     get:
+      security:
+        - bearerAuth: []
       tags:
         - File Storage Api
       summary: ReadLegacyEntity
@@ -154,8 +160,10 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-  "/file-storage-api/download/{id}":
+  "/storage-api/download/{id}":
     get:
+      security:
+        - bearerAuth: []
       tags:
         - File Storage Api
       summary: Score proxy with access-control

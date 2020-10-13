@@ -24,6 +24,7 @@ import { ADVERTISED_HOST } from 'config';
 import downloadProxy from './handlers/downloadHandler';
 import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
+import { storageApiAuthenticationMiddleware } from './accessValidations';
 
 export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Router => {
   const router = express.Router();
@@ -42,6 +43,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
 
   router.get(
     '/entities',
+    storageApiAuthenticationMiddleware,
     createEntitiesHandler({
       rootPath,
       esClient,
@@ -49,6 +51,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   );
   router.get(
     '/entities/:fileObjectId',
+    storageApiAuthenticationMiddleware,
     createEntitiesIdHandler({
       rootPath,
       esClient,
@@ -56,6 +59,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   );
   router.get(
     '/download/:fileObjectId',
+    storageApiAuthenticationMiddleware,
     downloadProxy({
       rootPath,
       esClient,

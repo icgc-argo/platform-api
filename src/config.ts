@@ -40,7 +40,6 @@ export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 // Ego config
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
 export const EGO_ROOT_GRPC = process.env.EGO_ROOT_GRPC || 'localhost:50051';
-export const EGO_JWT_SECRET = process.env.EGO_JWT_SECRET;
 export const EGO_DACO_POLICY_NAME = process.env.EGO_DACO_POLICY_NAME || 'DACO';
 
 // Vault
