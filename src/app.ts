@@ -38,6 +38,7 @@ import {
   USE_VAULT,
   EGO_CLIENT_SECRET,
   EGO_CLIENT_ID,
+  ELASTICSEARCH_VAULT_SECRET_PATH,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
@@ -45,7 +46,7 @@ import createHelpdeskSchema from './schemas/Helpdesk';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger, { loggerConfig } from './utils/logger';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
-import { createEsClient } from 'services/elasticsearch';
+import { createEsClient, EsSecret } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
 import apiDocRouter from 'routes/api-docs';
@@ -64,17 +65,27 @@ export type GlobalGqlContext = {
 
 const init = async () => {
   const vaultSecretLoader = await loadVaultSecret();
-  const egoAppCredentials = (USE_VAULT
-    ? await vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
-        logger.error(`could not read ego secret at path ${EGO_VAULT_SECRET_PATH}`);
-        throw err;
-      })
-    : {
-        clientId: EGO_CLIENT_ID,
-        clientSecret: EGO_CLIENT_SECRET,
-      }) as EgoApplicationCredential;
 
-  const esClient = await createEsClient();
+  const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
+    ? await Promise.all([
+        vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
+          logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
+          throw err;
+        }),
+        vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
+          logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
+          throw err;
+        }),
+      ]) as [EgoApplicationCredential, EsSecret]
+    : [
+        {
+          clientId: EGO_CLIENT_ID,
+          clientSecret: EGO_CLIENT_SECRET,
+        },
+        {},
+      ] as [EgoApplicationCredential, EsSecret];
+
+  const esClient = await createEsClient({ auth: elasticsearchCredentials });
   const egoClient = createEgoClient(egoAppCredentials);
 
   const schemas = await Promise.all([
