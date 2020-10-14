@@ -64,15 +64,18 @@ export type GlobalGqlContext = {
 
 const init = async () => {
   const vaultSecretLoader = await loadVaultSecret();
-  const egoSecret = (USE_VAULT
-    ? await vaultSecretLoader(EGO_VAULT_SECRET_PATH)
+  const egoAppCredentials = (USE_VAULT
+    ? await vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
+        logger.error(`could not read ego secret at path ${EGO_VAULT_SECRET_PATH}`);
+        throw err;
+      })
     : {
         clientId: EGO_CLIENT_ID,
         clientSecret: EGO_CLIENT_SECRET,
       }) as EgoApplicationCredential;
-  
+
   const esClient = await createEsClient();
-  const egoClient = createEgoClient(egoSecret);
+  const egoClient = createEgoClient(egoAppCredentials);
 
   const schemas = await Promise.all([
     userSchema(egoClient),
