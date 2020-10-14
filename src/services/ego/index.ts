@@ -21,7 +21,7 @@
  * This file dynamically generates a gRPC client from Ego.proto.
  * The content of Ego.proto is copied directly from: https://github.com/overture-stack/ego/blob/develop/src/main/proto/Ego.proto
  */
-import grpc from 'grpc';
+import grpc, { ChannelCredentials } from 'grpc';
 import * as loader from '@grpc/proto-loader';
 import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
@@ -43,17 +43,26 @@ const packageDefinition = loader.loadSync(PROTO_PATH, {
   oneofs: true,
 });
 
-const proto = grpc.loadPackageDefinition(packageDefinition).bio.overture.ego.grpc;
+const protoBio = grpc.loadPackageDefinition(packageDefinition).bio as {
+  overture: {
+    ego: {
+      grpc: {
+        UserService: new (grpc_root: string, credentials: ChannelCredentials) => any;
+      };
+    };
+  };
+};
+const proto = protoBio.overture.ego.grpc;
 
 const userService = withRetries(
   new proto.UserService(EGO_ROOT_GRPC, grpc.credentials.createInsecure()),
 );
 
-let memoizedGetDacoIds = null;
+let memoizedGetDacoIds: ReturnType<typeof getMemoizedDacoIds> | null = null;
 let dacoIdsCalled = new Date();
 const dacoGroupIdExpiry = 86400000; // 24hours
 
-const getUser = async (id, jwt = null) => {
+const getUser = async (id: string, jwt = null) => {
   return await new Promise((resolve, reject) => {
     userService.getUser(
       { id },
@@ -63,7 +72,22 @@ const getUser = async (id, jwt = null) => {
   });
 };
 
-const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = null) => {
+const listUsers = async (
+  {
+    pageNum,
+    limit,
+    sort,
+    groups,
+    query,
+  }: {
+    pageNum?: number;
+    limit?: number;
+    sort?: string;
+    groups?: string[];
+    query?: string;
+  } = {},
+  jwt = null,
+) => {
   const payload = {
     page: { page_number: pageNum, page_size: limit, sort },
     group_ids: groups,
@@ -79,22 +103,30 @@ const listUsers = async ({ pageNum, limit, sort, groups, query } = {}, jwt = nul
   });
 };
 
-/**
- * @typedef {{ name: string; expiryDate: string; description: string; scope: string[], isRevoked: boolean, issueDate: string }} EgoAccessKeyObj
- * @param {string} userId
- * @param {string} Authorization
- * @returns {Promise<Array<EgoAccessKeyObj>>}
- */
-const getEgoAccessKeys = async (userId, Authorization) => {
-  const RESULT_SET_KEY = 'resultSet';
-  const COUNT_KEY = 'count';
+type EgoAccessKeyObj = {
+  name: string;
+  expiryDate: string;
+  description: string;
+  scope: string[];
+  isRevoked: boolean;
+  issueDate: string;
+};
+
+const getEgoAccessKeys = async (
+  userId: string,
+  Authorization: string,
+): Promise<EgoAccessKeyObj[]> => {
+  type EgoApiKeyResponse = {
+    count: number;
+    resultSet: EgoAccessKeyObj[];
+  };
   const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
-  const totalCount = firstResponse[COUNT_KEY];
-  const firstResults = firstResponse[RESULT_SET_KEY];
+    .then(response => response.json() as EgoApiKeyResponse);
+  const totalCount = firstResponse.count;
+  const firstResults = firstResponse.resultSet;
   const remainingPageIndex = firstResults.length;
   const remainingResponse = await fetch(
     urlJoin(
@@ -106,20 +138,18 @@ const getEgoAccessKeys = async (userId, Authorization) => {
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then(response => response.json() as EgoApiKeyResponse);
 
-  const remainingResults = remainingResponse[RESULT_SET_KEY];
+  const remainingResults = remainingResponse.resultSet;
 
   return [...firstResults, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
 };
 
-/**
- * @param {string} userId
- * @param {Array<string>} scopes
- * @param {string} Authorization
- * @returns {Promise<EgoAccessKeyObj>}
- */
-const generateEgoAccessKey = async (userId, scopes, Authorization) => {
+const generateEgoAccessKey = async (
+  userId: string,
+  scopes: string[],
+  Authorization: string,
+): Promise<EgoAccessKeyObj> => {
   const url = urlJoin(
     EGO_API_KEY_ENDPOINT,
     `?user_id=${userId}&scopes=${encodeURIComponent(scopes.join())}`,
@@ -133,13 +163,10 @@ const generateEgoAccessKey = async (userId, scopes, Authorization) => {
   return response;
 };
 
-/**
- *
- * @param {string} userName
- * @param {string} Authorization
- * @returns {Promise<{scopes: string[]}>}
- */
-const getScopes = async (userName, Authorization) => {
+const getScopes = async (
+  userName: string,
+  Authorization: string,
+): Promise<{ scopes: string[] }> => {
   const url = `${EGO_ROOT_REST}/o/scopes?userName=${userName}`;
   const response = await fetch(url, {
     method: 'get',
@@ -150,12 +177,10 @@ const getScopes = async (userName, Authorization) => {
   return response;
 };
 
-/**
- * @param { EgoAccessKeyObj[] } keys
- * @param {string} Authorization
- * @returns {Promise<{key: string; success: boolean}[]> | null}
- */
-const deleteKeys = async (keys, Authorization) => {
+const deleteKeys = async (
+  keys: EgoAccessKeyObj[],
+  Authorization: string,
+): Promise<{ key: string; success: boolean }[] | null> => {
   const accessKeys = keys.map(k => k.name);
   const ps = await Promise.all(
     accessKeys.map(async key => {
@@ -175,8 +200,8 @@ const deleteKeys = async (keys, Authorization) => {
 };
 
 // check for new group id over 24hours otherwise use memo func
-const getDacoIds = (userId, Authorization) => {
-  const checkIdExpiry = new Date() - dacoIdsCalled >= dacoGroupIdExpiry;
+const getDacoIds = (userId: string, Authorization: string) => {
+  const checkIdExpiry = Number(new Date()) - Number(dacoIdsCalled) >= dacoGroupIdExpiry;
   if (!memoizedGetDacoIds || checkIdExpiry) {
     memoizedGetDacoIds = getMemoizedDacoIds();
     dacoIdsCalled = new Date();
@@ -195,7 +220,12 @@ const getMemoizedDacoIds = () =>
       method: 'get',
       headers: { Authorization },
     })
-      .then(resp => resp.json())
+      .then(
+        resp =>
+          resp.json() as Promise<{
+            resultSet: { name: string; id: string }[];
+          }>,
+      )
       .then(({ resultSet = [] }) => resultSet.filter(data => data.name === 'DACO'))
       .then(group => {
         if (group.length === 0) {
@@ -211,16 +241,9 @@ const getMemoizedDacoIds = () =>
     return response;
   });
 
-/**
- * @param {string} str
- */
-const toTimestamp = str => Math.round(new Date(str).getTime() / 1000);
+const toTimestamp = (str: string) => Math.round(new Date(str).getTime() / 1000);
 
-/**
- * @param {EgoAccessKeyObj} accessKeyObj
- * @returns {number}
- */
-const getTimeToExpiry = accessKeyObj => {
+const getTimeToExpiry = (accessKeyObj: EgoAccessKeyObj): number => {
   return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
 };
 
