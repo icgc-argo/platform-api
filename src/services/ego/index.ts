@@ -56,7 +56,12 @@ export type ListUserSortOptions = {
   query?: string;
 };
 
-const createEgoClient = () => {
+export type EgoApplicationCredential = {
+  clientId: string;
+  clientSecret: string;
+};
+
+const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   const PROTO_PATH = path.join(APP_DIR, '/resources/Ego.proto');
 
   const EGO_API_KEY_ENDPOINT = urlJoin(EGO_ROOT_REST, '/o/api_key');
@@ -271,5 +276,7 @@ const createEgoClient = () => {
     getTimeToExpiry,
   };
 };
+
+export type EgoClient = ReturnType<typeof createEgoClient>;
 
 export default createEgoClient;

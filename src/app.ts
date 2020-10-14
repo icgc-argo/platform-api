@@ -34,6 +34,10 @@ import {
   ARRANGER_PROJECT_ID,
   FEATURE_ARRANGER_SCHEMA_ENABLED,
   FEATURE_STORAGE_API_ENABLED,
+  EGO_VAULT_SECRET_PATH,
+  USE_VAULT,
+  EGO_CLIENT_SECRET,
+  EGO_CLIENT_ID,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
@@ -45,6 +49,8 @@ import { createEsClient } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
 import apiDocRouter from 'routes/api-docs';
+import createEgoClient, { EgoApplicationCredential } from 'services/ego';
+import { loadVaultSecret } from 'services/vault';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -57,10 +63,19 @@ export type GlobalGqlContext = {
 };
 
 const init = async () => {
+  const vaultSecretLoader = await loadVaultSecret();
+  const egoSecret = (USE_VAULT
+    ? await vaultSecretLoader(EGO_VAULT_SECRET_PATH)
+    : {
+        clientId: EGO_CLIENT_ID,
+        clientSecret: EGO_CLIENT_SECRET,
+      }) as EgoApplicationCredential;
+  
   const esClient = await createEsClient();
+  const egoClient = createEgoClient(egoSecret);
 
   const schemas = await Promise.all([
-    userSchema,
+    userSchema(egoClient),
     programSchema,
     clinicalSchema,
     ProgramDashboardSummarySchema(esClient),

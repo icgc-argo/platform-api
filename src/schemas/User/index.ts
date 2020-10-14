@@ -21,7 +21,7 @@ import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 
-import createEgoClient, { EgoGrpcUser, ListUserSortOptions } from '../../services/ego';
+import { EgoClient, EgoGrpcUser, ListUserSortOptions } from '../../services/ego';
 import { EGO_DACO_POLICY_NAME } from '../../config';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
@@ -120,13 +120,12 @@ const createProfile = ({
 });
 
 // Provide resolver functions for your schema fields
-const createResolvers = async () => {
-  const egoService = await createEgoClient();
+const createResolvers = (egoClient: EgoClient) => {
   return {
     Query: {
       user: async (obj: unknown, args: { id: string }, context: GlobalGqlContext) => {
         const { egoToken } = context;
-        const egoUser: EgoGrpcUser = await egoService.getUser(args.id, egoToken);
+        const egoUser: EgoGrpcUser = await egoClient.getUser(args.id, egoToken);
         return egoUser === null ? null : convertEgoUser(egoUser);
       },
       users: async (obj: unknown, args: ListUserSortOptions, context: GlobalGqlContext) => {
@@ -134,7 +133,7 @@ const createResolvers = async () => {
         const options = {
           ...args,
         };
-        const response = await egoService.listUsers(options, egoToken);
+        const response = await egoClient.listUsers(options, egoToken);
         const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
         return egoUserList.map(egoUser => convertEgoUser(egoUser));
       },
@@ -148,13 +147,13 @@ const createResolvers = async () => {
           (userScopes || []).includes(`${EGO_DACO_POLICY_NAME}.READ`);
 
         // API access keys
-        const keys = await egoService.getEgoAccessKeys(userId, Authorization);
+        const keys = await egoClient.getEgoAccessKeys(userId, Authorization);
         let apiKey = null;
 
         if (keys.length === 1) {
           const egoApiKeyObj = keys[0];
           const { name: accessToken } = egoApiKeyObj;
-          apiKey = { key: accessToken, exp: egoService.getTimeToExpiry(egoApiKeyObj), error: '' };
+          apiKey = { key: accessToken, exp: egoClient.getTimeToExpiry(egoApiKeyObj), error: '' };
         } else {
           const errorMsg =
             'An error has been found with your API key. Please generate a new API key';
@@ -172,16 +171,16 @@ const createResolvers = async () => {
         const userId = decodedToken.sub;
 
         // delete old keys
-        const keys = await egoService.getEgoAccessKeys(userId, Authorization);
+        const keys = await egoClient.getEgoAccessKeys(userId, Authorization);
         if (keys) {
-          await egoService.deleteKeys(keys, Authorization);
+          await egoClient.deleteKeys(keys, Authorization);
         }
         // get scopes for new token
-        const { scopes } = await egoService.getScopes(userName, Authorization);
+        const { scopes } = await egoClient.getScopes(userName, Authorization);
 
-        const egoApiKeyObj = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
+        const egoApiKeyObj = await egoClient.generateEgoAccessKey(userId, scopes, Authorization);
         return {
-          exp: egoService.getTimeToExpiry(egoApiKeyObj),
+          exp: egoClient.getTimeToExpiry(egoApiKeyObj),
           key: egoApiKeyObj.name,
           error: '',
         };
@@ -190,8 +189,8 @@ const createResolvers = async () => {
   };
 };
 
-export default async () =>
+export default (egoClient: EgoClient) =>
   makeExecutableSchema({
     typeDefs,
-    resolvers: await createResolvers(),
+    resolvers: createResolvers(egoClient),
   });
