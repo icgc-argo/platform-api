@@ -134,6 +134,7 @@ const init = async () => {
       createFileStorageApi({
         rootPath: rdpcRepoProxyPath,
         esClient,
+        egoClient
       }),
     );
   }

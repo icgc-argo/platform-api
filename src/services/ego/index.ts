@@ -62,6 +62,10 @@ export type EgoApplicationCredential = {
 };
 
 const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
+  const appCredentialBase64 = new Buffer(
+    `${applicationCredential.clientId}:${applicationCredential.clientSecret}`,
+  ).toString('base64');
+
   const PROTO_PATH = path.join(APP_DIR, '/resources/Ego.proto');
 
   const EGO_API_KEY_ENDPOINT = urlJoin(EGO_ROOT_REST, '/o/api_key');
@@ -259,6 +263,15 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       return response;
     });
 
+  const checkApiKey = ({ apiKey }: { apiKey: string }): Promise<{ scope: string[] }> =>
+    fetch(`${EGO_ROOT_REST}/o/check_api_key?apiKey=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Basic ${appCredentialBase64}`,
+      },
+    }).then(res => res.json());
+
   const toTimestamp = (str: string) => Math.round(new Date(str).getTime() / 1000);
 
   const getTimeToExpiry = (accessKeyObj: EgoAccessKeyObj): number => {
@@ -274,6 +287,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     deleteKeys,
     getDacoIds,
     getTimeToExpiry,
+    checkApiKey,
   };
 };
 

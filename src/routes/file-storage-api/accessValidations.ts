@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import { PermissionScopeObj } from '@icgc-argo/ego-token-utils/dist/common';
 import { EGO_ROOT_REST } from 'config';
+import { EgoClient } from 'services/ego';
 
 export const hasSufficientProgramMembershipAccess = async (config: {
   scopes: PermissionScopeObj[];
@@ -32,9 +33,12 @@ export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = 
   T2,
   Query
 > & { userScopes: PermissionScopeObj[] };
-const extractUserScopes = async (
-  authHeader?: string,
-): Promise<{ scopes: string[]; errorCode?: number }> => {
+
+const extractUserScopes = async (config: {
+  authHeader?: string;
+  egoClient: EgoClient;
+}): Promise<{ scopes: string[]; errorCode?: number }> => {
+  const { authHeader, egoClient } = config;
   const AUTH_ERROR_CODE = 401;
   if (authHeader) {
     const token = authHeader.replace('Bearer ', '');
@@ -48,16 +52,8 @@ const extractUserScopes = async (
         scopes: jwtData.context.scope,
       };
     } catch (err) {
-      return fetch(`${EGO_ROOT_REST}/o/check_api_key?apiKey=${token}`, {
-        method: 'POST',
-        headers: {
-          accept: 'application/json',
-
-          /** @Todo replace this guy */
-          Authorization: `Basic ...`,
-        },
-      })
-        .then(res => res.json())
+      return egoClient
+        .checkApiKey({ apiKey: token })
         .then(data => ({ scopes: data.scope as string[] }))
         .catch(err => ({ scopes: [], errorCode: AUTH_ERROR_CODE }));
     }
@@ -65,13 +61,20 @@ const extractUserScopes = async (
     return { scopes: [], errorCode: AUTH_ERROR_CODE };
   }
 };
-export const storageApiAuthenticationMiddleware: Handler = async (req: Request, res, next) => {
-  const { authorization } = req.headers;
-  const userScope = await extractUserScopes(authorization);
-  if (userScope.errorCode) {
-    res.status(userScope.errorCode).end();
-  } else {
-    (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
-    next();
-  }
+
+type AuthenticationMiddleware = (egoClient: EgoClient) => Handler;
+export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = egoClient => {
+  return async (req: Request, res, next) => {
+    const { authorization } = req.headers;
+    const userScope = await extractUserScopes({
+      egoClient,
+      authHeader: authorization,
+    });
+    if (userScope.errorCode) {
+      res.status(userScope.errorCode).end();
+    } else {
+      (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
+      next();
+    }
+  };
 };
