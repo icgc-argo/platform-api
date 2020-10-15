@@ -1,9 +1,7 @@
 import { Handler, Request } from 'express';
 import egoTokenUtils from 'utils/egoTokenUtils';
-import fetch from 'node-fetch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import { PermissionScopeObj } from '@icgc-argo/ego-token-utils/dist/common';
-import { EGO_ROOT_REST } from 'config';
 import { EgoClient } from 'services/ego';
 
 export const hasSufficientProgramMembershipAccess = async (config: {
