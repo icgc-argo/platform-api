@@ -62,7 +62,7 @@ export type EgoApplicationCredential = {
 };
 
 const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
-  const appCredentialBase64 = new Buffer(
+  const appCredentialBase64 = Buffer.from(
     `${applicationCredential.clientId}:${applicationCredential.clientSecret}`,
   ).toString('base64');
 
@@ -263,7 +263,16 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       return response;
     });
 
-  const checkApiKey = ({ apiKey }: { apiKey: string }): Promise<{ scope: string[] }> =>
+  const checkApiKey = ({
+    apiKey,
+  }: {
+    apiKey: string;
+  }): Promise<{
+    client_id: string;
+    exp: number;
+    scope: string[];
+    user_name: string;
+  }> =>
     fetch(`${EGO_ROOT_REST}/o/check_api_key?apiKey=${apiKey}`, {
       method: 'POST',
       headers: {
