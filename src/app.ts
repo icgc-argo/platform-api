@@ -70,11 +70,11 @@ const init = async () => {
     ? await Promise.all([
         vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
           logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
-          throw err;
+          throw err; //fail fast
         }),
         vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
           logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
-          throw err;
+          throw err; //fail fast
         }),
       ]) as [EgoApplicationCredential, EsSecret]
     : [
