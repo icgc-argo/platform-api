@@ -20,20 +20,25 @@
 import express, { Request } from 'express';
 import cors from 'cors';
 import { mergeSchemas } from 'graphql-tools';
-import * as swaggerUi from 'swagger-ui-express';
-import expressWinston from 'express-winston'
-import yaml from 'yamljs';
+import expressWinston from 'express-winston';
 import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import createFileStorageApi from './routes/file-storage-api';
 import {
   PORT,
   NODE_ENV,
   APP_DIR,
   ARRANGER_PROJECT_ID,
   FEATURE_ARRANGER_SCHEMA_ENABLED,
+  FEATURE_STORAGE_API_ENABLED,
+  EGO_VAULT_SECRET_PATH,
+  USE_VAULT,
+  EGO_CLIENT_SECRET,
+  EGO_CLIENT_ID,
+  ELASTICSEARCH_VAULT_SECRET_PATH,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
@@ -41,9 +46,12 @@ import createHelpdeskSchema from './schemas/Helpdesk';
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
 import logger, { loggerConfig } from './utils/logger';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
-import { createEsClient } from 'services/elasticsearch';
+import { createEsClient, EsSecret } from 'services/elasticsearch';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
+import apiDocRouter from 'routes/api-docs';
+import createEgoClient, { EgoApplicationCredential } from 'services/ego';
+import { loadVaultSecret } from 'services/vault';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -56,23 +64,45 @@ export type GlobalGqlContext = {
 };
 
 const init = async () => {
-  const esClient = await createEsClient();
-  
+  const vaultSecretLoader = await loadVaultSecret();
+
+  const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
+    ? await Promise.all([
+        vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
+          logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
+          throw err; //fail fast
+        }),
+        vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
+          logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
+          throw err; //fail fast
+        }),
+      ]) as [EgoApplicationCredential, EsSecret]
+    : [
+        {
+          clientId: EGO_CLIENT_ID,
+          clientSecret: EGO_CLIENT_SECRET,
+        },
+        {},
+      ] as [EgoApplicationCredential, EsSecret];
+
+  const esClient = await createEsClient({ auth: elasticsearchCredentials });
+  const egoClient = createEgoClient(egoAppCredentials);
+
   const schemas = await Promise.all([
-    userSchema,
+    userSchema(egoClient),
     programSchema,
     clinicalSchema,
-    ProgramDashboardSummarySchema(esClient), 
-    createHelpdeskSchema(), 
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : [])
-  ])
+    ProgramDashboardSummarySchema(esClient),
+    createHelpdeskSchema(),
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
+  ]);
 
   const server = new ArgoApolloServer({
     // @ts-ignore ApolloServer type is missing this for some reason
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }: {req: Request}): GlobalGqlContext & ArrangerGqlContext => ({
+    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => ({
       isUserRequest: true,
       egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
       Authorization:
@@ -87,7 +117,7 @@ const init = async () => {
 
   const app = express();
   app.use(cors());
-  app.use(expressWinston.logger(loggerConfig))
+  app.use(expressWinston.logger(loggerConfig));
   server.applyMiddleware({ app, path: '/graphql' });
   app.get('/status', (req, res) => {
     res.json(version);
@@ -95,18 +125,27 @@ const init = async () => {
 
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinicalProxyRoute);
-  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient))
+  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
 
-  app.use(
-    '/api-docs',
-    swaggerUi.serve,
-    swaggerUi.setup(yaml.load(path.join(__dirname, './resources/swagger.yaml'))),
-  );
+  if (FEATURE_STORAGE_API_ENABLED) {
+    const rdpcRepoProxyPath = '/storage-api';
+    app.use(
+      rdpcRepoProxyPath,
+      createFileStorageApi({
+        rootPath: rdpcRepoProxyPath,
+        esClient,
+        egoClient
+      }),
+    );
+  }
 
-  app.listen(PORT, () =>  
+  app.use('/api-docs', apiDocRouter());
+
+  app.listen(PORT, () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
-    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`),
-  );
+    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+    logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+  });
 };
 
 export default init;

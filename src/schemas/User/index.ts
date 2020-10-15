@@ -21,7 +21,7 @@ import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 
-import egoService from '../../services/ego';
+import { EgoClient, EgoGrpcUser, ListUserSortOptions } from '../../services/ego';
 import { EGO_DACO_POLICY_NAME } from '../../config';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
@@ -92,21 +92,6 @@ const typeDefs = gql`
   }
 `;
 
-type EgoGrpcUser = {
-  id: { value: unknown };
-  email: { value: unknown };
-  first_name: { value: unknown };
-  last_name: { value: unknown };
-  created_at: { value: unknown };
-  last_login: { value: unknown };
-  name: { value: unknown };
-  preferred_language: { value: unknown };
-  status: { value: unknown };
-  type: { value: unknown };
-  applications: unknown;
-  groups: unknown;
-  scopes: unknown;
-};
 const convertEgoUser = (user: EgoGrpcUser) => ({
   id: get(user, 'id.value'),
   email: get(user, 'email.value'),
@@ -135,83 +120,77 @@ const createProfile = ({
 });
 
 // Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    user: async (obj: unknown, args: { id: string }, context: GlobalGqlContext) => {
-      const { egoToken } = context;
-      const egoUser: EgoGrpcUser = await egoService.getUser(args.id, egoToken);
-      return egoUser === null ? null : convertEgoUser(egoUser);
-    },
-    users: async (
-      obj: unknown,
-      args: {
-        pageNum: unknown;
-        limit: unknown;
-        sort: unknown;
-        groups: unknown;
-        query: unknown;
+const createResolvers = (egoClient: EgoClient) => {
+  return {
+    Query: {
+      user: async (obj: unknown, args: { id: string }, context: GlobalGqlContext) => {
+        const { egoToken } = context;
+        const egoUser: EgoGrpcUser = await egoClient.getUser(args.id, egoToken);
+        return egoUser === null ? null : convertEgoUser(egoUser);
       },
-      context: GlobalGqlContext,
-    ) => {
-      const { egoToken } = context;
-      const options = {
-        ...args,
-      };
-      const response = await egoService.listUsers(options, egoToken);
-      const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
-      return egoUserList.map(egoUser => convertEgoUser(egoUser));
+      users: async (obj: unknown, args: ListUserSortOptions, context: GlobalGqlContext) => {
+        const { egoToken } = context;
+        const options = {
+          ...args,
+        };
+        const response = await egoClient.listUsers(options, egoToken);
+        const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
+        return egoUserList.map(egoUser => convertEgoUser(egoUser));
+      },
+      self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
+        const { Authorization, egoToken } = context;
+        const decodedToken = egoTokenUtils.decodeToken(egoToken);
+        const userId = decodedToken.sub;
+        const userScopes = decodedToken.context.scope;
+        const isDacoApproved =
+          (userScopes || []).includes(`${EGO_DACO_POLICY_NAME}.WRITE`) ||
+          (userScopes || []).includes(`${EGO_DACO_POLICY_NAME}.READ`);
+
+        // API access keys
+        const keys = await egoClient.getEgoAccessKeys(userId, Authorization);
+        let apiKey = null;
+
+        if (keys.length === 1) {
+          const egoApiKeyObj = keys[0];
+          const { name: accessToken } = egoApiKeyObj;
+          apiKey = { key: accessToken, exp: egoClient.getTimeToExpiry(egoApiKeyObj), error: '' };
+        } else {
+          const errorMsg =
+            'An error has been found with your API key. Please generate a new API key';
+          apiKey = { key: null, exp: null, error: errorMsg };
+        }
+
+        return createProfile({ apiKey, isDacoApproved });
+      },
     },
-    self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
-      const { Authorization, egoToken } = context;
-      const decodedToken = egoTokenUtils.decodeToken(egoToken);
-      const userId = decodedToken.sub;
-      const userScopes = decodedToken.context.scope;
-      const isDacoApproved =
-        (userScopes || []).includes(`${EGO_DACO_POLICY_NAME}.WRITE`) ||
-        (userScopes || []).includes(`${EGO_DACO_POLICY_NAME}.READ`);
+    Mutation: {
+      generateAccessKey: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
+        const { Authorization, egoToken } = context;
+        const decodedToken = egoTokenUtils.decodeToken(egoToken);
+        const userName = decodedToken.context.user.name;
+        const userId = decodedToken.sub;
 
-      // API access keys
-      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
-      let apiKey = null;
+        // delete old keys
+        const keys = await egoClient.getEgoAccessKeys(userId, Authorization);
+        if (keys) {
+          await egoClient.deleteKeys(keys, Authorization);
+        }
+        // get scopes for new token
+        const { scopes } = await egoClient.getScopes(userName, Authorization);
 
-      if (keys.length === 1) {
-        const egoApiKeyObj = keys[0];
-        const { name: accessToken } = egoApiKeyObj;
-        apiKey = { key: accessToken, exp: egoService.getTimeToExpiry(egoApiKeyObj), error: '' };
-      } else {
-        const errorMsg = 'An error has been found with your API key. Please generate a new API key';
-        apiKey = { key: null, exp: null, error: errorMsg };
-      }
-
-      return createProfile({ apiKey, isDacoApproved });
+        const egoApiKeyObj = await egoClient.generateEgoAccessKey(userId, scopes, Authorization);
+        return {
+          exp: egoClient.getTimeToExpiry(egoApiKeyObj),
+          key: egoApiKeyObj.name,
+          error: '',
+        };
+      },
     },
-  },
-  Mutation: {
-    generateAccessKey: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
-      const { Authorization, egoToken } = context;
-      const decodedToken = egoTokenUtils.decodeToken(egoToken);
-      const userName = decodedToken.context.user.name;
-      const userId = decodedToken.sub;
-
-      // delete old keys
-      const keys = await egoService.getEgoAccessKeys(userId, Authorization);
-      if (keys) {
-        await egoService.deleteKeys(keys, Authorization);
-      }
-      // get scopes for new token
-      const { scopes } = await egoService.getScopes(userName, Authorization);
-
-      const egoApiKeyObj = await egoService.generateEgoAccessKey(userId, scopes, Authorization);
-      return {
-        exp: egoService.getTimeToExpiry(egoApiKeyObj),
-        key: egoApiKeyObj.name,
-        error: '',
-      };
-    },
-  },
+  };
 };
 
-export default makeExecutableSchema({
-  typeDefs,
-  resolvers,
-});
+export default (egoClient: EgoClient) =>
+  makeExecutableSchema({
+    typeDefs,
+    resolvers: createResolvers(egoClient),
+  });

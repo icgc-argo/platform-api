@@ -484,4 +484,7 @@ const resolvers = {
 export default makeExecutableSchema({
   typeDefs,
   resolvers,
+  resolverValidationOptions: {
+    requireResolversForResolveType: false
+  }
 });
