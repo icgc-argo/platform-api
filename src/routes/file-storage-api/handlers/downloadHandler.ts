@@ -1,14 +1,14 @@
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
-import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from '../accessValidations';
+import { AuthenticatedRequest, hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from '../accessValidations';
 import { Client } from '@elastic/elasticsearch';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
 
 const downloadHandler =  ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Handler => async (
-  req: Request<{ fileObjectId: string }>,
+  req: AuthenticatedRequest<{ fileObjectId: string }>,
   res,
   next,
 ) => {
@@ -18,11 +18,11 @@ const downloadHandler =  ({ rootPath, esClient }: { rootPath: string; esClient: 
   const egoJwtOrApiKey = (authorization || '')?.split('Bearer ').join('');
   const accessValidationResults = await Promise.all([
     hasSufficientProgramMembershipAccess({
-      egoJwtOrApiKey,
+      scopes: req.userScopes,
       file: undefined,
     }),
     hasSufficientDacoAccess({
-      egoJwtOrApiKey,
+      scopes: req.userScopes,
       file: undefined,
     }),
   ]);

@@ -2,7 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
-import { hasSufficientProgramMembershipAccess } from '../accessValidations';
+import { AuthenticatedRequest, hasSufficientProgramMembershipAccess } from '../accessValidations';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
@@ -14,14 +14,12 @@ const createEntitiesIdHandler = ({
   esClient: Client;
   rootPath: string;
 }): Handler => {
-  return async (req: Request<{ fileObjectId: string }>, res, next) => {
+  return async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {
     /**
      * @todo: actually implement the API at https://song.rdpc-dev.cancercollaboratory.org/swagger-ui.html#/
      */
-    const { authorization } = req.headers;
-    const egoJwtOrApiKey = (authorization || '')?.split('Bearer ').join('');
     const isAuthorized = hasSufficientProgramMembershipAccess({
-      egoJwtOrApiKey,
+      scopes: req.userScopes,
       file: undefined,
     });
     if (isAuthorized) {
@@ -37,7 +35,7 @@ const createEntitiesIdHandler = ({
       });
       handleRequest(req, res, next);
     } else {
-      res.status(403)
+      res.status(403);
     }
   };
 };

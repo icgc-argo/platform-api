@@ -24,8 +24,18 @@ import { ADVERTISED_HOST } from 'config';
 import downloadProxy from './handlers/downloadHandler';
 import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
+import { storageApiAuthenticationMiddleware } from './accessValidations';
+import { EgoClient } from 'services/ego';
 
-export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }): Router => {
+export default ({
+  rootPath,
+  esClient,
+  egoClient,
+}: {
+  rootPath: string;
+  esClient: Client;
+  egoClient: EgoClient;
+}): Router => {
   const router = express.Router();
 
   /****************************************************************
@@ -42,6 +52,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
 
   router.get(
     '/entities',
+    storageApiAuthenticationMiddleware(egoClient),
     createEntitiesHandler({
       rootPath,
       esClient,
@@ -49,6 +60,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   );
   router.get(
     '/entities/:fileObjectId',
+    storageApiAuthenticationMiddleware(egoClient),
     createEntitiesIdHandler({
       rootPath,
       esClient,
@@ -56,6 +68,7 @@ export default ({ rootPath, esClient }: { rootPath: string; esClient: Client }):
   );
   router.get(
     '/download/:fileObjectId',
+    storageApiAuthenticationMiddleware(egoClient),
     downloadProxy({
       rootPath,
       esClient,
