@@ -60,7 +60,7 @@ const gender = ['Male', 'Female'];
     },
   }));
 
-  fs.writeFile('./compose/sample-data.json', JSON.stringify(data), null, err => {
+  fs.writeFile('./compose/sample_data.json', JSON.stringify(data), null, err => {
     if (err) {
       console.log('error writing file: ', err);
     } else {
