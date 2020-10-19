@@ -18,6 +18,8 @@
  */
 
 import { Client } from '@elastic/elasticsearch';
+import indexData from './file_centric/sample_file_centric.json';
+import indexSettings from './file_centric/file_mapping.json';
 
 export const createClient = async (host: string): Promise<Client> => {
   const esClient = new Client({
@@ -49,7 +51,11 @@ export const deleteIndex = async (client: Client, index: string) => {
   }
 };
 
-export const createIndex = async (client: Client, index: string, settings) => {
+export const createIndex = async (
+  client: Client,
+  index: string,
+  settings: typeof indexSettings,
+) => {
   console.log(`creating index ${index}`);
 
   await client.indices.create({
@@ -60,7 +66,7 @@ export const createIndex = async (client: Client, index: string, settings) => {
   console.log('index created');
 };
 
-export const index = async (client: Client, index: string, data) => {
+export const index = async (client: Client, index: string, data: typeof indexData) => {
   await Promise.all(
     data.map((doc, idx) => {
       console.log(`doc_${idx}`);
