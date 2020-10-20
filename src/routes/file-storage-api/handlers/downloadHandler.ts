@@ -14,19 +14,17 @@ import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
 
-const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: string) =>
-  esClient
+const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: string) => {
+  const objectIdField: keyof EsFileCentricDocument = 'object_id';
+  return esClient
     .search({
       index: ARRANGER_FILE_CENTRIC_INDEX,
       body: esb
         .requestBodySearch()
-        .query(
-          esb
-            .boolQuery()
-            .must(esb.matchQuery('object_id' as keyof EsFileCentricDocument, objectId)),
-        ),
+        .query(esb.boolQuery().must(esb.termQuery(objectIdField, objectId))),
     })
     .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
+};
 
 const downloadHandler = ({
   rootPath,
