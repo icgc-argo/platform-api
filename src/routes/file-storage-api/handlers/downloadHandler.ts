@@ -38,11 +38,11 @@ const downloadHandler = ({
   const { fileObjectId } = req.params;
   const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
 
-  if(!esFileObject) {
-    return res.status(404).end()
+  if (!esFileObject) {
+    return res.status(404).end();
   }
 
-  const accessValidationResults = await Promise.all([
+  const isAuthorized = (await Promise.all([
     hasSufficientProgramMembershipAccess({
       scopes: req.userScopes,
       file: esFileObject,
@@ -51,8 +51,7 @@ const downloadHandler = ({
       scopes: req.userScopes,
       file: esFileObject,
     }),
-  ]);
-  const isAuthorized = accessValidationResults.every(conditionMet => conditionMet);
+  ])).every(conditionMet => conditionMet);
 
   if (isAuthorized) {
     const repositoryUrl = esFileObject.repositories[0].url;
