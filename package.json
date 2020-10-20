@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "3.8.0",
+  "version": "3.9.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,13 +9,15 @@
     "build": "rm -rf dist && tsc -p ./tsconfig.build.json && cp -r ./src/resources ./dist",
     "start::prod": "NODE_PATH=./dist node dist/index.js",
     "programDashboardEsInit": "ts-node --project tsconfig.script.json ./compose/programDashboardEsInit.ts",
-    "fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts"
+    "fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts",
+    "releaseStageEsInit": "ts-node --project tsconfig.script.json ./compose/releaseStageEsInit.ts",
+    "generate-fake-data": "ts-node --project tsconfig.script.json ./compose/generateFake.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@arranger/server": "^2.4.0",
+    "@arranger/server": "^2.6.0",
     "@babel/core": "^7.4.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
