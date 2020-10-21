@@ -26,6 +26,8 @@ export const ADVERTISED_HOST = process.env.ADVERTISED_HOST || 'http://localhost:
 export const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'http://localhost:9200';
 export const ELASTICSEARCH_VAULT_SECRET_PATH = process.env
   .ELASTICSEARCH_VAULT_SECRET_PATH as string;
+export const ELASTICSEARCH_USERNAME = process.env.ELASTICSEARCH_USERNAME;
+export const ELASTICSEARCH_PASSWORD = process.env.ELASTICSEARCH_PASSWORD;
 export const ELASTICSEARCH_CLIENT_TRUST_SSL_CERT =
   process.env.ELASTICSEARCH_CLIENT_TRUST_SSL_CERT === 'true';
 

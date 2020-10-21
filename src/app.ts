@@ -39,6 +39,8 @@ import {
   EGO_CLIENT_SECRET,
   EGO_CLIENT_ID,
   ELASTICSEARCH_VAULT_SECRET_PATH,
+  ELASTICSEARCH_USERNAME,
+  ELASTICSEARCH_PASSWORD,
 } from './config';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
@@ -67,7 +69,7 @@ const init = async () => {
   const vaultSecretLoader = await loadVaultSecret();
 
   const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
-    ? await Promise.all([
+    ? ((await Promise.all([
         vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
           logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
           throw err; //fail fast
@@ -76,16 +78,24 @@ const init = async () => {
           logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
           throw err; //fail fast
         }),
-      ]) as [EgoApplicationCredential, EsSecret]
-    : [
+      ])) as [EgoApplicationCredential, EsSecret])
+    : ([
         {
           clientId: EGO_CLIENT_ID,
           clientSecret: EGO_CLIENT_SECRET,
         },
-        {},
-      ] as [EgoApplicationCredential, EsSecret];
+        {
+          user: ELASTICSEARCH_USERNAME,
+          pass: ELASTICSEARCH_PASSWORD,
+        },
+      ] as [EgoApplicationCredential, EsSecret]);
 
-  const esClient = await createEsClient({ auth: elasticsearchCredentials });
+  const esClient = await createEsClient({
+    auth:
+      elasticsearchCredentials.user && elasticsearchCredentials.pass
+        ? elasticsearchCredentials
+        : undefined,
+  });
   const egoClient = createEgoClient(egoAppCredentials);
 
   const schemas = await Promise.all([
@@ -134,7 +144,7 @@ const init = async () => {
       createFileStorageApi({
         rootPath: rdpcRepoProxyPath,
         esClient,
-        egoClient
+        egoClient,
       }),
     );
   }
