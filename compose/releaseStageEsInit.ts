@@ -22,6 +22,7 @@ import indexSettings from './file_centric/file_mapping.json';
 import indexData from './file_centric/sample_file_centric.json';
 
 const TEST_INDEX = 'release-stage';
+const targetAlias = 'file_centric';
 const ELASTICSEARCH_HOST = 'http://localhost:9200';
 
 (async () => {
@@ -29,4 +30,8 @@ const ELASTICSEARCH_HOST = 'http://localhost:9200';
   await deleteIndex(esClient, TEST_INDEX);
   await createIndex(esClient, TEST_INDEX, indexSettings);
   await index(esClient, TEST_INDEX, indexData);
+  await esClient.indices.putAlias({
+    index: TEST_INDEX,
+    name: targetAlias,
+  });
 })();

@@ -11,7 +11,7 @@
     "programDashboardEsInit": "ts-node --project tsconfig.script.json ./compose/programDashboardEsInit.ts",
     "fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts",
     "releaseStageEsInit": "ts-node --project tsconfig.script.json ./compose/releaseStageEsInit.ts",
-    "generate-fake-data": "ts-node --project tsconfig.script.json ./compose/generateFake.ts"
+    "generateFakeEsFiles": "ts-node --project tsconfig.script.json ./compose/generateFake.ts"
   },
   "keywords": [],
   "author": "",

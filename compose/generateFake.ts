@@ -10,11 +10,13 @@ const releaseStages = [
   'PUBLIC',
 ];
 const gender = ['Male', 'Female'];
+const donorIds = range(0, 100).map(num => `fake_donor_${num}`);
+const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
 
 (() => {
   const args = process.argv.slice(2);
 
-  const data = range(parseInt(args[0]) || 20).map(i => ({
+  const data = range(parseInt(args[0]) || 10001).map(i => ({
     object_id: `fake_file_${i}`,
     study_id: sample(studyIds),
     file_access: 'controlled',
@@ -34,8 +36,8 @@ const gender = ['Male', 'Female'];
       name: `fake_file_${i}.gz`,
     },
     donors: {
-      donor_id: `fake_donor_${i}`,
-      submitter_donor_id: `fake_submitter_donor_${i}`,
+      donor_id: sample(donorIds),
+      submitter_donor_id: sample(submitterDonorIds),
       gender: sample(gender),
       specimens: {
         specimen_id: `fake_specimen_${i}`,
@@ -60,11 +62,16 @@ const gender = ['Male', 'Female'];
     },
   }));
 
-  fs.writeFile('./compose/sample_data.json', JSON.stringify(data), null, err => {
-    if (err) {
-      console.log('error writing file: ', err);
-    } else {
-      console.log('file written successfully');
-    }
-  });
+  fs.writeFile(
+    './compose/file_centric/sample_file_centric.json',
+    JSON.stringify(data, null, 2),
+    null,
+    err => {
+      if (err) {
+        console.log('error writing file: ', err);
+      } else {
+        console.log('file written successfully');
+      }
+    },
+  );
 })();
