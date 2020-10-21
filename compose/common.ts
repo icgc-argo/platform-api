@@ -31,7 +31,7 @@ export const createClient = async (host: string): Promise<Client> => {
   };
   const esClient = new Client({
     node: host,
-    auth: auth.password && auth.password && auth,
+    auth: auth.username && auth.password && auth,
     ssl: {
       rejectUnauthorized: false,
     },
