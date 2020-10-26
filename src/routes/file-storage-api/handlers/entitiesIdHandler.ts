@@ -1,11 +1,30 @@
 import { Client } from '@elastic/elasticsearch';
+import { fil } from 'date-fns/locale';
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import logger from 'utils/logger';
 import { AuthenticatedRequest, hasSufficientProgramMembershipAccess } from '../accessValidations';
+import { getEsFileDocumentByObjectId } from '../utils';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
+
+const toSongEntity = (
+  file: EsFileCentricDocument,
+): {
+  id: string;
+  gnosId: string;
+  fileName: string;
+  projectCode: string;
+  access: 'controlled' | 'public';
+} => ({
+  access: file.file_access,
+  fileName: file.file.name,
+  id: file.object_id,
+  gnosId: file.analysis.analysis_id,
+  projectCode: file.program_id,
+});
 
 const createEntitiesIdHandler = ({
   esClient,
@@ -15,25 +34,13 @@ const createEntitiesIdHandler = ({
   rootPath: string;
 }): Handler => {
   return async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {
-    /**
-     * @todo: actually implement the API at https://song.rdpc-dev.cancercollaboratory.org/swagger-ui.html#/
-     */
+    const file = await getEsFileDocumentByObjectId(esClient)(req.params.fileObjectId);
     const isAuthorized = hasSufficientProgramMembershipAccess({
       scopes: req.userScopes,
-      file: undefined,
+      file,
     });
     if (isAuthorized) {
-      // this is just a placeholder logic for demo
-      const handleRequest = createProxyMiddleware({
-        target: 'https://song.rdpc-dev.cancercollaboratory.org',
-        pathRewrite: normalizePath(rootPath),
-        onError: (err: Error, req: Request, res: Response) => {
-          logger.error('Song Router Error - ' + err);
-          return res.status(500).send('Internal Server Error');
-        },
-        changeOrigin: true,
-      });
-      handleRequest(req, res, next);
+      res.send(toSongEntity(file as EsFileCentricDocument)).status(200);
     } else {
       res.status(403);
     }

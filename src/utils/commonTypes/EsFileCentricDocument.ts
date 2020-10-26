@@ -4,7 +4,7 @@ export type EsFileCentricDocument = {
   object_id: string;
   file_type: string;
   data_type: string;
-  file_access: string;
+  file_access: 'public' | 'controlled';
   analysis: {
     analysis_id: string;
     analysis_type: string;
