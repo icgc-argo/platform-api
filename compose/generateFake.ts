@@ -58,7 +58,7 @@ const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
       name: 'Canadian RDPC',
       organization: 'Ontario Institute for Cancer Research',
       country: 'Canada',
-      url: 'https://song.rdpc-dev.cancercollaboratory.org',
+      url: 'https://score.rdpc-dev.cancercollaboratory.org',
     },
   }));
 
