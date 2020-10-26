@@ -54,7 +54,6 @@ export default ({
     '/entities',
     storageApiAuthenticationMiddleware(egoClient),
     createEntitiesHandler({
-      rootPath,
       esClient,
     }),
   );
