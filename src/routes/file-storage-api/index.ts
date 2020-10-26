@@ -62,7 +62,6 @@ export default ({
     '/entities/:fileObjectId',
     storageApiAuthenticationMiddleware(egoClient),
     createEntitiesIdHandler({
-      rootPath,
       esClient,
     }),
   );
