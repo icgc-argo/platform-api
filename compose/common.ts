@@ -22,16 +22,19 @@ import indexData from './file_centric/sample_file_centric.json';
 import indexSettings from './file_centric/file_mapping.json';
 import _ from 'lodash';
 
-export const createClient = async (host: string): Promise<Client> => {
-  const esUsernameEnv = 'ES_USERNAME';
-  const esPasswordEnv = 'ES_PASSWORD';
+const esUsernameEnv = 'ES_USERNAME';
+const esPasswordEnv = 'ES_PASSWORD';
+const esHostEnv = 'ES_HOST';
+
+export const createClient = async (): Promise<Client> => {
   const auth = {
     username: process.env[esUsernameEnv] as string,
     password: process.env[esPasswordEnv] as string,
   };
+  const host = process.env[esHostEnv] || 'http://localhost:9200';
   const esClient = new Client({
     node: host,
-    auth: auth.username && auth.password && auth,
+    auth: (auth.username && auth.password && auth) || undefined,
     ssl: {
       rejectUnauthorized: false,
     },
@@ -41,6 +44,7 @@ export const createClient = async (host: string): Promise<Client> => {
     return esClient;
   } catch (err) {
     console.log(`failing to ping elasticsearch at ${host}: `, err);
+    console.log(`A custom elasticsearch host can also be provided with the ${esHostEnv} env`);
     console.log(
       `!!!!!!! If your elasticsearch is password protected, provide the credential through ${esUsernameEnv} and ${esPasswordEnv} env var !!!!!!!`,
     );
