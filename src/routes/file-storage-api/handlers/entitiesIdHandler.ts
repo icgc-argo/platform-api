@@ -2,23 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import { Request, Handler } from 'express';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import { AuthenticatedRequest, hasSufficientProgramMembershipAccess } from '../accessValidations';
-import { getEsFileDocumentByObjectId } from '../utils';
-
-const toSongEntity = (
-  file: EsFileCentricDocument,
-): {
-  id: string;
-  gnosId: string;
-  fileName: string;
-  projectCode: string;
-  access: 'controlled' | 'public';
-} => ({
-  access: file.file_access,
-  fileName: file.file.name,
-  id: file.object_id,
-  gnosId: file.analysis.analysis_id,
-  projectCode: file.program_id,
-});
+import { getEsFileDocumentByObjectId, toSongEntity } from '../utils';
 
 const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {

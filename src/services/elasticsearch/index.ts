@@ -107,3 +107,24 @@ export const createEsClient = async ({
   logger.info(`successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`);
   return esClient;
 };
+
+export type EsHits<T = {}> = {
+  took: number;
+  timed_out: boolean;
+  _shards: {
+    total: number;
+    successful: number;
+    skipped: number;
+    failed: number;
+  };
+  hits: {
+    total: {
+      value: number;
+      relation: 'eq' | 'gte';
+    };
+    max_score: number;
+    hits: T[];
+  };
+};
+
+export type EsSearchResult<T> = EsHits<T>;

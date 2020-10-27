@@ -14,3 +14,21 @@ export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: stri
     })
     .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
 };
+
+export type SongEntity = {
+  id: string;
+  gnosId: string;
+  fileName: string;
+  projectCode: string;
+  access: 'controlled' | 'public';
+}
+
+export const toSongEntity = (
+  file: EsFileCentricDocument,
+):SongEntity  => ({
+  access: file.file_access,
+  fileName: file.file.name,
+  id: file.object_id,
+  gnosId: file.analysis.analysis_id,
+  projectCode: file.program_id,
+});

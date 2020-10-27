@@ -155,6 +155,10 @@ const init = async () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+    if(process.env.NODE_ENV !== 'production') {
+      console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+    }
   });
 };
 

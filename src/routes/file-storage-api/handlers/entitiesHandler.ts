@@ -1,17 +1,182 @@
 import { Client } from '@elastic/elasticsearch';
 import { Request, Response, Handler } from 'express';
 import { AuthenticatedRequest } from '../accessValidations';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import _ from 'lodash';
+import { ARRANGER_FILE_CENTRIC_INDEX, EGO_DACO_POLICY_NAME } from 'config';
+import esb from 'elastic-builder';
+import { SongEntity, toSongEntity } from '../utils';
+import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
+import { EsHits } from 'services/elasticsearch';
 
-const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
-  pathName.replace(rootPath, '').replace('//', '/');
+type ResponseBody = {
+  content: Array<Partial<SongEntity>>;
+  pageable: {
+    offset: number;
+    sort: {
+      sorted: boolean;
+      unsorted: boolean;
+      empty: boolean;
+    };
+    pageSize: number;
+    pageNumber: number;
+    paged: boolean;
+    unpaged: boolean;
+  };
+  totalPages: number;
+  last: boolean;
+  totalElements: number;
+  first: boolean;
+  sort: {
+    sorted: boolean;
+    unsorted: boolean;
+    empty: boolean;
+  };
+  numberOfElements: number;
+  size: number;
+  number: number;
+  empty: boolean;
+};
+
+type RequestBodyQuery = {
+  access: string;
+  fields: string;
+  fileName: string;
+  analysisId: string;
+  id: string;
+  page: string;
+  projectCode: string;
+  size: string;
+};
+
+const emptyFilter = esb.boolQuery();
+
+const getAccessControlFilter = (
+  programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
+  isDacoApproved: boolean,
+): esb.Query => {
+  return ({
+    DCC_MEMBER: emptyFilter,
+    ASSOCIATE_PROGRAM_MEMBER: emptyFilter,
+    FULL_PROGRAM_MEMBER: emptyFilter,
+    PUBLIC_MEMBER: emptyFilter,
+  } as { [accessLevel in typeof programMembershipAccessLevel]: esb.BoolQuery })[
+    programMembershipAccessLevel
+  ];
+};
 
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (
-    req: AuthenticatedRequest<{}, any, any, { gnosId: string; size: string; page: string }>,
-    res,
+    req: AuthenticatedRequest<{}, any, any, RequestBodyQuery>,
+    res: Response<ResponseBody>,
     next,
   ) => {
     const userScopes = req.userScopes;
+    const isDacoApproved = userScopes.some(
+      s => s.policy === EGO_DACO_POLICY_NAME && s.permission !== 'DENY',
+    );
+    const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
+      permissions: userScopes.map(egoTokenUtils.serializeScope),
+    });
+
+    const parsedRequestQuery = {
+      page: Number(req.query.page || 0),
+      size: Number(req.query.size || 10),
+      access: req.query.access,
+      fields: req.query.fields
+        ? req.query.fields
+            .split(',')
+            .map(str => str.trim())
+            .filter(_.identity)
+        : [],
+      fileName: req.query.fileName || undefined,
+      id: req.query.id || undefined,
+      analysisId: req.query.analysisId || undefined,
+      projectCode: req.query.projectCode || undefined,
+    };
+
+    const accessControlFilter = getAccessControlFilter(
+      programMembershipAccessLevel,
+      isDacoApproved,
+    );
+
+    const query = esb
+      .requestBodySearch()
+      .from(parsedRequestQuery.page)
+      .size(parsedRequestQuery.size)
+      .query(
+        esb
+          .boolQuery()
+          .must([
+            parsedRequestQuery.id
+              ? esb.termsQuery('object_id', parsedRequestQuery.id)
+              : emptyFilter,
+            parsedRequestQuery.fileName
+              ? esb.termsQuery('file.name', parsedRequestQuery.fileName)
+              : emptyFilter,
+            parsedRequestQuery.access
+              ? esb.termsQuery('file_access', parsedRequestQuery.access)
+              : emptyFilter,
+            parsedRequestQuery.analysisId
+              ? esb.termsQuery('analysis.analysis_id', parsedRequestQuery.access)
+              : emptyFilter,
+            parsedRequestQuery.projectCode
+              ? esb.termsQuery('program_id', parsedRequestQuery.projectCode)
+              : emptyFilter,
+            accessControlFilter,
+          ]),
+      );
+
+    console.log('query: ', query.toJSON());
+
+    const esSearchResponse: { body: EsHits<EsFileCentricDocument> } = await esClient.search({
+      index: ARRANGER_FILE_CENTRIC_INDEX,
+      body: query,
+    });
+
+    const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
+      .map(({ _source }) => _source)
+      .map(toSongEntity)
+      .map(file =>
+        parsedRequestQuery.fields.length
+          ? (Object.fromEntries(
+              Object.entries(file).filter(([key]) => parsedRequestQuery.fields.includes(key)),
+            ) as Partial<SongEntity>)
+          : file,
+      );
+
+    const responseBody: ResponseBody = {
+      content: data,
+      pageable: {
+        offset: parsedRequestQuery.page,
+        pageNumber: parsedRequestQuery.page,
+        pageSize: data.length,
+        paged: true,
+        sort: {
+          sorted: false,
+          unsorted: true,
+          empty: true,
+        },
+        unpaged: false,
+      },
+      empty: !!data.length,
+      first: parsedRequestQuery.page === 0,
+      last: data.length < parsedRequestQuery.size,
+      size: data.length,
+      totalElements: esSearchResponse.body.hits.total.value,
+      numberOfElements: data.length,
+      sort: {
+        sorted: false,
+        unsorted: true,
+        empty: true,
+      },
+      number: data.length,
+      totalPages: esSearchResponse.body.hits.total.value / parsedRequestQuery.size,
+    };
+
+    console.log('responseBody: ', responseBody);
+
+    res.send(responseBody);
   };
 };
 

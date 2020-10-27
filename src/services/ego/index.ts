@@ -23,7 +23,7 @@
  */
 import grpc, { ChannelCredentials } from 'grpc';
 import * as loader from '@grpc/proto-loader';
-import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR } from '../../config';
+import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR, EGO_DACO_POLICY_NAME } from '../../config';
 import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import fetch from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
@@ -248,7 +248,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
               resultSet: { name: string; id: string }[];
             }>,
         )
-        .then(({ resultSet = [] }) => resultSet.filter(data => data.name === 'DACO'))
+        .then(({ resultSet = [] }) => resultSet.filter(data => data.name === EGO_DACO_POLICY_NAME))
         .then(group => {
           if (group.length === 0) {
             throw new Error('DACO group id not found');
