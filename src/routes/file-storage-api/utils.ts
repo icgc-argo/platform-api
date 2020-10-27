@@ -15,6 +15,14 @@ export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: stri
     .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
 };
 
+export const FILE_RELEASE_STAGE = {
+  OWN_PROGRAM: 'OWN_PROGRAM',
+  FULL_PROGRAMS: 'FULL_PROGRAMS',
+  ASSOCIATE_PROGRAMS: 'ASSOCIATE_PROGRAMS',
+  PUBLIC_QUEUE: 'PUBLIC_QUEUE',
+  PUBLIC: 'PUBLIC',
+};
+
 export type SongEntity = {
   id: string;
   gnosId: string;

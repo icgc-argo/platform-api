@@ -5,7 +5,7 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX, EGO_DACO_POLICY_NAME } from 'config';
 import esb from 'elastic-builder';
-import { SongEntity, toSongEntity } from '../utils';
+import { FILE_RELEASE_STAGE, SongEntity, toSongEntity } from '../utils';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
@@ -53,12 +53,38 @@ const emptyFilter = esb.boolQuery();
 
 const getAccessControlFilter = (
   programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
-  isDacoApproved: boolean,
+  userPrograms: string[],
 ): esb.Query => {
+  const ownProgramFilter = esb
+    .boolQuery()
+    .mustNot([
+      esb
+        .boolQuery()
+        .mustNot(esb.termsQuery('program_id' as keyof EsFileCentricDocument, userPrograms)),
+      esb.termsQuery(
+        'release_stage' as keyof EsFileCentricDocument,
+        FILE_RELEASE_STAGE.OWN_PROGRAM,
+      ),
+    ]);
   return ({
     DCC_MEMBER: emptyFilter,
-    ASSOCIATE_PROGRAM_MEMBER: emptyFilter,
-    FULL_PROGRAM_MEMBER: emptyFilter,
+    FULL_PROGRAM_MEMBER: ownProgramFilter,
+    ASSOCIATE_PROGRAM_MEMBER: esb
+      .boolQuery()
+      .must([
+        ownProgramFilter,
+        esb
+          .boolQuery()
+          .must([
+            esb
+              .boolQuery()
+              .mustNot([esb.termsQuery('program_id' as keyof EsFileCentricDocument, userPrograms)]),
+            esb.termQuery(
+              'release_stage' as keyof EsFileCentricDocument,
+              FILE_RELEASE_STAGE.FULL_PROGRAMS,
+            ),
+          ]),
+      ]),
     PUBLIC_MEMBER: emptyFilter,
   } as { [accessLevel in typeof programMembershipAccessLevel]: esb.BoolQuery })[
     programMembershipAccessLevel
@@ -97,7 +123,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const accessControlFilter = getAccessControlFilter(
       programMembershipAccessLevel,
-      isDacoApproved,
+      egoTokenUtils.getReadableProgramShortNames(req.userScopes),
     );
 
     const query = esb
