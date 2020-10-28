@@ -4,7 +4,7 @@ export type EsFileCentricDocument = {
   object_id: string;
   file_type: string;
   data_type: string;
-  release_stage: string;
+  release_stage: FILE_RELEASE_STAGE;
   file_access: 'public' | 'controlled';
   analysis: {
     analysis_id: string;
@@ -190,3 +190,11 @@ export const FILE_METADATA_FIELDS = {
   'repositories.country': 'repositories.country',
   'repositories.url': 'repositories.url',
 };
+
+export enum FILE_RELEASE_STAGE {
+  OWN_PROGRAM = 'OWN_PROGRAM',
+  FULL_PROGRAMS = 'FULL_PROGRAMS',
+  ASSOCIATE_PROGRAMS = 'ASSOCIATE_PROGRAMS',
+  PUBLIC_QUEUE = 'PUBLIC_QUEUE',
+  PUBLIC = 'PUBLIC',
+}

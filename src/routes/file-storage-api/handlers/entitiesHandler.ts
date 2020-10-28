@@ -5,10 +5,11 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX, EGO_DACO_POLICY_NAME } from 'config';
 import esb from 'elastic-builder';
-import { FILE_RELEASE_STAGE, SongEntity, toSongEntity } from '../utils';
+import { SongEntity, toSongEntity } from '../utils';
 import {
   EsFileCentricDocument,
   FILE_METADATA_FIELDS,
+  FILE_RELEASE_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
