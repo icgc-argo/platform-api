@@ -60,15 +60,18 @@ const extractUserScopes = async (config: {
   }
 };
 
-type AuthenticationMiddleware = (egoClient: EgoClient) => Handler;
-export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = egoClient => {
+type AuthenticationMiddleware = (config: { egoClient: EgoClient; required: boolean }) => Handler;
+export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = ({
+  egoClient,
+  required,
+}) => {
   return async (req: Request, res, next) => {
     const { authorization } = req.headers;
     const userScope = await extractUserScopes({
       egoClient,
       authHeader: authorization,
     });
-    if (userScope.errorCode) {
+    if (userScope.errorCode && required) {
       res.status(userScope.errorCode).end();
     } else {
       (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);

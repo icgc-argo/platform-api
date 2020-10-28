@@ -1,9 +1,9 @@
 import { Client } from '@elastic/elasticsearch';
-import { Request, Response, Handler } from 'express';
+import { Response, Handler } from 'express';
 import { AuthenticatedRequest } from '../accessValidations';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
-import { ARRANGER_FILE_CENTRIC_INDEX, EGO_DACO_POLICY_NAME } from 'config';
+import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import esb from 'elastic-builder';
 import { SongEntity, toSongEntity } from '../utils';
 import {
@@ -59,26 +59,27 @@ const getAccessControlFilter = (
   programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
   userPrograms: string[],
 ): esb.Query => {
-  const ownProgramFilter = esb
-    .boolQuery()
-    .mustNot([
-      esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)),
-      esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
-    ]);
+  const all = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().must(conditions);
+  const not = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().mustNot(conditions);
+
+  const isFromOtherPrograms = not([esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
+  const isUnReleasedFromOtherPrograms = all([
+    isFromOtherPrograms,
+    esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
+  ]);
+
   return ({
     DCC_MEMBER: emptyFilter,
-    FULL_PROGRAM_MEMBER: ownProgramFilter,
-    ASSOCIATE_PROGRAM_MEMBER: esb
-      .boolQuery()
-      .must([
-        ownProgramFilter,
-        esb
-          .boolQuery()
-          .must([
-            esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)),
-            esb.termQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.FULL_PROGRAMS),
-          ]),
+    FULL_PROGRAM_MEMBER: not([isUnReleasedFromOtherPrograms]),
+    ASSOCIATE_PROGRAM_MEMBER: all([
+      not([isUnReleasedFromOtherPrograms]),
+      not([
+        all([
+          isFromOtherPrograms,
+          esb.termQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.FULL_PROGRAMS),
+        ]),
       ]),
+    ]),
     PUBLIC_MEMBER: esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.PUBLIC),
   } as { [accessLevel in typeof programMembershipAccessLevel]: esb.Query })[
     programMembershipAccessLevel
@@ -89,12 +90,8 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (
     req: AuthenticatedRequest<{}, any, any, RequestBodyQuery>,
     res: Response<ResponseBody>,
-    next,
   ) => {
     const userScopes = req.userScopes;
-    const isDacoApproved = userScopes.some(
-      s => s.policy === EGO_DACO_POLICY_NAME && s.permission !== 'DENY',
-    );
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
       permissions: userScopes.map(egoTokenUtils.serializeScope),
     });
@@ -150,8 +147,6 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           ]),
       );
 
-    console.log('query: ', query.toJSON());
-
     const esSearchResponse: { body: EsHits<EsFileCentricDocument> } = await esClient.search({
       index: ARRANGER_FILE_CENTRIC_INDEX,
       body: query,
@@ -168,6 +163,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           : file,
       );
 
+    /**@todo: get Rob to take a look through this */
     const responseBody: ResponseBody = {
       content: data,
       pageable: {
@@ -196,8 +192,6 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       number: data.length,
       totalPages: esSearchResponse.body.hits.total.value / parsedRequestQuery.size,
     };
-
-    console.log('responseBody: ', responseBody);
 
     res.send(responseBody);
   };
