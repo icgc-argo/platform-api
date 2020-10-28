@@ -32,6 +32,7 @@ import {
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
+import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
 
 const createDownloadHandler = ({
   defaultFileName,
@@ -58,7 +59,7 @@ const createDownloadHandler = ({
       esClient,
       shouldContinue: () => !req.aborted,
       esQuery,
-      sortField: 'object_id',
+      sortField: FILE_METADATA_FIELDS['object_id'],
     });
     res.setHeader(
       'Content-disposition',

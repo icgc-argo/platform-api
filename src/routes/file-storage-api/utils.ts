@@ -29,5 +29,5 @@ export const toSongEntity = (file: EsFileCentricDocument): SongEntity => ({
   fileName: file.file.name,
   id: file.object_id,
   gnosId: file.analysis.analysis_id,
-  projectCode: file.program_id,
+  projectCode: file.study_id,
 });

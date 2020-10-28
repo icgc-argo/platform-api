@@ -62,7 +62,7 @@ const getAccessControlFilter = (
   const ownProgramFilter = esb
     .boolQuery()
     .mustNot([
-      esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['program_id'], userPrograms)),
+      esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)),
       esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
     ]);
   return ({
@@ -75,9 +75,7 @@ const getAccessControlFilter = (
         esb
           .boolQuery()
           .must([
-            esb
-              .boolQuery()
-              .mustNot(esb.termsQuery(FILE_METADATA_FIELDS['program_id'], userPrograms)),
+            esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)),
             esb.termQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.FULL_PROGRAMS),
           ]),
       ]),
@@ -146,7 +144,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
                 )
               : emptyFilter,
             parsedRequestQuery.projectCode
-              ? esb.termsQuery(FILE_METADATA_FIELDS['program_id'], parsedRequestQuery.projectCode)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['study_id'], parsedRequestQuery.projectCode)
               : emptyFilter,
             accessControlFilter,
           ]),
