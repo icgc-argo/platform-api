@@ -1,19 +1,20 @@
-import { Client } from "@elastic/elasticsearch";
-import { ARRANGER_FILE_CENTRIC_INDEX } from "config";
-import esb from "elastic-builder";
-import { EsFileCentricDocument } from "utils/commonTypes/EsFileCentricDocument";
+import { Client } from '@elastic/elasticsearch';
+import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import esb from 'elastic-builder';
+import {
+  EsFileCentricDocument,
+  FILE_METADATA_FIELDS,
+} from 'utils/commonTypes/EsFileCentricDocument';
 
-export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: string) => {
-  const objectIdField: keyof EsFileCentricDocument = 'object_id';
-  return esClient
+export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: string) =>
+  esClient
     .search({
       index: ARRANGER_FILE_CENTRIC_INDEX,
       body: esb
         .requestBodySearch()
-        .query(esb.boolQuery().must(esb.termQuery(objectIdField, objectId))),
+        .query(esb.boolQuery().must(esb.termQuery(FILE_METADATA_FIELDS['object_id'], objectId))),
     })
     .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
-};
 
 export const FILE_RELEASE_STAGE = {
   OWN_PROGRAM: 'OWN_PROGRAM',
@@ -29,11 +30,9 @@ export type SongEntity = {
   fileName: string;
   projectCode: string;
   access: 'controlled' | 'public';
-}
+};
 
-export const toSongEntity = (
-  file: EsFileCentricDocument,
-):SongEntity  => ({
+export const toSongEntity = (file: EsFileCentricDocument): SongEntity => ({
   access: file.file_access,
   fileName: file.file.name,
   id: file.object_id,
