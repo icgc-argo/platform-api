@@ -59,16 +59,22 @@ const getAccessControlFilter = (
   programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
   userPrograms: string[],
 ): esb.Query => {
+  /* Logical operator shorthands */
   const all = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().must(conditions);
   const not = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().mustNot(conditions);
+  /*******************************/
 
+  /* common filters */
   const isFromOtherPrograms = not([esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
   const isUnReleasedFromOtherPrograms = all([
     isFromOtherPrograms,
     esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
   ]);
+  /******************/
 
-  return ({
+  const userPermissionToQueryMap: {
+    [accessLevel in typeof programMembershipAccessLevel]: esb.Query;
+  } = {
     DCC_MEMBER: emptyFilter,
     FULL_PROGRAM_MEMBER: not([isUnReleasedFromOtherPrograms]),
     ASSOCIATE_PROGRAM_MEMBER: all([
@@ -81,9 +87,8 @@ const getAccessControlFilter = (
       ]),
     ]),
     PUBLIC_MEMBER: esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.PUBLIC),
-  } as { [accessLevel in typeof programMembershipAccessLevel]: esb.Query })[
-    programMembershipAccessLevel
-  ];
+  };
+  return userPermissionToQueryMap[programMembershipAccessLevel];
 };
 
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
