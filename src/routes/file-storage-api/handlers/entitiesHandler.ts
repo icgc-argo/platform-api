@@ -141,7 +141,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
             parsedRequestQuery.analysisId
               ? esb.termsQuery(
                   FILE_METADATA_FIELDS['analysis.analysis_id'],
-                  parsedRequestQuery.access,
+                  parsedRequestQuery.analysisId,
                 )
               : emptyFilter,
             parsedRequestQuery.projectCode
