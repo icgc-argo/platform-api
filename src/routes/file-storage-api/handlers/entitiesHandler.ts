@@ -53,7 +53,7 @@ type RequestBodyQuery = {
   size: string;
 };
 
-const emptyFilter = esb.boolQuery();
+const emptyFilter = () => esb.boolQuery();
 
 const getAccessControlFilter = (
   programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
@@ -75,7 +75,7 @@ const getAccessControlFilter = (
   const userPermissionToQueryMap: {
     [accessLevel in typeof programMembershipAccessLevel]: esb.Query;
   } = {
-    DCC_MEMBER: emptyFilter,
+    DCC_MEMBER: emptyFilter(),
     FULL_PROGRAM_MEMBER: not([isUnReleasedFromOtherPrograms]),
     ASSOCIATE_PROGRAM_MEMBER: all([
       not([isUnReleasedFromOtherPrograms]),
@@ -132,22 +132,22 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           .must([
             parsedRequestQuery.id
               ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id)
-              : emptyFilter,
+              : emptyFilter(),
             parsedRequestQuery.fileName
               ? esb.termsQuery(FILE_METADATA_FIELDS['file.name'], parsedRequestQuery.fileName)
-              : emptyFilter,
+              : emptyFilter(),
             parsedRequestQuery.access
               ? esb.termsQuery(FILE_METADATA_FIELDS['file_access'], parsedRequestQuery.access)
-              : emptyFilter,
+              : emptyFilter(),
             parsedRequestQuery.analysisId
               ? esb.termsQuery(
                   FILE_METADATA_FIELDS['analysis.analysis_id'],
                   parsedRequestQuery.analysisId,
                 )
-              : emptyFilter,
+              : emptyFilter(),
             parsedRequestQuery.projectCode
               ? esb.termsQuery(FILE_METADATA_FIELDS['study_id'], parsedRequestQuery.projectCode)
-              : emptyFilter,
+              : emptyFilter(),
             accessControlFilter,
           ]),
       );
