@@ -89,3 +89,104 @@ export type EsFileCentricDocument = {
     url: string;
   }>;
 };
+
+export const FILE_METADATA_FIELDS = {
+  program_id: 'program_id',
+  primary_site: 'primary_site',
+  object_id: 'object_id',
+  file_type: 'file_type',
+  data_type: 'data_type',
+  release_stage: 'release_stage',
+  file_access: 'file_access',
+
+  /** @analysis */
+  analysis: 'analysis',
+  'analysis.analysis_id': 'analysis.analysis_id',
+  'analysis.analysis_type': 'analysis.analysis_type',
+  'analysis.analysis_version': 'analysis.analysis_version',
+  'analysis.workflow': 'analysis.workflow',
+  'analysis.workflow.workflow_name': 'analysis.workflow.workflow_name',
+  'analysis.workflow.workflow_version': 'analysis.workflow.workflow_version',
+  'analysis.experiment': 'analysis.experiment',
+  'analysis.experiment.platform': 'analysis.experiment.platform',
+  'analysis.experiment.library_strategy': 'analysis.experiment.library_strategy',
+
+  /** @file */
+  file: 'file',
+  'file.size': 'file.size',
+  'file.md5sum': 'file.md5sum',
+  'file.name': 'file.name',
+  'file.index_file': 'file.index_file',
+  'file.index_file.object_id': 'file.index_file.object_id',
+  'file.index_file.file_type': 'file.index_file.file_type',
+  'file.index_file.md5sum': 'file.index_file.md5sum',
+  'file.index_file.name': 'file.index_file.name',
+  'file.index_file.size': 'file.index_file.size',
+
+  /** @donors */
+  donors: 'donors',
+  'donors.donor_id': 'donors.donor_id',
+  'donors.submitter_donor_id': 'donors.submitter_donor_id',
+  'donors.gender': 'donors.gender',
+  'donors.vital_status': 'donors.vital_status',
+  'donors.survival_time': 'donors.survival_time',
+  'donors.prior_malignancy': 'donors.prior_malignancy',
+
+  /** @primary_diagnosis */
+  'donors.primary_diagnosis': 'donors.primary_diagnosis',
+  'donors.primary_diagnosis.age_at_diagnosis': 'donors.primary_diagnosis.age_at_diagnosis',
+  'donors.primary_diagnosis.cancer_type_code': 'donors.primary_diagnosis.cancer_type_code',
+  'donors.primary_diagnosis.clinical_tumour_staging_system':
+    'donors.primary_diagnosis.clinical_tumour_staging_system',
+  'donors.primary_diagnosis.clinical_t_category': 'donors.primary_diagnosis.clinical_t_category',
+  'donors.primary_diagnosis.clinical_n_category': 'donors.primary_diagnosis.clinical_n_category',
+  'donors.primary_diagnosis.clinical_m_category': 'donors.primary_diagnosis.clinical_m_category',
+
+  /** @follow_ups */
+  'donors.follow_ups': 'donors.follow_ups.follow_ups',
+  'donors.follow_ups.follow_up_id': 'donors.follow_ups.follow_up_id',
+  'donors.follow_ups.submitter_follow_up_id': 'donors.follow_ups.submitter_follow_up_id',
+  'donors.follow_ups.disease_status_at_followup': 'donors.follow_ups.disease_status_at_followup',
+  'donors.follow_ups.relapse_type': 'donors.follow_ups.relapse_type',
+
+  /** @treatments */
+  'donors.treatments': 'donors.treatments',
+  'donors.treatments.treatment_id': 'donors.treatments.treatment_id',
+  'donors.treatments.submitter_treatment_id': 'donors.treatments.submitter_treatment_id',
+  'donors.treatments.treatment_type': 'donors.treatments.treatment_type',
+  'donors.treatments.response_to_therapy': 'donors.treatments.response_to_therapy',
+
+  /** @specimens */
+  'donors.specimens': 'donors.specimens',
+  'donors.specimens.specimen_id': 'donors.specimens.specimen_id',
+  'donors.specimens.submitter_specimen_id': 'donors.specimens.submitter_specimen_id',
+  'donors.specimens.tumour_normal_designation': 'donors.specimens.tumour_normal_designation',
+  'donors.specimens.specimen_tissue_source': 'donors.specimens.specimen_tissue_source',
+  'donors.specimens.specimen_type': 'donors.specimens.specimen_type',
+  'donors.specimens.pathological_tumour_staging_system':
+    'donors.specimens.pathological_tumour_staging_system',
+  'donors.specimens.pathological_t_category': 'donors.specimens.pathological_t_category',
+  'donors.specimens.pathological_n_category': 'donors.specimens.pathological_n_category',
+  'donors.specimens.pathological_m_category': 'donors.specimens.pathological_m_category',
+  'donors.specimens.pathological_stage_group': 'donors.specimens.pathological_stage_group',
+  'donors.specimens.specimen_anatomic_location': 'donors.specimens.specimen_anatomic_location',
+  'donors.specimens.tumour_histological_type': 'donors.specimens.tumour_histological_type',
+  'donors.specimens.tumour_grading_system': 'donors.specimens.tumour_grading_system',
+  'donors.specimens.tumour_grade': 'donors.specimens.tumour_grade',
+
+  /** @samples */
+  'donors.specimens.samples': 'donors.specimens.samples',
+  'donors.specimens.samples.sample_id': 'donors.specimens.samples.sample_id',
+  'donors.specimens.samples.submitter_sample_id': 'donors.specimens.samples.submitter_sample_id',
+  'donors.specimens.samples.sample_type': 'donors.specimens.samples.sample_type',
+  'donors.specimens.samples.matched_normal_submitter_sample_id':
+    'donors.specimens.samples.matched_normal_submitter_sample_id',
+
+  /** @repositories */
+  repositories: 'repositories',
+  'repositories.code': 'repositories.code',
+  'repositories.name': 'repositories.name',
+  'repositories.organization': 'repositories.organization',
+  'repositories.country': 'repositories.country',
+  'repositories.url': 'repositories.url',
+};

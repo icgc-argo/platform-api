@@ -6,7 +6,10 @@ import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX, EGO_DACO_POLICY_NAME } from 'config';
 import esb from 'elastic-builder';
 import { FILE_RELEASE_STAGE, SongEntity, toSongEntity } from '../utils';
-import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
+import {
+  EsFileCentricDocument,
+  FILE_METADATA_FIELDS,
+} from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
 type ResponseBody = {
@@ -58,13 +61,8 @@ const getAccessControlFilter = (
   const ownProgramFilter = esb
     .boolQuery()
     .mustNot([
-      esb
-        .boolQuery()
-        .mustNot(esb.termsQuery('program_id' as keyof EsFileCentricDocument, userPrograms)),
-      esb.termsQuery(
-        'release_stage' as keyof EsFileCentricDocument,
-        FILE_RELEASE_STAGE.OWN_PROGRAM,
-      ),
+      esb.boolQuery().mustNot(esb.termsQuery(FILE_METADATA_FIELDS['program_id'], userPrograms)),
+      esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
     ]);
   return ({
     DCC_MEMBER: emptyFilter,
@@ -78,15 +76,12 @@ const getAccessControlFilter = (
           .must([
             esb
               .boolQuery()
-              .mustNot([esb.termsQuery('program_id' as keyof EsFileCentricDocument, userPrograms)]),
-            esb.termQuery(
-              'release_stage' as keyof EsFileCentricDocument,
-              FILE_RELEASE_STAGE.FULL_PROGRAMS,
-            ),
+              .mustNot(esb.termsQuery(FILE_METADATA_FIELDS['program_id'], userPrograms)),
+            esb.termQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.FULL_PROGRAMS),
           ]),
       ]),
-    PUBLIC_MEMBER: emptyFilter,
-  } as { [accessLevel in typeof programMembershipAccessLevel]: esb.BoolQuery })[
+    PUBLIC_MEMBER: esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.PUBLIC),
+  } as { [accessLevel in typeof programMembershipAccessLevel]: esb.Query })[
     programMembershipAccessLevel
   ];
 };
@@ -135,19 +130,22 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           .boolQuery()
           .must([
             parsedRequestQuery.id
-              ? esb.termsQuery('object_id', parsedRequestQuery.id)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id)
               : emptyFilter,
             parsedRequestQuery.fileName
-              ? esb.termsQuery('file.name', parsedRequestQuery.fileName)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['file.name'], parsedRequestQuery.fileName)
               : emptyFilter,
             parsedRequestQuery.access
-              ? esb.termsQuery('file_access', parsedRequestQuery.access)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['file_access'], parsedRequestQuery.access)
               : emptyFilter,
             parsedRequestQuery.analysisId
-              ? esb.termsQuery('analysis.analysis_id', parsedRequestQuery.access)
+              ? esb.termsQuery(
+                  FILE_METADATA_FIELDS['analysis.analysis_id'],
+                  parsedRequestQuery.access,
+                )
               : emptyFilter,
             parsedRequestQuery.projectCode
-              ? esb.termsQuery('program_id', parsedRequestQuery.projectCode)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['program_id'], parsedRequestQuery.projectCode)
               : emptyFilter,
             accessControlFilter,
           ]),

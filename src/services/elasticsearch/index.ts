@@ -123,8 +123,12 @@ export type EsHits<T = {}> = {
       relation: 'eq' | 'gte';
     };
     max_score: number;
-    hits: T[];
+    hits: {
+      _index: string;
+      _type: string;
+      _id: string;
+      _score: number;
+      _source: T;
+    }[];
   };
 };
-
-export type EsSearchResult<T> = EsHits<T>;
