@@ -13,7 +13,7 @@ import {
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
-type ResponseBody = {
+export type EntitiesPageResponseBody = {
   content: Array<Partial<SongEntity>>;
   pageable: {
     offset: number;
@@ -94,7 +94,7 @@ const getAccessControlFilter = (
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (
     req: AuthenticatedRequest<{}, any, any, RequestBodyQuery>,
-    res: Response<ResponseBody>,
+    res: Response<EntitiesPageResponseBody>,
   ) => {
     const userScopes = req.userScopes;
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
@@ -124,8 +124,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const query = esb
       .requestBodySearch()
-      .from(parsedRequestQuery.page)
+      .from(parsedRequestQuery.page * parsedRequestQuery.size)
       .size(parsedRequestQuery.size)
+      .sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
       .query(
         esb
           .boolQuery()
@@ -169,7 +170,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       );
 
     /**@todo: get Rob to take a look through this */
-    const responseBody: ResponseBody = {
+    const responseBody: EntitiesPageResponseBody = {
       content: data,
       pageable: {
         offset: parsedRequestQuery.page,
