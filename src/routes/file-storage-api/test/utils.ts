@@ -31,14 +31,20 @@ import { reduce } from 'axax/es5/reduce';
 
 chai.use(chaiHttp);
 
-export const entitiesStream = async function*({ app }: { app: Express }) {
+export const entitiesStream = async function*({
+  app,
+  apiKey,
+}: {
+  app: Express;
+  apiKey: MockApiKey;
+}) {
   let currentPage = 0;
   const pageSize = 1000;
   cycle: while (true) {
-    console.log(`test streaming page ${currentPage}`);
     const pageData = await chai
       .request(app)
       .get(`/entities?page=${currentPage}&size=${pageSize}`)
+      .set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
       .then(response => response.body as EntitiesPageResponseBody);
 
     if (!pageData.content) {
@@ -85,17 +91,24 @@ export const getAllIndexedDocuments = (esClient: Client) => {
 };
 
 export const MOCK_API_KEYS = {
-  PUBLIC: 'PUBLIC',
-  DCC: 'DCC',
+  PUBLIC: 'PUBLIC' as 'PUBLIC',
+  DCC: 'DCC' as 'DCC',
 };
+export type MockApiKey = keyof typeof MOCK_API_KEYS;
 
 export const createMockEgoClient = (): Partial<EgoClient> => {
-  type MockApiKey = keyof typeof MOCK_API_KEYS;
   const MOCK_API_KEY_SCOPES: {
     [k in MockApiKey]: string[];
   } = {
     PUBLIC: [],
-    DCC: [],
+    DCC: [
+      'song.WRITE',
+      'score.WRITE',
+      'PROGRAMSERVICE.WRITE',
+      'FILES-SVC.WRITE',
+      'DICTIONARY.WRITE',
+      'CLINICALSERVICE.WRITE',
+    ],
   };
   const mockEgoClient = {
     checkApiKey: ({ apiKey }: { apiKey: MockApiKey }) =>

@@ -29,7 +29,12 @@ import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { EntitiesPageResponseBody } from '../handlers/entitiesHandler';
-import { createMockEgoClient, entitiesStream, getAllIndexedDocuments } from './utils';
+import {
+  createMockEgoClient,
+  entitiesStream,
+  getAllIndexedDocuments,
+  MOCK_API_KEYS,
+} from './utils';
 import _ from 'lodash';
 import { reduce } from 'axax/es5/reduce';
 import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
@@ -60,7 +65,6 @@ describe.only('file-storage-api', () => {
     if (stderr.length) {
       throw stderr;
     }
-    console.log(stdout);
     app.use(
       '/',
       createFileStorageApi({
@@ -84,7 +88,7 @@ describe.only('file-storage-api', () => {
 
   describe('/entities endpoint', () => {
     it('returns unique entities', async () => {
-      const responseStream = entitiesStream({ app });
+      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntities = await reduce<
         EntitiesPageResponseBody,
         EntitiesPageResponseBody['content']
@@ -100,7 +104,7 @@ describe.only('file-storage-api', () => {
     }, 240000);
 
     it('returns the right data for public users', async () => {
-      const responseStream = entitiesStream({ app });
+      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntityIdsFromApi = (await reduce<
         EntitiesPageResponseBody,
         EntitiesPageResponseBody['content']
@@ -123,6 +127,18 @@ describe.only('file-storage-api', () => {
           .filter(doc => doc.release_stage === FILE_RELEASE_STAGE.PUBLIC)
           .every(doc => allEntityIdsFromApi.includes(doc.object_id)),
       ).toBe(true);
+    });
+
+    it('returns all data for DCC', async () => {
+      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.DCC });
+      const allEntities = await reduce<
+        EntitiesPageResponseBody,
+        EntitiesPageResponseBody['content']
+      >((acc, r) => {
+        r.content.forEach(e => acc.push(e));
+        return acc;
+      }, [])(responseStream);
+      expect(allEntities.length).toBe(_(allIndexedDocuments).size());
     });
   });
 });
