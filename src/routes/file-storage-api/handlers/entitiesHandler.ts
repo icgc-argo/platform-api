@@ -72,8 +72,6 @@ const getAccessControlFilter = (
   ]);
   /******************/
 
-  console.log('programMembershipAccessLevel: ', programMembershipAccessLevel);
-
   const userPermissionToQueryMap: {
     [accessLevel in typeof programMembershipAccessLevel]: esb.Query;
   } = {

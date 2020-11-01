@@ -28,6 +28,7 @@ import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument.ts';
 import { reduce } from 'axax/es5/reduce';
+import _ from 'lodash';
 
 chai.use(chaiHttp);
 
@@ -60,6 +61,14 @@ export const entitiesStream = async function*({
   }
 };
 
+export const reduceToEntityList = (stream: ReturnType<typeof entitiesStream>) =>
+  reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>((acc, r) => {
+    r.content.forEach(e => {
+      acc.push(e);
+    });
+    return acc;
+  }, [])(stream);
+
 const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
   let currentIndex = 0;
   const pageSize = 1000;
@@ -83,16 +92,20 @@ const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
   }
 };
 
-export const getAllIndexedDocuments = (esClient: Client) => {
-  return reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
-    chunk.forEach(doc => acc.push(doc));
-    return acc;
-  }, [])(esDocumentStream({ esClient }));
-};
+export const getAllIndexedDocuments = async (esClient: Client) =>
+  _(
+    await reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
+      chunk.forEach(doc => acc.push(doc));
+      return acc;
+    }, [])(esDocumentStream({ esClient })),
+  )
+    .uniqBy(a => a.object_id)
+    .value();
 
 export const MOCK_API_KEYS = {
   PUBLIC: 'PUBLIC' as 'PUBLIC',
   DCC: 'DCC' as 'DCC',
+  FULL_PROGRAM_MEMBER: 'FULL_PROGRAM_MEMBER' as 'FULL_PROGRAM_MEMBER',
 };
 export type MockApiKey = keyof typeof MOCK_API_KEYS;
 
@@ -101,6 +114,7 @@ export const createMockEgoClient = (): Partial<EgoClient> => {
     [k in MockApiKey]: string[];
   } = {
     PUBLIC: [],
+    FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ'],
     DCC: [
       'song.WRITE',
       'score.WRITE',

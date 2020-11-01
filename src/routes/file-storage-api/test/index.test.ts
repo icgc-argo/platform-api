@@ -28,15 +28,14 @@ import createFileStorageApi from '../index';
 import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { EntitiesPageResponseBody } from '../handlers/entitiesHandler';
 import {
   createMockEgoClient,
   entitiesStream,
   getAllIndexedDocuments,
   MOCK_API_KEYS,
+  reduceToEntityList,
 } from './utils';
 import _ from 'lodash';
-import { reduce } from 'axax/es5/reduce';
 import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 
 const asyncExec = promisify(exec);
@@ -89,38 +88,26 @@ describe.only('file-storage-api', () => {
   describe('/entities endpoint', () => {
     it('returns unique entities', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
-      const allEntities = await reduce<
-        EntitiesPageResponseBody,
-        EntitiesPageResponseBody['content']
-      >((acc, r) => {
-        r.content.forEach(e => acc.push(e));
-        return acc;
-      }, [])(responseStream);
+      const allRetrievedEntities = await reduceToEntityList(responseStream);
       expect(
-        _(allEntities)
+        _(allRetrievedEntities)
           .uniqBy(e => e.id)
           .size(),
-      ).toBe(allEntities.length);
+      ).toBe(allRetrievedEntities.length);
     }, 240000);
 
     it('returns the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
-      const allEntityIdsFromApi = (await reduce<
-        EntitiesPageResponseBody,
-        EntitiesPageResponseBody['content']
-      >((acc, r) => {
-        r.content.forEach(e => acc.push(e));
-        return acc;
-      }, [])(responseStream)).map(e => e.id);
-
-      // every returned entity is publicly released
+      const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
       expect(
         allEntityIdsFromApi.every(
           id => allIndexedDocuments[id || ''].release_stage === FILE_RELEASE_STAGE.PUBLIC,
         ),
       ).toBe(true);
-
-      // every publicly released entity is returned
+    });
+    it('returns all publicly released entities', async () => {
+      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
+      const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
       expect(
         Object.entries(allIndexedDocuments)
           .map(([i, doc]) => doc)
@@ -131,14 +118,29 @@ describe.only('file-storage-api', () => {
 
     it('returns all data for DCC', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.DCC });
-      const allEntities = await reduce<
-        EntitiesPageResponseBody,
-        EntitiesPageResponseBody['content']
-      >((acc, r) => {
-        r.content.forEach(e => acc.push(e));
-        return acc;
-      }, [])(responseStream);
-      expect(allEntities.length).toBe(_(allIndexedDocuments).size());
+      const allRetrievedEntities = await reduceToEntityList(responseStream);
+      const indexedDocs = Object.entries(allIndexedDocuments).map(([i, d]) => d);
+      console.log('allRetrievedEntities.length: ', allRetrievedEntities.length);
+      console.log('indexedDocs.length: ', indexedDocs.length);
+      expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
+    });
+
+    it('returns the right data for full program members', async () => {
+      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER });
+      const allRetrievedEntities = await reduceToEntityList(responseStream);
+      expect(
+        allRetrievedEntities
+          .map(e => e.id)
+          .every(objectId => {
+            const indexedDocument = allIndexedDocuments[objectId || ''];
+            const { study_id, release_stage } = indexedDocument;
+            return (
+              release_stage === FILE_RELEASE_STAGE.PUBLIC ||
+              release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS ||
+              release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS
+            );
+          }),
+      ).toBe(true);
     });
   });
 });
