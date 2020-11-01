@@ -119,9 +119,6 @@ describe.only('file-storage-api', () => {
     it('returns all data for DCC', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.DCC });
       const allRetrievedEntities = await reduceToEntityList(responseStream);
-      const indexedDocs = Object.entries(allIndexedDocuments).map(([i, d]) => d);
-      console.log('allRetrievedEntities.length: ', allRetrievedEntities.length);
-      console.log('indexedDocs.length: ', indexedDocs.length);
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
