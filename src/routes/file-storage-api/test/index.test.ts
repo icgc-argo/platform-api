@@ -134,7 +134,9 @@ describe.only('file-storage-api', () => {
             return (
               release_stage === FILE_RELEASE_STAGE.PUBLIC ||
               release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS ||
-              release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS
+              release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS ||
+              // release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM ||
+              release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE
             );
           }),
       ).toBe(true);
