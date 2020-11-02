@@ -107,6 +107,7 @@ describe('file-storage-api', () => {
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
         doc => doc.release_stage === FILE_RELEASE_STAGE.PUBLIC,
       );
+      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
       expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
@@ -126,7 +127,7 @@ describe('file-storage-api', () => {
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
       const allRetrievedEntities = await reduceToEntityList(responseStream);
-      const equivalentIndexedDocument = allRetrievedEntities.map(
+      const equivalentIndexedDocuments = allRetrievedEntities.map(
         retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
@@ -141,10 +142,11 @@ describe('file-storage-api', () => {
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
         validators.some(validate => validate(doc)),
       );
-      expect(equivalentIndexedDocument.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
+      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocument.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });
@@ -154,7 +156,7 @@ describe('file-storage-api', () => {
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
       const allRetrievedEntities = await reduceToEntityList(responseStream);
-      const equivalentIndexedDocument = allRetrievedEntities.map(
+      const equivalentIndexedDocuments = allRetrievedEntities.map(
         retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
@@ -171,10 +173,11 @@ describe('file-storage-api', () => {
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
         validators.some(validate => validate(doc)),
       );
-      expect(equivalentIndexedDocument.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
+      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocument.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });
