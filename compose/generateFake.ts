@@ -1,5 +1,6 @@
 import { range, sample } from 'lodash';
 import fs from 'fs';
+import { v5 as uuidv5 } from 'uuid';
 
 const studyIds = ['PACA-CA', 'OCCAMS-GB', 'DASH-CA', 'TEST-CA'];
 const releaseStages = [
@@ -16,8 +17,9 @@ const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
 (() => {
   const args = process.argv.slice(2);
 
+  const uuidNamespace = '7a17f032-83b2-44fe-8cf0-bef1bfb77023'; //from https://www.uuidgenerator.net/
   const data = range(parseInt(args[0]) || 10001).map(i => ({
-    object_id: `fake_file_${i}`,
+    object_id: uuidv5(`fake_file_${i}`, uuidNamespace),
     study_id: sample(studyIds),
     file_access: 'controlled',
     data_type: 'unaligned_reads',

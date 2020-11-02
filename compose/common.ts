@@ -55,9 +55,10 @@ export const createClient = async (): Promise<Client> => {
 export const deleteIndex = async (client: Client, index: string) => {
   try {
     console.log(`deleting index ${index}`);
-    await client.indices.delete({
+    const deleteResult = await client.indices.delete({
       index: index,
     });
+    console.log(deleteResult);
   } catch (err) {
     console.log(`could not delete index ${index}: `, err);
     if ((await client.indices.exists({ index: index })).body) {
