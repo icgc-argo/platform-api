@@ -124,7 +124,7 @@ describe.only('file-storage-api', () => {
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
-    it.only('returns only the right data for program members', async () => {
+    it('returns only the right data for program members', async () => {
       const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
