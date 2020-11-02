@@ -43,7 +43,7 @@ const asyncExec = promisify(exec);
 
 chai.use(chaiHttp);
 
-describe.only('file-storage-api', () => {
+describe('file-storage-api', () => {
   let esContainer: StartedTestContainer;
   let esClient: Client;
   const app = express();
