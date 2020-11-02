@@ -98,7 +98,7 @@ describe.only('file-storage-api', () => {
       ).toBe(allRetrievedEntities.length);
     }, 240000);
 
-    it('returns the right data for public users', async () => {
+    it('returns only and all the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
       const equivalentIndexedDocuments = allEntityIdsFromApi.map(
@@ -121,7 +121,7 @@ describe.only('file-storage-api', () => {
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
-    it('returns only the right data for program members', async () => {
+    it('returns only and all the right data for program members', async () => {
       const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
@@ -134,6 +134,36 @@ describe.only('file-storage-api', () => {
         ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE,
         ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS,
         ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+        ({ study_id, release_stage }) =>
+          release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+          userScopes.some(scope => scope.includes(study_id)),
+      ];
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
+        validators.some(validate => validate(doc)),
+      );
+      expect(equivalentIndexedDocument.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+        true,
+      );
+      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocument.includes(doc))).toBe(
+        true,
+      );
+    });
+
+    it('returns only and all the right data for associate program members', async () => {
+      const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
+      const userScopes = MOCK_API_KEY_SCOPES[apiKey];
+      const responseStream = entitiesStream({ app, apiKey: apiKey });
+      const allRetrievedEntities = await reduceToEntityList(responseStream);
+      const equivalentIndexedDocument = allRetrievedEntities.map(
+        retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
+      );
+      const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+        ({ study_id, release_stage }) =>
+          release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS &&
+          userScopes.some(scope => scope.includes(study_id)),
         ({ study_id, release_stage }) =>
           release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
           userScopes.some(scope => scope.includes(study_id)),
