@@ -13,7 +13,7 @@ import {
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
-type ResponseBody = {
+export type EntitiesPageResponseBody = {
   content: Array<Partial<SongEntity>>;
   pageable: {
     offset: number;
@@ -94,11 +94,12 @@ const getAccessControlFilter = (
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (
     req: AuthenticatedRequest<{}, any, any, RequestBodyQuery>,
-    res: Response<ResponseBody>,
+    res: Response<EntitiesPageResponseBody>,
   ) => {
     const userScopes = req.userScopes;
+    const serializedUserScopes = userScopes.map(egoTokenUtils.serializeScope);
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
-      permissions: userScopes.map(egoTokenUtils.serializeScope),
+      permissions: serializedUserScopes,
     });
 
     const parsedRequestQuery = {
@@ -117,15 +118,15 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       projectCode: req.query.projectCode || undefined,
     };
 
-    const accessControlFilter = getAccessControlFilter(
-      programMembershipAccessLevel,
-      egoTokenUtils.getReadableProgramShortNames(req.userScopes),
-    );
+    const accessControlFilter = getAccessControlFilter(programMembershipAccessLevel, [
+      ...egoTokenUtils.getReadableProgramDataNames(serializedUserScopes),
+    ]);
 
     const query = esb
       .requestBodySearch()
-      .from(parsedRequestQuery.page)
+      .from(parsedRequestQuery.page * parsedRequestQuery.size)
       .size(parsedRequestQuery.size)
+      .sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
       .query(
         esb
           .boolQuery()
@@ -169,7 +170,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       );
 
     /**@todo: get Rob to take a look through this */
-    const responseBody: ResponseBody = {
+    const responseBody: EntitiesPageResponseBody = {
       content: data,
       pageable: {
         offset: parsedRequestQuery.page,
