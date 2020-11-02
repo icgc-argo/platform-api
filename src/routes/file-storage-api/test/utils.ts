@@ -108,22 +108,22 @@ export const MOCK_API_KEYS = {
   FULL_PROGRAM_MEMBER: 'FULL_PROGRAM_MEMBER' as 'FULL_PROGRAM_MEMBER',
 };
 export type MockApiKey = keyof typeof MOCK_API_KEYS;
+export const MOCK_API_KEY_SCOPES: {
+  [k in MockApiKey]: string[];
+} = {
+  PUBLIC: [],
+  FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ', 'PROGRAMDATA-DASH-CA.READ'],
+  DCC: [
+    'song.WRITE',
+    'score.WRITE',
+    'PROGRAMSERVICE.WRITE',
+    'FILES-SVC.WRITE',
+    'DICTIONARY.WRITE',
+    'CLINICALSERVICE.WRITE',
+  ],
+};
 
 export const createMockEgoClient = (): Partial<EgoClient> => {
-  const MOCK_API_KEY_SCOPES: {
-    [k in MockApiKey]: string[];
-  } = {
-    PUBLIC: [],
-    FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ'],
-    DCC: [
-      'song.WRITE',
-      'score.WRITE',
-      'PROGRAMSERVICE.WRITE',
-      'FILES-SVC.WRITE',
-      'DICTIONARY.WRITE',
-      'CLINICALSERVICE.WRITE',
-    ],
-  };
   const mockEgoClient = {
     checkApiKey: ({ apiKey }: { apiKey: MockApiKey }) =>
       Promise.resolve({

@@ -33,6 +33,7 @@ import {
   entitiesStream,
   getAllIndexedDocuments,
   MOCK_API_KEYS,
+  MOCK_API_KEY_SCOPES,
   reduceToEntityList,
 } from './utils';
 import _ from 'lodash';
@@ -46,6 +47,7 @@ describe.only('file-storage-api', () => {
   let esContainer: StartedTestContainer;
   let esClient: Client;
   const app = express();
+  const mockEgoClient = createMockEgoClient() as EgoClient;
   let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
 
   beforeAll(async () => {
@@ -67,7 +69,7 @@ describe.only('file-storage-api', () => {
     app.use(
       '/',
       createFileStorageApi({
-        egoClient: createMockEgoClient() as EgoClient,
+        egoClient: mockEgoClient,
         rootPath: '/',
         esClient,
       }),
@@ -122,24 +124,32 @@ describe.only('file-storage-api', () => {
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
-    it('returns the right data for full program members', async () => {
-      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER });
+    it.only('returns only the right data for program members', async () => {
+      const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
+      const userScopes = MOCK_API_KEY_SCOPES[apiKey];
+      const responseStream = entitiesStream({ app, apiKey: apiKey });
       const allRetrievedEntities = await reduceToEntityList(responseStream);
-      expect(
-        allRetrievedEntities
-          .map(e => e.id)
-          .every(objectId => {
-            const indexedDocument = allIndexedDocuments[objectId || ''];
-            const { study_id, release_stage } = indexedDocument;
-            return (
-              release_stage === FILE_RELEASE_STAGE.PUBLIC ||
-              release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS ||
-              release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS ||
-              // release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM ||
-              release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE
-            );
-          }),
-      ).toBe(true);
+      const equivalentIndexedDocument = allRetrievedEntities.map(
+        retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
+      );
+      const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS,
+        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+        ({ study_id, release_stage }) =>
+          release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+          userScopes.some(scope => scope.includes(study_id)),
+      ];
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
+        validators.some(validate => validate(doc)),
+      );
+      expect(equivalentIndexedDocument.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+        true,
+      );
+      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocument.includes(doc))).toBe(
+        true,
+      );
     });
   });
 });

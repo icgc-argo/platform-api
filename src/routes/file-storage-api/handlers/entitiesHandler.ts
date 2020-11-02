@@ -97,8 +97,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
     res: Response<EntitiesPageResponseBody>,
   ) => {
     const userScopes = req.userScopes;
+    const serializedUserScopes = userScopes.map(egoTokenUtils.serializeScope);
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
-      permissions: userScopes.map(egoTokenUtils.serializeScope),
+      permissions: serializedUserScopes,
     });
 
     const parsedRequestQuery = {
@@ -117,10 +118,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       projectCode: req.query.projectCode || undefined,
     };
 
-    const accessControlFilter = getAccessControlFilter(
-      programMembershipAccessLevel,
-      egoTokenUtils.getReadableProgramShortNames(req.userScopes),
-    );
+    const accessControlFilter = getAccessControlFilter(programMembershipAccessLevel, [
+      ...egoTokenUtils.getReadableProgramDataNames(serializedUserScopes),
+    ]);
 
     const query = esb
       .requestBodySearch()
