@@ -24,7 +24,7 @@ import { Duration, TemporalUnit } from 'node-duration';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import express from 'express';
-import createFileStorageApi from '../index';
+import createFileStorageApi from '../../index';
 import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';

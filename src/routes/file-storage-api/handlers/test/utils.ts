@@ -21,7 +21,7 @@ import { Express } from 'express';
 import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { EntitiesPageResponseBody } from '../handlers/entitiesHandler';
+import { EntitiesPageResponseBody } from '../entitiesHandler';
 import { Client } from '@elastic/elasticsearch';
 import esb from 'elastic-builder';
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
