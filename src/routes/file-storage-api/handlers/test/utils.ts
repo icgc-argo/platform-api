@@ -92,15 +92,11 @@ const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
   }
 };
 
-export const getAllIndexedDocuments = async (esClient: Client) =>
-  _(
-    await reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
-      chunk.forEach(doc => acc.push(doc));
-      return acc;
-    }, [])(esDocumentStream({ esClient })),
-  )
-    .uniqBy(a => a.object_id)
-    .value();
+export const getAllIndexedDocuments = (esClient: Client) =>
+  reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
+    chunk.forEach(doc => acc.push(doc));
+    return acc;
+  }, [])(esDocumentStream({ esClient }));
 
 export const MOCK_API_KEYS = {
   PUBLIC: 'PUBLIC' as 'PUBLIC',
