@@ -101,21 +101,18 @@ describe.only('file-storage-api', () => {
     it('returns the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
-      expect(
-        allEntityIdsFromApi.every(
-          id => allIndexedDocuments[id || ''].release_stage === FILE_RELEASE_STAGE.PUBLIC,
-        ),
-      ).toBe(true);
-    });
-    it('returns all publicly released entities', async () => {
-      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
-      const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
-      expect(
-        Object.entries(allIndexedDocuments)
-          .map(([i, doc]) => doc)
-          .filter(doc => doc.release_stage === FILE_RELEASE_STAGE.PUBLIC)
-          .every(doc => allEntityIdsFromApi.includes(doc.object_id)),
-      ).toBe(true);
+      const equivalentIndexedDocuments = allEntityIdsFromApi.map(
+        id => allIndexedDocuments[id || ''],
+      );
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
+        doc => doc.release_stage === FILE_RELEASE_STAGE.PUBLIC,
+      );
+      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+        true,
+      );
+      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+        true,
+      );
     });
 
     it('returns all data for DCC', async () => {
