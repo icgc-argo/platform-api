@@ -4,6 +4,8 @@ import { v5 as uuidv5 } from 'uuid';
 import fetch from 'node-fetch';
 
 const RDPC_URL = 'https://api.rdpc-dev.cancercollaboratory.org/graphql';
+const SCORE_URL = 'https://score.rdpc-dev.cancercollaboratory.org';
+
 const studyIds = ['PACA-CA', 'OCCAMS-GB', 'DASH-CA', 'TEST-CA'];
 const studyToLoadFromRdpc = 'TEST-CA';
 const releaseStages = [
@@ -27,7 +29,10 @@ const args = process.argv.slice(2);
     },
     body: JSON.stringify({
       query: `{
-        analyses(filter: { studyId: "${studyToLoadFromRdpc}" }) {
+        analyses(filter: { 
+          studyId: "${studyToLoadFromRdpc}"
+          analysisState: PUBLISHED
+        }) {
           files {
             objectId
           }
@@ -93,7 +98,7 @@ const args = process.argv.slice(2);
         name: 'Canadian RDPC',
         organization: 'Ontario Institute for Cancer Research',
         country: 'Canada',
-        url: 'https://score.rdpc-dev.cancercollaboratory.org',
+        url: SCORE_URL,
       },
     };
   });
