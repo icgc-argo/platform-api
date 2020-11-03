@@ -20,10 +20,21 @@
 import { Client } from '@elastic/elasticsearch';
 import indexData from './file_centric/sample_file_centric.json';
 import indexSettings from './file_centric/file_mapping.json';
+import _ from 'lodash';
 
-export const createClient = async (host: string): Promise<Client> => {
+const esUsernameEnv = 'ES_USERNAME';
+const esPasswordEnv = 'ES_PASSWORD';
+const esHostEnv = 'ES_HOST';
+
+export const createClient = async (): Promise<Client> => {
+  const auth = {
+    username: process.env[esUsernameEnv] as string,
+    password: process.env[esPasswordEnv] as string,
+  };
+  const host = process.env[esHostEnv] || 'http://localhost:9200';
   const esClient = new Client({
     node: host,
+    auth: (auth.username && auth.password && auth) || undefined,
     ssl: {
       rejectUnauthorized: false,
     },
@@ -33,6 +44,10 @@ export const createClient = async (host: string): Promise<Client> => {
     return esClient;
   } catch (err) {
     console.log(`failing to ping elasticsearch at ${host}: `, err);
+    console.log(`A custom elasticsearch host can also be provided with the ${esHostEnv} env`);
+    console.log(
+      `!!!!!!! If your elasticsearch is password protected, provide the credential through ${esUsernameEnv} and ${esPasswordEnv} env var !!!!!!!`,
+    );
     throw err;
   }
 };
@@ -66,14 +81,27 @@ export const createIndex = async (
   console.log('index created');
 };
 
+export const toEsBulkIndexActions = <T = {}>(
+  indexName: string,
+  getDocumentId: (document: T) => string | undefined,
+) => (docs: Array<T>) =>
+  _.flatMap(docs, doc => {
+    const documentId = getDocumentId(doc);
+    return [
+      {
+        index: documentId ? { _index: indexName, _id: documentId } : { _index: indexName },
+      },
+      doc,
+    ];
+  });
+
 export const index = async (client: Client, index: string, data: typeof indexData) => {
-  await Promise.all(
-    data.map((doc, idx) => {
-      console.log(`doc_${idx}`);
-      return client.index({
-        index: index,
-        refresh: 'wait_for',
-        body: {
+  let i = 0;
+  for (const chunk of _.chunk(data, 1000)) {
+    await client.bulk({
+      refresh: 'true',
+      body: toEsBulkIndexActions<any>(index, doc => doc.object_id)(
+        chunk.map(doc => ({
           ...doc,
           donors: [doc.donors].map(donor => ({
             ...donor,
@@ -83,10 +111,10 @@ export const index = async (client: Client, index: string, data: typeof indexDat
             })),
           })),
           repositories: [doc.repositories],
-        },
-      });
-    }),
-  );
-
+        })),
+      ),
+    });
+    console.log(`done chunk ${i++}`);
+  }
   console.log('Complete!');
 };

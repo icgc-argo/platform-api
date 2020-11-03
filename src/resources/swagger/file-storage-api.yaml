@@ -99,39 +99,6 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-  "/storage-api/studies/{studyId}/analysis/{id}":
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - File Storage Api
-      summary: ReadAnalysis
-      description: Retrieve the analysis object for an analysisId
-      operationId: readUsingGET
-      produces:
-        - "*/*"
-      parameters:
-        - name: id
-          in: path
-          description: id
-          required: true
-          type: string
-        - name: studyId
-          in: path
-          description: studyId
-          required: true
-          type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: "#/definitions/Analysis"
-        "401":
-          description: Unauthorized
-        "403":
-          description: Forbidden
-        "404":
-          description: Not Found
   "/storage-api/entities/{id}":
     get:
       security:
@@ -170,9 +137,29 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id
+          description: object_id
           required: true
           type: string
+        - name: offset
+          description: number
+          in: query
+          required: true
+          type: number
+        - name: length
+          description: number
+          in: query
+          required: true
+          type: number
+        - name: external
+          description: boolean
+          in: query
+          required: false
+          type: boolean
+        - name: exclude-urls
+          description: boolean
+          in: query
+          required: false
+          type: boolean
       responses:
         "200":
           description: OK
