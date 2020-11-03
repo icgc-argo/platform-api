@@ -17,10 +17,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from './accessValidations';
+import {
+  hasSufficientDacoAccess,
+  hasSufficientProgramMembershipAccess,
+  PermissionScopeObj,
+} from './accessValidations';
 import { FILE_ACCESS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
-import User from 'schemas/User';
-//import { PROGRAM_DATA_PREFIX } from '@icgc-argo/ego-token-utils/dist/common';
+import { EGO_DACO_POLICY_NAME } from 'config';
+import { PERMISSIONS } from '@icgc-argo/ego-token-utils/dist/common';
 
 const baseFile = {
   file_id: 'fake_file_id',
@@ -94,33 +98,12 @@ const baseFile = {
   ],
 };
 
-/**
- * the following duplication is a workaround
- * jest config isn't happy about importing from a foo.d.ts file
- * exepects all imports to be plain js
- */
 const PROGRAM_DATA_PREFIX = 'PROGRAMDATA-';
 const FULL_PROGRAM_MEMBER_POLICY = 'PROGRAMMEMBERSHIP-FULL';
 const ASSOCIATE_PROGRAM_MEMBER_POLICY = 'PROGRAMMEMBERSHIP-ASSOCIATE';
 
-const PERMISSIONS: {
-  READ: string;
-  WRITE: string;
-  ADMIN: string;
-  DENY: string;
-} = {
-  READ: 'READ',
-  WRITE: 'WRITE',
-  ADMIN: 'ADMIN',
-  DENY: 'DENY',
-};
-type PermissionScopeObj = {
-  policy: string;
-  permission: keyof typeof PERMISSIONS;
-};
-/* end of duplication */
 const DACO_SCOPE = {
-  policy: 'DACO',
+  policy: EGO_DACO_POLICY_NAME,
   permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
 };
 
