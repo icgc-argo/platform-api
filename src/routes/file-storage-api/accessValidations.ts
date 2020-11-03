@@ -25,37 +25,11 @@ import {
   FILE_RELEASE_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EgoClient } from 'services/ego';
-
-/**
- * duplication from ego-token-utils
- * import isn't working from `@icgc-argo/ego-token-utils`
- */
-export const PERMISSIONS: {
-  READ: string;
-  WRITE: string;
-  ADMIN: string;
-  DENY: string;
-} = {
-  READ: 'READ',
-  WRITE: 'WRITE',
-  ADMIN: 'ADMIN',
-  DENY: 'DENY',
-};
-
-export type PermissionScopeObj = {
-  policy: string;
-  permission: keyof typeof PERMISSIONS;
-};
-
-enum UserProgramMembershipAccessLevel {
-  DCC_MEMBER = 'DCC_MEMBER',
-  FULL_PROGRAM_MEMBER = 'FULL_PROGRAM_MEMBER',
-  ASSOCIATE_PROGRAM_MEMBER = 'ASSOCIATE_PROGRAM_MEMBER',
-  PUBLIC_MEMBER = 'PUBLIC_MEMBER',
-}
-/**
- * End duplication
- */
+import {
+  PERMISSIONS,
+  PermissionScopeObj,
+  UserProgramMembershipAccessLevel,
+} from '@icgc-argo/ego-token-utils';
 
 export const hasSufficientProgramMembershipAccess = (config: {
   scopes: PermissionScopeObj[];

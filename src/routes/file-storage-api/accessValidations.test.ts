@@ -17,14 +17,10 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  hasSufficientDacoAccess,
-  hasSufficientProgramMembershipAccess,
-  PERMISSIONS,
-  PermissionScopeObj,
-} from './accessValidations';
+import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from './accessValidations';
 import { FILE_ACCESS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 import { EGO_DACO_POLICY_NAME } from 'config';
+import { PERMISSIONS, PermissionScopeObj } from '@icgc-argo/ego-token-utils';
 
 const baseFile = {
   file_id: 'fake_file_id',
