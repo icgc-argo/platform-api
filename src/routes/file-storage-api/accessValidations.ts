@@ -19,7 +19,11 @@
 
 import { Handler, Request } from 'express';
 import egoTokenUtils from 'utils/egoTokenUtils';
-import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
+import {
+  EsFileCentricDocument,
+  FILE_ACCESS,
+  FILE_RELEASE_STAGE,
+} from 'utils/commonTypes/EsFileCentricDocument';
 import { EgoClient } from 'services/ego';
 const PERMISSIONS: {
   READ: string;
@@ -83,13 +87,16 @@ export const hasSufficientProgramMembershipAccess = (config: {
     }
 
     if (releaseStage === FILE_RELEASE_STAGE.PUBLIC) {
-      return (
+      const hasAccess =
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
         egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
         accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
         accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER ||
-        accessLevel === UserProgramMembershipAccessLevel.PUBLIC_MEMBER
-      );
+        accessLevel === UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
+
+      return file.file_access === FILE_ACCESS.CONTROLLED
+        ? hasAccess && hasSufficientDacoAccess({ scopes })
+        : hasAccess;
     }
   }
   return false;

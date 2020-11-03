@@ -33,7 +33,6 @@ const downloadHandler = ({
     }),
     hasSufficientDacoAccess({
       scopes: req.userScopes,
-      file: esFileObject,
     }),
   ])).every(conditionMet => conditionMet);
 

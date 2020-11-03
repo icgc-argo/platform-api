@@ -119,6 +119,10 @@ type PermissionScopeObj = {
   permission: keyof typeof PERMISSIONS;
 };
 /* end of duplication */
+const DACO_SCOPE = {
+  policy: 'DACO',
+  permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
+};
 
 describe('hasSufficientProgramMembershipAccess', () => {
   describe('individual program member for file', () => {
@@ -129,6 +133,7 @@ describe('hasSufficientProgramMembershipAccess', () => {
           policy: PROGRAM_DATA_PREFIX + baseFile.study_id,
           permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
         },
+        DACO_SCOPE,
       ];
       scopes = userScopes;
     });
@@ -183,6 +188,7 @@ describe('hasSufficientProgramMembershipAccess', () => {
           policy: FULL_PROGRAM_MEMBER_POLICY,
           permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
         },
+        DACO_SCOPE,
       ];
       scopes = userScopes;
     });
@@ -237,6 +243,7 @@ describe('hasSufficientProgramMembershipAccess', () => {
           policy: ASSOCIATE_PROGRAM_MEMBER_POLICY,
           permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
         },
+        DACO_SCOPE,
       ];
       scopes = userScopes;
     });
@@ -286,12 +293,7 @@ describe('hasSufficientProgramMembershipAccess', () => {
   describe('authorized public user', () => {
     let scopes: PermissionScopeObj[];
     beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [
-        {
-          policy: 'DACO',
-          permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-        },
-      ];
+      const userScopes: PermissionScopeObj[] = [DACO_SCOPE];
       scopes = userScopes;
     });
 
