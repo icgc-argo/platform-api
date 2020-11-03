@@ -26,15 +26,14 @@ const downloadHandler = ({
     return res.status(404).end();
   }
 
-  const isAuthorized = (await Promise.all([
+  const isAuthorized =
     hasSufficientProgramMembershipAccess({
       scopes: req.userScopes,
       file: esFileObject,
-    }),
+    }) &&
     hasSufficientDacoAccess({
       scopes: req.userScopes,
-    }),
-  ])).every(conditionMet => conditionMet);
+    });
 
   if (isAuthorized) {
     const repositoryUrl = esFileObject.repositories[0].url;
