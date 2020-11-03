@@ -20,11 +20,11 @@
 import {
   hasSufficientDacoAccess,
   hasSufficientProgramMembershipAccess,
+  PERMISSIONS,
   PermissionScopeObj,
 } from './accessValidations';
 import { FILE_ACCESS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 import { EGO_DACO_POLICY_NAME } from 'config';
-import { PERMISSIONS } from '@icgc-argo/ego-token-utils/dist/common';
 
 const baseFile = {
   file_id: 'fake_file_id',
