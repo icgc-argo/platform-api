@@ -57,7 +57,10 @@ const args = process.argv.slice(2);
       usedIds[nextIdCandidate] = true;
     }
     return {
-      object_id: useDataFromRdpc ? nextIdCandidate : uuidv5(`fake_file_${i}`, uuidNamespace),
+      object_id:
+        useDataFromRdpc && nextIdCandidate
+          ? nextIdCandidate
+          : uuidv5(`fake_file_${i}`, uuidNamespace),
       study_id: sample(studyIds),
       file_access: 'controlled',
       data_type: 'unaligned_reads',
