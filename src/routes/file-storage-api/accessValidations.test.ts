@@ -379,8 +379,24 @@ describe('DACO', () => {
     const res = hasSufficientDacoAccess({ scopes });
     expect(res).toBe(true);
   });
+
   it('fails with no DACO access', () => {
     const scopes: PermissionScopeObj[] = [];
+    const res = hasSufficientDacoAccess({ scopes });
+    expect(res).toBe(false);
+  });
+
+  it('fails with denied DACO access', () => {
+    const scopes: PermissionScopeObj[] = [
+      {
+        policy: 'DACO',
+        permission: PERMISSIONS.DENY as keyof typeof PERMISSIONS,
+      },
+      {
+        policy: 'DACO',
+        permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
+      },
+    ];
     const res = hasSufficientDacoAccess({ scopes });
     expect(res).toBe(false);
   });

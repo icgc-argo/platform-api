@@ -30,6 +30,7 @@ import {
   PermissionScopeObj,
   UserProgramMembershipAccessLevel,
 } from '@icgc-argo/ego-token-utils';
+import { EGO_DACO_POLICY_NAME } from 'config';
 
 export const hasSufficientProgramMembershipAccess = (config: {
   scopes: PermissionScopeObj[];
@@ -87,8 +88,11 @@ export const hasSufficientProgramMembershipAccess = (config: {
 };
 
 export const hasSufficientDacoAccess = (config: { scopes: PermissionScopeObj[] }): boolean => {
-  const dacoScope = config.scopes.find(({ policy }) => policy === 'DACO');
-  return dacoScope && dacoScope.permission === PERMISSIONS.READ ? true : false;
+  const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
+
+  return dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ)
+    ? true
+    : false;
 };
 
 export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = Request<
