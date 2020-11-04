@@ -23,7 +23,6 @@ import indexData from './file_centric/sample_file_centric.json';
 
 const TEST_INDEX = 'release-stage';
 const targetAlias = 'file_centric';
-
 (async () => {
   const esClient = await createClient();
   await deleteIndex(esClient, TEST_INDEX);
