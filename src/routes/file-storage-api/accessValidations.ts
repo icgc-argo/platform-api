@@ -89,10 +89,7 @@ export const hasSufficientProgramMembershipAccess = (config: {
 
 export const hasSufficientDacoAccess = (config: { scopes: PermissionScopeObj[] }): boolean => {
   const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
-
-  return dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ)
-    ? true
-    : false;
+  return dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ);
 };
 
 export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = Request<
