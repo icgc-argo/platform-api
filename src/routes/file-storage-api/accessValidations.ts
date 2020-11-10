@@ -36,7 +36,7 @@ export const hasSufficientProgramMembershipAccess = (config: {
   scopes: PermissionScopeObj[];
   file?: EsFileCentricDocument;
 }): boolean => {
-  if (config.scopes && config.file) {
+  if (config.file) {
     const { scopes, file } = config;
     const releaseStage = file.release_stage;
 
@@ -62,7 +62,10 @@ export const hasSufficientProgramMembershipAccess = (config: {
       );
     }
 
-    if (releaseStage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS) {
+    if (
+      releaseStage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS ||
+      releaseStage === FILE_RELEASE_STAGE.PUBLIC_QUEUE
+    ) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
         egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
@@ -72,24 +75,23 @@ export const hasSufficientProgramMembershipAccess = (config: {
     }
 
     if (releaseStage === FILE_RELEASE_STAGE.PUBLIC) {
-      const hasAccess =
-        accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
-        accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
-        accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER ||
-        accessLevel === UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
-
-      return file.file_access === FILE_ACCESS.CONTROLLED
-        ? hasAccess && hasSufficientDacoAccess({ scopes })
-        : hasAccess;
+      return true;
     }
   }
   return false;
 };
 
-export const hasSufficientDacoAccess = (config: { scopes: PermissionScopeObj[] }): boolean => {
+export const hasSufficientDacoAccess = (config: {
+  scopes: PermissionScopeObj[];
+  file: EsFileCentricDocument;
+}): boolean => {
   const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
-  return dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ);
+  const userHasDacoAccess =
+    dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ);
+  return (
+    config.file.file_access === FILE_ACCESS.PUBLIC ||
+    (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)
+  );
 };
 
 export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = Request<

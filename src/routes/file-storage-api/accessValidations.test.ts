@@ -18,11 +18,15 @@
  */
 
 import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from './accessValidations';
-import { FILE_ACCESS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
+import {
+  EsFileCentricDocument,
+  FILE_ACCESS,
+  FILE_RELEASE_STAGE,
+} from 'utils/commonTypes/EsFileCentricDocument';
 import { EGO_DACO_POLICY_NAME } from 'config';
 import { PERMISSIONS, PermissionScopeObj } from '@icgc-argo/ego-token-utils';
 
-const baseFile = {
+const baseFile: EsFileCentricDocument = {
   file_id: 'fake_file_id',
   study_id: 'fake_study_id',
   object_id: 'fake_obejct_id',
@@ -32,6 +36,7 @@ const baseFile = {
   data_category: 'fake_data_category',
   analysis_tools: '',
   file_access: FILE_ACCESS.PUBLIC,
+  release_stage: FILE_RELEASE_STAGE.PUBLIC,
   analysis: {
     analysis_id: '',
     analysis_type: '',
@@ -100,198 +105,248 @@ const ASSOCIATE_PROGRAM_MEMBER_POLICY = 'PROGRAMMEMBERSHIP-ASSOCIATE';
 
 const DACO_SCOPE = {
   policy: EGO_DACO_POLICY_NAME,
-  permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
+  permission: PERMISSIONS.READ,
 };
 
-describe('hasSufficientProgramMembershipAccess', () => {
-  describe('individual program member for file', () => {
-    let scopes: PermissionScopeObj[];
-    beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [
-        {
-          policy: PROGRAM_DATA_PREFIX + baseFile.study_id,
-          permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-        },
-        DACO_SCOPE,
-      ];
-      scopes = userScopes;
+describe('accesValidations', () => {
+  describe('hasSufficientProgramMembershipAccess', () => {
+    describe('individual program member for file', () => {
+      let scopes: PermissionScopeObj[];
+      beforeAll(() => {
+        const userScopes: PermissionScopeObj[] = [
+          {
+            policy: PROGRAM_DATA_PREFIX + baseFile.study_id,
+            permission: PERMISSIONS.READ,
+          },
+          DACO_SCOPE,
+        ];
+        scopes = userScopes;
+      });
+
+      it('allows access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for programs with full membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for programs with associate membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for public release controlled', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access  for public release open', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
     });
 
-    it('allows access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for programs with full membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for programs with associate membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for public release controlled', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access  for public release open', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-  });
+    describe('user with full program membership, not a member of file', () => {
+      let scopes: PermissionScopeObj[];
+      beforeAll(() => {
+        const userScopes: PermissionScopeObj[] = [
+          {
+            policy: FULL_PROGRAM_MEMBER_POLICY,
+            permission: PERMISSIONS.READ,
+          },
+          DACO_SCOPE,
+        ];
+        scopes = userScopes;
+      });
 
-  describe('user with full program membership, not a member of file', () => {
-    let scopes: PermissionScopeObj[];
-    beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [
-        {
-          policy: FULL_PROGRAM_MEMBER_POLICY,
-          permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-        },
-        DACO_SCOPE,
-      ];
-      scopes = userScopes;
-    });
-
-    it('denies access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    });
-    it('allows access for programs with full membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access  for public release controlled', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for public release open', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-  });
-
-  describe('user with associate program membership, not a member of file', () => {
-    let scopes: PermissionScopeObj[];
-    beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [
-        {
-          policy: ASSOCIATE_PROGRAM_MEMBER_POLICY,
-          permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-        },
-        DACO_SCOPE,
-      ];
-      scopes = userScopes;
+      it('denies access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
+      it('allows access for programs with full membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access  for public release controlled', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for public release open', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
     });
 
-    it('denies access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    });
-    it('denies access for programs with full membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    });
-    it('allows access for programs with associate membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for public release controlled', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-    it('allows access for public release open', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-  });
+    describe('user with associate program membership, not a member of file', () => {
+      let scopes: PermissionScopeObj[];
+      beforeAll(() => {
+        const userScopes: PermissionScopeObj[] = [
+          {
+            policy: ASSOCIATE_PROGRAM_MEMBER_POLICY,
+            permission: PERMISSIONS.READ,
+          },
+          DACO_SCOPE,
+        ];
+        scopes = userScopes;
+      });
 
-  describe('authorized public user', () => {
-    let scopes: PermissionScopeObj[];
-    beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [DACO_SCOPE];
-      scopes = userScopes;
+      it('denies access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
+      it('denies access for programs with full membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
+      it('allows access for programs with associate membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for public release controlled', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for public release open', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
     });
 
-    it('denies access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
+    describe('authorized public user', () => {
+      let scopes: PermissionScopeObj[];
+      beforeAll(() => {
+        const userScopes: PermissionScopeObj[] = [DACO_SCOPE];
+        scopes = userScopes;
+      });
+
+      it('denies access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
+      it('denies access for programs with full membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      }),
+        it('denies access for programs with associate membership', () => {
+          const file = {
+            ...baseFile,
+            ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+          };
+          const res = hasSufficientProgramMembershipAccess({ scopes, file });
+          expect(res).toBe(false);
+        });
+      it('allows access for public release controlled', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+      it('allows access for public release open', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
     });
-    it('denies access for programs with full membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    }),
+
+    describe('unauthorized public user', () => {
+      let scopes: PermissionScopeObj[];
+      beforeAll(() => {
+        const userScopes: PermissionScopeObj[] = [];
+        scopes = userScopes;
+      });
+
+      it('denies access for programs associated with file', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
+      it('denies access for programs with full membership', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(false);
+      });
       it('denies access for programs with associate membership', () => {
         const file = {
           ...baseFile,
@@ -300,109 +355,60 @@ describe('hasSufficientProgramMembershipAccess', () => {
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
       });
-    it('allows access for public release controlled', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
+      it('allows access for public release open', () => {
+        const file = {
+          ...baseFile,
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+        };
+        const res = hasSufficientProgramMembershipAccess({ scopes, file });
+        expect(res).toBe(true);
+      });
+    });
+  });
+
+  describe('DACO', () => {
+    const controlledFile: typeof baseFile = {
+      ...baseFile,
+      file_access: FILE_ACCESS.CONTROLLED,
+    };
+    const publicFile: typeof baseFile = {
+      ...baseFile,
+      file_access: FILE_ACCESS.PUBLIC,
+    };
+    it('permission give access', () => {
+      const scopes: PermissionScopeObj[] = [
+        {
+          policy: 'DACO',
+          permission: PERMISSIONS.READ,
+        },
+      ];
+      const res = hasSufficientDacoAccess({ scopes, file: publicFile });
       expect(res).toBe(true);
     });
-    it('allows access for public release open', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-  });
 
-  describe('unauthorized public user', () => {
-    let scopes: PermissionScopeObj[];
-    beforeAll(() => {
-      const userScopes: PermissionScopeObj[] = [];
-      scopes = userScopes;
-    });
-
-    it('denies access for programs associated with file', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
+    it('fails with no DACO access', () => {
+      const scopes: PermissionScopeObj[] = [];
+      const res = hasSufficientDacoAccess({ scopes, file: controlledFile });
       expect(res).toBe(false);
     });
-    it('denies access for programs with full membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
+
+    it('fails with denied DACO access', () => {
+      const scopes: PermissionScopeObj[] = [
+        {
+          policy: 'DACO',
+          permission: PERMISSIONS.DENY,
+        },
+        {
+          policy: 'DACO',
+          permission: PERMISSIONS.READ,
+        },
+      ];
+      const res = hasSufficientDacoAccess({ scopes, file: controlledFile });
       expect(res).toBe(false);
     });
-    it('denies access for programs with associate membership', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    });
-    it('denies access for public release controlled', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(false);
-    });
-    it('allows access for public release open', () => {
-      const file = {
-        ...baseFile,
-        ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
-      };
-      const res = hasSufficientProgramMembershipAccess({ scopes, file });
-      expect(res).toBe(true);
-    });
-  });
-});
-
-describe('DACO', () => {
-  it('permission give access', () => {
-    const scopes: PermissionScopeObj[] = [
-      {
-        policy: 'DACO',
-        permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-      },
-    ];
-    const res = hasSufficientDacoAccess({ scopes });
-    expect(res).toBe(true);
   });
 
-  it('fails with no DACO access', () => {
-    const scopes: PermissionScopeObj[] = [];
-    const res = hasSufficientDacoAccess({ scopes });
-    expect(res).toBe(false);
-  });
-
-  it('fails with denied DACO access', () => {
-    const scopes: PermissionScopeObj[] = [
-      {
-        policy: 'DACO',
-        permission: PERMISSIONS.DENY as keyof typeof PERMISSIONS,
-      },
-      {
-        policy: 'DACO',
-        permission: PERMISSIONS.READ as keyof typeof PERMISSIONS,
-      },
-    ];
-    const res = hasSufficientDacoAccess({ scopes });
-    expect(res).toBe(false);
-  });
-});
-
-/* it('allows public access', async () => {
+  /* it('allows public access', async () => {
   const scopes: PermissionScopeObj[] = [{ policy: '', permission: PERMISSIONS.READ }];
   const file = {
     ...baseFile,
@@ -415,3 +421,4 @@ describe('DACO', () => {
 it('allows file available to users who are member of the program which is associated with the file', async () => {
   expect(false).toBe(true);
 });*/
+});
