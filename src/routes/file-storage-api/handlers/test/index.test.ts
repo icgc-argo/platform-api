@@ -236,7 +236,7 @@ describe('file-storage-api', () => {
       });
     });
 
-    describe('for public users', () => {
+    describe.only('for public users', () => {
       // this is a function because `describe` callback happens before test run
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
@@ -256,7 +256,29 @@ describe('file-storage-api', () => {
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
       });
 
-      it('throws the right error when requesting unauthorized file', async () => {
+      it('throws the right error when unauthenticated user requests unauthorized file', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: 'ff5e325b-4b74-5e96-ab31-720a695a19cd',
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error?.status).toBe(401);
+      });
+
+      it('returns all the publicly released data for unauthenticated users', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({ objectIds: Object.keys(allIndexedDocuments) }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      });
+
+      it('throws the right error when authenticated user requests unauthorized file', async () => {
         let error;
         try {
           await fetchEntity({
@@ -269,15 +291,6 @@ describe('file-storage-api', () => {
         expect(error?.status).toBe(403);
       });
 
-      it('returns all the publicly released data for unauthenticated users', async () => {
-        const expectedRetrievableIds = getExpectedRetrievableIds();
-        const allEntitiesRetrievable = await reduceToEntityList(
-          retrievableObjectStream({ objectIds: Object.keys(allIndexedDocuments) }),
-        );
-        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
-        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
-        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
-      });
     });
   });
 });

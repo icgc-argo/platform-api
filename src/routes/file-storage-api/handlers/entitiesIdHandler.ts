@@ -14,7 +14,7 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
     if (isAuthorized) {
       res.status(200).send(toSongEntity(file as EsFileCentricDocument));
     } else {
-      res.status(403).end();
+      res.status(req.authenticated ? 403 : 401).end();
     }
   };
 };

@@ -49,7 +49,7 @@ const downloadHandler = ({
     });
     handleRequest(req, res, next);
   } else {
-    res.status(403).end();
+    res.status(req.authenticated ? 403 : 401).end();
   }
 };
 

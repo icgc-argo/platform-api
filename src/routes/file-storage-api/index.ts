@@ -52,21 +52,21 @@ export default ({
 
   router.get(
     '/entities',
-    storageApiAuthenticationMiddleware({ egoClient, required: false }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     createEntitiesHandler({
       esClient,
     }),
   );
   router.get(
     '/entities/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient, required: false }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     createEntitiesIdHandler({
       esClient,
     }),
   );
   router.get(
     '/download/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient, required: true }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     downloadProxy({
       rootPath,
       esClient,
