@@ -37,6 +37,7 @@ import {
   MOCK_API_KEYS,
   MOCK_API_KEY_SCOPES,
   reduceToEntityList,
+  TEST_PROGRAM,
 } from './utils';
 import _ from 'lodash';
 import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
@@ -265,7 +266,8 @@ describe('file-storage-api', () => {
         } catch (err) {
           error = err;
         }
-        expect(error?.status).toBe(401);
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(401);
       });
 
       it('returns all the publicly released data for unauthenticated users', async () => {
@@ -288,9 +290,53 @@ describe('file-storage-api', () => {
         } catch (err) {
           error = err;
         }
-        expect(error?.status).toBe(403);
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+
+    describe('for full program members', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(
+            obj =>
+              [
+                FILE_RELEASE_STAGE.FULL_PROGRAMS,
+                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_RELEASE_STAGE.PUBLIC,
+                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+              ].includes(obj.release_stage) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                obj.study_id === TEST_PROGRAM),
+          )
+          .map(doc => doc.object_id);
+      it('returns all and only the file the user can access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
       });
 
+      it('throws the right error when user access an unreleased file from another program', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: '14bddf27-ebd3-51f8-88b8-53e4e91d438e',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
     });
   });
 });
