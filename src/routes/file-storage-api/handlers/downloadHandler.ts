@@ -43,13 +43,13 @@ const downloadHandler = ({
       pathRewrite: normalizePath(rootPath),
       onError: (err: Error, req: Request, res: Response) => {
         logger.error('Score Router Error - ' + err);
-        return res.status(500).send('Internal Server Error');
+        return res.status(500).end();
       },
       changeOrigin: true,
     });
     handleRequest(req, res, next);
   } else {
-    res.status(403);
+    res.status(403).end();
   }
 };
 

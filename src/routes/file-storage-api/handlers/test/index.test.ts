@@ -28,16 +28,19 @@ import createFileStorageApi from '../../index';
 import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import { reduce } from 'axax/es5/reduce';
 import {
   createMockEgoClient,
   entitiesStream,
   getAllIndexedDocuments,
+  MockApiKey,
   MOCK_API_KEYS,
   MOCK_API_KEY_SCOPES,
   reduceToEntityList,
 } from './utils';
 import _ from 'lodash';
 import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
+import { SongEntity } from 'routes/file-storage-api/utils';
 
 const asyncExec = promisify(exec);
 
@@ -180,6 +183,101 @@ describe('file-storage-api', () => {
       expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
+    });
+  });
+
+  describe.only('/entities/{id} endpoint', () => {
+    const fetchEntity = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
+      const requestPromise = chai.request(app).get(`/entities/${objectId}`);
+      return (apiKey
+        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+        : requestPromise
+      ).then(response => {
+        if (!response.body.id) {
+          throw response.error;
+        }
+        return response.body as SongEntity;
+      });
+    };
+    const retrievableObjectStream = async function*({
+      apiKey,
+      objectIds,
+    }: {
+      apiKey?: MockApiKey;
+      objectIds: string[];
+    }) {
+      for await (const chunk of _.chunk(objectIds, 5)) {
+        const data = await Promise.all(
+          chunk.map(objectId => fetchEntity({ apiKey, objectId }).catch(err => null)),
+        );
+        yield data.filter(entry => !!entry) as SongEntity[];
+      }
+    };
+    const reduceToEntityList = (stream: ReturnType<typeof retrievableObjectStream>) =>
+      reduce<(SongEntity)[], (SongEntity)[]>((acc, r) => {
+        r.forEach(entity => acc.push(entity));
+        return acc;
+      }, [])(stream);
+
+    describe('for DCC users', () => {
+      it('returns all data for dcc members', async () => {
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.DCC,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        expect(allEntitiesRetrievable.length).toBe(_.size(allIndexedDocuments));
+        expect(
+          allEntitiesRetrievable
+            .map(obj => (obj as SongEntity).id)
+            .every(id => Object.keys(allIndexedDocuments).includes(id)),
+        );
+      });
+    });
+
+    describe('for public users', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(obj => obj.release_stage === FILE_RELEASE_STAGE.PUBLIC)
+          .map(doc => doc.object_id);
+
+      it('returns all the publicly released data for authenticated users', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.PUBLIC,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      });
+
+      it('throws the right error when requesting unauthorized file', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: 'ff5e325b-4b74-5e96-ab31-720a695a19cd',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error?.status).toBe(403);
+      });
+
+      it('returns all the publicly released data for unauthenticated users', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({ objectIds: Object.keys(allIndexedDocuments) }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      });
     });
   });
 });

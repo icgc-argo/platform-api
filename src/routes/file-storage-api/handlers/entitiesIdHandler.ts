@@ -12,9 +12,9 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
       file,
     });
     if (isAuthorized) {
-      res.send(toSongEntity(file as EsFileCentricDocument)).status(200);
+      res.status(200).send(toSongEntity(file as EsFileCentricDocument));
     } else {
-      res.status(403);
+      res.status(403).end();
     }
   };
 };
