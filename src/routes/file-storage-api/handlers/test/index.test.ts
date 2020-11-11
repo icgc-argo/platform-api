@@ -236,7 +236,7 @@ describe('file-storage-api', () => {
       });
     });
 
-    describe.only('for public users', () => {
+    describe('for public users', () => {
       // this is a function because `describe` callback happens before test run
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
