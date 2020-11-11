@@ -23,12 +23,14 @@ const args = process.argv.slice(2);
 
 (async () => {
   const uuidNamespace = '7a17f032-83b2-44fe-8cf0-bef1bfb77023'; //from https://www.uuidgenerator.net/
-  const fileIdsFromRdpc: string[] = await fetch(RDPC_URL, {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
+  const fileIdsFromRdpc: string[] =
+    [] ||
+    (await fetch(RDPC_URL, {
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `{
         analyses(filter: { 
           studyId: "${studyToLoadFromRdpc}"
           analysisState: PUBLISHED
@@ -38,18 +40,18 @@ const args = process.argv.slice(2);
           }
         }
       }`,
-    }),
-    method: 'POST',
-  })
-    .then(res => res.json())
-    .then(({ data }: { data: { analyses: Array<{ files: Array<{ objectId: string }> }> } }) =>
-      data.analyses
-        .map(({ files }) => files)
-        .flatMap(x => x)
-        .map(({ objectId }) => objectId),
-    );
+      }),
+      method: 'POST',
+    })
+      .then(res => res.json())
+      .then(({ data }: { data: { analyses: Array<{ files: Array<{ objectId: string }> }> } }) =>
+        data.analyses
+          .map(({ files }) => files)
+          .flatMap(x => x)
+          .map(({ objectId }) => objectId),
+      ));
   const usedIds: { [k: string]: true } = {};
-  const data = range(parseInt(args[0]) || 10001).map((i, index) => {
+  const data = range(parseInt(args[0]) || 10).map((i, index) => {
     const studyId = sample(studyIds);
     const useDataFromRdpc = studyId === studyToLoadFromRdpc;
     const nextIdCandidate = fileIdsFromRdpc.filter(id => !usedIds[id])[0];
