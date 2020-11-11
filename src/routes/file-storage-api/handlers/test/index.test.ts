@@ -187,7 +187,7 @@ describe('file-storage-api', () => {
     });
   });
 
-  describe.only('/entities/{id} endpoint', () => {
+  describe('/entities/{id} endpoint', () => {
     const fetchEntity = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
       const requestPromise = chai.request(app).get(`/entities/${objectId}`);
       return (apiKey
