@@ -114,7 +114,7 @@ describe('file-storage-api', () => {
       ).toBe(allRetrievedEntities.length);
     }, 240000);
 
-    it('returns only and all the right data for public users', async () => {
+    it('returns and all the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
       const equivalentIndexedDocuments = allEntityIdsFromApi.map(
@@ -138,7 +138,7 @@ describe('file-storage-api', () => {
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
-    it('returns only and all the right data for program members', async () => {
+    it('returns and all the right data for program members', async () => {
       const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
@@ -167,7 +167,7 @@ describe('file-storage-api', () => {
       );
     });
 
-    it('returns only and all the right data for associate program members', async () => {
+    it('returns and all the right data for associate program members', async () => {
       const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
@@ -323,7 +323,7 @@ describe('file-storage-api', () => {
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);
-      it('returns all and only the file the user can access', async () => {
+      it('returns all and the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
           retrievableObjectStream({
@@ -368,7 +368,7 @@ describe('file-storage-api', () => {
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);
-      it('returns all and only the file the user can access', async () => {
+      it('returns all and the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
           retrievableObjectStream({
@@ -535,7 +535,7 @@ describe('file-storage-api', () => {
         expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
       });
 
-      it.only('throws the right error when user access an unreleased file from another program', async () => {
+      it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
         try {
           await fetchDownload({
@@ -550,7 +550,7 @@ describe('file-storage-api', () => {
       });
     });
 
-    describe.only('for associate program members', () => {
+    describe('for associate program members', () => {
       // this is a function because `describe` callback happens before test run
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
@@ -590,7 +590,7 @@ describe('file-storage-api', () => {
         expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
       });
 
-      it.only('throws the right error when user access an unreleased file from another program', async () => {
+      it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
         try {
           await fetchDownload({
