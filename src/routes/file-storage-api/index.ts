@@ -26,15 +26,18 @@ import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
 import { storageApiAuthenticationMiddleware } from './accessValidations';
 import { EgoClient } from 'services/ego';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export default ({
   rootPath,
   esClient,
   egoClient,
+  downloadProxyMiddlewareFactory = createProxyMiddleware,
 }: {
   rootPath: string;
   esClient: Client;
   egoClient: EgoClient;
+  downloadProxyMiddlewareFactory?: typeof createProxyMiddleware;
 }): Router => {
   const router = express.Router();
 
@@ -70,6 +73,7 @@ export default ({
     downloadProxy({
       rootPath,
       esClient,
+      proxyMiddlewareFactory: downloadProxyMiddlewareFactory,
     }),
   );
 

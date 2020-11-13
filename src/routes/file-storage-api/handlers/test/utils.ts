@@ -105,7 +105,7 @@ export const MOCK_API_KEYS = {
   DCC: 'DCC' as 'DCC',
 };
 export type MockApiKey = keyof typeof MOCK_API_KEYS;
-export const TEST_PROGRAM = `DASH-CA`;
+export const TEST_PROGRAM = `TEST-CA`;
 export const MOCK_API_KEY_SCOPES: {
   [k in MockApiKey]: string[];
 } = {

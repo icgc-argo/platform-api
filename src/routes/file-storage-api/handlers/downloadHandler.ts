@@ -15,9 +15,11 @@ const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
 const downloadHandler = ({
   rootPath,
   esClient,
+  proxyMiddlewareFactory = createProxyMiddleware,
 }: {
   rootPath: string;
   esClient: Client;
+  proxyMiddlewareFactory: typeof createProxyMiddleware;
 }): Handler => async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {
   const { fileObjectId } = req.params;
   const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
@@ -38,7 +40,7 @@ const downloadHandler = ({
 
   if (isAuthorized) {
     const repositoryUrl = esFileObject.repositories[0].url;
-    const handleRequest = createProxyMiddleware({
+    const handleRequest = proxyMiddlewareFactory({
       target: repositoryUrl,
       pathRewrite: normalizePath(rootPath),
       onError: (err: Error, req: Request, res: Response) => {
