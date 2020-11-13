@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest -t file-storage-api",
+    "test": "jest",
     "dev": "NODE_PATH=./src ts-node-dev ./src/index.ts -p ./tsconfig.json",
     "build": "rm -rf dist && tsc -p ./tsconfig.build.json && cp -r ./src/resources ./dist",
     "start::prod": "NODE_PATH=./dist node dist/index.js",
