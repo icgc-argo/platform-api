@@ -431,7 +431,7 @@ describe('file-storage-api', () => {
         return acc;
       }, [])(stream);
 
-    describe('for public users', () => {
+    describe('for unauthenticated users', () => {
       it('allows downloading publicly released file with open access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(
@@ -480,6 +480,62 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(401);
+      });
+    });
+
+    describe('for authenticated public users', () => {
+      it('allows downloading publicly released file with open access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(
+            doc =>
+              doc.release_stage === FILE_RELEASE_STAGE.PUBLIC &&
+              doc.file_access === FILE_ACCESS.PUBLIC,
+          )
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+      });
+      it('does not allow download of files that are not publicly released', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.release_stage !== FILE_RELEASE_STAGE.PUBLIC)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('does not allow download of files that have controlled access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('throws the right error for publicly released controlled files', async () => {
+        let error = null;
+        try {
+          await fetchDownload({
+            objectId: 'dcfcd6ed-7d8c-57b1-8d85-d75cf8f4a301',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
       });
     });
 
