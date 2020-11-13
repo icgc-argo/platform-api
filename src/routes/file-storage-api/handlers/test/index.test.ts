@@ -323,7 +323,7 @@ describe('file-storage-api', () => {
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);
-      it('returns all and the file the user can access', async () => {
+      it('returns all and only the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
           retrievableObjectStream({
@@ -368,7 +368,7 @@ describe('file-storage-api', () => {
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);
-      it('returns all and the file the user can access', async () => {
+      it('returns all and only the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
           retrievableObjectStream({
