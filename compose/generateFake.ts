@@ -51,7 +51,7 @@ const args = process.argv.slice(2);
           .map(({ objectId }) => objectId),
       ));
   const usedIds: { [k: string]: true } = {};
-  const data = range(parseInt(args[0]) || 10).map((i, index) => {
+  const data = range(parseInt(args[0]) || 1000).map((i, index) => {
     const studyId = sample(studyIds);
     const useDataFromRdpc = studyId === studyToLoadFromRdpc;
     const nextIdCandidate = fileIdsFromRdpc.filter(id => !usedIds[id])[0];
@@ -64,7 +64,7 @@ const args = process.argv.slice(2);
           ? nextIdCandidate
           : uuidv5(`fake_file_${i}`, uuidNamespace),
       study_id: sample(studyIds),
-      file_access: 'controlled',
+      file_access: sample(['controlled', 'public']),
       data_type: 'unaligned_reads',
       file_type: 'FASTQ',
       release_stage: sample(releaseStages),

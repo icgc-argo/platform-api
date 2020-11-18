@@ -99,52 +99,46 @@ export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = 
   T1,
   T2,
   Query
-> & { userScopes: PermissionScopeObj[] };
+> & { userScopes: PermissionScopeObj[]; authenticated: boolean };
 
 const extractUserScopes = async (config: {
   authHeader?: string;
   egoClient: EgoClient;
-}): Promise<{ scopes: string[]; errorCode?: number }> => {
+}): Promise<{ scopes: string[]; authenticated: boolean }> => {
   const { authHeader, egoClient } = config;
-  const AUTH_ERROR_CODE = 401;
   if (authHeader) {
     const token = authHeader.replace('Bearer ', '');
     try {
       const jwtData = egoTokenUtils.decodeToken(token);
       const expired = egoTokenUtils.isExpiredToken(jwtData);
       if (expired) {
-        return { scopes: [], errorCode: AUTH_ERROR_CODE };
+        return { scopes: [], authenticated: false };
       }
       return {
         scopes: jwtData.context.scope,
+        authenticated: true,
       };
     } catch (err) {
       return egoClient
         .checkApiKey({ apiKey: token })
-        .then(data => ({ scopes: data.scope as string[] }))
-        .catch(err => ({ scopes: [], errorCode: AUTH_ERROR_CODE }));
+        .then(data => ({ scopes: data.scope as string[], authenticated: true }))
+        .catch(err => ({ scopes: [], authenticated: false }));
     }
   } else {
-    return { scopes: [], errorCode: AUTH_ERROR_CODE };
+    return { scopes: [], authenticated: false };
   }
 };
 
-type AuthenticationMiddleware = (config: { egoClient: EgoClient; required: boolean }) => Handler;
-export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = ({
-  egoClient,
-  required,
-}) => {
+type AuthenticationMiddleware = (config: { egoClient: EgoClient }) => Handler;
+export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = ({ egoClient }) => {
   return async (req: Request, res, next) => {
     const { authorization } = req.headers;
     const userScope = await extractUserScopes({
       egoClient,
       authHeader: authorization,
     });
-    if (userScope.errorCode && required) {
-      res.status(userScope.errorCode).end();
-    } else {
-      (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
-      next();
-    }
+    (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
+    (req as AuthenticatedRequest).authenticated = userScope.authenticated;
+    next();
   };
 };

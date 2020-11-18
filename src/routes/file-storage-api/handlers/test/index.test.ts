@@ -28,16 +28,24 @@ import createFileStorageApi from '../../index';
 import { EgoClient } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import { reduce } from 'axax/es5/reduce';
 import {
   createMockEgoClient,
   entitiesStream,
   getAllIndexedDocuments,
+  MockApiKey,
   MOCK_API_KEYS,
   MOCK_API_KEY_SCOPES,
   reduceToEntityList,
+  TEST_PROGRAM,
 } from './utils';
 import _ from 'lodash';
-import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
+import {
+  EsFileCentricDocument,
+  FILE_ACCESS,
+  FILE_RELEASE_STAGE,
+} from 'utils/commonTypes/EsFileCentricDocument';
+import { SongEntity } from 'routes/file-storage-api/utils';
 
 const asyncExec = promisify(exec);
 
@@ -66,12 +74,20 @@ describe('file-storage-api', () => {
     if (stderr.length) {
       throw stderr;
     }
+    await new Promise(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, 1000);
+    });
     app.use(
       '/',
       createFileStorageApi({
         egoClient: mockEgoClient,
         rootPath: '/',
         esClient,
+        downloadProxyMiddlewareFactory: () => (req, res, next) => {
+          res.send('ok');
+        },
       }),
     );
     allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
@@ -98,7 +114,7 @@ describe('file-storage-api', () => {
       ).toBe(allRetrievedEntities.length);
     }, 240000);
 
-    it('returns only and all the right data for public users', async () => {
+    it('returns and all the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
       const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map(e => e.id);
       const equivalentIndexedDocuments = allEntityIdsFromApi.map(
@@ -122,7 +138,7 @@ describe('file-storage-api', () => {
       expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
     });
 
-    it('returns only and all the right data for program members', async () => {
+    it('returns and all the right data for program members', async () => {
       const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
@@ -151,7 +167,7 @@ describe('file-storage-api', () => {
       );
     });
 
-    it('returns only and all the right data for associate program members', async () => {
+    it('returns and all the right data for associate program members', async () => {
       const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = entitiesStream({ app, apiKey: apiKey });
@@ -180,6 +196,469 @@ describe('file-storage-api', () => {
       expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
+    });
+  });
+
+  describe('/entities/{id} endpoint', () => {
+    const fetchEntity = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
+      const requestPromise = chai.request(app).get(`/entities/${objectId}`);
+      return (apiKey
+        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+        : requestPromise
+      ).then(response => {
+        if (!response.body.id) {
+          throw response.error;
+        }
+        return response.body as SongEntity;
+      });
+    };
+    const retrievableObjectStream = async function*({
+      apiKey,
+      objectIds,
+    }: {
+      apiKey?: MockApiKey;
+      objectIds: string[];
+    }) {
+      for await (const chunk of _.chunk(objectIds, 5)) {
+        const data = await Promise.all(
+          chunk.map(objectId => fetchEntity({ apiKey, objectId }).catch(err => null)),
+        );
+        yield data.filter(entry => !!entry) as SongEntity[];
+      }
+    };
+    const reduceToEntityList = (stream: ReturnType<typeof retrievableObjectStream>) =>
+      reduce<(SongEntity)[], (SongEntity)[]>((acc, r) => {
+        r.forEach(entity => acc.push(entity));
+        return acc;
+      }, [])(stream);
+
+    describe('for DCC users', () => {
+      it('returns all data for dcc members', async () => {
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.DCC,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        expect(allEntitiesRetrievable.length).toBe(_.size(allIndexedDocuments));
+        expect(
+          allEntitiesRetrievable
+            .map(obj => (obj as SongEntity).id)
+            .every(id => Object.keys(allIndexedDocuments).includes(id)),
+        );
+      });
+    });
+
+    describe('for public users', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(obj => obj.release_stage === FILE_RELEASE_STAGE.PUBLIC)
+          .map(doc => doc.object_id);
+
+      it('returns all the publicly released data for authenticated users', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.PUBLIC,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      }, 120000);
+
+      it('throws the right error when unauthenticated user requests unauthorized file', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(401);
+      });
+
+      it('returns all the publicly released data for unauthenticated users', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({ objectIds: Object.keys(allIndexedDocuments) }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      }, 120000);
+
+      it('throws the right error when authenticated user requests unauthorized file', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+
+    describe('for full program members', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(
+            obj =>
+              [
+                FILE_RELEASE_STAGE.FULL_PROGRAMS,
+                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_RELEASE_STAGE.PUBLIC,
+                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+              ].includes(obj.release_stage) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                obj.study_id === TEST_PROGRAM),
+          )
+          .map(doc => doc.object_id);
+      it('returns all and only the file the user can access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      });
+
+      it('throws the right error when user access an unreleased file from another program', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+
+    describe('for associate program members', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(
+            obj =>
+              [
+                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+                FILE_RELEASE_STAGE.PUBLIC,
+              ].includes(obj.release_stage) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                obj.study_id === TEST_PROGRAM) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS &&
+                obj.study_id === TEST_PROGRAM),
+          )
+          .map(doc => doc.object_id);
+      it('returns all and only the file the user can access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToEntityList(
+          retrievableObjectStream({
+            apiKey: MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER,
+            objectIds: Object.keys(allIndexedDocuments),
+          }),
+        );
+        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        expect(allRetrievedIds.length).toBe(expectedRetrievableIds.length);
+        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+      });
+
+      it('throws the right error when user access an unreleased file from another program', async () => {
+        let error;
+        try {
+          await fetchEntity({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+  });
+
+  describe('/download endpoint', () => {
+    const fetchDownload = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
+      const requestPromise = chai.request(app).get(`/download/${objectId}`);
+      return (apiKey
+        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+        : requestPromise
+      ).then(response => {
+        if (response.body !== 'ok') {
+          throw response.error;
+        }
+        return response.body as 'ok';
+      });
+    };
+    const downloadableStream = async function*({
+      apiKey,
+      objectIds,
+    }: {
+      apiKey?: MockApiKey;
+      objectIds: string[];
+    }) {
+      for await (const chunk of _.chunk(objectIds, 5)) {
+        const data = await Promise.all(
+          chunk.map(objectId => fetchDownload({ apiKey, objectId }).catch(err => null)),
+        );
+        yield data.filter(entry => !!entry) as ('ok' | null)[];
+      }
+    };
+    const reduceToList = (stream: ReturnType<typeof downloadableStream>) =>
+      reduce<('ok' | null)[], ('ok' | null)[]>((acc, r) => {
+        r.forEach(entity => acc.push(entity));
+        return acc;
+      }, [])(stream);
+
+    describe('for unauthenticated users', () => {
+      it('allows downloading publicly released file with open access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(
+            doc =>
+              doc.release_stage === FILE_RELEASE_STAGE.PUBLIC &&
+              doc.file_access === FILE_ACCESS.PUBLIC,
+          )
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+          }),
+        );
+        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+      });
+      it('does not allow download of files that are not publicly released', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.release_stage !== FILE_RELEASE_STAGE.PUBLIC)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('does not allow download of files that have controlled access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('throws the right error for publicly released controlled files', async () => {
+        let error = null;
+        try {
+          await fetchDownload({
+            objectId: 'dcfcd6ed-7d8c-57b1-8d85-d75cf8f4a301',
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(401);
+      });
+    });
+
+    describe('for authenticated public users', () => {
+      it('allows downloading publicly released file with open access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(
+            doc =>
+              doc.release_stage === FILE_RELEASE_STAGE.PUBLIC &&
+              doc.file_access === FILE_ACCESS.PUBLIC,
+          )
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+      });
+      it('does not allow download of files that are not publicly released', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.release_stage !== FILE_RELEASE_STAGE.PUBLIC)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('does not allow download of files that have controlled access', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments)
+          .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
+          .map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          }),
+        );
+        expect(downloadResults.every(result => result === null)).toBe(true);
+      });
+      it('throws the right error for publicly released controlled files', async () => {
+        let error = null;
+        try {
+          await fetchDownload({
+            objectId: 'dcfcd6ed-7d8c-57b1-8d85-d75cf8f4a301',
+            apiKey: MOCK_API_KEYS.PUBLIC,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+
+    describe('for dcc users', () => {
+      it('allows downloading everything', async () => {
+        const expectedRetrieableIds = Object.values(allIndexedDocuments).map(doc => doc.object_id);
+        const downloadResults = await reduceToList(
+          downloadableStream({
+            objectIds: expectedRetrieableIds,
+            apiKey: MOCK_API_KEYS.DCC,
+          }),
+        );
+        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+      });
+    });
+
+    describe('for full program members', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(
+            obj =>
+              [
+                FILE_RELEASE_STAGE.FULL_PROGRAMS,
+                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_RELEASE_STAGE.PUBLIC,
+                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+              ].includes(obj.release_stage) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                obj.study_id === TEST_PROGRAM),
+          )
+          .map(doc => doc.object_id);
+      it('returns all the file the user can access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToList(
+          downloadableStream({
+            apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
+            objectIds: Object.keys(expectedRetrievableIds),
+          }),
+        );
+        expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
+      });
+      it('does not return the files users cannot access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToList(
+          downloadableStream({
+            apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
+            objectIds: Object.keys(allIndexedDocuments).filter(
+              id => !expectedRetrievableIds.includes(id),
+            ),
+          }),
+        );
+        expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
+      });
+
+      it('throws the right error when user access an unreleased file from another program', async () => {
+        let error;
+        try {
+          await fetchDownload({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+            apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
+    });
+
+    describe('for associate program members', () => {
+      // this is a function because `describe` callback happens before test run
+      const getExpectedRetrievableIds = () =>
+        Object.values(allIndexedDocuments)
+          .filter(
+            obj =>
+              [
+                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
+                FILE_RELEASE_STAGE.PUBLIC,
+              ].includes(obj.release_stage) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                obj.study_id === TEST_PROGRAM) ||
+              (obj.release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS &&
+                obj.study_id === TEST_PROGRAM),
+          )
+          .map(doc => doc.object_id);
+      it('returns all the file the user can access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToList(
+          downloadableStream({
+            apiKey: MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER,
+            objectIds: Object.keys(expectedRetrievableIds),
+          }),
+        );
+        expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
+      });
+      it('does not return the files users cannot access', async () => {
+        const expectedRetrievableIds = getExpectedRetrievableIds();
+        const allEntitiesRetrievable = await reduceToList(
+          downloadableStream({
+            apiKey: MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER,
+            objectIds: Object.keys(allIndexedDocuments).filter(
+              id => !expectedRetrievableIds.includes(id),
+            ),
+          }),
+        );
+        expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
+      });
+
+      it('throws the right error when user access an unreleased file from another program', async () => {
+        let error;
+        try {
+          await fetchDownload({
+            objectId: '82232d81-7960-5eca-8b3c-1cf4d403b128',
+            apiKey: MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER,
+          });
+        } catch (err) {
+          error = err;
+        }
+        expect(error).toBeTruthy();
+        expect(error.status).toBe(403);
+      });
     });
   });
 });

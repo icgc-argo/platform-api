@@ -26,15 +26,18 @@ import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
 import { storageApiAuthenticationMiddleware } from './accessValidations';
 import { EgoClient } from 'services/ego';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export default ({
   rootPath,
   esClient,
   egoClient,
+  downloadProxyMiddlewareFactory = createProxyMiddleware,
 }: {
   rootPath: string;
   esClient: Client;
   egoClient: EgoClient;
+  downloadProxyMiddlewareFactory?: typeof createProxyMiddleware;
 }): Router => {
   const router = express.Router();
 
@@ -52,24 +55,25 @@ export default ({
 
   router.get(
     '/entities',
-    storageApiAuthenticationMiddleware({ egoClient, required: false }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     createEntitiesHandler({
       esClient,
     }),
   );
   router.get(
     '/entities/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient, required: false }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     createEntitiesIdHandler({
       esClient,
     }),
   );
   router.get(
     '/download/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient, required: true }),
+    storageApiAuthenticationMiddleware({ egoClient }),
     downloadProxy({
       rootPath,
       esClient,
+      proxyMiddlewareFactory: downloadProxyMiddlewareFactory,
     }),
   );
 

@@ -99,7 +99,7 @@ export const index = async (client: Client, index: string, data: typeof indexDat
   let i = 0;
   for (const chunk of _.chunk(data, 1000)) {
     await client.bulk({
-      refresh: 'true',
+      refresh: 'wait_for',
       body: toEsBulkIndexActions<any>(index, doc => doc.object_id)(
         chunk.map(doc => ({
           ...doc,
