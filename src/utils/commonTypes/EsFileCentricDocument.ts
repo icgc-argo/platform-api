@@ -125,7 +125,7 @@ export const FILE_METADATA_FIELDS = {
 };
 
 export enum FILE_ACCESS {
-  PUBLIC = 'public',
+  OPEN = 'open',
   CONTROLLED = 'controlled',
 }
 

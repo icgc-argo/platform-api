@@ -50,7 +50,7 @@
   {
     "object_id": "e876fcf6-61bd-5cc1-bb7c-4949653b6f2d",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -98,7 +98,7 @@
   {
     "object_id": "2c8061b6-7dae-563f-b547-9888bd9d337e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -242,7 +242,7 @@
   {
     "object_id": "ff5e325b-4b74-5e96-ab31-720a695a19cd",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -290,7 +290,7 @@
   {
     "object_id": "1fd91a5e-dcd7-5139-a8c2-728c78da4e6d",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -338,7 +338,7 @@
   {
     "object_id": "01c1f1ad-5cdb-5ffe-b77d-faa812f9e493",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -386,7 +386,7 @@
   {
     "object_id": "ef092dff-231e-57b9-b3fa-20cad090dc94",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -434,7 +434,7 @@
   {
     "object_id": "a15cf550-cffd-58e0-93ba-b7b23486fca8",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -482,7 +482,7 @@
   {
     "object_id": "82232d81-7960-5eca-8b3c-1cf4d403b128",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -578,7 +578,7 @@
   {
     "object_id": "ed3d4b47-e158-5777-bf72-711e5f2dca54",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -626,7 +626,7 @@
   {
     "object_id": "24ec1572-988f-5a10-a9d6-c622828ac6d7",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -770,7 +770,7 @@
   {
     "object_id": "83055287-b278-54b1-b55a-5fe12021942c",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -914,7 +914,7 @@
   {
     "object_id": "b4b0c7b4-3734-5e7a-90a9-6b5a41bb5599",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -962,7 +962,7 @@
   {
     "object_id": "4f568f71-806a-53e4-b292-1f859d5cd160",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -1058,7 +1058,7 @@
   {
     "object_id": "d378bd51-2dd8-556d-a736-1e42d0e32d71",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -1106,7 +1106,7 @@
   {
     "object_id": "c873b4f3-4347-5d49-8458-964ba5f81566",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -1154,7 +1154,7 @@
   {
     "object_id": "664646a5-f7aa-5873-bae0-513b33d3078c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -1250,7 +1250,7 @@
   {
     "object_id": "90e3aecf-95a8-508e-a4a5-7a904dda99e2",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -1298,7 +1298,7 @@
   {
     "object_id": "782dfa6d-44fc-5b9e-8b56-c17989cd62ba",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -1394,7 +1394,7 @@
   {
     "object_id": "27440636-dac9-5f39-b12a-157c5de89560",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -1490,7 +1490,7 @@
   {
     "object_id": "38a8eb89-5c89-585d-97d0-8bb6093c2cc7",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -1538,7 +1538,7 @@
   {
     "object_id": "b2573cee-46b2-56f1-9810-3c6674f25c91",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -1634,7 +1634,7 @@
   {
     "object_id": "fb2d63cc-2efc-595a-8dc4-b879c13911b5",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -1730,7 +1730,7 @@
   {
     "object_id": "48ba16f0-b5e6-5e79-99e6-d63c27e6d71f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -1778,7 +1778,7 @@
   {
     "object_id": "ad70e476-ef80-50ac-a1aa-20a9232bf5aa",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -1826,7 +1826,7 @@
   {
     "object_id": "16bb4dec-7f06-592c-a00e-862aa2463ad0",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -1922,7 +1922,7 @@
   {
     "object_id": "5c576f29-a30f-5c38-a5ec-b00b4961d241",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -1970,7 +1970,7 @@
   {
     "object_id": "752cff5e-83f8-53b4-97ca-c74af6ea185c",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2066,7 +2066,7 @@
   {
     "object_id": "9cc2c80f-3456-5583-9856-5c36f83158c6",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -2114,7 +2114,7 @@
   {
     "object_id": "ee45ef7d-a287-5a2f-aca6-2119470515f4",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2162,7 +2162,7 @@
   {
     "object_id": "2850d344-4f5c-5ad1-a4d7-3976889d30fb",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -2210,7 +2210,7 @@
   {
     "object_id": "9ff5bced-e452-58d2-8502-d27f78170343",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -2354,7 +2354,7 @@
   {
     "object_id": "af9763a2-d1b6-5f77-92c6-17fa5f20f8be",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -2498,7 +2498,7 @@
   {
     "object_id": "42630e8f-2097-54e0-a76a-4ba789112c9b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2546,7 +2546,7 @@
   {
     "object_id": "667c5d4c-b902-5c2b-ad65-8912cde1747b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2594,7 +2594,7 @@
   {
     "object_id": "8ab0040c-cc4c-588e-b155-73ae3fa8539d",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2642,7 +2642,7 @@
   {
     "object_id": "752294ce-f508-51d7-b77d-692f03164eca",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -2786,7 +2786,7 @@
   {
     "object_id": "599315d9-56f8-5cdb-944e-7d387ceacfe8",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -2834,7 +2834,7 @@
   {
     "object_id": "dc579eca-e87e-51bf-9e52-b0cbb3cf2654",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -3074,7 +3074,7 @@
   {
     "object_id": "6ac60ff9-f196-55fe-9ef2-86d0abc146ea",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -3122,7 +3122,7 @@
   {
     "object_id": "78415afa-9d46-501d-bf15-c334fb5a4ac6",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -3170,7 +3170,7 @@
   {
     "object_id": "ecf9d411-ffdf-57ee-b994-8edea132763d",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -3218,7 +3218,7 @@
   {
     "object_id": "32e60477-349e-5ddb-a12e-ea0749b3bd96",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -3362,7 +3362,7 @@
   {
     "object_id": "907d9811-4d82-5789-b222-f51e5735d7b5",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -3458,7 +3458,7 @@
   {
     "object_id": "41f59cb6-c5b3-58a2-bb7e-1616ebba8625",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -3602,7 +3602,7 @@
   {
     "object_id": "e73bb311-4f1b-517e-8413-cb74215663e1",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -3794,7 +3794,7 @@
   {
     "object_id": "11a0c33d-d30f-5984-9245-95898380ba4c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -3842,7 +3842,7 @@
   {
     "object_id": "92cfeec7-07c4-5775-b6a6-642fc171a569",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -3938,7 +3938,7 @@
   {
     "object_id": "9f79aa38-a4ce-5bd0-87dd-5c7159b6fe77",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -3986,7 +3986,7 @@
   {
     "object_id": "cdda429f-f9a3-557e-bd36-bf00866807c2",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -4034,7 +4034,7 @@
   {
     "object_id": "3b98ce89-6891-5c8d-a2f2-56213af8ead6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -4322,7 +4322,7 @@
   {
     "object_id": "dbabf56d-72d6-5aaf-85a9-55f343515939",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -4418,7 +4418,7 @@
   {
     "object_id": "858c6899-4137-5456-b2ce-5bdcb2065c36",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -4562,7 +4562,7 @@
   {
     "object_id": "8a2c3faf-1742-5d92-a106-53ecd7eca59f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -4706,7 +4706,7 @@
   {
     "object_id": "179160c4-a133-5a4d-a96d-097bf9355000",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -4754,7 +4754,7 @@
   {
     "object_id": "6654c159-d960-572b-a887-644796e0b809",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -4802,7 +4802,7 @@
   {
     "object_id": "9f4d3715-69a6-56c2-a1d0-ad926599e650",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -4850,7 +4850,7 @@
   {
     "object_id": "906ea1bf-29f4-590b-8d2b-a0422301810c",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -4898,7 +4898,7 @@
   {
     "object_id": "5b5fbeb1-6c73-5c33-bd7d-6a3702326be3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -4994,7 +4994,7 @@
   {
     "object_id": "2f0e73e3-0c7f-55ee-b9fc-f163e8d2ebae",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -5234,7 +5234,7 @@
   {
     "object_id": "92a7102b-de34-57da-8270-fb719a94ee2a",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -5330,7 +5330,7 @@
   {
     "object_id": "8a227287-56e8-5fe8-9043-c925c8a84c49",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -5426,7 +5426,7 @@
   {
     "object_id": "7d2bb3b8-0c6c-5718-8289-1052e2aeb67d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -5666,7 +5666,7 @@
   {
     "object_id": "c8b6b13c-08c2-53ea-9406-cebbf30826a7",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -5714,7 +5714,7 @@
   {
     "object_id": "686cd54a-f7e6-577a-b5a2-4eca2a9ec2cf",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -5810,7 +5810,7 @@
   {
     "object_id": "bd96871e-13b3-537d-ba38-ae5764bf662c",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -5858,7 +5858,7 @@
   {
     "object_id": "fbb605bb-9fe8-5c78-99c6-a150f8749bf5",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -6050,7 +6050,7 @@
   {
     "object_id": "da945ca1-dc53-5df9-a8e4-00f6d32bcc07",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -6194,7 +6194,7 @@
   {
     "object_id": "443432da-ddb0-5410-88e1-0470e7f0cabb",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -6482,7 +6482,7 @@
   {
     "object_id": "120375b8-153d-55bf-aa64-94b274eb8753",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -6530,7 +6530,7 @@
   {
     "object_id": "b98bb04f-a7a4-53bf-a03e-ae2d89bb2ae1",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -6578,7 +6578,7 @@
   {
     "object_id": "bfe3fff1-76dc-5cfa-8595-ca77768a1d75",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -6626,7 +6626,7 @@
   {
     "object_id": "55daca0e-eabd-595a-97c1-79c2fb71946f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -6674,7 +6674,7 @@
   {
     "object_id": "7ef94a18-7817-5e02-8015-83df151c7799",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -6722,7 +6722,7 @@
   {
     "object_id": "f5a06bdf-0fb7-559c-bc6c-fd93889de6cf",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -6818,7 +6818,7 @@
   {
     "object_id": "1309c8e9-381a-5b5a-96cc-fc05de9e46c8",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -6866,7 +6866,7 @@
   {
     "object_id": "dcb3fba0-51b8-5d7d-890a-8a2db9bd6d88",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -7154,7 +7154,7 @@
   {
     "object_id": "84eca700-23c5-5b00-8bc1-ffe29975bd57",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -7202,7 +7202,7 @@
   {
     "object_id": "08d8566a-26c0-567b-89ba-4e5c5ef8f7f6",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -7394,7 +7394,7 @@
   {
     "object_id": "8e364316-7279-55f1-8c2a-d204b20b4218",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -7442,7 +7442,7 @@
   {
     "object_id": "f94784d6-5941-5692-8824-83355cbf307f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -7490,7 +7490,7 @@
   {
     "object_id": "7c0a803c-5524-5e10-8ae5-fce5b31fdada",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -7634,7 +7634,7 @@
   {
     "object_id": "296363d9-b01c-5d62-8339-6f56770ba14d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -7778,7 +7778,7 @@
   {
     "object_id": "7c681184-ec69-560c-972d-29b7963d8fca",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -7874,7 +7874,7 @@
   {
     "object_id": "830eb173-2148-5a87-a8fe-2127c5a34505",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -7922,7 +7922,7 @@
   {
     "object_id": "b4040a94-1be3-51d5-b97e-7618db9684b3",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -7970,7 +7970,7 @@
   {
     "object_id": "2c832965-c11a-5a56-b727-5aa911843859",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -8018,7 +8018,7 @@
   {
     "object_id": "fcff7938-7acf-5245-8b87-7c10e759b4e6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -8066,7 +8066,7 @@
   {
     "object_id": "20d91d12-40c2-5173-95c6-de707be1ec2f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -8114,7 +8114,7 @@
   {
     "object_id": "eadca586-cd99-5663-967e-171a0023e68c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -8210,7 +8210,7 @@
   {
     "object_id": "2157b3fb-cb71-5255-8ca0-09384b58af2a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -8354,7 +8354,7 @@
   {
     "object_id": "16b969cc-4fb4-5f2c-a6ff-a776dbe2dc10",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -8402,7 +8402,7 @@
   {
     "object_id": "63670ab2-cf86-5cf1-afcb-003b3b6ba56e",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -8450,7 +8450,7 @@
   {
     "object_id": "8070df73-17a0-5016-b693-6a1e6a71d333",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -8546,7 +8546,7 @@
   {
     "object_id": "4ac71b1e-f486-57cd-a82a-86b1b1a2f264",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -8642,7 +8642,7 @@
   {
     "object_id": "d57747f8-1c4a-562e-b401-027dcc55d0eb",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -8786,7 +8786,7 @@
   {
     "object_id": "ac5a4599-8b98-5af2-8007-bc8dce0a642c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -8978,7 +8978,7 @@
   {
     "object_id": "8187ca21-ded3-5e4f-9f98-57faa93dedf4",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -9026,7 +9026,7 @@
   {
     "object_id": "21a18d62-3ec1-5a76-af03-23ab9adf5fe3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -9074,7 +9074,7 @@
   {
     "object_id": "3bdd1955-b410-542d-9ee9-85177b18ceb3",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -9362,7 +9362,7 @@
   {
     "object_id": "94de3792-f441-51c0-b2db-a88235321c3c",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -9410,7 +9410,7 @@
   {
     "object_id": "c1f85e5e-39e7-534b-a75c-4cc44b533e72",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -9794,7 +9794,7 @@
   {
     "object_id": "50cd3370-a003-525b-9b10-49db5ce7b8b0",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -9890,7 +9890,7 @@
   {
     "object_id": "33911f35-b602-5824-ad2d-dc2202cf69c4",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -9938,7 +9938,7 @@
   {
     "object_id": "4b3a6d50-1673-5541-9be8-c12e69a2f58b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -10082,7 +10082,7 @@
   {
     "object_id": "a7f823eb-2d74-52ff-9d86-01b9789179f2",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10130,7 +10130,7 @@
   {
     "object_id": "25963968-d541-5163-809b-1dccf3a77316",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -10226,7 +10226,7 @@
   {
     "object_id": "9e2ed5b4-abc6-55d8-ad38-f52d08bf4e7e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10274,7 +10274,7 @@
   {
     "object_id": "2ac422f0-40fc-52f6-8207-cc213579ab91",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10322,7 +10322,7 @@
   {
     "object_id": "f90b9f0a-dc9e-5231-b5a5-d74192caeec6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10370,7 +10370,7 @@
   {
     "object_id": "5f1800aa-6504-5cca-bc88-cc7e99f7e860",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -10514,7 +10514,7 @@
   {
     "object_id": "70f30e41-571f-54f0-831f-23079aecafa9",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10562,7 +10562,7 @@
   {
     "object_id": "5d7533d6-f527-574a-94aa-781e099c02db",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -10610,7 +10610,7 @@
   {
     "object_id": "00c7a5f9-6ad2-5d13-9557-a024aedbc15d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -10754,7 +10754,7 @@
   {
     "object_id": "2a4e1241-9e19-55e3-91f7-916dd2c0c1e9",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -10850,7 +10850,7 @@
   {
     "object_id": "c6ae79b7-a806-5e43-bbb8-bf730a464b58",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -10898,7 +10898,7 @@
   {
     "object_id": "f6201b1b-f89e-508d-a4b8-2e64f6f974d0",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -10994,7 +10994,7 @@
   {
     "object_id": "5cd39723-2abd-5f27-b0c6-465ec4eb66f0",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -11090,7 +11090,7 @@
   {
     "object_id": "86bb659d-73cc-5929-b3cf-ba8f649d38ac",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -11186,7 +11186,7 @@
   {
     "object_id": "d8940881-4f99-52e6-8636-cdbb691994e7",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -11234,7 +11234,7 @@
   {
     "object_id": "450c2370-298b-535f-b5ad-c10880268575",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -11282,7 +11282,7 @@
   {
     "object_id": "5c98fff7-bc99-5e76-9131-6ff3729d5621",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -11330,7 +11330,7 @@
   {
     "object_id": "19e8ace4-9a06-5682-9238-fa3cc7108669",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -11426,7 +11426,7 @@
   {
     "object_id": "41b5fcee-34b8-5120-b25a-c39f78266e2f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -11474,7 +11474,7 @@
   {
     "object_id": "a245b73d-d546-5900-a69b-adb64253b970",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -11522,7 +11522,7 @@
   {
     "object_id": "e33bb465-ba1a-52f0-b259-5cb05e8551f2",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -11570,7 +11570,7 @@
   {
     "object_id": "1c27b665-196a-5b01-8011-908b055d8d60",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -11618,7 +11618,7 @@
   {
     "object_id": "f2e80b5d-4ae4-5780-8eb6-32c4b4efba79",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -11714,7 +11714,7 @@
   {
     "object_id": "835aba95-5ebc-5797-9929-6b609209a163",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -11810,7 +11810,7 @@
   {
     "object_id": "427352b1-dc72-5bd2-853b-df81657ecf51",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -11858,7 +11858,7 @@
   {
     "object_id": "89e501a1-3291-5610-8c13-4edd5047c64a",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -11906,7 +11906,7 @@
   {
     "object_id": "9a9096e2-f951-57e6-baeb-559915bf69fe",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -12050,7 +12050,7 @@
   {
     "object_id": "6362ae2a-4ccb-574d-9688-69d3f4654d57",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -12098,7 +12098,7 @@
   {
     "object_id": "b7fa1150-55ef-522d-9f10-b376f9f22550",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -12146,7 +12146,7 @@
   {
     "object_id": "e919453a-f911-5b74-84b7-33c70e19efcf",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -12434,7 +12434,7 @@
   {
     "object_id": "70401d42-32ff-575b-8f3b-b985b5f34b0c",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -12530,7 +12530,7 @@
   {
     "object_id": "86aeec6e-d7a6-5994-9d41-6888e50d08bb",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -12578,7 +12578,7 @@
   {
     "object_id": "13b958ff-7c50-50b1-b814-7344f5b69af4",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -12626,7 +12626,7 @@
   {
     "object_id": "785e8f94-5ea3-5fd6-8bb5-cd6b40dfec2d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -12722,7 +12722,7 @@
   {
     "object_id": "75f449c8-a58b-54e8-a87c-049bec5b0c83",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -12866,7 +12866,7 @@
   {
     "object_id": "1d4e48e2-d171-5a1f-a69b-a71a469b15b8",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -12962,7 +12962,7 @@
   {
     "object_id": "6fa724d3-01b5-5de8-9336-47ccc344eb60",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -13010,7 +13010,7 @@
   {
     "object_id": "9fa155e5-28f9-5093-b984-a6875bb5958a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -13154,7 +13154,7 @@
   {
     "object_id": "22d8f90d-32fc-565d-8994-544f8bc3bc12",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -13202,7 +13202,7 @@
   {
     "object_id": "dba94d1a-ec62-5a39-b9a4-b28fa6448555",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -13298,7 +13298,7 @@
   {
     "object_id": "f90f6114-d093-53b8-a93e-5271ac453a01",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -13346,7 +13346,7 @@
   {
     "object_id": "85520744-ee84-5c65-835c-067786954188",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -13394,7 +13394,7 @@
   {
     "object_id": "ff67ad97-b322-56e8-86b3-3a58a8aabe47",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -13442,7 +13442,7 @@
   {
     "object_id": "2219da27-e21b-52f2-b136-98b170d10ad2",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -13490,7 +13490,7 @@
   {
     "object_id": "86c84312-183d-5669-b611-bb0a65633455",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -13586,7 +13586,7 @@
   {
     "object_id": "472c645d-45da-510a-babf-d28cc82fee68",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -13730,7 +13730,7 @@
   {
     "object_id": "4df8d140-f1ae-53af-a5da-01c9d4b3c837",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -14018,7 +14018,7 @@
   {
     "object_id": "1fc42a12-f961-5945-b50c-79e1ee11992e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -14066,7 +14066,7 @@
   {
     "object_id": "578bd8c1-ae91-58c7-938d-b2b6d8dcfad5",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -14114,7 +14114,7 @@
   {
     "object_id": "4a08f864-2e0a-5e36-9bb5-0713190aad2e",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -14306,7 +14306,7 @@
   {
     "object_id": "acb21631-63ab-5e29-bb32-66ea479eddbf",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -14354,7 +14354,7 @@
   {
     "object_id": "5c314937-00c7-57d1-9ba0-79c3b995956b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -14498,7 +14498,7 @@
   {
     "object_id": "6e80d66a-2677-56ad-b973-9a49bb38340c",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -14594,7 +14594,7 @@
   {
     "object_id": "f159b63f-a5a1-577d-b247-22f0edfa8433",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -14738,7 +14738,7 @@
   {
     "object_id": "0e093c9e-e09e-5597-901e-27ff0c832dcb",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -14834,7 +14834,7 @@
   {
     "object_id": "97e1f0c8-ed55-55f4-b2c8-db3a63e2ca5a",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -14978,7 +14978,7 @@
   {
     "object_id": "550d8c99-d82c-51e5-89c1-6b7e9cb57692",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -15218,7 +15218,7 @@
   {
     "object_id": "e579e261-dca0-5ec8-b2ba-4d486b93e5e5",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -15410,7 +15410,7 @@
   {
     "object_id": "f028eda4-e7eb-5886-9467-e13e311c82bc",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -15458,7 +15458,7 @@
   {
     "object_id": "f4b38a97-a939-55a8-b238-0c248d35fd06",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -15554,7 +15554,7 @@
   {
     "object_id": "99baf33c-8148-540c-b4c5-e68efe63f948",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -15602,7 +15602,7 @@
   {
     "object_id": "95ad7b67-9117-5e85-8bdc-3cb8bae3e446",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -15746,7 +15746,7 @@
   {
     "object_id": "5bd71e93-128a-5465-9ff3-7bf1a667ab0e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -15842,7 +15842,7 @@
   {
     "object_id": "56b7fda3-dcdb-59f4-b412-3614b62eb2ef",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -16034,7 +16034,7 @@
   {
     "object_id": "1f4ab65f-762d-59fe-98cf-8e9fa8a84479",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -16082,7 +16082,7 @@
   {
     "object_id": "9a633369-6fa8-51c3-b734-47ed12db93f6",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -16178,7 +16178,7 @@
   {
     "object_id": "6b087b3a-2dcb-50ad-9a6f-1507c4dd6ea9",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -16226,7 +16226,7 @@
   {
     "object_id": "0ab03ce8-334a-52db-b797-2a22b9ef378d",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -16274,7 +16274,7 @@
   {
     "object_id": "c6740b64-3bcc-5371-b0ff-b5b81a4cfcf3",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -16466,7 +16466,7 @@
   {
     "object_id": "79cbe0a9-7bdd-54e9-9525-4e5456a01870",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -16514,7 +16514,7 @@
   {
     "object_id": "0ad34478-1510-5999-bf9d-6727c4800be2",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -16610,7 +16610,7 @@
   {
     "object_id": "57e4fb76-071a-5013-b3ff-4f834e13e25c",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -16658,7 +16658,7 @@
   {
     "object_id": "6f71fc5a-6104-5f6a-9096-7217e5f82fef",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -16850,7 +16850,7 @@
   {
     "object_id": "9c595f89-1f4d-5749-9fee-26d99f172ad6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -16946,7 +16946,7 @@
   {
     "object_id": "0f57fdc7-d8cd-5546-b93a-431aba288932",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -17042,7 +17042,7 @@
   {
     "object_id": "a84b06a9-4dfa-5e66-a2e6-d73e7f791368",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -17234,7 +17234,7 @@
   {
     "object_id": "0ef671a1-4fc8-521b-8fb7-495373ec1d66",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -17474,7 +17474,7 @@
   {
     "object_id": "e9c67824-d656-5b5d-99ee-043a23d386df",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -17666,7 +17666,7 @@
   {
     "object_id": "32cae39f-1d09-54a7-b761-d31277b10ceb",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -17858,7 +17858,7 @@
   {
     "object_id": "5788d03f-7db0-5160-bc68-017069328d33",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -17954,7 +17954,7 @@
   {
     "object_id": "b9df014a-efa2-5bfe-9bcb-04d2d7a209af",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -18290,7 +18290,7 @@
   {
     "object_id": "e16b3279-eee9-5386-b5ca-47d0e1bf2810",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -18338,7 +18338,7 @@
   {
     "object_id": "8bd4f183-209e-5f1e-be8d-9b35fd80b6ac",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -18434,7 +18434,7 @@
   {
     "object_id": "baeded79-555a-5330-96bc-3cf2080c301b",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -18482,7 +18482,7 @@
   {
     "object_id": "3bb6d6e9-a08f-507c-b0a9-d2e06b21fba8",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -18530,7 +18530,7 @@
   {
     "object_id": "2e263818-7b18-508a-b6cd-840ef57c2d03",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -18626,7 +18626,7 @@
   {
     "object_id": "d09dc1c2-4349-5a12-9209-c2608824e0ba",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -18722,7 +18722,7 @@
   {
     "object_id": "c559f63f-5f32-55e6-b7ec-a5f891326e17",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -18770,7 +18770,7 @@
   {
     "object_id": "d7871b85-41fd-5660-a040-113294688125",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -19106,7 +19106,7 @@
   {
     "object_id": "3a924889-3880-51ab-a041-c1f3dce9c3c9",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -19154,7 +19154,7 @@
   {
     "object_id": "3e025f4a-f5f1-5a2f-a649-1d3fb7eeb3ad",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -19250,7 +19250,7 @@
   {
     "object_id": "f57bac1b-04e5-55b6-9ae1-aa70857eb878",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -19346,7 +19346,7 @@
   {
     "object_id": "b583166e-cc13-51bb-a7f7-a790bdab9b33",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -19538,7 +19538,7 @@
   {
     "object_id": "756f3a0a-bb53-5877-a3fc-25a3414e002c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -19634,7 +19634,7 @@
   {
     "object_id": "682f1044-5820-53d2-9458-617d2de05c4b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -19682,7 +19682,7 @@
   {
     "object_id": "c9594fce-ba86-5c5a-9ae6-4bdaed915f4d",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -19874,7 +19874,7 @@
   {
     "object_id": "6682fe6c-0471-58a7-8643-6fa5f6218564",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -19922,7 +19922,7 @@
   {
     "object_id": "f1544f2a-3be1-5ce7-a44f-6a3026c2cfce",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -19970,7 +19970,7 @@
   {
     "object_id": "280e3116-275f-5c3c-a299-46f0a4f710ad",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -20114,7 +20114,7 @@
   {
     "object_id": "a476476d-f6c7-5576-8967-05d76a173f53",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -20210,7 +20210,7 @@
   {
     "object_id": "e4732661-0162-5ec2-b18c-6665a8238961",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -20306,7 +20306,7 @@
   {
     "object_id": "116063ba-b2c4-5f7d-b91c-16ceea427f06",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -20498,7 +20498,7 @@
   {
     "object_id": "8189d6de-8f26-582e-b1b1-ed32d222b151",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -20546,7 +20546,7 @@
   {
     "object_id": "244848da-d134-5073-8398-2c35a42bf98f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -20690,7 +20690,7 @@
   {
     "object_id": "b790a425-13cc-5fb3-9fbb-14aa51d8b705",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -20738,7 +20738,7 @@
   {
     "object_id": "3a391003-7aa0-5005-8ac3-a27c3bd1776d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -20834,7 +20834,7 @@
   {
     "object_id": "15743ff7-1b84-5c20-9e3f-d3708aa17299",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -21122,7 +21122,7 @@
   {
     "object_id": "d08fa3cb-2363-54ae-b04c-f88bdd9fecae",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -21170,7 +21170,7 @@
   {
     "object_id": "fa5263f6-befc-5906-b623-60cbe7b4f95c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -21218,7 +21218,7 @@
   {
     "object_id": "43ee054f-b340-5395-b984-fd669d0255fd",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -21362,7 +21362,7 @@
   {
     "object_id": "5ac3da4a-316a-5820-8877-bbb769d447ec",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -21410,7 +21410,7 @@
   {
     "object_id": "566ed953-04f7-5946-86a2-b654c0ffd9aa",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -21506,7 +21506,7 @@
   {
     "object_id": "c921ea26-1519-5f57-bcc9-b56f837c452d",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -21554,7 +21554,7 @@
   {
     "object_id": "36798c34-cc6c-57d5-a488-0a4e6def57ee",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -21794,7 +21794,7 @@
   {
     "object_id": "a7d5f0f2-5ee6-5197-b3c9-d2db7c2e747e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -21938,7 +21938,7 @@
   {
     "object_id": "a712a126-824d-5ef3-8a59-dc64fe8e79d1",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -21986,7 +21986,7 @@
   {
     "object_id": "cc851733-13fc-5c6c-9026-490b6f67feec",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -22034,7 +22034,7 @@
   {
     "object_id": "264e62f9-628c-538c-9e9c-76261cb1e986",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -22082,7 +22082,7 @@
   {
     "object_id": "b877cc19-1a4d-5611-942e-99dd73e02aff",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -22274,7 +22274,7 @@
   {
     "object_id": "f5111c5c-60d2-5c85-8e48-c04504be3005",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -22418,7 +22418,7 @@
   {
     "object_id": "8d78f201-9a59-5dbd-a9d7-ad2c7c8cc297",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -22562,7 +22562,7 @@
   {
     "object_id": "5598b97d-ad88-5182-b6e5-08a15665c68c",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -22706,7 +22706,7 @@
   {
     "object_id": "25f4f7ab-e20e-56c1-adcb-9f699f813d17",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -22754,7 +22754,7 @@
   {
     "object_id": "ec471b26-cadd-5db2-ab27-e4a73d64caef",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -22802,7 +22802,7 @@
   {
     "object_id": "a23e04b2-1965-5feb-96d4-8e1c39e30614",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -22994,7 +22994,7 @@
   {
     "object_id": "3ee140cb-0dab-5359-9b02-bfc61def93c0",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -23186,7 +23186,7 @@
   {
     "object_id": "7d71f918-721d-57f4-aca1-c8fb5af1a119",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -23330,7 +23330,7 @@
   {
     "object_id": "5a569cdd-cfe3-5e0a-8cc1-0afd809505f6",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -23378,7 +23378,7 @@
   {
     "object_id": "6ebd741e-f1e5-53ce-a616-5e00970bd793",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -23426,7 +23426,7 @@
   {
     "object_id": "f868ff3a-2ab9-5d60-9a0d-f384bf1b3d9e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -23522,7 +23522,7 @@
   {
     "object_id": "849af641-b271-57ae-833a-f71de4e6d83f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -23570,7 +23570,7 @@
   {
     "object_id": "1d8980fa-8b48-5e57-b182-cdd1a44dbd1d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -23666,7 +23666,7 @@
   {
     "object_id": "cb56b305-6b8b-5ad4-bba5-8f6de51e8e95",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -23762,7 +23762,7 @@
   {
     "object_id": "6c9f8f52-e0ce-506e-a20a-daefe89798dc",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -23954,7 +23954,7 @@
   {
     "object_id": "e447f002-7d29-5cb5-ae9b-24375d78a42c",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -24050,7 +24050,7 @@
   {
     "object_id": "1f6d686d-86c1-5e33-9a29-8b8acd3262d6",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -24194,7 +24194,7 @@
   {
     "object_id": "697e8f7a-3bbc-5dc5-9503-97db533ad39b",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -24290,7 +24290,7 @@
   {
     "object_id": "0c589f1a-0838-5c62-854a-cd8c918bcf2e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -24434,7 +24434,7 @@
   {
     "object_id": "89b75a58-2fac-5cf2-a48d-160212ec2aa1",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -24482,7 +24482,7 @@
   {
     "object_id": "3b5b9d6e-da77-54b0-abb5-4813519faf8d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -24626,7 +24626,7 @@
   {
     "object_id": "1310dc92-3072-59df-87ea-594c7752be30",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -24674,7 +24674,7 @@
   {
     "object_id": "a19d12a5-42de-5349-9c01-36030e4054df",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -24866,7 +24866,7 @@
   {
     "object_id": "681d3065-3480-536d-81e6-c080e7cf7ced",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -24914,7 +24914,7 @@
   {
     "object_id": "f20717b9-8e14-551a-8f2d-bbbd264b5a1a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -25154,7 +25154,7 @@
   {
     "object_id": "28d97277-5d38-5fa6-bd90-41c1190ab2f5",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -25346,7 +25346,7 @@
   {
     "object_id": "4cb069c6-545c-5b2b-babc-57f4c0a71812",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -25442,7 +25442,7 @@
   {
     "object_id": "a3572691-707a-5456-ac94-9bf293df43dc",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -25490,7 +25490,7 @@
   {
     "object_id": "52ae8c46-9f89-5784-b86e-3f421b583760",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -25538,7 +25538,7 @@
   {
     "object_id": "85811d22-f7eb-53c3-99eb-eb7e8b6ff32d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -25586,7 +25586,7 @@
   {
     "object_id": "2e4a0231-151e-513f-a206-7419afcc0b20",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -25634,7 +25634,7 @@
   {
     "object_id": "44178b35-06ed-5d02-89b0-b2c34d4d31a9",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -25682,7 +25682,7 @@
   {
     "object_id": "19c5f7ec-0fc6-5827-8478-3a7158ec7988",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -25922,7 +25922,7 @@
   {
     "object_id": "7faebcae-df88-5534-b829-a35bdbcbd9eb",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -25970,7 +25970,7 @@
   {
     "object_id": "149055e0-067f-5947-a078-8eded0a75059",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26066,7 +26066,7 @@
   {
     "object_id": "e08f7a26-bb3d-59a8-b27b-626b16f5303d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -26162,7 +26162,7 @@
   {
     "object_id": "ea865568-b97b-5b5e-8a5a-cc5cab8757e8",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -26210,7 +26210,7 @@
   {
     "object_id": "f11a9b38-37bc-5b49-94c3-1612e4244bc3",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26306,7 +26306,7 @@
   {
     "object_id": "88e9ec11-e289-56a2-850d-662a55e2f7fd",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -26354,7 +26354,7 @@
   {
     "object_id": "65fcc78b-61ff-5009-8a58-6e984fe29e48",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26402,7 +26402,7 @@
   {
     "object_id": "2e19286b-07c5-529f-a161-ae5124fa6d79",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26498,7 +26498,7 @@
   {
     "object_id": "b6a04349-0b2e-53ca-9f8e-f5d6e7dd4816",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -26546,7 +26546,7 @@
   {
     "object_id": "8ac3b373-9fc9-52db-89f9-aa5df005a687",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26594,7 +26594,7 @@
   {
     "object_id": "f46ed34d-ee9b-5c82-9382-54d4aa9149f0",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -26642,7 +26642,7 @@
   {
     "object_id": "288f4de1-a8bc-5591-9487-65a00651527e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -26786,7 +26786,7 @@
   {
     "object_id": "2304bc15-ed44-5a51-822a-467fb961a104",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -26978,7 +26978,7 @@
   {
     "object_id": "04d32c97-9475-59e8-8772-b7e502e17aa6",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -27026,7 +27026,7 @@
   {
     "object_id": "54f5b899-ccdb-58b5-ba20-c00df0736f18",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -27170,7 +27170,7 @@
   {
     "object_id": "efa411a6-df9e-5b12-b74b-ea0e485ee5b5",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -27314,7 +27314,7 @@
   {
     "object_id": "f546f191-9410-5696-9457-49f32b0f5162",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -27410,7 +27410,7 @@
   {
     "object_id": "479477f9-f84d-5272-8047-7aa02866dbe8",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -27458,7 +27458,7 @@
   {
     "object_id": "a98b878d-02da-5b1f-8c7b-94c7eed7d95c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -27506,7 +27506,7 @@
   {
     "object_id": "d7d8e3dc-1988-5185-b4dc-d9ff2b8bd356",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -27554,7 +27554,7 @@
   {
     "object_id": "2813e5f0-9c29-5687-9815-9c9b0ed24094",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -27698,7 +27698,7 @@
   {
     "object_id": "277840d2-1a4c-5e34-adae-f0dedc345a65",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -28034,7 +28034,7 @@
   {
     "object_id": "92869752-1e7f-5791-8e2d-6a56cb6fa71e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28130,7 +28130,7 @@
   {
     "object_id": "5c273a2c-3632-5b89-a57f-5fdf2f9d3416",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28178,7 +28178,7 @@
   {
     "object_id": "7e00dc84-eaf5-5458-8321-6e91ac0756c1",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28226,7 +28226,7 @@
   {
     "object_id": "39c85612-4b8a-56cd-b511-b70e82b8aa66",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -28274,7 +28274,7 @@
   {
     "object_id": "a99fa4de-2184-5bde-9102-b87bc2bf439d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28322,7 +28322,7 @@
   {
     "object_id": "a2a6ddde-b205-5176-a31e-83ad4dbea0b7",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28370,7 +28370,7 @@
   {
     "object_id": "d302dd68-9541-5b91-b4dd-cfb992d1f910",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -28418,7 +28418,7 @@
   {
     "object_id": "a1e65d01-1a5f-5715-a75d-7ac2955b385b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28466,7 +28466,7 @@
   {
     "object_id": "042f4f1d-4033-5fd6-bf71-8fb08e46a385",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -28514,7 +28514,7 @@
   {
     "object_id": "eab99eaa-0b4a-598e-9ff1-4abc584c18b0",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -28658,7 +28658,7 @@
   {
     "object_id": "1d14a3da-0f0a-5b73-a3fc-9ceed68379b5",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -28706,7 +28706,7 @@
   {
     "object_id": "603d5621-b96f-59a0-b29b-1a79947e2bec",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -28754,7 +28754,7 @@
   {
     "object_id": "68d7eb02-70f5-5843-97e7-685328078628",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -28802,7 +28802,7 @@
   {
     "object_id": "6545eafa-f76e-5e67-b830-03ad15e1faba",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -28850,7 +28850,7 @@
   {
     "object_id": "b0ac151c-e7cd-5194-831b-cdc1a0255b05",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -28898,7 +28898,7 @@
   {
     "object_id": "e963962c-0788-5df4-8eea-fa01494ea04b",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -28946,7 +28946,7 @@
   {
     "object_id": "a2875026-123c-5a32-aa95-a0a6b3f4aef6",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -28994,7 +28994,7 @@
   {
     "object_id": "5e72d74b-d725-55d4-8f45-91c108148368",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -29042,7 +29042,7 @@
   {
     "object_id": "9256f33b-6984-529a-97aa-7227e456525b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -29090,7 +29090,7 @@
   {
     "object_id": "04da9f44-49d1-574f-8d85-04d1a72c4755",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -29186,7 +29186,7 @@
   {
     "object_id": "997117e1-a897-5af6-b8dd-f0d0e3fa5794",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -29378,7 +29378,7 @@
   {
     "object_id": "5de05b8d-b624-5676-9b40-7bac42ded80c",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -29474,7 +29474,7 @@
   {
     "object_id": "351a4b3e-3020-5997-96b4-b59e12071539",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -29522,7 +29522,7 @@
   {
     "object_id": "00afba2a-6583-53fb-8390-3083e088a6c6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -29570,7 +29570,7 @@
   {
     "object_id": "671c2110-66c1-5357-b066-bf0c1011793b",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -29714,7 +29714,7 @@
   {
     "object_id": "b10af255-e056-5f6a-a19e-0d91ae33d56a",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -30002,7 +30002,7 @@
   {
     "object_id": "0b243d00-4c00-5846-9bea-27a646b0d960",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -30050,7 +30050,7 @@
   {
     "object_id": "f52047dc-36d1-572c-9c0b-45c3f051cb5d",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -30146,7 +30146,7 @@
   {
     "object_id": "b3141ba9-a037-5c7b-b154-5d13a541a7fd",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -30194,7 +30194,7 @@
   {
     "object_id": "0126eb79-01ab-5c42-aa1e-96a38be86969",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -30242,7 +30242,7 @@
   {
     "object_id": "174e0e8d-61cb-5d3d-aa5c-00a169711112",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -30290,7 +30290,7 @@
   {
     "object_id": "1721caa7-9aef-5c30-a68c-358edc7ba3b0",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -30386,7 +30386,7 @@
   {
     "object_id": "23567306-59a3-5077-99cb-2644a05c8d73",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -30434,7 +30434,7 @@
   {
     "object_id": "636d75e7-bb44-5c43-9f86-0546df47f78a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -30482,7 +30482,7 @@
   {
     "object_id": "25b1a55f-1ee4-5078-bebd-e7ff3058acf5",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -30530,7 +30530,7 @@
   {
     "object_id": "9dc1a381-f41b-5f64-b471-622798d8619a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -30578,7 +30578,7 @@
   {
     "object_id": "a81bbcda-4a61-5c3b-b958-9a3cb813eaaa",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -30674,7 +30674,7 @@
   {
     "object_id": "4bae8f33-766f-5d14-88eb-011e59ba671e",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -30818,7 +30818,7 @@
   {
     "object_id": "c2150422-c8ad-596a-88c5-2cbc3763942a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -30866,7 +30866,7 @@
   {
     "object_id": "c90a5ab4-49a3-50ba-a499-2bfe6b884c56",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -30914,7 +30914,7 @@
   {
     "object_id": "a4f3edad-6a02-5e9c-9392-e5b07916cc57",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -30962,7 +30962,7 @@
   {
     "object_id": "c55ca946-79a3-588c-8400-914f0013e26d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -31106,7 +31106,7 @@
   {
     "object_id": "ff2590cf-33cf-53fd-acd2-58146799d3ef",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -31154,7 +31154,7 @@
   {
     "object_id": "7e3f78bb-ad8a-5293-95da-f966291f5074",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -31250,7 +31250,7 @@
   {
     "object_id": "35c83283-ba55-503b-bf0d-b56021a17015",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -31298,7 +31298,7 @@
   {
     "object_id": "20ee3c4c-3c20-5f38-b37d-6226214e10a1",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -31346,7 +31346,7 @@
   {
     "object_id": "f13da60c-3f82-5ecf-aa75-c1143eaf07f9",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -31442,7 +31442,7 @@
   {
     "object_id": "52eb743e-6a83-5401-b295-342ac545286e",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -31634,7 +31634,7 @@
   {
     "object_id": "839796cc-6514-5c13-907d-56a82f96a630",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -31682,7 +31682,7 @@
   {
     "object_id": "d3e538cc-1a44-50db-a988-aca5c6a6fabf",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -31826,7 +31826,7 @@
   {
     "object_id": "d37f1886-8288-5079-9602-5fcfece78229",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -31874,7 +31874,7 @@
   {
     "object_id": "dcb099e1-caa2-5895-913d-38cd5a2c0f15",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -31922,7 +31922,7 @@
   {
     "object_id": "94f6bb44-505f-595e-b600-768f58901585",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -32018,7 +32018,7 @@
   {
     "object_id": "c51c77b1-0571-5ea2-88be-52937f90159e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -32210,7 +32210,7 @@
   {
     "object_id": "3e967f37-fa98-5112-a090-10ecf24ef490",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -32258,7 +32258,7 @@
   {
     "object_id": "67e5645f-10c1-5790-bd36-337da9b03cc5",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -32354,7 +32354,7 @@
   {
     "object_id": "a744a657-e4e4-5872-a679-5696a46a5ad4",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -32450,7 +32450,7 @@
   {
     "object_id": "8dccd6b6-4063-5b63-b0da-2b33232f8708",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -32498,7 +32498,7 @@
   {
     "object_id": "b321892a-c41c-5332-834e-e93e88061e90",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -32546,7 +32546,7 @@
   {
     "object_id": "cece08d0-6257-5d97-9ffa-7acbd9a5608b",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -32642,7 +32642,7 @@
   {
     "object_id": "8acac2c3-511c-506d-a4e2-fb64018aa3a7",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -32690,7 +32690,7 @@
   {
     "object_id": "ea7f7eca-9ecf-5581-a65a-3b5dc368173d",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -32882,7 +32882,7 @@
   {
     "object_id": "62a7d728-e1d0-5ce6-bb70-4ded3a75d783",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -32978,7 +32978,7 @@
   {
     "object_id": "a04423e4-c53e-5585-9ca4-969eb6043e56",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -33122,7 +33122,7 @@
   {
     "object_id": "97409f58-e63f-56ad-9590-79452aee62af",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -33170,7 +33170,7 @@
   {
     "object_id": "0b1b8181-0cf8-5776-a580-811c8d3326eb",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -33266,7 +33266,7 @@
   {
     "object_id": "86d2ad81-41a3-5a00-8450-c07ba0d1cc58",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -33362,7 +33362,7 @@
   {
     "object_id": "9e2a54d7-a0d2-5a86-96d6-00c972ca0e76",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -33506,7 +33506,7 @@
   {
     "object_id": "0057a667-6b6f-5f49-9327-f7eefacf9727",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -33602,7 +33602,7 @@
   {
     "object_id": "d638a724-e163-5a4e-86d2-c6690fab5c72",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -33650,7 +33650,7 @@
   {
     "object_id": "3b9bf023-ea67-5435-8f81-38a0d5191e4c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -33746,7 +33746,7 @@
   {
     "object_id": "24bdd4c6-115e-5438-9188-d952b63355f0",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -33842,7 +33842,7 @@
   {
     "object_id": "e9ac2d1d-597f-5456-961d-e2f42d0d3316",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -33890,7 +33890,7 @@
   {
     "object_id": "0a599c8a-edcc-5793-a591-744a8e1c9aa6",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -33986,7 +33986,7 @@
   {
     "object_id": "eaaad98e-9b36-5167-8ee2-1c1eac97fa63",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -34082,7 +34082,7 @@
   {
     "object_id": "03d0e1b7-87f3-53f2-bc86-fd47880d677b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -34226,7 +34226,7 @@
   {
     "object_id": "adacf866-0c66-5ba3-9a8f-f924f95ed145",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -34322,7 +34322,7 @@
   {
     "object_id": "830c4dd8-8bac-58f0-b898-b2b633cf4ff9",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -34370,7 +34370,7 @@
   {
     "object_id": "9e2c074c-87e4-557d-9f25-453404a3d498",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -34418,7 +34418,7 @@
   {
     "object_id": "add2ac96-3c44-5883-a8db-9253c5535470",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -34466,7 +34466,7 @@
   {
     "object_id": "78e43e78-6007-5fc1-9191-fc313c1a5aa3",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -34658,7 +34658,7 @@
   {
     "object_id": "b9e22ac1-81c9-5fea-8b71-90e675b4606e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -34706,7 +34706,7 @@
   {
     "object_id": "6ea783ff-6d6f-5f3d-8673-189f26dbbe06",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -34898,7 +34898,7 @@
   {
     "object_id": "aa20b7fa-5273-59b5-959f-1d6d919d9c24",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -34946,7 +34946,7 @@
   {
     "object_id": "95d86362-d0e5-5a94-af61-d4cf062a5a89",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -35138,7 +35138,7 @@
   {
     "object_id": "b979bec4-2354-5897-b234-d5fca98c18e1",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -35186,7 +35186,7 @@
   {
     "object_id": "fd166268-6f53-532c-b260-f5e4c8ed0f8f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -35426,7 +35426,7 @@
   {
     "object_id": "19034298-ee71-5b93-af20-40517f07090b",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -35474,7 +35474,7 @@
   {
     "object_id": "6dc03741-3041-51d8-8b2d-54854c31fbb2",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -35570,7 +35570,7 @@
   {
     "object_id": "e4e3cebe-6729-579b-b49b-6fe210cc839e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -35618,7 +35618,7 @@
   {
     "object_id": "081d3e72-cde1-56c6-a497-ab35418065b4",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -35666,7 +35666,7 @@
   {
     "object_id": "2abeb020-0ea7-56d0-ace6-636ef4df6f6e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -35762,7 +35762,7 @@
   {
     "object_id": "c44e99d8-53dd-5c58-99ae-5c4a2e76fb89",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -35954,7 +35954,7 @@
   {
     "object_id": "2b11548d-0c86-5bd8-8248-f965aca0ab36",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -36050,7 +36050,7 @@
   {
     "object_id": "4636ee26-9762-5605-b1d3-da9434ec3fa3",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -36146,7 +36146,7 @@
   {
     "object_id": "32feb3b4-3da6-54dd-8765-072180987a48",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -36290,7 +36290,7 @@
   {
     "object_id": "63b7f636-d03b-5e0c-b179-3af5a13078ab",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -36530,7 +36530,7 @@
   {
     "object_id": "1f0c5efd-24e0-51fa-b3cd-d3e6c293428e",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -36722,7 +36722,7 @@
   {
     "object_id": "ca5d7024-c44f-516d-bb75-2bc117f627e8",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -36818,7 +36818,7 @@
   {
     "object_id": "d3b5ba5d-39b9-5429-bb9f-322aa9b77383",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -36866,7 +36866,7 @@
   {
     "object_id": "79d91efb-6444-5ec8-a38b-5c50fbec05f3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -36914,7 +36914,7 @@
   {
     "object_id": "ff7672e1-99c7-587c-b2c9-d86bdeab9b2f",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -37010,7 +37010,7 @@
   {
     "object_id": "7ea62f56-d1c4-5cf6-b925-2466ac16ddf0",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -37058,7 +37058,7 @@
   {
     "object_id": "eee90967-bc4a-5ca2-8deb-f0abf6fd7e11",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -37106,7 +37106,7 @@
   {
     "object_id": "fc2a0709-4ec5-599f-8c08-fec0413cc5fb",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -37250,7 +37250,7 @@
   {
     "object_id": "3865181e-7dda-5b28-8faf-5d5de3a7cfe3",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -37346,7 +37346,7 @@
   {
     "object_id": "f2074e6f-8d23-5f06-99f2-5baf4b61a3cd",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -37394,7 +37394,7 @@
   {
     "object_id": "811ac19d-533b-588b-8166-1f0c54e4ff72",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -37442,7 +37442,7 @@
   {
     "object_id": "580365f2-6164-51c8-97dc-3d98e0839358",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -37538,7 +37538,7 @@
   {
     "object_id": "22b1c5d6-77ab-5512-806b-d0bdd2f9b26e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -37682,7 +37682,7 @@
   {
     "object_id": "6d34f91d-1e93-5c00-8c1f-0eea84f99c4d",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -37730,7 +37730,7 @@
   {
     "object_id": "e6502597-7f30-5455-a2c1-cd32736906e1",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -37826,7 +37826,7 @@
   {
     "object_id": "bc851122-725e-5b4c-bf2c-7e154e829545",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -37922,7 +37922,7 @@
   {
     "object_id": "219029b7-cdf7-5928-afe8-5b2d741af69a",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -38306,7 +38306,7 @@
   {
     "object_id": "2066c047-8432-5d8d-8dc7-48e193243558",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -38450,7 +38450,7 @@
   {
     "object_id": "219b5898-e1e1-52a9-b869-2997f6aed66f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -38498,7 +38498,7 @@
   {
     "object_id": "a6a3caef-6022-5a87-85f3-de73c7a7c27b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -38642,7 +38642,7 @@
   {
     "object_id": "5b5a6128-6898-5d29-9160-09f1b0509fae",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -38738,7 +38738,7 @@
   {
     "object_id": "ea6f6431-17d8-532c-828f-a2f3d542184f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -38786,7 +38786,7 @@
   {
     "object_id": "a956d6ca-38ad-5816-bd10-7eb8d9bee8c4",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -38834,7 +38834,7 @@
   {
     "object_id": "66ca519f-8d66-55e4-8fe5-50ecbe146201",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -38930,7 +38930,7 @@
   {
     "object_id": "57bb5dc2-c909-57f8-a5e5-135d4e740b02",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -38978,7 +38978,7 @@
   {
     "object_id": "99f3a4d6-23a0-568f-b91b-eb458fe5c5ab",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -39074,7 +39074,7 @@
   {
     "object_id": "eaf15ebe-dff5-596b-95d2-f62d90bb5b77",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -39218,7 +39218,7 @@
   {
     "object_id": "4b09fa27-c63e-53f1-a6bc-c3db8b60c5b0",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -39266,7 +39266,7 @@
   {
     "object_id": "aec4d4a9-e92c-5875-99a4-dab7e100d0e0",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -39410,7 +39410,7 @@
   {
     "object_id": "9c2264e1-6553-5706-ab33-e487a2733765",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -39458,7 +39458,7 @@
   {
     "object_id": "fabad316-6896-5b13-9eee-f8302d1066fa",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -39506,7 +39506,7 @@
   {
     "object_id": "77bd0029-edbf-50b9-bc2f-8374be379cdb",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -39554,7 +39554,7 @@
   {
     "object_id": "c2922def-2df5-57d7-bd89-04b8e69b5f6b",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -39602,7 +39602,7 @@
   {
     "object_id": "1a6455dd-5921-51e5-a68b-c000a30dfc34",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -39698,7 +39698,7 @@
   {
     "object_id": "5269bc28-75cb-5856-aec4-edfc7be0b289",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -39794,7 +39794,7 @@
   {
     "object_id": "d93ac9ff-097d-5457-8656-1b6ec5608ce9",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -39890,7 +39890,7 @@
   {
     "object_id": "4f060a5b-89d9-5343-bbb3-a9eac528a119",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -39938,7 +39938,7 @@
   {
     "object_id": "aa27ab11-f7a0-5df6-8b14-0d3ef3adb75a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -40034,7 +40034,7 @@
   {
     "object_id": "3b42f6a1-def3-5b15-b52b-2fdb3ef95a8f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -40130,7 +40130,7 @@
   {
     "object_id": "c2c7edc2-f538-5229-9e18-1ad99f834ea9",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -40226,7 +40226,7 @@
   {
     "object_id": "29e4a9eb-5c13-54e2-a92c-44905d7e9876",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -40322,7 +40322,7 @@
   {
     "object_id": "0dd9d597-2568-5d56-9eb8-38dfb0360d80",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -40466,7 +40466,7 @@
   {
     "object_id": "3ed9193c-71b8-5f7e-8bbb-9bfcf2f54e75",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -40610,7 +40610,7 @@
   {
     "object_id": "4209199a-e8a1-552e-a1d6-262350960d3b",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -40658,7 +40658,7 @@
   {
     "object_id": "7f006e66-2dbc-59d2-938f-de0d54fef328",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -40706,7 +40706,7 @@
   {
     "object_id": "39eda818-3f7d-5601-a775-f5f988ec2efa",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -40850,7 +40850,7 @@
   {
     "object_id": "ec98f522-4813-5a94-8eff-9166442bf1a6",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -40898,7 +40898,7 @@
   {
     "object_id": "5c967fd9-6c36-521f-88f5-78bf92bb856a",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -40946,7 +40946,7 @@
   {
     "object_id": "f8442b2b-f544-5a6d-a4b6-1a06b52ae039",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -40994,7 +40994,7 @@
   {
     "object_id": "523986c0-5b74-5296-9570-1c3d8f6fc1ad",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -41090,7 +41090,7 @@
   {
     "object_id": "b3aa5d59-a8d8-5842-a50c-318ffcaa82ef",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -41186,7 +41186,7 @@
   {
     "object_id": "78abbfe9-4041-5358-9317-0a1c91c3d98f",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -41234,7 +41234,7 @@
   {
     "object_id": "454bc1c0-0e6d-5e47-b059-e1c8d57a7b11",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -41426,7 +41426,7 @@
   {
     "object_id": "55341d00-9f6d-5f65-866d-ec2eee607beb",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -41618,7 +41618,7 @@
   {
     "object_id": "5322ce7d-e3c2-5ffe-8e9b-132af6402d99",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -41714,7 +41714,7 @@
   {
     "object_id": "3a63b093-1249-5692-a0e3-07091d96a172",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -41810,7 +41810,7 @@
   {
     "object_id": "c5de5ef0-61fc-5672-908b-ba829303f399",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -41906,7 +41906,7 @@
   {
     "object_id": "3bdcf204-b4da-5005-88f1-0b30514909d6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -41954,7 +41954,7 @@
   {
     "object_id": "2e5e6066-a756-5226-9a51-cc7bb3326c5f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -42098,7 +42098,7 @@
   {
     "object_id": "86a78fd3-fc91-562b-bab7-28aeb9bfd779",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -42338,7 +42338,7 @@
   {
     "object_id": "9cc9329b-1b92-569c-93aa-b5738d0ab8c1",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -42530,7 +42530,7 @@
   {
     "object_id": "888ccf7e-6abf-5e9c-828e-09fea1bde1ee",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -42674,7 +42674,7 @@
   {
     "object_id": "328eb3f7-59d9-5a9d-95af-45ca7bc53d1b",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -42866,7 +42866,7 @@
   {
     "object_id": "a7bf8d44-ea69-590b-9a8e-df62ed2409ca",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -43058,7 +43058,7 @@
   {
     "object_id": "1cd1e710-fff6-5358-a1cb-97e672ffcc92",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -43154,7 +43154,7 @@
   {
     "object_id": "4c8eee6d-c3d5-56a7-9a42-0f740e1d403b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -43250,7 +43250,7 @@
   {
     "object_id": "68ac4e1e-29e6-5eb4-a4aa-06bcae59d885",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -43394,7 +43394,7 @@
   {
     "object_id": "de6f0d57-10c6-5f3f-aeae-967d3b78e6a6",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -43490,7 +43490,7 @@
   {
     "object_id": "69af0ff4-9ea4-5fbf-8bb2-9a6cb73f1e78",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -43538,7 +43538,7 @@
   {
     "object_id": "400ed225-4b4c-5407-9c11-73fa25480f53",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -43682,7 +43682,7 @@
   {
     "object_id": "07ba3e1e-b3de-592e-ba7c-0d4036e91e2c",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -43778,7 +43778,7 @@
   {
     "object_id": "6bf2d637-a249-5abd-9627-d3c19d8b8979",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -43826,7 +43826,7 @@
   {
     "object_id": "38463f06-11c7-5124-97fd-f669854480af",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -43874,7 +43874,7 @@
   {
     "object_id": "f4cca54b-14c6-514d-9d51-ef4f5db8bf7d",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -43922,7 +43922,7 @@
   {
     "object_id": "3105096b-d5bf-5c3c-8086-a453c50ae7c6",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -44114,7 +44114,7 @@
   {
     "object_id": "f171b7c4-ca4e-5e6c-a3c2-3207f4be8f74",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -44306,7 +44306,7 @@
   {
     "object_id": "a21a1f95-5ddd-5702-973e-569c6de0c9d3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -44546,7 +44546,7 @@
   {
     "object_id": "6f7b1709-c708-5fc9-be51-c0a497dc2235",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -44690,7 +44690,7 @@
   {
     "object_id": "eed67001-7296-5f98-879d-24c389ec7f47",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -44738,7 +44738,7 @@
   {
     "object_id": "b5d35510-ebaa-5376-98f8-f000bdb82cb7",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -44786,7 +44786,7 @@
   {
     "object_id": "f8abd78a-4a25-59a3-ad36-b690bf094745",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -44978,7 +44978,7 @@
   {
     "object_id": "d155677a-a7aa-5fbc-8cfa-014c13f9c050",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -45026,7 +45026,7 @@
   {
     "object_id": "eb0ee6b3-0fd3-55df-963c-4ab042dd6e47",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -45074,7 +45074,7 @@
   {
     "object_id": "c5db5f6e-9cee-5819-bd8c-f35550024c12",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -45170,7 +45170,7 @@
   {
     "object_id": "7e2ee52d-7863-5351-823b-bb515a00d0f3",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -45266,7 +45266,7 @@
   {
     "object_id": "8b988d14-0a1d-5c20-b2fb-0fe94526ae11",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -45362,7 +45362,7 @@
   {
     "object_id": "b3d167cb-434c-5adb-8343-f1d517c054f6",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -45458,7 +45458,7 @@
   {
     "object_id": "c4a6debc-81c0-56b1-83c7-57a40e07767a",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -45506,7 +45506,7 @@
   {
     "object_id": "e98e6510-8e2d-575f-b07a-d5ef8fb0a6fc",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -45554,7 +45554,7 @@
   {
     "object_id": "11caa14c-51ed-5626-97a9-91a41435d72c",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -45602,7 +45602,7 @@
   {
     "object_id": "f011969d-fe08-5612-b2dc-8ec43070d50f",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -45650,7 +45650,7 @@
   {
     "object_id": "d31e7d03-dee2-5724-b871-df6f72752427",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -45698,7 +45698,7 @@
   {
     "object_id": "6ca075de-6edd-54fc-b0d0-3e211193529f",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -45746,7 +45746,7 @@
   {
     "object_id": "8e74941a-bf41-521a-8c83-e9d533675216",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -45842,7 +45842,7 @@
   {
     "object_id": "e54f98fa-174f-538b-b7c9-0c0c7f34317b",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -45938,7 +45938,7 @@
   {
     "object_id": "b17a96a8-72e9-5469-a46d-c22b1f3b57f7",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -45986,7 +45986,7 @@
   {
     "object_id": "5e1625d3-4545-5fad-936f-d626bdb065f3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -46034,7 +46034,7 @@
   {
     "object_id": "01716be6-a7c2-5a9a-9f2f-4073440fd37d",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -46130,7 +46130,7 @@
   {
     "object_id": "79d6206f-24f2-5465-b9a4-673eee699505",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -46226,7 +46226,7 @@
   {
     "object_id": "5bfdd098-210a-5951-ac24-fb11f920c709",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -46274,7 +46274,7 @@
   {
     "object_id": "1ea2ac28-6493-5c57-8fbe-538005199964",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -46370,7 +46370,7 @@
   {
     "object_id": "769ec88e-a79a-5757-871d-e9ec6b40c48e",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -46418,7 +46418,7 @@
   {
     "object_id": "e19b6ae1-159c-5b6d-a1be-33f7d31de438",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -46466,7 +46466,7 @@
   {
     "object_id": "7e1bf2e5-296a-5727-a34b-7a46e50e1e47",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -46562,7 +46562,7 @@
   {
     "object_id": "012f0903-30d0-5e1e-801e-9cbce846c8c1",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -46610,7 +46610,7 @@
   {
     "object_id": "405a882d-3fa7-5f89-8fd4-9428db9502ff",
     "study_id": "PACA-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -46706,7 +46706,7 @@
   {
     "object_id": "459a4b99-8b8e-50ed-97dd-caea35ba1f74",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -46754,7 +46754,7 @@
   {
     "object_id": "a5cdeda0-fdc9-58f5-bb58-30500c5fc662",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -46994,7 +46994,7 @@
   {
     "object_id": "ac9f7fcb-c15b-5e25-a8d5-7fe16ac33394",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC",
@@ -47042,7 +47042,7 @@
   {
     "object_id": "afd5b552-9f81-522e-8eda-9d35715f9eea",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -47090,7 +47090,7 @@
   {
     "object_id": "37d8edc8-c569-5e42-b33a-af7d7d6f7381",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -47186,7 +47186,7 @@
   {
     "object_id": "c7dfc5f9-047c-5060-a5c6-87c84cd9ecc3",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -47282,7 +47282,7 @@
   {
     "object_id": "ec09b90e-1bae-5179-84c8-50a7a75fe008",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -47330,7 +47330,7 @@
   {
     "object_id": "054fe673-64de-5de9-bb4d-ff9b912f02ed",
     "study_id": "TEST-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",
@@ -47378,7 +47378,7 @@
   {
     "object_id": "353f5130-5e54-5eb0-8fba-5014500f899a",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -47426,7 +47426,7 @@
   {
     "object_id": "3f4653c4-3a3a-5520-8e6c-580cc42b5786",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -47474,7 +47474,7 @@
   {
     "object_id": "827fec98-d5ec-5bb3-87ce-146925338604",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "PUBLIC_QUEUE",
@@ -47522,7 +47522,7 @@
   {
     "object_id": "831f9aa7-0d3d-58d8-a8e0-2423d502864b",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "ASSOCIATE_PROGRAMS",
@@ -47666,7 +47666,7 @@
   {
     "object_id": "fa409743-5ada-50cc-994d-4ee267a0e351",
     "study_id": "OCCAMS-GB",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "OWN_PROGRAM",
@@ -47714,7 +47714,7 @@
   {
     "object_id": "80c31d0f-f758-5194-bad2-1ab8c54ce5cb",
     "study_id": "DASH-CA",
-    "file_access": "public",
+    "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
     "release_stage": "FULL_PROGRAMS",

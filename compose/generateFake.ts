@@ -64,7 +64,7 @@ const args = process.argv.slice(2);
           ? nextIdCandidate
           : uuidv5(`fake_file_${i}`, uuidNamespace),
       study_id: sample(studyIds),
-      file_access: sample(['controlled', 'public']),
+      file_access: sample(['controlled', 'open']),
       data_type: 'unaligned_reads',
       file_type: 'FASTQ',
       release_stage: sample(releaseStages),

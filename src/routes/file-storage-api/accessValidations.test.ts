@@ -35,7 +35,7 @@ const baseFile: EsFileCentricDocument = {
   data_type: 'fake_data_type',
   data_category: 'fake_data_category',
   analysis_tools: '',
-  file_access: FILE_ACCESS.PUBLIC,
+  file_access: FILE_ACCESS.OPEN,
   release_stage: FILE_RELEASE_STAGE.PUBLIC,
   analysis: {
     analysis_id: '',
@@ -158,7 +158,7 @@ describe('accesValidations', () => {
       it('allows access  for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -213,7 +213,7 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -268,7 +268,7 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -317,7 +317,7 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -358,7 +358,7 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -373,7 +373,7 @@ describe('accesValidations', () => {
     };
     const publicFile: typeof baseFile = {
       ...baseFile,
-      file_access: FILE_ACCESS.PUBLIC,
+      file_access: FILE_ACCESS.OPEN,
     };
     it('permission give access', () => {
       const scopes: PermissionScopeObj[] = [
