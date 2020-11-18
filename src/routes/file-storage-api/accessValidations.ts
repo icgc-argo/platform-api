@@ -89,7 +89,7 @@ export const hasSufficientDacoAccess = (config: {
   const userHasDacoAccess =
     dacoScopes.length > 0 && dacoScopes.every(scope => scope.permission === PERMISSIONS.READ);
   return (
-    config.file.file_access === FILE_ACCESS.PUBLIC ||
+    config.file.file_access === FILE_ACCESS.OPEN ||
     (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)
   );
 };

@@ -437,7 +437,7 @@ describe('file-storage-api', () => {
           .filter(
             doc =>
               doc.release_stage === FILE_RELEASE_STAGE.PUBLIC &&
-              doc.file_access === FILE_ACCESS.PUBLIC,
+              doc.file_access === FILE_ACCESS.OPEN,
           )
           .map(doc => doc.object_id);
         const downloadResults = await reduceToList(
@@ -489,7 +489,7 @@ describe('file-storage-api', () => {
           .filter(
             doc =>
               doc.release_stage === FILE_RELEASE_STAGE.PUBLIC &&
-              doc.file_access === FILE_ACCESS.PUBLIC,
+              doc.file_access === FILE_ACCESS.OPEN,
           )
           .map(doc => doc.object_id);
         const downloadResults = await reduceToList(
