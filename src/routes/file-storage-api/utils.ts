@@ -3,6 +3,7 @@ import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import esb from 'elastic-builder';
 import {
   EsFileCentricDocument,
+  FILE_ACCESS,
   FILE_METADATA_FIELDS,
 } from 'utils/commonTypes/EsFileCentricDocument';
 
@@ -21,7 +22,7 @@ export type SongEntity = {
   gnosId: string;
   fileName: string;
   projectCode: string;
-  access: 'controlled' | 'public';
+  access: FILE_ACCESS;
 };
 
 export const toSongEntity = (file: EsFileCentricDocument): SongEntity => ({

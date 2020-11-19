@@ -15,9 +15,11 @@ const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
 const downloadHandler = ({
   rootPath,
   esClient,
+  proxyMiddlewareFactory = createProxyMiddleware,
 }: {
   rootPath: string;
   esClient: Client;
+  proxyMiddlewareFactory: typeof createProxyMiddleware;
 }): Handler => async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {
   const { fileObjectId } = req.params;
   const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
@@ -26,31 +28,30 @@ const downloadHandler = ({
     return res.status(404).end();
   }
 
-  const isAuthorized = (await Promise.all([
+  const isAuthorized =
     hasSufficientProgramMembershipAccess({
       scopes: req.userScopes,
       file: esFileObject,
-    }),
+    }) &&
     hasSufficientDacoAccess({
       scopes: req.userScopes,
       file: esFileObject,
-    }),
-  ])).every(conditionMet => conditionMet);
+    });
 
   if (isAuthorized) {
     const repositoryUrl = esFileObject.repositories[0].url;
-    const handleRequest = createProxyMiddleware({
+    const handleRequest = proxyMiddlewareFactory({
       target: repositoryUrl,
       pathRewrite: normalizePath(rootPath),
       onError: (err: Error, req: Request, res: Response) => {
         logger.error('Score Router Error - ' + err);
-        return res.status(500).send('Internal Server Error');
+        return res.status(500).end();
       },
       changeOrigin: true,
     });
     handleRequest(req, res, next);
   } else {
-    res.status(403);
+    res.status(req.authenticated ? 403 : 401).end();
   }
 };
 
