@@ -54,6 +54,8 @@ import ArgoApolloServer from 'utils/ArgoApolloServer';
 import apiDocRouter from 'routes/api-docs';
 import createEgoClient, { EgoApplicationCredential } from 'services/ego';
 import { loadVaultSecret } from 'services/vault';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -62,6 +64,7 @@ export type GlobalGqlContext = {
   isUserRequest: boolean;
   egoToken: string;
   Authorization: string;
+  userJwtData: EgoJwtData | null;
   dataLoaders: {};
 };
 
@@ -112,15 +115,19 @@ const init = async () => {
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => ({
+    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
+      const authHeader = req.headers?.authorization
+      const userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null
+      return ({
       isUserRequest: true,
-      egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
+      egoToken: (authHeader || '').split('Bearer ').join(''),
       Authorization:
-        `Bearer ${(req.headers?.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
+        `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
       dataLoaders: {},
+      userJwtData,
       es: esClient, // for arranger only
       projectId: ARRANGER_PROJECT_ID, // for arranger only
-    }),
+    })},
     introspection: true,
     tracing: NODE_ENV !== 'production',
   });

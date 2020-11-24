@@ -31,6 +31,7 @@ import { GlobalGqlContext } from 'app';
 import { FILE_METADATA_FIELDS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 export type ArrangerGqlContext = {
   es: Client;
@@ -43,10 +44,15 @@ const emptyFilter = () => ({
 });
 
 type Sqon = {};
-const getAccessControlFilter = (egoToken: string): Sqon => {
-  const userPrograms: string[] = [];
-  const programMembershipAccessLevel: UserProgramMembershipAccessLevel =
-    UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
+const getAccessControlFilter = (userJwtData: EgoJwtData | null): Sqon => {
+  const userPrograms: string[] = userJwtData
+    ? egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope)
+    : [];
+  const programMembershipAccessLevel: UserProgramMembershipAccessLevel = userJwtData
+    ? egoTokenUtils.getProgramMembershipAccessLevel({
+        permissions: userJwtData.context.scope,
+      })
+    : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
 
   /* Logical operator shorthands */
   const all = (conditions: any[]) => ({
@@ -103,7 +109,7 @@ const getArrangerGqlSchema = async (esClient: Client) => {
     graphqlOptions: {},
     enableAdmin: false,
     getServerSideFilter: FEATURE_METADATA_ACCESS_CONTROL
-      ? ({ egoToken }: GlobalGqlContext) => getAccessControlFilter(egoToken)
+      ? ({ userJwtData }: GlobalGqlContext) => getAccessControlFilter(userJwtData)
       : undefined,
   })) as { schema: GraphQLSchema };
 
