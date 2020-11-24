@@ -84,7 +84,7 @@ const getAccessControlFilter = (egoToken: string): Sqon => {
       not([
         all([
           isFromOtherPrograms,
-          match(FILE_METADATA_FIELDS['release_stage'], [FILE_METADATA_FIELDS['release_stage']]),
+          match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.FULL_PROGRAMS]),
         ]),
       ]),
     ]),
