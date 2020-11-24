@@ -27,10 +27,70 @@ import { transformSchema, TransformRootFields } from 'graphql-tools';
 import { ARRANGER_PROJECT_ID } from 'config';
 import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
+import { GlobalGqlContext } from 'app';
+import { FILE_METADATA_FIELDS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
 
 export type ArrangerGqlContext = {
   es: Client;
   projectId: string;
+};
+
+const emptyFilter = () => ({
+  op: 'and',
+  content: [],
+});
+
+type Sqon = {};
+const getAccessControlFilter = (egoToken: string): Sqon => {
+  const userPrograms: string[] = [];
+  const programMembershipAccessLevel: UserProgramMembershipAccessLevel =
+    UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
+
+  /* Logical operator shorthands */
+  const all = (conditions: any[]) => ({
+    op: 'and',
+    content: [...conditions],
+  });
+  const not = (conditions: any[]) => ({
+    op: 'not',
+    content: [...conditions],
+  });
+  const match = (field: keyof typeof FILE_METADATA_FIELDS, values: string[]) => ({
+    op: 'in',
+    content: {
+      field,
+      value: values,
+    },
+  });
+  /*******************************/
+
+  /* common filters */
+  const isFromOtherPrograms = not([match(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
+  const isUnReleasedFromOtherPrograms = all([
+    isFromOtherPrograms,
+    match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.OWN_PROGRAM]),
+  ]);
+  /******************/
+
+  const userPermissionToQueryMap: {
+    [accessLevel in UserProgramMembershipAccessLevel]: any;
+  } = {
+    DCC_MEMBER: emptyFilter(),
+    FULL_PROGRAM_MEMBER: not([isUnReleasedFromOtherPrograms]),
+    ASSOCIATE_PROGRAM_MEMBER: all([
+      not([isUnReleasedFromOtherPrograms]),
+      not([
+        all([
+          isFromOtherPrograms,
+          match(FILE_METADATA_FIELDS['release_stage'], [FILE_METADATA_FIELDS['release_stage']]),
+        ]),
+      ]),
+    ]),
+    PUBLIC_MEMBER: match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.PUBLIC]),
+  };
+  return userPermissionToQueryMap[programMembershipAccessLevel];
 };
 
 const getArrangerGqlSchema = async (esClient: Client) => {
@@ -42,6 +102,7 @@ const getArrangerGqlSchema = async (esClient: Client) => {
     id: ARRANGER_PROJECT_ID,
     graphqlOptions: {},
     enableAdmin: false,
+    getServerSideFilter: ({ egoToken }: GlobalGqlContext) => getAccessControlFilter(egoToken),
   })) as { schema: GraphQLSchema };
 
   // Arranger schema has a recursive field called 'viewer' inside of type 'Root'
