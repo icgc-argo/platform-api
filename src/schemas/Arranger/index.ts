@@ -28,75 +28,11 @@ import { ARRANGER_PROJECT_ID, FEATURE_METADATA_ACCESS_CONTROL } from 'config';
 import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
 import { GlobalGqlContext } from 'app';
-import { FILE_METADATA_FIELDS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
-import egoTokenUtils from 'utils/egoTokenUtils';
-import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
-import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
+import getAccessControlFilter from './getAccessControlFilter';
 
 export type ArrangerGqlContext = {
   es: Client;
   projectId: string;
-};
-
-const emptyFilter = () => ({
-  op: 'and',
-  content: [],
-});
-
-type Sqon = {};
-const getAccessControlFilter = (userJwtData: EgoJwtData | null): Sqon => {
-  const userPrograms: string[] = userJwtData
-    ? egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope)
-    : [];
-  const programMembershipAccessLevel: UserProgramMembershipAccessLevel = userJwtData
-    ? egoTokenUtils.getProgramMembershipAccessLevel({
-        permissions: userJwtData.context.scope,
-      })
-    : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
-
-  /* Logical operator shorthands */
-  const all = (conditions: any[]) => ({
-    op: 'and',
-    content: [...conditions],
-  });
-  const not = (conditions: any[]) => ({
-    op: 'not',
-    content: [...conditions],
-  });
-  const match = (field: keyof typeof FILE_METADATA_FIELDS, values: string[]) => ({
-    op: 'in',
-    content: {
-      field,
-      value: values,
-    },
-  });
-  /*******************************/
-
-  /* common filters */
-  const isFromOtherPrograms = not([match(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
-  const isUnReleasedFromOtherPrograms = all([
-    isFromOtherPrograms,
-    match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.OWN_PROGRAM]),
-  ]);
-  /******************/
-
-  const userPermissionToQueryMap: {
-    [accessLevel in UserProgramMembershipAccessLevel]: any;
-  } = {
-    DCC_MEMBER: emptyFilter(),
-    FULL_PROGRAM_MEMBER: not([isUnReleasedFromOtherPrograms]),
-    ASSOCIATE_PROGRAM_MEMBER: all([
-      not([isUnReleasedFromOtherPrograms]),
-      not([
-        all([
-          isFromOtherPrograms,
-          match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.FULL_PROGRAMS]),
-        ]),
-      ]),
-    ]),
-    PUBLIC_MEMBER: match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.PUBLIC]),
-  };
-  return userPermissionToQueryMap[programMembershipAccessLevel];
 };
 
 const getArrangerGqlSchema = async (esClient: Client) => {
