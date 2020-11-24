@@ -24,7 +24,7 @@ import { createProjectSchema } from '@arranger/server/dist/startProject';
 
 import { GraphQLSchema } from 'graphql';
 import { transformSchema, TransformRootFields } from 'graphql-tools';
-import { ARRANGER_PROJECT_ID } from 'config';
+import { ARRANGER_PROJECT_ID, FEATURE_METADATA_ACCESS_CONTROL } from 'config';
 import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
 import { GlobalGqlContext } from 'app';
@@ -102,7 +102,9 @@ const getArrangerGqlSchema = async (esClient: Client) => {
     id: ARRANGER_PROJECT_ID,
     graphqlOptions: {},
     enableAdmin: false,
-    getServerSideFilter: ({ egoToken }: GlobalGqlContext) => getAccessControlFilter(egoToken),
+    getServerSideFilter: FEATURE_METADATA_ACCESS_CONTROL
+      ? ({ egoToken }: GlobalGqlContext) => getAccessControlFilter(egoToken)
+      : undefined,
   })) as { schema: GraphQLSchema };
 
   // Arranger schema has a recursive field called 'viewer' inside of type 'Root'
