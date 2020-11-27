@@ -187,7 +187,7 @@ describe('Arranger schema', () => {
       graphqlClient = createTestClient(apolloServer);
     });
 
-    describe('hits query', () => {
+    describe.only('hits query', () => {
       it('returns unique entities', async () => {
         const responseStream = fileDocumentStream({
           gqlClient: graphqlClient,

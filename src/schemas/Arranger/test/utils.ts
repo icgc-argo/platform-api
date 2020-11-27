@@ -58,6 +58,8 @@ export const fileDocumentStream = async function*({
       },
     });
 
+    console.log('queryResponse: ', JSON.stringify(queryResponse));
+
     if (!queryResponse.data) {
       console.log('no queryResponse.data: ', queryResponse);
       throw new Error('boo');
