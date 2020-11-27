@@ -79,7 +79,7 @@ const init = async () => {
         }),
         vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
           logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
-          throw err; //fail fast
+          throw err; //fail fastw
         }),
       ])) as [EgoApplicationCredential, EsSecret])
     : ([

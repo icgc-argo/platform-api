@@ -22,14 +22,18 @@ import { FILE_METADATA_FIELDS, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFi
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
+import {
+  ArrangerFilterFieldOperation,
+  ArrangerFilter,
+  ArrangerFilterNode,
+} from './arrangerFilterTypes';
 
 const emptyFilter = () => ({
   op: 'and',
   content: [],
 });
 
-type Sqon = {};
-const getAccessControlFilter = (userJwtData: EgoJwtData | null): Sqon => {
+const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter => {
   const userPrograms: string[] = userJwtData
     ? egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope)
     : [];
@@ -40,15 +44,18 @@ const getAccessControlFilter = (userJwtData: EgoJwtData | null): Sqon => {
     : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
 
   /* Logical operator shorthands */
-  const all = (conditions: any[]) => ({
+  const all = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
     op: 'and',
     content: [...conditions],
   });
-  const not = (conditions: any[]) => ({
+  const not = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
     op: 'not',
     content: [...conditions],
   });
-  const match = (field: keyof typeof FILE_METADATA_FIELDS, values: string[]) => ({
+  const match = (
+    field: keyof typeof FILE_METADATA_FIELDS,
+    values: string[],
+  ): ArrangerFilterFieldOperation => ({
     op: 'in',
     content: {
       field,
