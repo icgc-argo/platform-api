@@ -165,7 +165,7 @@ describe('Arranger schema', () => {
     });
   });
 
-  describe('metadata access control', () => {
+  describe.only('metadata access control', () => {
     let apolloServer: ApolloServer;
     let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
     const app = express();
@@ -187,7 +187,7 @@ describe('Arranger schema', () => {
       graphqlClient = createTestClient(apolloServer);
     });
 
-    describe.only('hits query', () => {
+    describe('hits query', () => {
       it('returns unique entities', async () => {
         const responseStream = fileDocumentStream({
           gqlClient: graphqlClient,
