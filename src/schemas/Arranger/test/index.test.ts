@@ -36,7 +36,7 @@ import {
   MOCK_API_KEYS,
   MOCK_API_KEY_SCOPES,
 } from 'routes/file-storage-api/handlers/test/utils';
-import { fileDocumentStream, reduceToFileHits } from './utils';
+import { aggregateAllObjectIds, fileDocumentStream, reduceToFileHits } from './utils';
 import _ from 'lodash';
 
 const asyncExec = promisify(exec);
@@ -188,7 +188,7 @@ describe('Arranger schema', () => {
       );
     });
 
-    describe.only('hits query', () => {
+    describe('hits query', () => {
       it('returns unique entities', async () => {
         const responseStream = fileDocumentStream({
           esClient,
@@ -296,27 +296,13 @@ describe('Arranger schema', () => {
     });
 
     describe('aggregation query', () => {
-      it('returns unique entities', async () => {
-        const responseStream = fileDocumentStream({
-          esClient,
-          apiKey: MOCK_API_KEYS.PUBLIC,
-        });
-        const allRetrievedEntities = await reduceToFileHits(responseStream);
-        expect(
-          _(allRetrievedEntities)
-            .uniqBy(e => e.node.object_id)
-            .size(),
-        ).toBe(allRetrievedEntities.length);
-      }, 240000);
 
       it('returns and all the right data for public users', async () => {
-        const responseStream = fileDocumentStream({
-          esClient,
+        const aggregationResult = await aggregateAllObjectIds({
           apiKey: MOCK_API_KEYS.PUBLIC,
-        });
-        const allEntityIdsFromApi = (await reduceToFileHits(responseStream)).map(
-          e => e.node.object_id,
-        );
+          esClient,
+        })
+        const allEntityIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
         const equivalentIndexedDocuments = allEntityIdsFromApi.map(
           id => allIndexedDocuments[id || ''],
         );
@@ -333,21 +319,21 @@ describe('Arranger schema', () => {
       });
 
       it('returns all data for DCC', async () => {
-        const responseStream = fileDocumentStream({
+        const aggregationResult = await aggregateAllObjectIds({
+          apiKey: MOCK_API_KEYS.PUBLIC,
           esClient,
-          apiKey: MOCK_API_KEYS.DCC,
-        });
-        const allRetrievedEntities = await reduceToFileHits(responseStream);
-        expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
+        })
+        const allEntityIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
+        expect(allEntityIdsFromApi.length).toBe(Object.entries(allIndexedDocuments).length);
       });
 
       it('returns and all the right data for program members', async () => {
         const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
         const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-        const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
-        const allRetrievedEntities = await reduceToFileHits(responseStream);
-        const equivalentIndexedDocuments = allRetrievedEntities.map(
-          retrievedObject => allIndexedDocuments[retrievedObject.node.object_id || ''],
+        const aggregationResult = await aggregateAllObjectIds({ apiKey, esClient })
+        const allObjectIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
+        const equivalentIndexedDocuments = allObjectIdsFromApi.map(
+          objectId => allIndexedDocuments[objectId],
         );
         const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
           ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
@@ -373,10 +359,10 @@ describe('Arranger schema', () => {
       it('returns and all the right data for associate program members', async () => {
         const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
         const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-        const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
-        const allRetrievedEntities = await reduceToFileHits(responseStream);
-        const equivalentIndexedDocuments = allRetrievedEntities.map(
-          retrievedObject => allIndexedDocuments[retrievedObject.node.object_id || ''],
+        const aggregationResult = await aggregateAllObjectIds({ apiKey, esClient })
+        const allObjectIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
+        const equivalentIndexedDocuments = allObjectIdsFromApi.map(
+          objectId => allIndexedDocuments[objectId],
         );
         const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
           ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
@@ -401,8 +387,5 @@ describe('Arranger schema', () => {
         );
       });
     });
-
-
-
   });
 });

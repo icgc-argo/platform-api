@@ -157,7 +157,22 @@ export const aggregateAllObjectIds = async ({
     apiKey,
   });
 
-  return graphqlClient.query({
+  const respone = await graphqlClient.query<
+    {
+      file: {
+        aggregations: {
+          object_id: {
+            buckets: {
+              key: string;
+            }[];
+          };
+        };
+      };
+    },
+    {
+      filters?: ArrangerFilter;
+    }
+  >({
     query: `
       query($filters: JSON) {
         file {
@@ -172,8 +187,13 @@ export const aggregateAllObjectIds = async ({
       }
     `,
     variables: {
-      filters: clientSideFilters
-    }
-  })
+      filters: clientSideFilters,
+    },
+  });
 
+  if (respone.errors) {
+    throw new Error(respone.errors.toString());
+  }
+
+  return respone.data;
 };
