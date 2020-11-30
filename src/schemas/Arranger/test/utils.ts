@@ -57,10 +57,7 @@ const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
 export const fileDocumentStream = async function*({
   esClient,
   apiKey,
-  clientSideFilters = {
-    op:"and",
-    content: []
-  },
+  clientSideFilters,
 }: {
   apiKey: keyof typeof MOCK_API_KEYS;
   esClient: Client;
@@ -84,7 +81,7 @@ export const fileDocumentStream = async function*({
       {
         offset: number;
         first: number;
-        filters: ArrangerFilter;
+        filters?: ArrangerFilter;
       }
     >({
       query: `
