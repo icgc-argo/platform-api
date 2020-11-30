@@ -43,8 +43,6 @@ const getArrangerGqlSchema = async (
 ) => {
   await initArrangerMetadata(esClient);
 
-  console.log('yoooooo!!!!!!');
-
   // Create arranger schema
   const { schema: argoArrangerSchema } = (await createProjectSchema({
     es: esClient,
