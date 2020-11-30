@@ -54,18 +54,14 @@ const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
   jti: '',
   sub: '',
 });
-export const fileDocumentStream = async function*({
+
+const createArrangerApi = async ({
   esClient,
   apiKey,
-  clientSideFilters,
 }: {
   apiKey: keyof typeof MOCK_API_KEYS;
   esClient: Client;
-  clientSideFilters?: ArrangerFilter
-}) {
-  let offset = 0;
-  const pageSize = 100;
-
+}) => {
   const apolloServer = new ApolloServer({
     schema: await getArrangerGqlSchema(esClient, true),
     context: ({ req }: { req: Request }): ArrangerGqlContext => ({
@@ -75,6 +71,25 @@ export const fileDocumentStream = async function*({
     }),
   });
   const graphqlClient = createTestClient(apolloServer);
+  return graphqlClient;
+};
+
+export const fileDocumentStream = async function*({
+  esClient,
+  apiKey,
+  clientSideFilters,
+}: {
+  apiKey: keyof typeof MOCK_API_KEYS;
+  esClient: Client;
+  clientSideFilters?: ArrangerFilter;
+}) {
+  let offset = 0;
+  const pageSize = 100;
+  const graphqlClient = await createArrangerApi({
+    esClient,
+    apiKey,
+  });
+
   cycle: while (true) {
     const queryResponse = await graphqlClient.query<
       QueryResponse,
@@ -105,7 +120,7 @@ export const fileDocumentStream = async function*({
       variables: {
         offset: offset,
         first: pageSize,
-        filters: clientSideFilters
+        filters: clientSideFilters,
       },
     });
 
@@ -127,3 +142,38 @@ export const reduceToFileHits = (stream: ReturnType<typeof fileDocumentStream>) 
     });
     return acc;
   }, [])(stream);
+
+export const aggregateAllObjectIds = async ({
+  esClient,
+  apiKey,
+  clientSideFilters,
+}: {
+  apiKey: keyof typeof MOCK_API_KEYS;
+  esClient: Client;
+  clientSideFilters?: ArrangerFilter;
+}) => {
+  const graphqlClient = await createArrangerApi({
+    esClient,
+    apiKey,
+  });
+
+  return graphqlClient.query({
+    query: `
+      query($filters: JSON) {
+        file {
+          aggregations (filters: $filters, aggregations_filter_themselves: true) {
+            object_id {
+              buckets {
+                key
+              }
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      filters: clientSideFilters
+    }
+  })
+
+};
