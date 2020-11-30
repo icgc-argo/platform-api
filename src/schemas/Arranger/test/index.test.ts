@@ -31,9 +31,6 @@ import metadata from 'resources/arranger_es_metadata.json';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
-import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
-import { createTestClient } from 'apollo-server-testing';
 import {
   getAllIndexedDocuments,
   MOCK_API_KEYS,
