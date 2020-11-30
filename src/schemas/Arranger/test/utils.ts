@@ -113,13 +113,11 @@ export const fileDocumentStream = async function*({
     });
 
     if (!queryResponse.data) {
-      console.log('no queryResponse.data: ', queryResponse);
       throw new Error(queryResponse.errors?.toString());
     } else if (queryResponse.data.file.hits.edges.length > 0) {
       offset += pageSize;
       yield queryResponse.data;
     } else {
-      console.log('offset: ', offset);
       break cycle;
     }
   }

@@ -169,10 +169,7 @@ describe('Arranger schema', () => {
   });
 
   describe.only('metadata access control', () => {
-    let apolloServer: ApolloServer;
     let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
-    const app = express();
-    let graphqlClient: ReturnType<typeof createTestClient>;
 
     beforeAll(async () => {
       const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run releaseStageEsInit`);
