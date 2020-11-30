@@ -18,31 +18,84 @@
  */
 
 import { createTestClient } from 'apollo-server-testing';
-import { MOCK_API_KEYS } from 'routes/file-storage-api/handlers/test/utils';
+import { MOCK_API_KEYS, MOCK_API_KEY_SCOPES } from 'routes/file-storage-api/handlers/test/utils';
 import { reduce } from 'axax/es5/reduce';
 
+import { Request } from 'express';
+import getArrangerGqlSchema, { ArrangerGqlContext } from '..';
+import { ARRANGER_PROJECT_ID } from 'config';
+import { ApolloServer } from 'apollo-server-express';
+import _ from 'lodash';
+import { Client } from '@elastic/elasticsearch';
+import { ArrangerFilter } from '../arrangerFilterTypes';
+// import { EgoJwtData, UserStatus, UserType } from '@icgc-argo/ego-token-utils/dist/common';
+
 type QueryResponse = { file: { hits: { edges: { node: { object_id: string } }[] } } };
+
+const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
+  aud: [],
+  context: {
+    scope: MOCK_API_KEY_SCOPES[apiKey],
+    user: {
+      createdAt: 0,
+      email: '',
+      firstName: '',
+      lastLogin: 0,
+      lastName: '',
+      name: '',
+      preferredLanguage: '',
+      status: 'APPROVED',
+      type: 'USER',
+    },
+  },
+  exp: Infinity,
+  iat: 0,
+  iss: '',
+  jti: '',
+  sub: '',
+});
 export const fileDocumentStream = async function*({
-  gqlClient,
+  esClient,
   apiKey,
+  clientSideFilters = {
+    op:"and",
+    content: []
+  },
 }: {
   apiKey: keyof typeof MOCK_API_KEYS;
-  gqlClient: ReturnType<typeof createTestClient>;
+  esClient: Client;
+  clientSideFilters?: ArrangerFilter
 }) {
-  let currentPage = 0;
-  const pageSize = 1000;
+  let offset = 0;
+  const pageSize = 100;
+
+  const apolloServer = new ApolloServer({
+    schema: await getArrangerGqlSchema(esClient, true),
+    context: ({ req }: { req: Request }): ArrangerGqlContext => ({
+      es: esClient, // for arranger only
+      projectId: ARRANGER_PROJECT_ID, // for arranger only
+      userJwtData: mockJwtData(apiKey),
+    }),
+  });
+  const graphqlClient = createTestClient(apolloServer);
   cycle: while (true) {
-    const queryResponse = await gqlClient.query<
+    const queryResponse = await graphqlClient.query<
       QueryResponse,
       {
         offset: number;
         first: number;
+        filters: ArrangerFilter;
       }
     >({
       query: `
-        query($offset: Int, $first: Int) {
+        query($offset: Int, $first: Int, $filters: JSON) {
           file {
-            hits (first: $first, offset: $offset) {
+            hits (
+              first: $first,
+              offset: $offset,
+              sort: { field: "object_id" },
+              filters: $filters
+            ) {
               edges {
                 node {
                   object_id
@@ -53,20 +106,20 @@ export const fileDocumentStream = async function*({
         }
       `,
       variables: {
-        offset: currentPage,
+        offset: offset,
         first: pageSize,
+        filters: clientSideFilters
       },
     });
 
-    console.log('queryResponse: ', JSON.stringify(queryResponse));
-
     if (!queryResponse.data) {
       console.log('no queryResponse.data: ', queryResponse);
-      throw new Error('boo');
+      throw new Error(queryResponse.errors?.toString());
     } else if (queryResponse.data.file.hits.edges.length > 0) {
-      currentPage++;
+      offset += pageSize;
       yield queryResponse.data;
     } else {
+      console.log('offset: ', offset);
       break cycle;
     }
   }

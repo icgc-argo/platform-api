@@ -88,7 +88,9 @@ const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter 
     ]),
     PUBLIC_MEMBER: match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.PUBLIC]),
   };
-  return userPermissionToQueryMap[programMembershipAccessLevel];
+  const output = userPermissionToQueryMap[programMembershipAccessLevel];
+  console.log('server-side filter: ', JSON.stringify(output));
+  return output;
 };
 
 export default getAccessControlFilter;

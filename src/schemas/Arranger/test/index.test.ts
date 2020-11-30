@@ -16,7 +16,6 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import initArrangerMetadata, {
   ARRANGER_PROJECT_METADATA_INDEX,
   ARRANGER_PROJECTS_INDEX,
@@ -35,9 +34,13 @@ import { EsFileCentricDocument, FILE_RELEASE_STAGE } from 'utils/commonTypes/EsF
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { createTestClient } from 'apollo-server-testing';
-import { MOCK_API_KEYS, MOCK_API_KEY_SCOPES } from 'routes/file-storage-api/handlers/test/utils';
+import {
+  getAllIndexedDocuments,
+  MOCK_API_KEYS,
+  MOCK_API_KEY_SCOPES,
+} from 'routes/file-storage-api/handlers/test/utils';
 import { fileDocumentStream, reduceToFileHits } from './utils';
-import _ from 'lodash'
+import _ from 'lodash';
 
 const asyncExec = promisify(exec);
 
@@ -179,18 +182,22 @@ describe('Arranger schema', () => {
       await new Promise(resolve => {
         setTimeout(() => {
           resolve();
-        }, 1000);
+        }, 5000);
       });
-      apolloServer = new ApolloServer({
-        schema: await getArrangerGqlSchema(esClient),
-      });
-      graphqlClient = createTestClient(apolloServer);
+
+      allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
+        (acc, doc) => {
+          acc[doc.object_id] = doc;
+          return acc;
+        },
+        {} as typeof allIndexedDocuments,
+      );
     });
 
     describe('hits query', () => {
       it('returns unique entities', async () => {
         const responseStream = fileDocumentStream({
-          gqlClient: graphqlClient,
+          esClient,
           apiKey: MOCK_API_KEYS.PUBLIC,
         });
         const allRetrievedEntities = await reduceToFileHits(responseStream);
@@ -203,10 +210,12 @@ describe('Arranger schema', () => {
 
       it('returns and all the right data for public users', async () => {
         const responseStream = fileDocumentStream({
-          gqlClient: graphqlClient,
+          esClient,
           apiKey: MOCK_API_KEYS.PUBLIC,
         });
-        const allEntityIdsFromApi = (await reduceToFileHits(responseStream)).map(e => e.node.object_id);
+        const allEntityIdsFromApi = (await reduceToFileHits(responseStream)).map(
+          e => e.node.object_id,
+        );
         const equivalentIndexedDocuments = allEntityIdsFromApi.map(
           id => allIndexedDocuments[id || ''],
         );
@@ -224,7 +233,7 @@ describe('Arranger schema', () => {
 
       it('returns all data for DCC', async () => {
         const responseStream = fileDocumentStream({
-          gqlClient: graphqlClient,
+          esClient,
           apiKey: MOCK_API_KEYS.DCC,
         });
         const allRetrievedEntities = await reduceToFileHits(responseStream);
@@ -234,7 +243,7 @@ describe('Arranger schema', () => {
       it('returns and all the right data for program members', async () => {
         const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
         const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-        const responseStream = fileDocumentStream({ gqlClient: graphqlClient, apiKey: apiKey });
+        const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
         const allRetrievedEntities = await reduceToFileHits(responseStream);
         const equivalentIndexedDocuments = allRetrievedEntities.map(
           retrievedObject => allIndexedDocuments[retrievedObject.node.object_id || ''],
@@ -263,7 +272,7 @@ describe('Arranger schema', () => {
       it('returns and all the right data for associate program members', async () => {
         const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
         const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-        const responseStream = fileDocumentStream({ gqlClient: graphqlClient, apiKey: apiKey });
+        const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
         const allRetrievedEntities = await reduceToFileHits(responseStream);
         const equivalentIndexedDocuments = allRetrievedEntities.map(
           retrievedObject => allIndexedDocuments[retrievedObject.node.object_id || ''],

@@ -29,14 +29,21 @@ import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
 import { GlobalGqlContext } from 'app';
 import getAccessControlFilter from './getAccessControlFilter';
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 export type ArrangerGqlContext = {
   es: Client;
   projectId: string;
+  userJwtData: EgoJwtData | null;
 };
 
-const getArrangerGqlSchema = async (esClient: Client) => {
+const getArrangerGqlSchema = async (
+  esClient: Client,
+  enableAccessControl = FEATURE_METADATA_ACCESS_CONTROL,
+) => {
   await initArrangerMetadata(esClient);
+
+  console.log('yoooooo!!!!!!');
 
   // Create arranger schema
   const { schema: argoArrangerSchema } = (await createProjectSchema({
@@ -44,7 +51,7 @@ const getArrangerGqlSchema = async (esClient: Client) => {
     id: ARRANGER_PROJECT_ID,
     graphqlOptions: {},
     enableAdmin: false,
-    getServerSideFilter: FEATURE_METADATA_ACCESS_CONTROL
+    getServerSideFilter: enableAccessControl
       ? ({ userJwtData }: GlobalGqlContext) => getAccessControlFilter(userJwtData)
       : undefined,
   })) as { schema: GraphQLSchema };
