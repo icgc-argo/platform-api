@@ -89,7 +89,6 @@ const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter 
     PUBLIC_MEMBER: match(FILE_METADATA_FIELDS['release_stage'], [FILE_RELEASE_STAGE.PUBLIC]),
   };
   const output = userPermissionToQueryMap[programMembershipAccessLevel];
-  console.log(programMembershipAccessLevel, output);
   return output;
 };
 
