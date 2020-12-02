@@ -295,7 +295,7 @@ describe('Arranger schema', () => {
       });
     });
 
-    describe('aggregation query', () => {
+    describe.only('aggregation query', () => {
 
       it('returns and all the right data for public users', async () => {
         const aggregationResult = await aggregateAllObjectIds({
@@ -320,7 +320,7 @@ describe('Arranger schema', () => {
 
       it('returns all data for DCC', async () => {
         const aggregationResult = await aggregateAllObjectIds({
-          apiKey: MOCK_API_KEYS.PUBLIC,
+          apiKey: MOCK_API_KEYS.DCC,
           esClient,
         })
         const allEntityIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
