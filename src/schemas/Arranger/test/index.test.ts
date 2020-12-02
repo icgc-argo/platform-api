@@ -165,7 +165,7 @@ describe('Arranger schema', () => {
     });
   });
 
-  describe.only('metadata access control', () => {
+  describe('metadata access control', () => {
     let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
 
     beforeAll(async () => {
@@ -173,10 +173,11 @@ describe('Arranger schema', () => {
       if (stderr.length) {
         throw stderr;
       }
+      console.log("releaseStageEsInit stdout: ", stdout);
       await new Promise(resolve => {
         setTimeout(() => {
           resolve();
-        }, 60000);
+        }, 30000);
       });
 
       allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
