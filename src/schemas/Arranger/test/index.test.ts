@@ -224,7 +224,7 @@ describe('Arranger schema', () => {
         expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
 
       it('returns all data for DCC', async () => {
         const responseStream = fileDocumentStream({
@@ -233,7 +233,7 @@ describe('Arranger schema', () => {
         });
         const allRetrievedEntities = await reduceToFileHits(responseStream);
         expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
-      });
+      }, 240000);
 
       it('returns and all the right data for program members', async () => {
         const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
@@ -262,7 +262,7 @@ describe('Arranger schema', () => {
         expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
 
       it('returns and all the right data for associate program members', async () => {
         const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
@@ -293,10 +293,10 @@ describe('Arranger schema', () => {
         expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
     });
 
-    describe.only('aggregation query', () => {
+    describe('aggregation query', () => {
 
       it('returns and all the right data for public users', async () => {
         const aggregationResult = await aggregateAllObjectIds({
@@ -317,7 +317,7 @@ describe('Arranger schema', () => {
         expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
 
       it('returns all data for DCC', async () => {
         const aggregationResult = await aggregateAllObjectIds({
@@ -326,7 +326,7 @@ describe('Arranger schema', () => {
         })
         const allEntityIdsFromApi = aggregationResult?.file.aggregations.object_id.buckets.map(({key}) => key) || []
         expect(allEntityIdsFromApi.length).toBe(Object.entries(allIndexedDocuments).length);
-      });
+      }, 240000);
 
       it('returns and all the right data for program members', async () => {
         const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
@@ -355,7 +355,7 @@ describe('Arranger schema', () => {
         expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
 
       it('returns and all the right data for associate program members', async () => {
         const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
@@ -386,7 +386,7 @@ describe('Arranger schema', () => {
         expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
           true,
         );
-      });
+      }, 240000);
     });
   });
 });
