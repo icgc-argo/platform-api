@@ -176,10 +176,10 @@ describe('Arranger schema', () => {
       await new Promise(resolve => {
         setTimeout(() => {
           resolve();
-        }, 10000);
+        }, 30000);
       });
 
-      allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
+      allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
         (acc, doc) => {
           acc[doc.object_id] = doc;
           return acc;
