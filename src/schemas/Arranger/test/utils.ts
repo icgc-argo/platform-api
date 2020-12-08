@@ -84,7 +84,7 @@ export const fileDocumentStream = async function*({
   clientSideFilters?: ArrangerFilter;
 }) {
   let offset = 0;
-  const pageSize = 100;
+  const pageSize = 1000;
   const graphqlClient = await createArrangerApi({
     esClient,
     apiKey,

@@ -112,7 +112,7 @@ describe('file-storage-api', () => {
           .uniqBy(e => e.id)
           .size(),
       ).toBe(allRetrievedEntities.length);
-    }, 240000);
+    });
 
     it('returns and all the right data for public users', async () => {
       const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.PUBLIC });
@@ -246,7 +246,7 @@ describe('file-storage-api', () => {
             .map(obj => (obj as SongEntity).id)
             .every(id => Object.keys(allIndexedDocuments).includes(id)),
         );
-      }, 240000);
+      });
     });
 
     describe('for public users', () => {
@@ -267,7 +267,7 @@ describe('file-storage-api', () => {
         const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
         expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when unauthenticated user requests unauthorized file', async () => {
         let error;
@@ -280,7 +280,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(401);
-      }, 240000);
+      });
 
       it('returns all the publicly released data for unauthenticated users', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
@@ -290,7 +290,7 @@ describe('file-storage-api', () => {
         const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
         expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when authenticated user requests unauthorized file', async () => {
         let error;
@@ -304,7 +304,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
 
     describe('for full program members', () => {
@@ -334,7 +334,7 @@ describe('file-storage-api', () => {
         const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
         expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
@@ -348,7 +348,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
 
     describe('for associate program members', () => {
@@ -380,7 +380,7 @@ describe('file-storage-api', () => {
         expect(allRetrievedIds.length).toBe(expectedRetrievableIds.length);
         expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
@@ -394,7 +394,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
   });
 
@@ -446,7 +446,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === 'ok')).toBe(true);
-      }, 240000);
+      });
       it('does not allow download of files that are not publicly released', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(doc => doc.release_stage !== FILE_RELEASE_STAGE.PUBLIC)
@@ -457,7 +457,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === null)).toBe(true);
-      }, 240000);
+      });
       it('does not allow download of files that have controlled access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
@@ -468,7 +468,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === null)).toBe(true);
-      }, 240000);
+      });
       it('throws the right error for publicly released controlled files', async () => {
         let error = null;
         try {
@@ -480,7 +480,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(401);
-      }, 240000);
+      });
     });
 
     describe('for authenticated public users', () => {
@@ -499,7 +499,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === 'ok')).toBe(true);
-      }, 240000);
+      });
       it('does not allow download of files that are not publicly released', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(doc => doc.release_stage !== FILE_RELEASE_STAGE.PUBLIC)
@@ -511,7 +511,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === null)).toBe(true);
-      }, 240000);
+      });
       it('does not allow download of files that have controlled access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
@@ -523,7 +523,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === null)).toBe(true);
-      }, 240000);
+      });
       it('throws the right error for publicly released controlled files', async () => {
         let error = null;
         try {
@@ -536,7 +536,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
 
     describe('for dcc users', () => {
@@ -549,7 +549,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(downloadResults.every(result => result === 'ok')).toBe(true);
-      }, 240000);
+      });
     });
 
     describe('for full program members', () => {
@@ -577,7 +577,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
-      }, 240000);
+      });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToList(
@@ -589,7 +589,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
@@ -603,7 +603,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
 
     describe('for associate program members', () => {
@@ -632,7 +632,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
-      }, 240000);
+      });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToList(
@@ -644,7 +644,7 @@ describe('file-storage-api', () => {
           }),
         );
         expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
-      }, 240000);
+      });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
         let error;
@@ -658,7 +658,7 @@ describe('file-storage-api', () => {
         }
         expect(error).toBeTruthy();
         expect(error.status).toBe(403);
-      }, 240000);
+      });
     });
   });
 });
