@@ -89,6 +89,7 @@ export default async (esClient: Client) => {
       isEqual(projectManifestInEs, projectManifest) &&
       isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
     ) {
+      console.log('arranger metadata init success!!!');
       return true;
     } else {
       throw new Error('arranger metadata mismatch in elasticsearch');

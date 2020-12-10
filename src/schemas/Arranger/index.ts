@@ -24,16 +24,23 @@ import { createProjectSchema } from '@arranger/server/dist/startProject';
 
 import { GraphQLSchema } from 'graphql';
 import { transformSchema, TransformRootFields } from 'graphql-tools';
-import { ARRANGER_PROJECT_ID } from 'config';
+import { ARRANGER_PROJECT_ID, FEATURE_METADATA_ACCESS_CONTROL } from 'config';
 import { Client } from '@elastic/elasticsearch';
 import initArrangerMetadata from './initArrangerMetadata';
+import { GlobalGqlContext } from 'app';
+import getAccessControlFilter from './getAccessControlFilter';
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 export type ArrangerGqlContext = {
   es: Client;
   projectId: string;
+  userJwtData: EgoJwtData | null;
 };
 
-const getArrangerGqlSchema = async (esClient: Client) => {
+const getArrangerGqlSchema = async (
+  esClient: Client,
+  enableAccessControl = FEATURE_METADATA_ACCESS_CONTROL,
+) => {
   await initArrangerMetadata(esClient);
 
   // Create arranger schema
@@ -42,6 +49,9 @@ const getArrangerGqlSchema = async (esClient: Client) => {
     id: ARRANGER_PROJECT_ID,
     graphqlOptions: {},
     enableAdmin: false,
+    getServerSideFilter: enableAccessControl
+      ? ({ userJwtData }: GlobalGqlContext) => getAccessControlFilter(userJwtData)
+      : undefined,
   })) as { schema: GraphQLSchema };
 
   // Arranger schema has a recursive field called 'viewer' inside of type 'Root'
