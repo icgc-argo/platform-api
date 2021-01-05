@@ -117,7 +117,6 @@ const init = async () => {
     }),
     context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
       const authHeader = req.headers?.authorization;
-      console.log('authHeader: ', authHeader);
       let userJwtData: EgoJwtData | null = null;
       try {
         userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null;
