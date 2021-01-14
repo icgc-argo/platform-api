@@ -116,18 +116,23 @@ const init = async () => {
       schemas,
     }),
     context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
-      const authHeader = req.headers?.authorization
-      const userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null
-      return ({
-      isUserRequest: true,
-      egoToken: (authHeader || '').split('Bearer ').join(''),
-      Authorization:
-        `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
-      dataLoaders: {},
-      userJwtData,
-      es: esClient, // for arranger only
-      projectId: ARRANGER_PROJECT_ID, // for arranger only
-    })},
+      const authHeader = req.headers?.authorization;
+      let userJwtData: EgoJwtData | null = null;
+      try {
+        userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null;
+      } catch (err) {
+        userJwtData = null
+      }
+      return {
+        isUserRequest: true,
+        egoToken: (authHeader || '').split('Bearer ').join(''),
+        Authorization: `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
+        dataLoaders: {},
+        userJwtData,
+        es: esClient, // for arranger only
+        projectId: ARRANGER_PROJECT_ID, // for arranger only
+      };
+    },
     introspection: true,
     tracing: NODE_ENV !== 'production',
   });
@@ -162,7 +167,7 @@ const init = async () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
-    if(process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') {
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
       console.log(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
     }
