@@ -44,6 +44,7 @@ spec:
       name: docker-sock
   - name: dind-daemon
     image: docker:18.06-dind
+    args: ["--registry-mirror", "https://registry.dev.argo.cancercollaboratory.org"]
     securityContext:
       privileged: true
     volumeMounts:
@@ -74,7 +75,7 @@ spec:
             steps {
                 container('node') {
                     sh "npm ci"
-                    sh "DEBUG=testcontainers npm run test"
+                    sh "DEBUG=testcontainers npm run test-base"
                 }
             }
         }

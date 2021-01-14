@@ -16,19 +16,19 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import initArrangerMetadata, {
   ARRANGER_PROJECT_METADATA_INDEX,
   ARRANGER_PROJECTS_INDEX,
   harmonizedFileCentricConfig,
-} from './initArrangerMetadata';
+} from '../initArrangerMetadata';
 import { createEsClient } from 'services/elasticsearch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Duration, TemporalUnit } from 'node-duration';
 import { Client } from '@elastic/elasticsearch';
-import getArrangerGqlSchema from '.';
+import getArrangerGqlSchema from '..';
 import { ARRANGER_FILE_CENTRIC_INDEX, ARRANGER_PROJECT_ID } from 'config';
 import metadata from 'resources/arranger_es_metadata.json';
+import _ from 'lodash';
 
 describe('Arranger schema', () => {
   const mockMapping = {
@@ -54,25 +54,28 @@ describe('Arranger schema', () => {
   };
   let esContainer: StartedTestContainer;
   let esClient: Client;
+  let esHost: string;
   beforeAll(async () => {
     esContainer = await new GenericContainer('elasticsearch', '7.5.0')
       .withExposedPorts(9200)
       .withEnv('discovery.type', 'single-node')
       .withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
       .start();
+    esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`;
     esClient = await createEsClient({
-      node: `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`,
+      node: esHost,
     });
     esClient.indices.create({
       index: 'test',
       body: mockMapping,
     });
   }, 120000);
-  afterAll(async () => {
+  afterAll( async (done) => {
     await esContainer.stop();
-  }, 120000);
+    done()
+  });
 
-  describe("initArrangerMetadata", () => {
+  describe('initArrangerMetadata', () => {
     it('indices must exist after run', async () => {
       await initArrangerMetadata(esClient);
       expect((await esClient.indices.exists({ index: ARRANGER_PROJECT_METADATA_INDEX })).body).toBe(
@@ -139,7 +142,7 @@ describe('Arranger schema', () => {
     });
   });
 
-  describe("getArrangerGqlSchema", () => {
+  describe('getArrangerGqlSchema', () => {
     it('generates arranger schema with "file" type', async () => {
       try {
         const arrangerSchema = await getArrangerGqlSchema(esClient);
@@ -150,5 +153,5 @@ describe('Arranger schema', () => {
         throw err;
       }
     });
-  })
+  });
 });

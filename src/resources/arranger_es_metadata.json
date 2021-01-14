@@ -21,6 +21,12 @@
               "type": "Aggregations"
             },
             {
+              "field": "release_stage",
+              "show": false,
+              "active": true,
+              "type": "Aggregations"
+            },
+            {
               "field": "analysis_tools",
               "show": false,
               "active": true,
@@ -279,6 +285,17 @@
                 "query": null,
                 "show": false,
                 "accessor": "analysis.variant_class",
+                "jsonPath": null,
+                "sortable": true,
+                "id": null,
+                "type": "string"
+              },
+              {
+                "canChangeShow": true,
+                "field": "release_stage",
+                "query": null,
+                "show": false,
+                "accessor": "release_stage",
                 "jsonPath": null,
                 "sortable": true,
                 "id": null,
@@ -823,6 +840,18 @@
             "isArray": false,
             "rangeStep": 1,
             "type": "object",
+            "primaryKey": false
+          },
+          {
+            "unit": null,
+            "displayValues": {},
+            "quickSearchEnabled": false,
+            "field": "release_stage",
+            "displayName": "Release Stage",
+            "active": false,
+            "isArray": false,
+            "rangeStep": 1,
+            "type": "keyword",
             "primaryKey": false
           },
           {

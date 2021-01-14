@@ -54,6 +54,8 @@ import ArgoApolloServer from 'utils/ArgoApolloServer';
 import apiDocRouter from 'routes/api-docs';
 import createEgoClient, { EgoApplicationCredential } from 'services/ego';
 import { loadVaultSecret } from 'services/vault';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -62,6 +64,7 @@ export type GlobalGqlContext = {
   isUserRequest: boolean;
   egoToken: string;
   Authorization: string;
+  userJwtData: EgoJwtData | null;
   dataLoaders: {};
 };
 
@@ -76,7 +79,7 @@ const init = async () => {
         }),
         vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
           logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
-          throw err; //fail fast
+          throw err; //fail fastw
         }),
       ])) as [EgoApplicationCredential, EsSecret])
     : ([
@@ -112,15 +115,24 @@ const init = async () => {
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => ({
-      isUserRequest: true,
-      egoToken: (req.headers?.authorization || '').split('Bearer ').join(''),
-      Authorization:
-        `Bearer ${(req.headers?.authorization || '').replace(/^Bearer[\s]*/, '')}` || '',
-      dataLoaders: {},
-      es: esClient, // for arranger only
-      projectId: ARRANGER_PROJECT_ID, // for arranger only
-    }),
+    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
+      const authHeader = req.headers?.authorization;
+      let userJwtData: EgoJwtData | null = null;
+      try {
+        userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null;
+      } catch (err) {
+        userJwtData = null
+      }
+      return {
+        isUserRequest: true,
+        egoToken: (authHeader || '').split('Bearer ').join(''),
+        Authorization: `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
+        dataLoaders: {},
+        userJwtData,
+        es: esClient, // for arranger only
+        projectId: ARRANGER_PROJECT_ID, // for arranger only
+      };
+    },
     introspection: true,
     tracing: NODE_ENV !== 'production',
   });
@@ -155,7 +167,7 @@ const init = async () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
-    if(process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production') {
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
       console.log(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
     }
