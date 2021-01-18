@@ -1,0 +1,16 @@
+[
+  {
+    "dismissable": false,
+    "id": "banner-warning-users-something",
+    "level": "warning",
+    "message": "Occaecat ut pariatur est magna exercitation deserunt eu pariatur consequat dolor reprehenderit ullamco non labore.",
+    "title": "Warning for users"
+  },
+  {
+    "dismissable": true,
+    "id": "banner-error-something-something",
+    "level": "error",
+    "message": "Irure eiusmod minim do pariatur elit quis mollit.",
+    "title": "Error for users"
+  }
+]
