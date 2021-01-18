@@ -4,11 +4,11 @@ import { makeExecutableSchema } from 'graphql-tools';
 const getBanners = () => {
   try {
     const bannersStr = process.env.BANNERS || '';
-    const banners = JSON.parse(bannersStr);
-    if (!Array.isArray(banners)) {
+    const bannersParsed = JSON.parse(bannersStr);
+    if (!Array.isArray(bannersParsed)) {
       throw new Error('Banners need to be an array');
     } 
-    return banners;
+    return bannersParsed;
   } catch (e) {
     console.log('Banners error: ', e.name, e.message)
     return [];
