@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import banners from '../../../banners.json';
+
+const bannersStr = process.env.BANNERS || '';
+const bannerArray = JSON.parse(bannersStr);
 
 const typeDefs = gql`
   type Banner {
@@ -17,7 +19,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    banners: () => banners,
+    banners: () => bannerArray,
   }
 };
 
