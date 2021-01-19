@@ -25,9 +25,19 @@ const getBanners = () => {
     const bannersStr = process.env.BANNERS || '';
     const bannersParsed = [].concat(JSON.parse(bannersStr));
 
-    result = bannersParsed.filter((banner: any) => BannerTI.test(banner));
+    const bannersValidated = bannersParsed.reduce((acc, curr) => ({
+      ...acc,
+      ...(BannerTI.test(curr)
+        ? { valid: [...acc.valid, curr] }
+        : { invalid: [...acc.invalid, curr] }
+      )
+    }), {valid: [], invalid: []})
 
-    bannersParsed.forEach((banner: any) => {
+    console.log(bannersValidated);
+
+    result = bannersValidated.valid;
+
+    bannersValidated.invalid.forEach((banner: any) => {
       BannerTI.check(banner);
     });
   } catch (e) {
