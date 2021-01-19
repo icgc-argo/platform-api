@@ -23,22 +23,9 @@ const getBanners = () => {
 
   try {
     const bannersStr = process.env.BANNERS || '';
-    const bannersParsed = JSON.parse(bannersStr);
+    const bannersParsed = [].concat(JSON.parse(bannersStr));
 
-    if (!Array.isArray(bannersParsed)) {
-      const isBanner = !BannerTI.test(bannersParsed);
-      if (isBanner) {
-        result = [bannersParsed];
-      } else {
-        throw 'Banners need to be an array';
-      }
-    }
-
-    result = bannersParsed.filter((banner: any) => {
-      const isBanner = BannerTI.test(banner);
-      console.log(isBanner)
-      return isBanner;
-    });
+    result = bannersParsed.filter((banner: any) => BannerTI.test(banner));
 
     bannersParsed.forEach((banner: any) => {
       BannerTI.check(banner);
