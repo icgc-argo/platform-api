@@ -1,19 +1,68 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
+import { isEqual } from 'lodash';
+
+type BannerObj = {
+  [key: string]: string
+}
+
+const bannerFieldsRequired: BannerObj = {
+  'dismissable': 'boolean',
+  'id': 'number',
+  'level': 'string',
+  'title': 'string',
+};
+
+const bannerFieldsAllowed: BannerObj = {
+  ...bannerFieldsRequired,
+  'message': 'string',
+};
+
+const bannerLevelsAllowed = [
+  'error',
+  'info',
+  'warning',
+];
 
 const getBanners = () => {
   try {
     const bannersStr = process.env.BANNERS || '';
     const bannersParsed = JSON.parse(bannersStr);
+
     if (!Array.isArray(bannersParsed)) {
       throw new Error('Banners need to be an array');
-    } 
+    }
+
+    bannersParsed.forEach(banner => {
+      const errorTitle = `"${banner.title}"`;
+      const bannerKeys = Object.keys(banner).sort();
+
+      const checkFields = isEqual(bannerKeys, Object.keys(bannerFieldsRequired).sort()) || isEqual(bannerKeys, Object.keys(bannerFieldsAllowed).sort());
+
+      if (!checkFields) {
+        throw new Error(`Fields incorrect in ${errorTitle}`);
+      }
+
+      for (const [key, value] of Object.entries(banner)) {
+        const expectedType = bannerFieldsAllowed[key];
+        const checkType = expectedType === typeof value;
+        if (!checkType) {
+          throw new Error(`${key} should be a ${expectedType} in ${errorTitle}`);
+        }
+      }
+      
+      const checkLevel = bannerLevelsAllowed.includes(banner.level);
+      if (!checkLevel) {
+        throw new Error(`Invalid level "${banner.level}" in ${errorTitle}`);
+      }
+    });
+
     return bannersParsed;
   } catch (e) {
-    console.log('Banners error: ', e.name, e.message)
+    console.log('Banners', e.name, '-', e.message);
     return [];
   }
-}
+};
 
 const bannersArray = getBanners();
 
