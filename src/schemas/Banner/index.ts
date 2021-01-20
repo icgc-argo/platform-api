@@ -50,12 +50,13 @@ const getBanners = () => {
       )
     }), { valid: [], invalid: [] });
 
-    const bannersOnlyAllowedFields = bannersValidated.valid.map((banner: Banner) => 
-      Object.keys(banner)
-        .filter(key => allowedFields.includes(key))
-        .reduce((acc, curr: AllowedFields) => 
-          ({ ...acc, [curr]: banner[curr] }), {} as Banner)
-    );
+    const bannersOnlyAllowedFields = bannersValidated.valid
+      .map((banner: Banner) => 
+        Object.keys(banner)
+          .filter(key => allowedFields.includes(key))
+          .reduce((acc, curr: AllowedFields) => 
+            ({ ...acc, [curr]: banner[curr] }), {} as Banner)
+      );
 
     result = bannersOnlyAllowedFields;
 
