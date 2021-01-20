@@ -15,7 +15,7 @@ interface Banner {
 }
 
 const logError = (message: string, name: string) => {
-  logger.error(`Banner - ${name} - ${message}`);
+  logger.error(`📜 Banner - ${name} - ${message}`);
 };
 
 const getBanners = () => {
