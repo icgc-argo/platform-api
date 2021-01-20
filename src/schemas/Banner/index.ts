@@ -31,13 +31,15 @@ const getBanners = () => {
         ? { valid: [...acc.valid, curr] }
         : { invalid: [...acc.invalid, curr] }
       )
-    }), {valid: [], invalid: []})
+    }), { valid: [], invalid: [] })
 
-    console.log(bannersValidated);
-
-    result = bannersValidated.valid;
+    result = bannersValidated.valid.map((banner: Banner) => {
+      const { dismissable, id, level, title, message = '' } = banner;
+      return ({ dismissable, id, level, title, message });
+    });
 
     bannersValidated.invalid.forEach((banner: any) => {
+      // check() will throw errors on invalid banners
       BannerTI.check(banner);
     });
   } catch (e) {
