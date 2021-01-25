@@ -73,7 +73,7 @@ const getBanners = () => {
 
 const bannersArray = getBanners();
 
-console.log({ bannersArray });
+logger.info(`📜 Banners: ${JSON.stringify({ bannersArray })}`);
 
 const typeDefs = gql`
   type Banner {
