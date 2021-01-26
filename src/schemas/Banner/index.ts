@@ -1,8 +1,8 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import bannerTI from "./banner-ti";
 import { createCheckers } from "ts-interface-checker";
 import logger from '../../utils/logger';
+import bannerTI from "./banner-ti";
 
 const { BannerTI } = createCheckers(bannerTI);
 
@@ -16,7 +16,7 @@ type AllowedFields =
 
 interface Banner {
   dismissable: boolean;
-  id: number;
+  id: string;
   level: 'error'|'info'|'warning';
   message?: string;
   title: string;
@@ -50,15 +50,13 @@ const getBanners = () => {
       )
     }), { valid: [], invalid: [] });
 
-    const bannersOnlyAllowedFields = bannersValidated.valid
-      .map((banner: Banner) => 
+    result = bannersValidated.valid
+      .map((banner: Banner) =>
         Object.keys(banner)
           .filter(key => allowedFields.includes(key))
-          .reduce((acc, curr: AllowedFields) => 
+          .reduce((acc, curr: AllowedFields) =>
             ({ ...acc, [curr]: banner[curr] }), {} as Banner)
       );
-
-    result = bannersOnlyAllowedFields;
 
     bannersValidated.invalid.forEach((banner: any) => {
       // check() will throw errors on invalid banners
