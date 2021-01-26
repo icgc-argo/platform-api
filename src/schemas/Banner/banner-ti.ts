@@ -4,7 +4,7 @@ import * as t from 'ts-interface-checker';
 
 export const BannerTI = t.iface([], {
   dismissable: 'boolean',
-  id: 'number',
+  id: 'string',
   level: t.union(t.lit('error'), t.lit('info'), t.lit('warning')),
   message: t.opt('string'),
   title: 'string',
