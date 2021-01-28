@@ -6,14 +6,6 @@ import bannerTI from "./banner-ti";
 
 const { BannerTI } = createCheckers(bannerTI);
 
-type AllowedFields =
-  | 'dismissable' 
-  | 'id' 
-  | 'level'
-  | 'message'
-  | 'title'
-;
-
 interface Banner {
   dismissable: boolean;
   id: string;
@@ -21,6 +13,8 @@ interface Banner {
   message?: string;
   title: string;
 }
+
+type AllowedFields = keyof Banner;
 
 const allowedFields = [
   'dismissable',
