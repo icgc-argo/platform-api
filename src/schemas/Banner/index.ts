@@ -16,9 +16,6 @@ interface Banner {
 
 type AllowedFields = keyof Banner;
 
-// this isn't typed with AllowedFields
-// so we can filter out unallowed fields
-// without throwing errors or breaking the build
 const allowedFields = [
   'dismissable',
   'id',
