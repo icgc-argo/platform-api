@@ -6,14 +6,6 @@ import bannerTI from "./banner-ti";
 
 const { BannerTI } = createCheckers(bannerTI);
 
-type AllowedFields =
-  | 'dismissable' 
-  | 'id' 
-  | 'level'
-  | 'message'
-  | 'title'
-;
-
 interface Banner {
   dismissable: boolean;
   id: string;
@@ -22,6 +14,11 @@ interface Banner {
   title: string;
 }
 
+type AllowedFields = keyof Banner;
+
+// this isn't typed with AllowedFields
+// so we can filter out unallowed fields
+// without throwing errors or breaking the build
 const allowedFields = [
   'dismissable',
   'id',
