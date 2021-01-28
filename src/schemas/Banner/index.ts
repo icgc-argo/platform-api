@@ -6,6 +6,17 @@ import bannerTI from "./banner-ti";
 
 const { BannerTI } = createCheckers(bannerTI);
 
+// NOTE: we're validating banners at runtime with JavaScript,
+// using TS interfaces/types and the "ts-interface-checker" library,
+// rather than validating with TypeScript at buildtime.
+
+// this is to avoid breaking the build if a banner is invalid.
+// there's no other checks on banner data,
+// because it's in an env variable, not a database.
+
+// if a banner is invalid, the error will be logged,
+// the build will continue, and valid banners will still be served.
+
 interface Banner {
   dismissable: boolean;
   id: string;
@@ -16,6 +27,8 @@ interface Banner {
 
 type AllowedFields = keyof Banner;
 
+// deliberately not typed to avoid throwing TS errors
+// if a banner includes extra fields.
 const allowedFields = [
   'dismissable',
   'id',
@@ -53,7 +66,7 @@ const getBanners = () => {
       );
 
     bannersValidated.invalid.forEach((banner: any) => {
-      // check() will throw errors on invalid banners
+      // check() will throw errors on invalid banners.
       BannerTI.check(banner);
     });
   } catch (e) {
