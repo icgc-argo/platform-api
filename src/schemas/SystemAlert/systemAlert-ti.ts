@@ -2,7 +2,7 @@ import * as t from 'ts-interface-checker';
 
 // this was created manually, not with ts-interface-builder
 
-export const BannerTI = t.iface([], {
+export const SystemAlertTI = t.iface([], {
   dismissable: 'boolean',
   id: 'string',
   level: t.union(t.lit('error'), t.lit('info'), t.lit('warning')),
@@ -11,6 +11,6 @@ export const BannerTI = t.iface([], {
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
-  BannerTI,
+  SystemAlertTI,
 };
 export default exportedTypeSuite;

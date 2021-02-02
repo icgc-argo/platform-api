@@ -42,7 +42,7 @@ import {
   ELASTICSEARCH_USERNAME,
   ELASTICSEARCH_PASSWORD,
 } from './config';
-import bannerSchema from './schemas/Banner';
+import systemAlertSchema from './schemas/SystemAlert';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
 
@@ -106,7 +106,7 @@ const init = async () => {
     userSchema(egoClient),
     programSchema,
     clinicalSchema,
-    bannerSchema,
+    systemAlertSchema,
     ProgramDashboardSummarySchema(esClient),
     createHelpdeskSchema(),
     ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
