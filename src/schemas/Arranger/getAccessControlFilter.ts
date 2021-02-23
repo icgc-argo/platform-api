@@ -33,7 +33,30 @@ const emptyFilter = () => ({
   content: [],
 });
 
-const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter => {
+/* Logical operator shorthands */
+const all = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
+  op: 'and',
+  content: [...conditions],
+});
+const not = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
+  op: 'not',
+  content: [...conditions],
+});
+const match = (
+  field: keyof typeof FILE_METADATA_FIELDS,
+  values: string[],
+): ArrangerFilterFieldOperation => ({
+  op: 'in',
+  content: {
+    field,
+    value: values,
+  },
+});
+/*******************************/
+
+const getAccessControlFilter = (egoToken: string): ArrangerFilter => {
+  const userJwtData: EgoJwtData = egoTokenUtils.decodeToken(egoToken);
+
   const userPrograms: string[] = userJwtData
     ? egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope)
     : [];
@@ -42,27 +65,6 @@ const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter 
         permissions: userJwtData.context.scope,
       })
     : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
-
-  /* Logical operator shorthands */
-  const all = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
-    op: 'and',
-    content: [...conditions],
-  });
-  const not = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
-    op: 'not',
-    content: [...conditions],
-  });
-  const match = (
-    field: keyof typeof FILE_METADATA_FIELDS,
-    values: string[],
-  ): ArrangerFilterFieldOperation => ({
-    op: 'in',
-    content: {
-      field,
-      value: values,
-    },
-  });
-  /*******************************/
 
   /* common filters */
   const isFromOtherPrograms = not([match(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
