@@ -19,6 +19,43 @@ const gender = ['Male', 'Female'];
 const donorIds = range(0, 100).map(num => `fake_donor_${num}`);
 const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
 
+const specimenTissueSources = [
+  'Blood derived - peripheral blood',
+  'Blood derived',
+  'Bone marrow',
+  'Bone',
+  'Buccal cell',
+  'Buffy coat',
+  'Cerebellum',
+  'Cerebrospinal fluid',
+  'Endometrium',
+  'Esophagus',
+  'Intestine',
+  'Lymph node',
+  'Mononuclear cells from bone marrow',
+  'Other',
+  'Plasma',
+  'Pleural effusion',
+  'Saliva',
+  'Serum',
+  'Skin',
+  'Solid tissue',
+];
+const specimenTypes = [
+  'Cell line - derived from xenograft tumour',
+  'Metastatic tumour - additional metastatic',
+  'Metastatic tumour - metastasis local to lymph node',
+  'Metastatic tumour - metastasis to distant location',
+  'Metastatic tumour',
+  'Normal - tissue adjacent to primary tumour',
+  'Normal',
+  'Primary tumour - additional new primary',
+  'Primary tumour - adjacent to normal',
+  'Primary tumour',
+  'Recurrent tumour',
+  'Xenograft - derived from primary tumour',
+];
+
 const args = process.argv.slice(2);
 
 (async () => {
@@ -88,8 +125,8 @@ const args = process.argv.slice(2);
           specimen_id: `fake_specimen_${i}`,
           submitter_specimen_id: 'insilico_2_tumor',
           tumour_normal_designation: 'Tumour',
-          specimen_tissue_source: 'Blood derived',
-          specimen_type: 'Primary tumour',
+          specimen_tissue_source: sample(specimenTissueSources),
+          specimen_type: sample(specimenTypes),
           samples: {
             sample_id: `fake_sample_${i}`,
             submitter_sample_id: 'insilico_2_tumor',
