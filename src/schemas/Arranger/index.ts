@@ -50,7 +50,7 @@ const getArrangerGqlSchema = async (
     graphqlOptions: {},
     enableAdmin: false,
     getServerSideFilter: enableAccessControl
-      ? ({ userJwtData }: GlobalGqlContext) => getAccessControlFilter(userJwtData)
+      ? ({ egoToken }: GlobalGqlContext) => getAccessControlFilter(egoToken)
       : undefined,
   })) as { schema: GraphQLSchema };
 
