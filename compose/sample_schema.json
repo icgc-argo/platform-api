@@ -54,6 +54,15 @@
       "sangerVcsFailed": {
         "type": "byte"
       },
+      "mutectCompleted" : {
+        "type" : "byte"
+      },
+      "mutectFailed" : {
+        "type" : "byte"
+      },
+      "mutectRunning" : {
+        "type" : "byte"
+      },
       "processingStatus": {
         "type": "keyword"
       },
