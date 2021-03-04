@@ -51,6 +51,9 @@ export type DonorSummaryEntry = {
   sangerVcsCompleted: number;
   sangerVcsRunning: number;
   sangerVcsFailed: number;
+  mutectCompleted: number;
+  mutectRunning: number;
+  mutectFailed: number;
   processingStatus: DonorMolecularDataProcessingStatus;
   updatedAt: Date;
   createdAt: Date;
@@ -111,6 +114,9 @@ export enum EsDonorDocumentField {
   sangerVcsCompleted = 'sangerVcsCompleted',
   sangerVcsFailed = 'sangerVcsFailed',
   sangerVcsRunning = 'sangerVcsRunning',
+  mutectCompleted = 'mutectCompleted',
+  mutectRunning = 'mutectRunning',
+  mutectFailed = 'mutectFailed',
   submittedCoreDataPercent = 'submittedCoreDataPercent',
   submittedExtendedDataPercent = 'submittedExtendedDataPercent',
   submitterDonorId = 'submitterDonorId',
@@ -136,6 +142,9 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.sangerVcsCompleted]: number;
   [EsDonorDocumentField.sangerVcsFailed]: number;
   [EsDonorDocumentField.sangerVcsRunning]: number;
+  [EsDonorDocumentField.mutectCompleted]: number;
+  [EsDonorDocumentField.mutectRunning]: number;
+  [EsDonorDocumentField.mutectFailed]: number;
   [EsDonorDocumentField.submittedCoreDataPercent]: number;
   [EsDonorDocumentField.submittedExtendedDataPercent]: number;
   [EsDonorDocumentField.submitterDonorId]: string;

@@ -52,6 +52,9 @@ export default gql`
     sangerVcsCompleted
     sangerVcsRunning
     sangerVcsFailed
+    mutectCompleted
+    mutectRunning
+    mutectFailed
     processingStatus
     updatedAt
     createdAt
@@ -148,6 +151,18 @@ export default gql`
     Number of Sanger VCs that is failing for this donor
     """
     sangerVcsFailed: Int!
+    """
+    Number of Mutect2 completed for this donor
+    """
+    mutectCompleted: Int!
+    """
+    Number of Mutect2 currently running for this donor
+    """
+    mutectRunning: Int!
+    """
+    Number of Mutect2 that is failed for this donor
+    """
+    mutectFailed: Int!
     """
     Molecular data processing status of this donor
     """
