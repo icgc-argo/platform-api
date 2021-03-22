@@ -10,11 +10,11 @@ const { SystemAlertTI } = createCheckers(systemAlertTI);
 // using TS interfaces/types and the "ts-interface-checker" library,
 // rather than validating with TypeScript at buildtime.
 
-// this is to avoid breaking the build if a alert is invalid.
+// this is to avoid breaking the build if an alert is invalid.
 // there's no other checks on alert data,
 // because it's in an env variable, not a database.
 
-// if a alert is invalid, the error will be logged,
+// if an alert is invalid, the error will be logged,
 // the build will continue, and valid system alerts will still be served.
 
 interface SystemAlert {
