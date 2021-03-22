@@ -47,6 +47,7 @@ import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
 
 import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
+import DonorDataChartSchema from './schemas/DonorDataChart';
 import logger, { loggerConfig } from './utils/logger';
 import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
 import { createEsClient, EsSecret } from 'services/elasticsearch';
@@ -108,6 +109,7 @@ const init = async () => {
     clinicalSchema,
     systemAlertSchema,
     ProgramDashboardSummarySchema(esClient),
+    DonorDataChartSchema(esClient),
     createHelpdeskSchema(),
     ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
   ]);

@@ -24,7 +24,8 @@
     "totalFilesCount": 20,
     "filesToQcCount": 20,
     "updatedAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
-    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
+    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
+    "rawReadsFirstPublishedDate": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
   },
   {
     "programId": "DASH-CA",
@@ -48,7 +49,8 @@
     "totalFilesCount": 20,
     "filesToQcCount": 20,
     "updatedAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
-    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
+    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
+    "rawReadsFirstPublishedDate": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
   },
   {
     "programId": "DASH-CA",
@@ -72,7 +74,8 @@
     "totalFilesCount": 20,
     "filesToQcCount": 20,
     "updatedAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
-    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
+    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
+    "rawReadsFirstPublishedDate": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
   },
   {
     "programId": "DASH-CA",
@@ -96,6 +99,7 @@
     "totalFilesCount": 20,
     "filesToQcCount": 20,
     "updatedAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
-    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
+    "createdAt": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)",
+    "rawReadsFirstPublishedDate": "Tue Apr 28 2020 10:40:37 GMT-0400 (Eastern Daylight Time)"
   }
 ]
