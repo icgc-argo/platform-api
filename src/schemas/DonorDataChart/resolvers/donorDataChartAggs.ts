@@ -29,18 +29,26 @@ import {
   DonorMolecularDataProcessingStatus,
   DonorMolecularDataReleaseStatus,
   BaseQueryArguments,
+  ChartType,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import logger from 'utils/logger';
 
-const donorDataChartEntriesResolver: (
+const donorDataChartAggsResolver: (
   esClient: Client,
 ) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
+    // already have program short name
+    dateRangeFrom: Date;
+    dateRangeTo: Date;
+    dataPoints: number;
+    chartType: ChartType;
+    // old args
+    // keeping these temporarily so the app doesn't crash
     first: number;
     offset: number;
     sorts: DonorSummaryEntrySort[];
@@ -116,4 +124,4 @@ const donorDataChartEntriesResolver: (
     );
 };
 
-export default donorDataChartEntriesResolver;
+export default donorDataChartAggsResolver;

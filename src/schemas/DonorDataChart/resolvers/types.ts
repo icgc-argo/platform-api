@@ -153,3 +153,8 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.totalFilesCount]: number;
   [EsDonorDocumentField.filesToQcCount]: number;
 };
+
+
+// new types for donor chart
+
+export type ChartType = 'clinical' | 'molecular';

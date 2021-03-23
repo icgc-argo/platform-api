@@ -21,7 +21,7 @@ import { Client } from '@elastic/elasticsearch';
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
 import { resolveWithProgramAuth } from '../../ProgramDonorSummary/resolvers';
-import { donorDataChartEntriesResolver } from './donorDataChartEntries';
+import donorDataChartAggsResolver from './donorDataChartAggs';
 
 const createResolvers = async (
   esClient: Client,
@@ -30,7 +30,7 @@ const createResolvers = async (
     Query: {
       donorDataChartEntries: (...resolverArguments) =>
         resolveWithProgramAuth(
-          donorDataChartEntriesResolver(esClient)(...resolverArguments),
+          donorDataChartAggsResolver(esClient)(...resolverArguments),
           resolverArguments,
         ),
     },
