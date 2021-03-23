@@ -22,9 +22,10 @@ import { gql } from 'apollo-server-express';
 export default gql`
   scalar DateTime
 
-  enum ChartType {
-    CLINICAL
-    MOLECULAR
+  enum DonorMolecularDataReleaseStatus {
+    FULLY_RELEASED
+    PARTIALLY_RELEASED
+    NO_RELEASE
   }
 
   enum DonorMolecularDataProcessingStatus {
@@ -33,12 +34,53 @@ export default gql`
     REGISTERED
   }
 
-  enum DonorMolecularDataReleaseStatus {
-    FULLY_RELEASED
-    PARTIALLY_RELEASED
-    NO_RELEASE
+  enum ProgramDonorSummaryEntryField {
+    donorId
+    validWithCurrentDictionary
+    releaseStatus
+    submitterDonorId
+    programShortName
+    submittedCoreDataPercent
+    submittedExtendedDataPercent
+    registeredNormalSamples
+    registeredTumourSamples
+    publishedNormalAnalysis
+    publishedTumourAnalysis
+    alignmentsCompleted
+    alignmentsRunning
+    alignmentsFailed
+    sangerVcsCompleted
+    sangerVcsRunning
+    sangerVcsFailed
+    mutectCompleted
+    mutectRunning
+    mutectFailed
+    processingStatus
+    updatedAt
+    createdAt
+    alignmentFirstPublishedDate
+    fakeFirstPublishedDate
+    mutectFirstPublishedDate
+    rawReadsFirstPublishedDate
+    sangerVcsFirstPublishedDate
   }
-    """
+
+  input ProgramDonorSummaryFilter {
+    field: ProgramDonorSummaryEntryField!
+    values: [String!]!
+  }
+
+  enum SortOrder {
+    asc
+    desc
+  }
+
+  input DonorSummaryEntrySort {
+    field: ProgramDonorSummaryEntryField!
+    order: SortOrder
+  }
+
+  """
   Includes status summary of clinical and molecular data processing for the given donor
   """
   type DonorSummaryEntry {
@@ -134,21 +176,110 @@ export default gql`
     Timestamp of the latest update applied to this donor's clinical data
     """
     updatedAt: DateTime!
-    rawReadsFirstPublishedDate: DateTime!
     """
     Timestamp of when this donor was first registered
     """
     createdAt: DateTime!
+    """
+    Timestamp of when raw reads data was first published
+    """
+    rawReadsFirstPublishedDate: DateTime!
+    """
+    This one is fake. I want to see if unused fields crash the app.
+    """
+    fakeFirstPublishedDate: DateTime!
+    """
+    Timestamp of when mutect data was first published
+    """
+    mutectFirstPublishedDate: DateTime!
+    """
+    Timestamp of when alignment data was first published
+    """
+    alignmentFirstPublishedDate: DateTime!
+    """
+    Timestamp of when Sanger VCS data was first published
+    """
+    sangerVcsFirstPublishedDate: DateTime!
   }
-  # TODO: I want to get back aggs not hits. change [DonorSummaryEntry]!
-  # to look like aggs response.
+
+  """
+  Contains summary of aggregate clinical and molecular data processing status for the given program
+  """
+  type ProgramDonorSummaryStats {
+    """
+    Unique ID of this summary object
+    """
+    id: ID!
+    """
+    Short name of the program which this summary object is associated with
+    """
+    programShortName: String!
+    """
+    Total number of donors registered for this program
+    """
+    registeredDonorsCount: Int!
+    """
+    Percentage of core clinical data fields submitted over total core clinical data fields
+    """
+    percentageCoreClinical: Float!
+    """
+
+    """
+    percentageTumourAndNormal: Float!
+    """
+    Number of donors whose molecular data is being processed
+    """
+    donorsProcessingMolecularDataCount: Int!
+    """
+    Number of files to QC
+    """
+    filesToQcCount: Int!
+    """
+    Number of donors whose files have been released
+    """
+    donorsWithReleasedFilesCount: Int!
+    """
+    Number of donors invalidated with current data dictionary version
+    """
+    donorsInvalidWithCurrentDictionaryCount: Int!
+    """
+    Total number of genomic files associated with this program
+    """
+    allFilesCount: Int!
+    """
+    Number of donors whose genomic files have been fully released
+    """
+    fullyReleasedDonorsCount: Int!
+    """
+    Number of donors who only have some genomic files that have been released
+    """
+    partiallyReleasedDonorsCount: Int!
+    """
+    Number of donors registered to the program who currently has no released genomic file
+    """
+    noReleaseDonorsCount: Int!
+  }
+
+  # new types for donor data
+
+  enum ChartType {
+    clinical
+    molecular
+  }
+
   type Query {
-    donorDataChartEntries(
-      programId: String!
-      chartType: ChartType!
-      dataPoints: Int!
-      dateRangeFrom: DateTime!
-      dateRangeTo: DateTime!
+    """
+    Paginated list of donor data summary given a program
+    """
+    boop1(
+      programShortName: String!
+      """
+      Maximum page size of 500
+      """
+      first: Int = 20
+      offset: Int = 0
+      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
+      filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
   }
 `;

@@ -35,6 +35,19 @@ import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import logger from 'utils/logger';
+import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
+
+const esAggFields = {
+  'clinical': [ 'createdAt' ], // TODO
+  'molecular': [
+    'alignment',
+    'mutect',
+    'rawReads',
+    'sangerVcs',
+  ],
+};
+
+const esMolecularAggField = "FirstPublishedAt";
 
 const donorDataChartAggsResolver: (
   esClient: Client,
@@ -43,9 +56,9 @@ const donorDataChartAggsResolver: (
   GlobalGqlContext,
   BaseQueryArguments & {
     // already have program short name
-    dateRangeFrom: Date;
-    dateRangeTo: Date;
-    dataPoints: number;
+    // dateRangeFrom: Date;
+    // dateRangeTo: Date;
+    // dataPoints: number;
     chartType: ChartType;
     // old args
     // keeping these temporarily so the app doesn't crash
@@ -55,7 +68,9 @@ const donorDataChartAggsResolver: (
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
-  const { programShortName } = args;
+  const { chartType, programShortName } = args;
+
+  const esAggFieldString = chartType === 'molecular' ? esMolecularAggField : '';
 
   const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
   if (args.first > MAXIMUM_SUMMARY_PAGE_SIZE) {
@@ -63,6 +78,29 @@ const donorDataChartAggsResolver: (
       first: args.first,
     });
   }
+
+  const bucketsTemp = ['01-10-2020'];
+  console.log(esAggFields[chartType])
+
+  const newEsQuery = esb
+    .requestBodySearch()
+    .size(0)
+    .query(
+      esb.boolQuery()
+        .filter(esb.termQuery(EsDonorDocumentField.programId, programShortName))
+        .should(esAggFields[chartType]
+          .map(field => esb.existsQuery(`${field}${esAggFieldString}`)))
+        .minimumShouldMatch(1)
+    )
+    .aggs(esAggFields[chartType].map(field => esb
+      .dateRangeAggregation(`${field}Agg`, `${field}${esAggFieldString}`)
+      .format(ELASTICSEARCH_DATE_TIME_FORMAT)
+      .ranges(bucketsTemp.map(bucket => ({ to: bucket })))
+    ));
+
+  const newEsQueryString = JSON.stringify(newEsQuery);
+  console.log('🤖🤖🤖🤖🤖🤖🤖', newEsQueryString);
+  
 
   const esQuery = esb
     .requestBodySearch()

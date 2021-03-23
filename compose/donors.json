@@ -25,7 +25,10 @@
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.388Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -52,8 +55,10 @@
     "registeredNormalSamples": 2,
     "registeredTumourSamples": 3,
     "updatedAt": "2021-03-19T15:28:28.388Z",
-    "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "createdAt": "2020-11-09T21:25:17.717Z","alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -81,7 +86,10 @@
     "registeredTumourSamples": 4,
     "updatedAt": "2021-03-19T15:28:28.388Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -108,8 +116,10 @@
     "registeredNormalSamples": 2,
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.388Z",
-    "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "createdAt": "2020-11-09T21:25:17.717Z","alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -137,7 +147,10 @@
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.388Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -165,7 +178,10 @@
     "registeredTumourSamples": 1,
     "updatedAt": "2021-03-19T15:28:28.389Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -193,7 +209,10 @@
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.389Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -221,7 +240,10 @@
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.389Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -249,7 +271,10 @@
     "registeredTumourSamples": 2,
     "updatedAt": "2021-03-19T15:28:28.389Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -277,6 +302,9 @@
     "registeredTumourSamples": 1,
     "updatedAt": "2021-03-19T15:28:28.389Z",
     "createdAt": "2020-11-09T21:25:17.717Z",
-    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   }
 ]

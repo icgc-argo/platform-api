@@ -58,6 +58,11 @@ export default gql`
     processingStatus
     updatedAt
     createdAt
+    alignmentFirstPublishedDate
+    fakeFirstPublishedDate
+    mutectFirstPublishedDate
+    rawReadsFirstPublishedDate
+    sangerVcsFirstPublishedDate
   }
 
   input ProgramDonorSummaryFilter {
@@ -175,6 +180,26 @@ export default gql`
     Timestamp of when this donor was first registered
     """
     createdAt: DateTime!
+    """
+    Timestamp of when raw reads data was first published
+    """
+    rawReadsFirstPublishedDate: DateTime!
+    """
+    This one is fake. I want to see if unused fields crash the app.
+    """
+    fakeFirstPublishedDate: DateTime!
+    """
+    Timestamp of when mutect data was first published
+    """
+    mutectFirstPublishedDate: DateTime!
+    """
+    Timestamp of when alignment data was first published
+    """
+    alignmentFirstPublishedDate: DateTime!
+    """
+    Timestamp of when Sanger VCS data was first published
+    """
+    sangerVcsFirstPublishedDate: DateTime!
   }
 
   """

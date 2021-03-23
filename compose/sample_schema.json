@@ -77,6 +77,21 @@
       },
       "createdAt": {
         "type": "date"
+      },
+      "rawReadsFirstPublishedDate": {
+        "type": "date"
+      },
+      "fakeFirstPublishedDate": {
+        "type": "date"
+      },
+      "sangerVcsFirstPublishedDate": {
+        "type": "date"
+      },
+      "mutectFirstPublishedDate": {
+        "type": "date"
+      },
+      "alignmentFirstPublishedDate": {
+        "type": "date"
       }
     }
   }

@@ -28,7 +28,7 @@ const createResolvers = async (
 ): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   return {
     Query: {
-      donorDataChartEntries: (...resolverArguments) =>
+      donorDataChartAggs: (...resolverArguments) =>
         resolveWithProgramAuth(
           donorDataChartAggsResolver(esClient)(...resolverArguments),
           resolverArguments,
