@@ -273,6 +273,7 @@ export default gql`
     """
     donorDataChartAggs(
       programShortName: String!
+      chartType: ChartType!
       """
       Maximum page size of 500
       """
