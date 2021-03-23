@@ -271,7 +271,7 @@ export default gql`
     """
     Paginated list of donor data summary given a program
     """
-    boop1(
+    donorDataChartAggs(
       programShortName: String!
       """
       Maximum page size of 500
