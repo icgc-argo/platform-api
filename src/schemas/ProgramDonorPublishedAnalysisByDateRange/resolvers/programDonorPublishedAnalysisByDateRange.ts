@@ -36,7 +36,7 @@ import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import { convertStringToISODate, validateISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
 
 const esAggFields = {
   'clinical': [ 'createdAt' ], // TODO
@@ -86,7 +86,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
   const isoDateRangeTo = convertStringToISODate(dateRangeTo);
 
-  const daysInRange = differenceInDays(isoDateRangeFrom, isoDateRangeTo);
+  const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
   if (daysInRange < bucketCount) {
     throw new UserInputError(`${ERROR_TITLE} Days in range must be greater than or equal to bucket count`, {
       dateRangeFrom,
@@ -94,8 +94,12 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     });
   }
 
-  const bucketsTemp = ['01-10-2020'];
-  // console.log(esAggFields[analysisType])
+  const bucketDates = [...Array(bucketCount).keys()]
+    .sort((a, b) => b - a)
+    .map((bucketIndex: number) => subDate(isoDateRangeTo, 
+      { days: Math.floor(daysInRange / bucketCount * bucketIndex) }
+    ))
+    .map((bucketDate: Date) => formatISO(bucketDate));
 
   const newEsQuery = esb
     .requestBodySearch()
@@ -110,12 +114,10 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     .aggs(esAggFields[analysisType].map(field => esb
       .dateRangeAggregation(`${field}Agg`, `${field}${esAggFieldString}`)
       .format(ELASTICSEARCH_DATE_TIME_FORMAT)
-      .ranges(bucketsTemp.map(bucket => ({ to: bucket })))
+      .ranges(bucketDates.map(bucketDate => ({ to: bucketDate })))
     ));
 
   const newEsQueryString = JSON.stringify(newEsQuery);
-  // console.log('🤖🤖🤖🤖🤖🤖🤖', newEsQueryString);
-  
 
   const esQuery = esb
     .requestBodySearch()
