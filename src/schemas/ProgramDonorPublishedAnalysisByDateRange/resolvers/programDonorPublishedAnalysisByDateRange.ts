@@ -129,7 +129,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     });
 
   return Object.keys(esAggs).map((key) => ({
-    title: key,
+    title: key.split('Agg')[0],
     buckets: esAggs[key].buckets.map((bucket) => ({
       date: bucket.to_as_string,
       donors: bucket.doc_count

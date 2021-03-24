@@ -57,11 +57,6 @@ export type DonorSummaryEntry = {
   processingStatus: DonorMolecularDataProcessingStatus;
   updatedAt: Date;
   createdAt: Date;
-  alignmentFirstPublishedDate: Date;
-  fakeFirstPublishedDate: Date;
-  mutectFirstPublishedDate: Date;
-  rawReadsFirstPublishedDate: Date;
-  sangerVcsFirstPublishedDate: Date;
 };
 
 type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry;
@@ -129,11 +124,6 @@ export enum EsDonorDocumentField {
   validWithCurrentDictionary = 'validWithCurrentDictionary',
   totalFilesCount = 'totalFilesCount',
   filesToQcCount = 'filesToQcCount',
-  alignmentFirstPublishedDate = 'alignmentFirstPublishedDate',
-  fakeFirstPublishedDate = 'fakeFirstPublishedDate',
-  mutectFirstPublishedDate = 'mutectFirstPublishedDate',
-  rawReadsFirstPublishedDate = 'rawReadsFirstPublishedDate',
-  sangerVcsFirstPublishedDate = 'sangerVcsFirstPublishedDate',
 };
 
 export type ElasticsearchDonorDocument = {
@@ -162,9 +152,4 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.validWithCurrentDictionary]: boolean;
   [EsDonorDocumentField.totalFilesCount]: number;
   [EsDonorDocumentField.filesToQcCount]: number;
-  [EsDonorDocumentField.alignmentFirstPublishedDate]: string;
-  [EsDonorDocumentField.fakeFirstPublishedDate]: string;
-  [EsDonorDocumentField.mutectFirstPublishedDate]: string;
-  [EsDonorDocumentField.rawReadsFirstPublishedDate]: string;
-  [EsDonorDocumentField.sangerVcsFirstPublishedDate]: string;
 };

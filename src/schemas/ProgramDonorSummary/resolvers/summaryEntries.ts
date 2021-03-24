@@ -112,11 +112,6 @@ const programDonorSummaryEntriesResolver: (
           validWithCurrentDictionary: doc.validWithCurrentDictionary,
           createdAt: new Date(doc.createdAt),
           updatedAt: new Date(doc.updatedAt),
-          alignmentFirstPublishedDate: new Date(doc.alignmentFirstPublishedDate),
-          fakeFirstPublishedDate: new Date(doc.fakeFirstPublishedDate),
-          mutectFirstPublishedDate: new Date(doc.mutectFirstPublishedDate),
-          rawReadsFirstPublishedDate: new Date(doc.rawReadsFirstPublishedDate),
-          sangerVcsFirstPublishedDate: new Date(doc.sangerVcsFirstPublishedDate),
         } as DonorSummaryEntry),
     );
 };
