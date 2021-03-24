@@ -124,7 +124,7 @@ export enum EsDonorDocumentField {
   validWithCurrentDictionary = 'validWithCurrentDictionary',
   totalFilesCount = 'totalFilesCount',
   filesToQcCount = 'filesToQcCount',
-};
+}
 
 export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.alignmentsCompleted]: number;
