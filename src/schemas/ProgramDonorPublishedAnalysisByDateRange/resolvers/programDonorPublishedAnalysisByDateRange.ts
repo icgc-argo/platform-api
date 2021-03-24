@@ -21,15 +21,14 @@ import esb from 'elastic-builder';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
-  DonorSummaryEntry,
   ProgramDonorSummaryFilter,
-  ElasticsearchDonorDocument,
   EsDonorDocumentField,
   DonorSummaryEntrySort,
-  DonorMolecularDataProcessingStatus,
-  DonorMolecularDataReleaseStatus,
   BaseQueryArguments,
   AnalysisType,
+  EsAggs,
+  ResultBucket,
+  ResultBuckets,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -37,6 +36,7 @@ import { UserInputError } from 'apollo-server-express';
 import { convertStringToISODate, validateISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
 import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
+import logger from 'utils/logger';
 
 const esAggFields = {
   'clinical': [ 'createdAt' ], // TODO
@@ -70,7 +70,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     sorts: DonorSummaryEntrySort[];
     filters: ProgramDonorSummaryFilter[];
   }
-> = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
+> = esClient => async (source, args, context): Promise<ResultBucket[]> => {
   const { analysisType, bucketCount, dateRangeTo, dateRangeFrom, programShortName } = args;
 
   const esAggFieldString = analysisType === 'molecular' ? esMolecularAggField : '';
@@ -101,7 +101,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     ))
     .map((bucketDate: Date) => formatISO(bucketDate));
 
-  const newEsQuery = esb
+  const esQuery = esb
     .requestBodySearch()
     .size(0)
     .query(
@@ -117,73 +117,24 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
       .ranges(bucketDates.map(bucketDate => ({ to: bucketDate })))
     ));
 
-  const newEsQueryString = JSON.stringify(newEsQuery);
-
-  const esQuery = esb
-    .requestBodySearch()
-    .query(
-      esb.boolQuery().must([
-        //using an array to accommodate filters in the future
-        esb.matchQuery(EsDonorDocumentField.programId, programShortName),
-      ]),
-    )
-    .sorts(args.sorts.map(({ field, order }) => esb.sort(field, order)))
-    .from(args.offset)
-    .size(args.first);
-
-  type EsHits = Array<{
-    _source: ElasticsearchDonorDocument;
-  }>;
-
-  const esHits: EsHits = await esClient
+  const esAggs: EsAggs = await esClient
     .search({ 
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
     })
-    .then(res => res.body.hits.hits)
+    .then(res => res.body.aggregations)
     .catch(err => {
-      logger.error('error reading data from Elasticsearch: ', err);
-      return [] as EsHits;
+      logger.error(`${ERROR_TITLE} Error reading data from Elasticsearch: `, err);
+      return {} as EsAggs;
     });
-  // console.log('👾👾👾👾👾👾', esHits);
-  
-  return esHits
-    .map(({ _source }) => _source)
-    .map(
-      doc =>
-        ({
-          id: `${programShortName}::${doc.donorId}`,
-          programShortName: doc.programId,
-          alignmentsCompleted: doc.alignmentsCompleted,
-          alignmentsFailed: doc.alignmentsFailed,
-          alignmentsRunning: doc.alignmentsRunning,
-          donorId: doc.donorId,
-          processingStatus: doc.processingStatus || DonorMolecularDataProcessingStatus.REGISTERED,
-          programId: doc.programId,
-          publishedNormalAnalysis: doc.publishedNormalAnalysis,
-          publishedTumourAnalysis: doc.publishedTumourAnalysis,
-          registeredNormalSamples: doc.registeredNormalSamples,
-          registeredTumourSamples: doc.registeredTumourSamples,
-          releaseStatus: doc.releaseStatus || DonorMolecularDataReleaseStatus.NO_RELEASE,
-          sangerVcsCompleted: doc.sangerVcsCompleted,
-          sangerVcsFailed: doc.sangerVcsFailed,
-          sangerVcsRunning: doc.sangerVcsRunning,
-          mutectCompleted: doc.mutectCompleted,
-          mutectRunning: doc.mutectRunning,
-          mutectFailed: doc.mutectFailed,
-          submittedCoreDataPercent: doc.submittedCoreDataPercent,
-          submittedExtendedDataPercent: doc.submittedExtendedDataPercent,
-          submitterDonorId: doc.submitterDonorId,
-          validWithCurrentDictionary: doc.validWithCurrentDictionary,
-          createdAt: new Date(doc.createdAt),
-          updatedAt: new Date(doc.updatedAt),
-          alignmentFirstPublishedDate: new Date(doc.alignmentFirstPublishedDate),
-          fakeFirstPublishedDate: new Date(doc.fakeFirstPublishedDate),
-          mutectFirstPublishedDate: new Date(doc.mutectFirstPublishedDate),
-          rawReadsFirstPublishedDate: new Date(doc.rawReadsFirstPublishedDate),
-          sangerVcsFirstPublishedDate: new Date(doc.sangerVcsFirstPublishedDate),
-        } as DonorSummaryEntry),
-    );
+
+  return Object.keys(esAggs).map((key) => ({
+    title: key,
+    buckets: esAggs[key].buckets.map((bucket) => ({
+      date: bucket.to_as_string,
+      donors: bucket.doc_count
+    }))
+  }));
 };
 
 export default programDonorPublishedAnalysisByDateRangeResolver;

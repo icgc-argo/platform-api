@@ -171,4 +171,29 @@ export type ElasticsearchDonorDocument = {
 
 // new types for donor chart
 
+export type ResultBucketBuckets = {
+  date: string;
+  donors: number;
+}
+
+export type ResultBucket = {
+  title: string;
+  buckets: ResultBucketBuckets[];
+};
+
 export type AnalysisType = 'clinical' | 'molecular';
+
+export type EsAggsBucket = {
+  key: string;
+  to: number;
+  to_as_string: string;
+  doc_count: number;
+};
+
+export type EsAggsBuckets = {
+  [key:string]: EsAggsBucket[];
+};
+
+export type EsAggs = {
+  [key:string]: EsAggsBuckets;
+};

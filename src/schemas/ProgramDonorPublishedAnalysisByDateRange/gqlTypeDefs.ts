@@ -267,6 +267,16 @@ export default gql`
     molecular
   }
 
+  type ResultBucketBuckets {
+    date: String
+    donors: Int
+  }
+
+  type ResultBucket {
+    title: String
+    buckets: [ResultBucketBuckets]
+  }
+
   type Query {
     """
     Paginated list of donor data summary given a program
@@ -277,13 +287,6 @@ export default gql`
       dateRangeTo: DateTime!
       programShortName: String!
       bucketCount: Int = 7
-      """
-      Maximum page size of 500
-      """
-      first: Int = 20
-      offset: Int = 0
-      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
-      filters: [ProgramDonorSummaryFilter!] = []
-    ): [DonorSummaryEntry]!
+    ): [ResultBucket]!
   }
 `;
