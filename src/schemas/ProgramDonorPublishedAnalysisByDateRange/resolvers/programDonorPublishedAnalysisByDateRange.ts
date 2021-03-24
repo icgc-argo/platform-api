@@ -34,8 +34,9 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
-import { convertStringToISODate } from 'utils/dateUtils';
+import { convertStringToISODate, validateISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
+import { differenceInDays } from 'date-fns';
 
 const esAggFields = {
   'clinical': [ 'createdAt' ], // TODO
@@ -58,10 +59,10 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   GlobalGqlContext,
   BaseQueryArguments & {
     // already have program short name
+    analysisType: AnalysisType;
+    bucketCount: number;
     dateRangeFrom: string;
     dateRangeTo: string;
-    dataPoints: number;
-    analysisType: AnalysisType;
     // old args
     // keeping these temporarily so the app doesn't crash
     first: number;
@@ -70,15 +71,24 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
-  const { analysisType, dateRangeTo, dateRangeFrom, programShortName } = args;
+  const { analysisType, bucketCount, dateRangeTo, dateRangeFrom, programShortName } = args;
 
   const esAggFieldString = analysisType === 'molecular' ? esMolecularAggField : '';
 
-  const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
-  const isoDateRangeTo = convertStringToISODate(dateRangeTo);
-  const areDatesValid = isoDateRangeFrom && isoDateRangeTo;
+  const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
   if (!areDatesValid) {
     throw new UserInputError(`${ERROR_TITLE} Dates must be in ISO format`, {
+      dateRangeFrom,
+      dateRangeTo
+    });
+  }
+
+  const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
+  const isoDateRangeTo = convertStringToISODate(dateRangeTo);
+
+  const daysInRange = differenceInDays(isoDateRangeFrom, isoDateRangeTo);
+  if (daysInRange < bucketCount) {
+    throw new UserInputError(`${ERROR_TITLE} Days in range must be greater than or equal to bucket count`, {
       dateRangeFrom,
       dateRangeTo
     });

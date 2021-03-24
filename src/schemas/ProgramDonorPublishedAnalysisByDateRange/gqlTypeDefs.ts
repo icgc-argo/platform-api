@@ -276,6 +276,7 @@ export default gql`
       dateRangeFrom: DateTime!
       dateRangeTo: DateTime!
       programShortName: String!
+      bucketCount: Int = 7
       """
       Maximum page size of 500
       """
