@@ -21,16 +21,16 @@ import { Client } from '@elastic/elasticsearch';
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
 import { resolveWithProgramAuth } from '../../ProgramDonorSummary/resolvers';
-import donorDataChartAggsResolver from './donorDataChartAggs';
+import programDonorPublishedAnalysisByDateRangeResolver from './programDonorPublishedAnalysisByDateRange';
 
 const createResolvers = async (
   esClient: Client,
 ): Promise<IResolvers<unknown, GlobalGqlContext>> => {
   return {
     Query: {
-      donorDataChartAggs: (...resolverArguments) =>
+      programDonorPublishedAnalysisByDateRange: (...resolverArguments) =>
         resolveWithProgramAuth(
-          donorDataChartAggsResolver(esClient)(...resolverArguments),
+          programDonorPublishedAnalysisByDateRangeResolver(esClient)(...resolverArguments),
           resolverArguments,
         ),
     },

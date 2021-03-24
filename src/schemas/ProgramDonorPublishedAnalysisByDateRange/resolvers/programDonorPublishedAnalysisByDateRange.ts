@@ -29,12 +29,12 @@ import {
   DonorMolecularDataProcessingStatus,
   DonorMolecularDataReleaseStatus,
   BaseQueryArguments,
-  ChartType,
+  AnalysisType,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
-import logger from 'utils/logger';
+import { convertStringToISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
 
 const esAggFields = {
@@ -47,19 +47,21 @@ const esAggFields = {
   ],
 };
 
+const ERROR_TITLE = 'ProgramDonorPublishedAnalysisByDateRange:'
+
 const esMolecularAggField = "FirstPublishedAt";
 
-const donorDataChartAggsResolver: (
+const programDonorPublishedAnalysisByDateRangeResolver: (
   esClient: Client,
 ) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
     // already have program short name
-    // dateRangeFrom: Date;
-    // dateRangeTo: Date;
-    // dataPoints: number;
-    chartType: ChartType;
+    dateRangeFrom: string;
+    dateRangeTo: string;
+    dataPoints: number;
+    analysisType: AnalysisType;
     // old args
     // keeping these temporarily so the app doesn't crash
     first: number;
@@ -68,19 +70,22 @@ const donorDataChartAggsResolver: (
     filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
-  const { chartType, programShortName } = args;
+  const { analysisType, dateRangeTo, dateRangeFrom, programShortName } = args;
 
-  const esAggFieldString = chartType === 'molecular' ? esMolecularAggField : '';
+  const esAggFieldString = analysisType === 'molecular' ? esMolecularAggField : '';
 
-  const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
-  if (args.first > MAXIMUM_SUMMARY_PAGE_SIZE) {
-    throw new UserInputError(`Max page size of ${MAXIMUM_SUMMARY_PAGE_SIZE} exceeded`, {
-      first: args.first,
+  const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
+  const isoDateRangeTo = convertStringToISODate(dateRangeTo);
+  const areDatesValid = isoDateRangeFrom && isoDateRangeTo;
+  if (!areDatesValid) {
+    throw new UserInputError(`${ERROR_TITLE} Dates must be in ISO format`, {
+      dateRangeFrom,
+      dateRangeTo
     });
   }
 
   const bucketsTemp = ['01-10-2020'];
-  console.log(esAggFields[chartType])
+  // console.log(esAggFields[analysisType])
 
   const newEsQuery = esb
     .requestBodySearch()
@@ -88,18 +93,18 @@ const donorDataChartAggsResolver: (
     .query(
       esb.boolQuery()
         .filter(esb.termQuery(EsDonorDocumentField.programId, programShortName))
-        .should(esAggFields[chartType]
+        .should(esAggFields[analysisType]
           .map(field => esb.existsQuery(`${field}${esAggFieldString}`)))
         .minimumShouldMatch(1)
     )
-    .aggs(esAggFields[chartType].map(field => esb
+    .aggs(esAggFields[analysisType].map(field => esb
       .dateRangeAggregation(`${field}Agg`, `${field}${esAggFieldString}`)
       .format(ELASTICSEARCH_DATE_TIME_FORMAT)
       .ranges(bucketsTemp.map(bucket => ({ to: bucket })))
     ));
 
   const newEsQueryString = JSON.stringify(newEsQuery);
-  console.log('🤖🤖🤖🤖🤖🤖🤖', newEsQueryString);
+  // console.log('🤖🤖🤖🤖🤖🤖🤖', newEsQueryString);
   
 
   const esQuery = esb
@@ -119,7 +124,7 @@ const donorDataChartAggsResolver: (
   }>;
 
   const esHits: EsHits = await esClient
-    .search({
+    .search({ 
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
     })
@@ -128,6 +133,8 @@ const donorDataChartAggsResolver: (
       logger.error('error reading data from Elasticsearch: ', err);
       return [] as EsHits;
     });
+  // console.log('👾👾👾👾👾👾', esHits);
+  
   return esHits
     .map(({ _source }) => _source)
     .map(
@@ -158,8 +165,13 @@ const donorDataChartAggsResolver: (
           validWithCurrentDictionary: doc.validWithCurrentDictionary,
           createdAt: new Date(doc.createdAt),
           updatedAt: new Date(doc.updatedAt),
+          alignmentFirstPublishedDate: new Date(doc.alignmentFirstPublishedDate),
+          fakeFirstPublishedDate: new Date(doc.fakeFirstPublishedDate),
+          mutectFirstPublishedDate: new Date(doc.mutectFirstPublishedDate),
+          rawReadsFirstPublishedDate: new Date(doc.rawReadsFirstPublishedDate),
+          sangerVcsFirstPublishedDate: new Date(doc.sangerVcsFirstPublishedDate),
         } as DonorSummaryEntry),
     );
 };
 
-export default donorDataChartAggsResolver;
+export default programDonorPublishedAnalysisByDateRangeResolver;

@@ -171,4 +171,4 @@ export type ElasticsearchDonorDocument = {
 
 // new types for donor chart
 
-export type ChartType = 'clinical' | 'molecular';
+export type AnalysisType = 'clinical' | 'molecular';

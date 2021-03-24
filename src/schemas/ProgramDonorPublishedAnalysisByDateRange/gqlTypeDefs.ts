@@ -262,7 +262,7 @@ export default gql`
 
   # new types for donor data
 
-  enum ChartType {
+  enum AnalysisType {
     clinical
     molecular
   }
@@ -271,9 +271,11 @@ export default gql`
     """
     Paginated list of donor data summary given a program
     """
-    donorDataChartAggs(
+    programDonorPublishedAnalysisByDateRange(
+      analysisType: AnalysisType!
+      dateRangeFrom: DateTime!
+      dateRangeTo: DateTime!
       programShortName: String!
-      chartType: ChartType!
       """
       Maximum page size of 500
       """
