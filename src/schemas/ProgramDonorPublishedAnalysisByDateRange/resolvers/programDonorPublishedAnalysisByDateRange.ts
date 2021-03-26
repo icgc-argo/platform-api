@@ -21,14 +21,11 @@ import esb from 'elastic-builder';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
-  ProgramDonorSummaryFilter,
-  EsDonorDocumentField,
-  DonorSummaryEntrySort,
-  BaseQueryArguments,
+  AnalysisTitle,
   AnalysisType,
+  BaseQueryArguments,
   EsAggs,
   ResultBucket,
-  ResultBuckets,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -58,20 +55,19 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
-    // already have program short name
     analysisType: AnalysisType;
     bucketCount: number;
     dateRangeFrom: string;
     dateRangeTo: string;
-    // old args
-    // keeping these temporarily so the app doesn't crash
-    first: number;
-    offset: number;
-    sorts: DonorSummaryEntrySort[];
-    filters: ProgramDonorSummaryFilter[];
   }
 > = esClient => async (source, args, context): Promise<ResultBucket[]> => {
-  const { analysisType, bucketCount, dateRangeTo, dateRangeFrom, programShortName } = args;
+  const {
+    analysisType,
+    bucketCount,
+    dateRangeTo,
+    dateRangeFrom,
+    programShortName
+  } = args;
 
   const esAggFieldString = analysisType === 'molecular' ? esMolecularAggField : '';
 
@@ -88,9 +84,12 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
 
   const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
   if (daysInRange < bucketCount) {
-    throw new UserInputError(`${ERROR_TITLE} Days in range must be greater than or equal to bucket count`, {
+    throw new UserInputError(`${ERROR_TITLE
+      } Days in range must be greater than or equal to bucket count`, {
+      bucketCount,
       dateRangeFrom,
-      dateRangeTo
+      dateRangeTo,
+      daysInRange
     });
   }
 
@@ -106,7 +105,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     .size(0)
     .query(
       esb.boolQuery()
-        .filter(esb.termQuery(EsDonorDocumentField.programId, programShortName))
+        .filter(esb.termQuery('programId', programShortName))
         .should(esAggFields[analysisType]
           .map(field => esb.existsQuery(`${field}${esAggFieldString}`)))
         .minimumShouldMatch(1)
@@ -128,7 +127,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
       return {} as EsAggs;
     });
 
-  return Object.keys(esAggs).map((key) => ({
+  return Object.keys(esAggs).map((key: AnalysisTitle) => ({
     title: key.split('Agg')[0],
     buckets: esAggs[key].buckets.map((bucket) => ({
       date: bucket.to_as_string,

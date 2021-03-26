@@ -39,7 +39,7 @@ export default gql`
     donors: Int
   }
 
-  type AnalysisBucket {
+  type AnalysisObject {
     title: AnalysisTitle
     buckets: [DateRangeBucket]
   }
@@ -51,6 +51,6 @@ export default gql`
       dateRangeTo: DateTime!
       programShortName: String!
       bucketCount: Int = 7
-    ): [AnalysisBucket]!
+    ): [AnalysisObject]!
   }
 `;
