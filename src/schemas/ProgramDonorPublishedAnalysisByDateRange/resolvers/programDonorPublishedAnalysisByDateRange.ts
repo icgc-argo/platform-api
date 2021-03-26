@@ -22,8 +22,8 @@ import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
   AnalysisTitle,
-  AnalysisType,
   BaseQueryArguments,
+  DataType,
   EsAggs,
   ResultBucket,
 } from './types';
@@ -55,21 +55,21 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
-    analysisType: AnalysisType;
+    dataType: DataType;
     bucketCount: number;
     dateRangeFrom: string;
     dateRangeTo: string;
   }
 > = esClient => async (source, args, context): Promise<ResultBucket[]> => {
   const {
-    analysisType,
+    dataType,
     bucketCount,
     dateRangeTo,
     dateRangeFrom,
     programShortName
   } = args;
 
-  const esAggFieldString = analysisType === 'molecular' ? esMolecularAggField : '';
+  const esAggFieldString = dataType === 'molecular' ? esMolecularAggField : '';
 
   const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
   if (!areDatesValid) {
@@ -106,11 +106,11 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     .query(
       esb.boolQuery()
         .filter(esb.termQuery('programId', programShortName))
-        .should(esAggFields[analysisType]
+        .should(esAggFields[dataType]
           .map(field => esb.existsQuery(`${field}${esAggFieldString}`)))
         .minimumShouldMatch(1)
     )
-    .aggs(esAggFields[analysisType].map(field => esb
+    .aggs(esAggFields[dataType].map(field => esb
       .dateRangeAggregation(`${field}Agg`, `${field}${esAggFieldString}`)
       .format(ELASTICSEARCH_DATE_TIME_FORMAT)
       .ranges(bucketDates.map(bucketDate => ({ to: bucketDate })))

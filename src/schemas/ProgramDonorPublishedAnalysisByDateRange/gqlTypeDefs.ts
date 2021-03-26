@@ -29,7 +29,7 @@ export default gql`
     sangerVcs
   }
 
-  enum AnalysisType {
+  enum DataType {
     clinical
     molecular
   }
@@ -44,9 +44,11 @@ export default gql`
     buckets: [DateRangeBucket]
   }
 
+  # enum Analysis
+
   type Query {
     programDonorPublishedAnalysisByDateRange(
-      analysisType: AnalysisType!
+      dataType: DataType!
       dateRangeFrom: DateTime!
       dateRangeTo: DateTime!
       programShortName: String!

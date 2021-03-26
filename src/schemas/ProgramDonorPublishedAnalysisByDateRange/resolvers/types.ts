@@ -31,7 +31,7 @@ export type ResultBucket = {
   buckets: ResultBucketBuckets[];
 };
 
-export type AnalysisType = 'clinical' | 'molecular';
+export type DataType = 'clinical' | 'molecular';
 
 export type AnalysisTitle = 
   'alignment' |
