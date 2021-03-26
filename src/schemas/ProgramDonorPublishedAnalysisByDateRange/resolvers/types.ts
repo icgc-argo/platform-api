@@ -21,17 +21,15 @@ export type BaseQueryArguments = {
   programShortName: string;
 };
 
-export type ResultBucketBuckets = {
+export type ResponseBucket = {
   date: string;
   donors: number;
 }
 
-export type ResultBucket = {
+export type ProgramDonorGqlResponse = {
+  buckets: ResponseBucket[];
   title: string;
-  buckets: ResultBucketBuckets[];
 };
-
-export type DataType = 'clinical' | 'molecular';
 
 export type AnalysisTitle = 
   'alignment' |
@@ -42,10 +40,10 @@ export type AnalysisTitle =
 export type BucketsKey = 'buckets';
 
 export type EsAggsBucket = {
-  key: string;
-  to: number;
-  to_as_string: string;
   doc_count: number;
+  key: string;
+  to_as_string: string;
+  to: number;
 };
 
 export type EsAggsBuckets = {
@@ -53,5 +51,13 @@ export type EsAggsBuckets = {
 };
 
 export type EsAggs = {
-  [key in AnalysisTitle]: EsAggsBuckets;
+  [key in DonorFields]: EsAggsBuckets;
 };
+
+export type DonorFields = 
+  'alignmentFirstPublishedDate' |
+  'createdAt' |
+  'mutectFirstPublishedDate' |
+  'rawReadsFirstPublishedDate' |
+  'sangerVcsFirstPublishedDate';
+  // TODO replace createdAt with clinical published date

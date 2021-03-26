@@ -22,37 +22,32 @@ import { gql } from 'apollo-server-express';
 export default gql`
   scalar DateTime
 
-  enum AnalysisTitle {
-    alignment
-    mutect
-    rawReads
-    sangerVcs
-  }
-
-  enum DataType {
-    clinical
-    molecular
-  }
-
   type DateRangeBucket {
     date: DateTime
     donors: Int
   }
 
   type AnalysisObject {
-    title: AnalysisTitle
     buckets: [DateRangeBucket]
+    title: DonorField
   }
 
-  # enum Analysis
+  enum DonorField {
+    alignmentFirstPublishedDate
+    createdAt
+    mutectFirstPublishedDate
+    rawReadsFirstPublishedDate
+    sangerVcsFirstPublishedDate
+    # TODO replace createdAt with clinical published date
+  }
 
   type Query {
     programDonorPublishedAnalysisByDateRange(
-      dataType: DataType!
+      bucketCount: Int = 7
       dateRangeFrom: DateTime!
       dateRangeTo: DateTime!
+      donorFields: [DonorField]!
       programShortName: String!
-      bucketCount: Int = 7
     ): [AnalysisObject]!
   }
 `;

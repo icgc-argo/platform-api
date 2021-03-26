@@ -21,11 +21,10 @@ import esb from 'elastic-builder';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
-  AnalysisTitle,
   BaseQueryArguments,
-  DataType,
+  DonorFields,
   EsAggs,
-  ResultBucket,
+  ProgramDonorGqlResponse,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -35,19 +34,7 @@ import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch
 import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
 import logger from 'utils/logger';
 
-const esAggFields = {
-  'clinical': [ 'createdAt' ], // TODO
-  'molecular': [
-    'alignment',
-    'mutect',
-    'rawReads',
-    'sangerVcs',
-  ],
-};
-
 const ERROR_TITLE = 'ProgramDonorPublishedAnalysisByDateRange:'
-
-const esMolecularAggField = "FirstPublishedAt";
 
 const programDonorPublishedAnalysisByDateRangeResolver: (
   esClient: Client,
@@ -55,21 +42,19 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
-    dataType: DataType;
     bucketCount: number;
     dateRangeFrom: string;
     dateRangeTo: string;
+    donorFields: DonorFields[];
   }
-> = esClient => async (source, args, context): Promise<ResultBucket[]> => {
+> = esClient => async (source, args, context): Promise<ProgramDonorGqlResponse[]> => {
   const {
-    dataType,
     bucketCount,
     dateRangeTo,
     dateRangeFrom,
+    donorFields,
     programShortName
   } = args;
-
-  const esAggFieldString = dataType === 'molecular' ? esMolecularAggField : '';
 
   const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
   if (!areDatesValid) {
@@ -106,20 +91,20 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     .query(
       esb.boolQuery()
         .filter(esb.termQuery('programId', programShortName))
-        .should(esAggFields[dataType]
-          .map(field => esb.existsQuery(`${field}${esAggFieldString}`)))
+        .should(donorFields
+          .map((donorField: DonorFields) => esb.existsQuery(donorField)))
         .minimumShouldMatch(1)
     )
-    .aggs(esAggFields[dataType].map(field => esb
-      .dateRangeAggregation(`${field}Agg`, `${field}${esAggFieldString}`)
+    .aggs(donorFields.map((donorField: DonorFields) => esb
+      .dateRangeAggregation(donorField, donorField)
       .format(ELASTICSEARCH_DATE_TIME_FORMAT)
       .ranges(bucketDates.map(bucketDate => ({ to: bucketDate })))
     ));
 
   const esAggs: EsAggs = await esClient
     .search({ 
-      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
+      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
     })
     .then(res => res.body.aggregations)
     .catch(err => {
@@ -127,8 +112,8 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
       return {} as EsAggs;
     });
 
-  return Object.keys(esAggs).map((key: AnalysisTitle) => ({
-    title: key.split('Agg')[0],
+  return Object.keys(esAggs).map((key: DonorFields) => ({
+    title: key,
     buckets: esAggs[key].buckets.map((bucket) => ({
       date: bucket.to_as_string,
       donors: bucket.doc_count
