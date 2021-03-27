@@ -24,7 +24,7 @@ import { ADVERTISED_HOST } from 'config';
 import downloadProxy from './handlers/downloadHandler';
 import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
-import { storageApiAuthenticationMiddleware } from './accessValidations';
+import authenticatedRequestMiddleware from 'routes/middleware/authenticatedRequestMiddleware';
 import { EgoClient } from 'services/ego';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
@@ -55,21 +55,21 @@ export default ({
 
   router.get(
     '/entities',
-    storageApiAuthenticationMiddleware({ egoClient }),
+    authenticatedRequestMiddleware({ egoClient }),
     createEntitiesHandler({
       esClient,
     }),
   );
   router.get(
     '/entities/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient }),
+    authenticatedRequestMiddleware({ egoClient }),
     createEntitiesIdHandler({
       esClient,
     }),
   );
   router.get(
     '/download/:fileObjectId',
-    storageApiAuthenticationMiddleware({ egoClient }),
+    authenticatedRequestMiddleware({ egoClient }),
     downloadProxy({
       rootPath,
       esClient,
