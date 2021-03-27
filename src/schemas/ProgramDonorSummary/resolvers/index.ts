@@ -42,24 +42,9 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
 ): ResolverType => {
   const [_, args, context] = gqlResolverArguments;
   const { egoToken } = context;
-  const {
-    decodeToken,
-    isExpiredToken,
-    getPermissionsFromToken,
-    isValidJwt,
-    canReadProgramData,
-    canReadProgram,
-  } = egoTokenUtils;
+  const { getPermissionsFromToken, isValidJwt, canReadProgramData, canReadProgram } = egoTokenUtils;
 
   if (egoToken) {
-    let decodedToken: ReturnType<typeof decodeToken>;
-    try {
-      decodedToken = decodeToken(egoToken);
-    } catch (err) {
-      throw new AuthenticationError(err);
-    }
-
-    const isExpired = isExpiredToken(decodedToken);
     const permissions = getPermissionsFromToken(egoToken);
     const hasPermission =
       canReadProgram({
@@ -71,16 +56,12 @@ const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unk
         programId: args.programShortName,
       });
 
-    const authorized = egoToken && isValidJwt(egoToken) && !isExpired && hasPermission;
+    const authorized = egoToken && isValidJwt(egoToken) && hasPermission;
 
     if (authorized) {
       return resolver;
     } else {
-      if (isExpired) {
-        throw new UnauthorizedError('expired jwt');
-      } else {
-        throw new UnauthorizedError('unauthorized');
-      }
+      throw new UnauthorizedError('unauthorized');
     }
   } else {
     throw new AuthenticationError('you must be logged in to access this data');

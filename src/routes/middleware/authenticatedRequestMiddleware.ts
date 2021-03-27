@@ -38,8 +38,8 @@ const extractUserScopes = async (config: {
     const token = authHeader.replace('Bearer ', '');
     try {
       const jwtData = egoTokenUtils.decodeToken(token);
-      const expired = egoTokenUtils.isExpiredToken(jwtData);
-      if (expired) {
+      const valid = egoTokenUtils.isValidJwt(token);
+      if (!valid) {
         return { scopes: [], authenticated: false };
       }
       return {
@@ -47,6 +47,9 @@ const extractUserScopes = async (config: {
         authenticated: true,
       };
     } catch (err) {
+      // The best way to identify if we have an API Key or a JWT is to try to decode it as a JWT and parse it accordingly.
+      // If it is not the JWT then it will throw an error and arriver here, where we can attempt to treat it as the API Key
+      // If it is also not an API Key then the final .catch block will handle setting authenticated to false.
       return egoClient
         .checkApiKey({ apiKey: token })
         .then(data => ({ scopes: data.scope as string[], authenticated: true }))
