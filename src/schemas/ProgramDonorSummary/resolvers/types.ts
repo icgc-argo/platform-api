@@ -78,10 +78,11 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
+  lastUpdate?: Date;
 };
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
-  id: () => string;
+  id: string;
   programShortName: string;
 };
 
