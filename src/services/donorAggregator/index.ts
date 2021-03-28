@@ -24,7 +24,7 @@ import fetch from 'node-fetch';
 import urlJoin from 'url-join';
 
 import egoTokenUtils from 'utils/egoTokenUtils';
-import { DONOR_AGGREGATOR_REST_PROXY_ROOT } from 'config';
+import { DONOR_AGGREGATOR_API_ROOT } from 'config';
 
 export type DonorAggregatorClient = {
   syncDonorAggregationIndex: (programId: string) => Promise<void>;
@@ -44,7 +44,7 @@ const getAuthorizedClient = (requestEgoJwt: string) => {
 };
 
 const donorAggregatorClient = (): DonorAggregatorClient => {
-  const SYNC_PROGRAM_URL = urlJoin(DONOR_AGGREGATOR_REST_PROXY_ROOT, 'index/program');
+  const SYNC_PROGRAM_URL = urlJoin(DONOR_AGGREGATOR_API_ROOT, 'index/program');
 
   const syncDonorAggregationIndex = async (programId: string) => {
     const url = urlJoin(SYNC_PROGRAM_URL, programId);
