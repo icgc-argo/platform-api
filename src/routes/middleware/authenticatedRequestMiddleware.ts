@@ -21,18 +21,19 @@ import { Handler, Request } from 'express';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { EgoClient } from 'services/ego';
 import { PermissionScopeObj } from '@icgc-argo/ego-token-utils';
+import logger from 'utils/logger';
 
 export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = Request<
   Params,
   T1,
   T2,
   Query
-> & { userScopes: PermissionScopeObj[]; authenticated: boolean };
+> & { userScopes: PermissionScopeObj[]; authenticated: boolean; egoJwt: string };
 
 const extractUserScopes = async (config: {
   authHeader?: string;
   egoClient: EgoClient;
-}): Promise<{ scopes: string[]; authenticated: boolean }> => {
+}): Promise<{ scopes: string[]; authenticated: boolean; egoJwt: string }> => {
   const { authHeader, egoClient } = config;
   if (authHeader) {
     const token = authHeader.replace('Bearer ', '');
@@ -40,11 +41,12 @@ const extractUserScopes = async (config: {
       const jwtData = egoTokenUtils.decodeToken(token);
       const valid = egoTokenUtils.isValidJwt(token);
       if (!valid) {
-        return { scopes: [], authenticated: false };
+        return { scopes: [], authenticated: false, egoJwt: token };
       }
       return {
         scopes: jwtData.context.scope,
         authenticated: true,
+        egoJwt: token,
       };
     } catch (err) {
       // The best way to identify if we have an API Key or a JWT is to try to decode it as a JWT and parse it accordingly.
@@ -52,11 +54,11 @@ const extractUserScopes = async (config: {
       // If it is also not an API Key then the final .catch block will handle setting authenticated to false.
       return egoClient
         .checkApiKey({ apiKey: token })
-        .then(data => ({ scopes: data.scope as string[], authenticated: true }))
-        .catch(err => ({ scopes: [], authenticated: false }));
+        .then(data => ({ scopes: data.scope as string[], authenticated: true, egoJwt: token }))
+        .catch(err => ({ scopes: [], authenticated: false, egoJwt: token }));
     }
   } else {
-    return { scopes: [], authenticated: false };
+    return { scopes: [], authenticated: false, egoJwt: '' };
   }
 };
 
@@ -70,6 +72,7 @@ const authenticatedRequestMiddleware: AuthenticationMiddleware = ({ egoClient })
     });
     (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
     (req as AuthenticatedRequest).authenticated = userScope.authenticated;
+    (req as AuthenticatedRequest).egoJwt = userScope.egoJwt;
     next();
   };
 };

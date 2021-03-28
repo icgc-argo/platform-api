@@ -2,7 +2,7 @@ import { Client } from '@elastic/elasticsearch';
 import { Request, Handler } from 'express';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
-import { hasSufficientProgramMembershipAccess } from '../accessValidations';
+import { hasSufficientProgramMembershipAccess } from 'routes/utils/accessValidations';
 import { getEsFileDocumentByObjectId, toSongEntity } from '../utils';
 
 const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler => {

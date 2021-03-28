@@ -5,7 +5,7 @@ import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMidd
 import {
   hasSufficientDacoAccess,
   hasSufficientProgramMembershipAccess,
-} from '../accessValidations';
+} from 'routes/utils/accessValidations';
 import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
 
