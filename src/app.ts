@@ -26,6 +26,7 @@ import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
 import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import createDonorAggregatorRouter from 'routes/donor-aggregator-api';
 import createFileStorageApi from './routes/file-storage-api';
 import {
   PORT,
@@ -57,6 +58,7 @@ import createEgoClient, { EgoApplicationCredential } from 'services/ego';
 import { loadVaultSecret } from 'services/vault';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
+
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -150,6 +152,7 @@ const init = async () => {
   app.use('/kafka', kafkaProxyRoute);
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
+  app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient))
 
   if (FEATURE_STORAGE_API_ENABLED) {
     const rdpcRepoProxyPath = '/storage-api';
