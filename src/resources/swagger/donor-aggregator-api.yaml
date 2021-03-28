@@ -1,0 +1,38 @@
+# Swagger documentation for Donor Aggregator router
+
+tags:
+  - name: Donor Aggregator API
+    description: Restricted access endpoints to manually interact with the Donor Submission Aggregartor
+
+paths:
+  '/donor-aggregator/sync':
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Donor Aggregator API
+      summary: Sync Donor Aggregations for Program
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                programId:
+                  type: string
+      responses:
+        '200':
+          description: Successfully queued sync event for aggregator
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Authorization error - inalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                example: '{"message": "not authorized"}'
+                type: string
+        '500':
+          description: Internal server error
