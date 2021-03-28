@@ -28,11 +28,16 @@ paths:
               schema:
                 type: object
         '403':
-          description: Authorization error - inalid token or insufficient permissions
+          description: Authorization error - invalid token or insufficient permissions
           content:
             application/json:
               schema:
-                example: '{"message": "not authorized"}'
+                example: '{"error": "not authorized"}'
                 type: string
         '500':
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                example: '{"error": "internal server error"}'
+                type: string
