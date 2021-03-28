@@ -17,7 +17,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import logger from 'utils/logger';
+
 import fetch from 'node-fetch';
+
+import urlJoin from 'url-join';
 
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { DONOR_AGGREGATOR_REST_PROXY_ROOT } from 'config';
@@ -40,12 +44,13 @@ const getAuthorizedClient = (requestEgoJwt: string) => {
 };
 
 const donorAggregatorClient = (): DonorAggregatorClient => {
-  const SYNC_PROGRAM_URL = new URL('index/program', DONOR_AGGREGATOR_REST_PROXY_ROOT);
+  const SYNC_PROGRAM_URL = urlJoin(DONOR_AGGREGATOR_REST_PROXY_ROOT, 'index/program');
 
   const syncDonorAggregationIndex = async (programId: string) => {
-    const url = new URL(programId, SYNC_PROGRAM_URL);
+    const url = urlJoin(SYNC_PROGRAM_URL, programId);
     try {
-      await fetch(url, { method: 'POST' });
+      logger.debug(`Sending request to donorAggregator: ${url}`);
+      const response = await fetch(url, { method: 'POST' });
       return;
     } catch (error) {
       throw new Error(error);
