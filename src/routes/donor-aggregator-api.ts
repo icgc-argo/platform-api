@@ -40,12 +40,12 @@ const createDonorAggregatorRouter = (egoClient: EgoClient) => {
     const { authenticated, userScopes, egoJwt } = req;
 
     if (!authenticated) {
-      res.status(403).json({ error: 'invalid token', authenticated, userScopes });
+      res.status(403).json({ error: 'invalid token' });
       return;
     }
 
     if (!isDccMember(userScopes)) {
-      res.status(403).json({ error: 'not authorized', authenticated, userScopes });
+      res.status(403).json({ error: 'not authorized' });
       return;
     }
 
