@@ -2,7 +2,7 @@
 
 tags:
   - name: Donor Aggregator API
-    description: Restricted access endpoints to manually interact with the Donor Submission Aggregartor
+    description: Restricted access endpoints for DCC Admin to interact with the Donor Submission Aggregartor
 
 paths:
   '/donor-aggregator/sync':
