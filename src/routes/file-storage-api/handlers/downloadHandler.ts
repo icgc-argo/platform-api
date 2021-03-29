@@ -1,11 +1,11 @@
 import { Request, Response, Handler } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
+import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import {
-  AuthenticatedRequest,
   hasSufficientDacoAccess,
   hasSufficientProgramMembershipAccess,
-} from '../accessValidations';
+} from 'routes/utils/accessValidations';
 import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
 

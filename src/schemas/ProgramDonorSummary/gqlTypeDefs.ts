@@ -233,6 +233,11 @@ export default gql`
     Number of donors registered to the program who currently has no released genomic file
     """
     noReleaseDonorsCount: Int!
+
+    """
+    Date of the most recent update to the donor summary index for this program. Can be null if no documents for this program
+    """
+    lastUpdate: DateTime
   }
 
   type Query {

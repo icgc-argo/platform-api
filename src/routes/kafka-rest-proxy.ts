@@ -40,18 +40,8 @@ router.use((req, res, next) => {
       message: 'this endpoint needs a valid jwt token',
     });
   }
-  let decodedToken: ReturnType<typeof egoTokenUtils.decodeToken> | null = null;
-  try {
-    decodedToken = egoTokenUtils.decodeToken(jwt);
-  } catch (err) {
-    logger.error('failed to decode token');
-  }
 
-  if (
-    !decodedToken ||
-    egoTokenUtils.isExpiredToken(decodedToken) ||
-    !egoTokenUtils.isValidJwt(jwt)
-  ) {
+  if (!egoTokenUtils.isValidJwt(jwt)) {
     return res.status(401).send({
       message: 'expired token',
     });

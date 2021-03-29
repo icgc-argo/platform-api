@@ -35,15 +35,21 @@ import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import logger from 'utils/logger';
 
-const programDonorSummaryStatsResolver: (
-  esClient: Client,
-) => GraphQLFieldResolver<
+type DonorStatsResolverType = GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
     filters: ProgramDonorSummaryFilter[];
   }
-> = esClient => async (source, args, context): Promise<ProgramDonorSummaryStatsGqlResponse> => {
+>;
+
+const programDonorSummaryStatsResolver: (
+  esClient: Client,
+) => DonorStatsResolverType = esClient => async (
+  source,
+  args,
+  context,
+): Promise<ProgramDonorSummaryStatsGqlResponse> => {
   const { programShortName, filters } = args;
 
   type AggregationName =
@@ -121,10 +127,12 @@ const programDonorSummaryStatsResolver: (
       esb
         .sumAggregation('filesToQcCount' as AggregationName)
         .field(EsDonorDocumentField.filesToQcCount),
+      esb.maxAggregation('lastUpdate' as AggregationName).field(EsDonorDocumentField.updatedAt),
     ]);
 
   type FilterAggregationResult = { doc_count: number };
   type NumericAggregationResult = { value: number };
+  type DateAggregationResult = { value: Date };
   type QueryResult = {
     hits: {
       total: { value: number; relation: string };
@@ -140,6 +148,7 @@ const programDonorSummaryStatsResolver: (
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
+      lastUpdate?: DateAggregationResult;
     };
   };
   const { aggregations, hits }: QueryResult = await esClient
@@ -176,7 +185,7 @@ const programDonorSummaryStatsResolver: (
     });
 
   return {
-    id: () => `${programShortName}::${stringify(filters)}`,
+    id: `${programShortName}::${stringify(filters)}`,
     programShortName: programShortName,
     registeredDonorsCount: hits.total.value,
     fullyReleasedDonorsCount: aggregations.fullyReleasedDonorsCount.doc_count,
@@ -194,6 +203,7 @@ const programDonorSummaryStatsResolver: (
     filesToQcCount: aggregations.filesToQcCount.value,
     donorsInvalidWithCurrentDictionaryCount:
       aggregations.donorsInvalidWithCurrentDictionary.doc_count,
+    lastUpdate: aggregations.lastUpdate?.value ? new Date(aggregations.lastUpdate.value) : undefined,
   };
 };
 

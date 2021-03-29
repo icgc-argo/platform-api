@@ -1,6 +1,6 @@
 import { Client } from '@elastic/elasticsearch';
 import { Response, Handler } from 'express';
-import { AuthenticatedRequest } from '../accessValidations';
+import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
