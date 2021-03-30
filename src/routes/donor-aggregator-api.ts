@@ -56,9 +56,9 @@ const createDonorAggregatorRouter = (egoClient: EgoClient) => {
       await getAuthorizedClient(egoJwt).syncDonorAggregationIndex(programId);
     } catch (error) {
       logger.error(
-        `Error requeting SYNC from Donor Submission Aggregator (${programId}): ${error}`,
+        `Error requesting SYNC from Donor Submission Aggregator (${programId}): ${error}`,
       );
-      res.status(500).json({ error });
+      res.status(500).json({ error: error.message });
       return;
     }
 
