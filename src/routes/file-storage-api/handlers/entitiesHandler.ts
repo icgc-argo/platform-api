@@ -92,11 +92,8 @@ const getAccessControlFilter = (
 };
 
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
-  return async (
-    req: AuthenticatedRequest<{}, any, any, RequestBodyQuery>,
-    res: Response<EntitiesPageResponseBody>,
-  ) => {
-    const userScopes = req.userScopes;
+  return async (req: AuthenticatedRequest, res: Response<EntitiesPageResponseBody>) => {
+    const userScopes = req.auth.scopes;
     const serializedUserScopes = userScopes.map(egoTokenUtils.serializeScope);
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
       permissions: serializedUserScopes,
@@ -106,12 +103,13 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       page: Number(req.query.page || 0),
       size: Number(req.query.size || 10),
       access: req.query.access,
-      fields: req.query.fields
-        ? req.query.fields
-            .split(',')
-            .map(str => str.trim())
-            .filter(_.identity)
-        : [],
+      fields: req.query.fields,
+      // TODO: removing this processing from here, we don't at this stage know that fields will be a string or an array
+      // ? req.query.fields
+      //     .split(',')
+      //     .map(str => str.trim())
+      //     .filter(_.identity)
+      // : [],
       fileName: req.query.fileName || undefined,
       id: req.query.id || undefined,
       analysisId: req.query.analysisId || undefined,
@@ -130,24 +128,35 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       .query(
         esb
           .boolQuery()
+          // TODO: All of the `as string` casting in this section was added to silence the typescript compiler, it needs to be tested
+          // the solution is likely in the types being applied to the Request object, such that it doesnt know if the query params are string or parsed into arrays
           .must([
             parsedRequestQuery.id
-              ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id)
+              ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id as string)
               : emptyFilter(),
             parsedRequestQuery.fileName
-              ? esb.termsQuery(FILE_METADATA_FIELDS['file.name'], parsedRequestQuery.fileName)
+              ? esb.termsQuery(
+                  FILE_METADATA_FIELDS['file.name'],
+                  parsedRequestQuery.fileName as string,
+                )
               : emptyFilter(),
             parsedRequestQuery.access
-              ? esb.termsQuery(FILE_METADATA_FIELDS['file_access'], parsedRequestQuery.access)
+              ? esb.termsQuery(
+                  FILE_METADATA_FIELDS['file_access'],
+                  parsedRequestQuery.access as string,
+                )
               : emptyFilter(),
             parsedRequestQuery.analysisId
               ? esb.termsQuery(
                   FILE_METADATA_FIELDS['analysis.analysis_id'],
-                  parsedRequestQuery.analysisId,
+                  parsedRequestQuery.analysisId as string,
                 )
               : emptyFilter(),
             parsedRequestQuery.projectCode
-              ? esb.termsQuery(FILE_METADATA_FIELDS['study_id'], parsedRequestQuery.projectCode)
+              ? esb.termsQuery(
+                  FILE_METADATA_FIELDS['study_id'],
+                  parsedRequestQuery.projectCode as string,
+                )
               : emptyFilter(),
             accessControlFilter,
           ]),
@@ -164,7 +173,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       .map(file =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
-              Object.entries(file).filter(([key]) => parsedRequestQuery.fields.includes(key)),
+              Object.entries(file).filter(([key]) =>
+                (parsedRequestQuery.fields as string).includes(key),
+              ),
             ) as Partial<SongEntity>)
           : file,
       );
