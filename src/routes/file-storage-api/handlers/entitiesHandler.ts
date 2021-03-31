@@ -93,8 +93,7 @@ const getAccessControlFilter = (
 
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (req: AuthenticatedRequest, res: Response<EntitiesPageResponseBody>) => {
-    const userScopes = req.auth.scopes;
-    const serializedUserScopes = userScopes.map(egoTokenUtils.serializeScope);
+    const serializedUserScopes = req.auth.serializedScopes;
     const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
       permissions: serializedUserScopes,
     });
@@ -103,13 +102,12 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       page: Number(req.query.page || 0),
       size: Number(req.query.size || 10),
       access: req.query.access,
-      fields: req.query.fields,
-      // TODO: removing this processing from here, we don't at this stage know that fields will be a string or an array
-      // ? req.query.fields
-      //     .split(',')
-      //     .map(str => str.trim())
-      //     .filter(_.identity)
-      // : [],
+      fields: req.query.fields
+        ? (req.query.fields as string)
+            .split(',')
+            .map(str => str.trim())
+            .filter(_.identity)
+        : [],
       fileName: req.query.fileName || undefined,
       id: req.query.id || undefined,
       analysisId: req.query.analysisId || undefined,
@@ -173,9 +171,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       .map(file =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
-              Object.entries(file).filter(([key]) =>
-                (parsedRequestQuery.fields as string).includes(key),
-              ),
+              Object.entries(file).filter(([key]) => parsedRequestQuery.fields.includes(key)),
             ) as Partial<SongEntity>)
           : file,
       );
