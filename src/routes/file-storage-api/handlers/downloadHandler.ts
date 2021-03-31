@@ -20,7 +20,7 @@ const downloadHandler = ({
   rootPath: string;
   esClient: Client;
   proxyMiddlewareFactory: typeof createProxyMiddleware;
-}): Handler => async (req: AuthenticatedRequest<{ fileObjectId: string }>, res, next) => {
+}): Handler => async (req: AuthenticatedRequest, res, next) => {
   const { fileObjectId } = req.params;
   const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
 
@@ -30,11 +30,11 @@ const downloadHandler = ({
 
   const isAuthorized =
     hasSufficientProgramMembershipAccess({
-      scopes: req.userScopes,
+      scopes: req.auth.scopes,
       file: esFileObject,
     }) &&
     hasSufficientDacoAccess({
-      scopes: req.userScopes,
+      scopes: req.auth.scopes,
       file: esFileObject,
     });
 
@@ -51,7 +51,7 @@ const downloadHandler = ({
     });
     handleRequest(req, res, next);
   } else {
-    res.status(req.authenticated ? 403 : 401).end();
+    res.status(req.auth.authenticated ? 403 : 401).end();
   }
 };
 
