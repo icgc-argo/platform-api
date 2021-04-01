@@ -25,7 +25,7 @@ import userSchema from './schemas/User';
 import programSchema from './schemas/Program';
 import path from 'path';
 import clinicalProxyRoute from './routes/clinical-proxy';
-import kafkaProxyRoute from './routes/kafka-rest-proxy';
+import createKafkaRouter from './routes/kafka-rest-proxy';
 import createDonorAggregatorRouter from 'routes/donor-aggregator-api';
 import createFileStorageApi from './routes/file-storage-api';
 import {
@@ -149,7 +149,7 @@ const init = async () => {
     res.json(version);
   });
 
-  app.use('/kafka', kafkaProxyRoute);
+  app.use('/kafka', createKafkaRouter(egoClient));
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
   app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient))

@@ -16,20 +16,20 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import express from 'express';
+import express, { Router } from 'express';
 import { json } from 'body-parser';
 
 import logger from 'utils/logger';
 
 import { EgoClient } from 'services/ego';
+import egoTokenUtils from 'utils/egoTokenUtils';
 import getAuthorizedClient from 'services/donorAggregator';
 
 import authenticatedRequestMiddleware, {
   AuthenticatedRequest,
 } from 'routes/middleware/authenticatedRequestMiddleware';
-import { isDccMember } from 'routes/utils/accessValidations';
 
-const createDonorAggregatorRouter = (egoClient: EgoClient) => {
+const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
   const router = express.Router();
 
   router.use(json());
@@ -37,14 +37,14 @@ const createDonorAggregatorRouter = (egoClient: EgoClient) => {
 
   router.post('/sync', async (req: AuthenticatedRequest, res) => {
     // Ensure Authenticated and DCC Admin
-    const { authenticated, userScopes, egoJwt } = req;
+    const { authenticated, serializedScopes, egoJwt } = req.auth;
 
     if (!authenticated) {
-      res.status(403).json({ error: 'invalid token' });
+      res.status(401).json({ error: 'invalid auth token' });
       return;
     }
 
-    if (!isDccMember(userScopes)) {
+    if (!egoTokenUtils.isDccMember(serializedScopes)) {
       res.status(403).json({ error: 'not authorized' });
       return;
     }

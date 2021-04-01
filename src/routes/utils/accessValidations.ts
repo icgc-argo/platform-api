@@ -30,11 +30,6 @@ import {
 } from '@icgc-argo/ego-token-utils';
 import { EGO_DACO_POLICY_NAME } from 'config';
 
-export const isDccMember = (scopes: PermissionScopeObj[]) => {
-  const serializedScopes = scopes.map(egoTokenUtils.serializeScope);
-  return egoTokenUtils.isDccMember(serializedScopes);
-};
-
 export const hasSufficientProgramMembershipAccess = (config: {
   scopes: PermissionScopeObj[];
   file?: EsFileCentricDocument;
