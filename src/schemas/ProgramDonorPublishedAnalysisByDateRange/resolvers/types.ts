@@ -31,27 +31,16 @@ export type ProgramDonorGqlResponse = {
   title: string;
 };
 
-export type AnalysisTitle = 
-  'alignment' |
-  'mutect' |
-  'rawReads' |
-  'sangerVcs';
-
-export type BucketsKey = 'buckets';
-
+// keys are from elasticsearch
 export type EsAggsBucket = {
   doc_count: number;
   key: string;
-  to_as_string: string;
+  to_as_string: string; // ISO date time
   to: number;
 };
 
 export type EsAggsBuckets = {
-  [key in BucketsKey]: EsAggsBucket[];
-};
-
-export type EsAggs = {
-  [key in DonorFields]: EsAggsBuckets;
+  buckets: EsAggsBucket[];
 };
 
 export type DonorFields = 
@@ -61,3 +50,7 @@ export type DonorFields =
   'rawReadsFirstPublishedDate' |
   'sangerVcsFirstPublishedDate';
   // TODO replace createdAt with clinical published date
+
+export type EsAggs = {
+  [key in DonorFields]: EsAggsBuckets;
+};
