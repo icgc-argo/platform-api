@@ -56,6 +56,13 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     programShortName
   } = args;
 
+  if (bucketCount < 1) {
+    throw new UserInputError(`${ERROR_TITLE
+      } bucketCount must be at least 1`, {
+      bucketCount,
+    });
+  }
+
   const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
   if (!areDatesValid) {
     throw new UserInputError(`${ERROR_TITLE} Dates must be in ISO format`, {
@@ -68,6 +75,14 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   const isoDateRangeTo = convertStringToISODate(dateRangeTo);
 
   const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
+  if (daysInRange < 1) {
+    throw new UserInputError(`${ERROR_TITLE
+      } dateRangeFrom must be a date before dateRangeTo`, {
+      dateRangeFrom,
+      dateRangeTo
+    });
+  }
+
   if (daysInRange < bucketCount) {
     throw new UserInputError(`${ERROR_TITLE
       } Days in range must be greater than or equal to bucket count`, {
