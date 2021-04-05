@@ -17,14 +17,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Handler, Request } from 'express';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import {
   EsFileCentricDocument,
   FILE_ACCESS,
   FILE_RELEASE_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
-import { EgoClient } from 'services/ego';
 import {
   PERMISSIONS,
   PermissionScopeObj,
@@ -92,53 +90,4 @@ export const hasSufficientDacoAccess = (config: {
     config.file.file_access === FILE_ACCESS.OPEN ||
     (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)
   );
-};
-
-export type AuthenticatedRequest<Params = {}, T1 = any, T2 = any, Query = {}> = Request<
-  Params,
-  T1,
-  T2,
-  Query
-> & { userScopes: PermissionScopeObj[]; authenticated: boolean };
-
-const extractUserScopes = async (config: {
-  authHeader?: string;
-  egoClient: EgoClient;
-}): Promise<{ scopes: string[]; authenticated: boolean }> => {
-  const { authHeader, egoClient } = config;
-  if (authHeader) {
-    const token = authHeader.replace('Bearer ', '');
-    try {
-      const jwtData = egoTokenUtils.decodeToken(token);
-      const expired = egoTokenUtils.isExpiredToken(jwtData);
-      if (expired) {
-        return { scopes: [], authenticated: false };
-      }
-      return {
-        scopes: jwtData.context.scope,
-        authenticated: true,
-      };
-    } catch (err) {
-      return egoClient
-        .checkApiKey({ apiKey: token })
-        .then(data => ({ scopes: data.scope as string[], authenticated: true }))
-        .catch(err => ({ scopes: [], authenticated: false }));
-    }
-  } else {
-    return { scopes: [], authenticated: false };
-  }
-};
-
-type AuthenticationMiddleware = (config: { egoClient: EgoClient }) => Handler;
-export const storageApiAuthenticationMiddleware: AuthenticationMiddleware = ({ egoClient }) => {
-  return async (req: Request, res, next) => {
-    const { authorization } = req.headers;
-    const userScope = await extractUserScopes({
-      egoClient,
-      authHeader: authorization,
-    });
-    (req as AuthenticatedRequest).userScopes = userScope.scopes.map(egoTokenUtils.parseScope);
-    (req as AuthenticatedRequest).authenticated = userScope.authenticated;
-    next();
-  };
 };

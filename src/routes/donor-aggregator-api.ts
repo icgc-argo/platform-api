@@ -16,79 +16,59 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { KAFKA_REST_PROXY_ROOT } from '../config';
-import urlJoin from 'url-join';
-import logger from '../utils/logger';
-import fetch from 'node-fetch';
-import { json } from 'body-parser';
 import express, { Router } from 'express';
+import { json } from 'body-parser';
+
+import logger from 'utils/logger';
+
 import { EgoClient } from 'services/ego';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import getAuthorizedClient from 'services/donorAggregator';
+
 import authenticatedRequestMiddleware, {
   AuthenticatedRequest,
 } from 'routes/middleware/authenticatedRequestMiddleware';
-import egoTokenUtils from 'utils/egoTokenUtils';
 
-const createKafkaRouter = (egoClient: EgoClient): Router => {
+const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
   const router = express.Router();
-  const apiRoot = KAFKA_REST_PROXY_ROOT;
 
-  // fetch needs to use the json body parser
   router.use(json());
-
   router.use(authenticatedRequestMiddleware({ egoClient }));
 
-  router.post('/:topic', async (req: AuthenticatedRequest, res) => {
-    const {
-      auth: { authenticated, serializedScopes, egoJwt },
-      params: { topic },
-    } = req;
+  router.post('/sync', async (req: AuthenticatedRequest, res) => {
+    // Ensure Authenticated and DCC Admin
+    const { authenticated, serializedScopes, egoJwt } = req.auth;
 
-    // Require auth
     if (!authenticated) {
       res.status(401).json({ error: 'invalid auth token' });
       return;
     }
 
-    // Require kafka topic writing permisison
-    const hasPermission = egoTokenUtils.canWriteKafkaTopic({
-      permissions: serializedScopes,
-      topic,
-    });
-    if (!hasPermission) {
+    if (!egoTokenUtils.isDccMember(serializedScopes)) {
       res.status(403).json({ error: 'not authorized' });
+      return;
     }
 
-    const url = urlJoin(apiRoot, 'topics', topic);
-    const msg = req.body;
-    logger.debug(`received message in kafka proxy ${JSON.stringify(msg)}`);
-    const kafkaRestProxyBody = JSON.stringify({
-      records: [
-        {
-          value: msg,
-        },
-      ],
-    });
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/vnd.kafka.json.v2+json',
-        Accept: 'application/vnd.kafka.v2+json',
-      },
-      body: kafkaRestProxyBody,
-    })
-      .then(response => {
-        res.contentType('application/vnd.kafka.v2+json');
-        res.status(response.status);
-        return response.body.pipe(res);
-      })
-      .catch(e => {
-        logger.error('failed to send message to kafka proxy' + e);
-        return res.status(500).send(e);
-      });
+    // Send request to Donor Aggregator
+    const programId = req.body.programId;
+    try {
+      logger.info(`Initiating Donor Submission Aggregator SYNC request for ${programId}.`);
+      await getAuthorizedClient(egoJwt).syncDonorAggregationIndex(programId);
+    } catch (error) {
+      logger.error(
+        `Error requesting SYNC from Donor Submission Aggregator (${programId}): ${error}`,
+      );
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res
+      .status(200)
+      .json({ message: 'Initiated sync for donor submission aggregation index.', programId });
+    return;
   });
 
   return router;
 };
 
-export default createKafkaRouter;
+export default createDonorAggregatorRouter;

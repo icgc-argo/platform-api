@@ -35,9 +35,7 @@ import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import logger from 'utils/logger';
 
-const programDonorSummaryEntriesResolver: (
-  esClient: Client,
-) => GraphQLFieldResolver<
+type DonorEntriesResolverType = GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
@@ -46,7 +44,15 @@ const programDonorSummaryEntriesResolver: (
     sorts: DonorSummaryEntrySort[];
     filters: ProgramDonorSummaryFilter[];
   }
-> = esClient => async (source, args, context): Promise<DonorSummaryEntry[]> => {
+>;
+
+const programDonorSummaryEntriesResolver: (
+  esClient: Client,
+) => DonorEntriesResolverType = esClient => async (
+  source,
+  args,
+  context,
+): Promise<DonorSummaryEntry[]> => {
   const { programShortName } = args;
 
   const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
