@@ -28,13 +28,11 @@ import {
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
-import { UserInputError } from 'apollo-server-express';
+import { ApolloError, UserInputError } from 'apollo-server-express';
 import { convertStringToISODate, validateISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
 import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
 import logger from 'utils/logger';
-
-const ERROR_TITLE = 'ProgramDonorPublishedAnalysisByDateRange:'
 
 const programDonorPublishedAnalysisByDateRangeResolver: (
   esClient: Client,
@@ -57,15 +55,14 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
   } = args;
 
   if (bucketCount < 1) {
-    throw new UserInputError(`${ERROR_TITLE
-      } bucketCount must be at least 1`, {
+    throw new UserInputError(`bucketCount must be at least 1`, {
       bucketCount,
     });
   }
 
   const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
   if (!areDatesValid) {
-    throw new UserInputError(`${ERROR_TITLE} Dates must be in ISO format`, {
+    throw new UserInputError(`Dates must be in ISO format`, {
       dateRangeFrom,
       dateRangeTo
     });
@@ -76,16 +73,14 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
 
   const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
   if (daysInRange < 1) {
-    throw new UserInputError(`${ERROR_TITLE
-      } dateRangeFrom must be a date before dateRangeTo`, {
+    throw new UserInputError(`dateRangeFrom must be a date before dateRangeTo`, {
       dateRangeFrom,
       dateRangeTo
     });
   }
 
   if (daysInRange < bucketCount) {
-    throw new UserInputError(`${ERROR_TITLE
-      } Days in range must be greater than or equal to bucket count`, {
+    throw new UserInputError(`Days in range must be greater than or equal to bucket count`, {
       bucketCount,
       dateRangeFrom,
       dateRangeTo,
@@ -123,8 +118,7 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     })
     .then(res => res.body.aggregations)
     .catch(err => {
-      logger.error(`${ERROR_TITLE} Error reading data from Elasticsearch: `, err);
-      return {} as EsAggs;
+      throw new ApolloError(err);
     });
 
   return Object.keys(esAggs).map((key: DonorFields) => ({
