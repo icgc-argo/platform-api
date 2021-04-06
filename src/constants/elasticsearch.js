@@ -17,9 +17,4 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import createEgoUtils from '@icgc-argo/ego-token-utils';
-import { EGO_PUBLIC_KEY } from 'config';
-
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
-
-export default TokenUtils;
+export const ELASTICSEARCH_DATE_TIME_FORMAT = 'strict_date_time';

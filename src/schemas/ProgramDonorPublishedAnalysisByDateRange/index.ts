@@ -17,9 +17,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import createEgoUtils from '@icgc-argo/ego-token-utils';
-import { EGO_PUBLIC_KEY } from 'config';
+import { makeExecutableSchema } from 'graphql-tools';
 
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+import resolvers from './resolvers';
+import typeDefs from './gqlTypeDefs';
+import { Client } from '@elastic/elasticsearch';
 
-export default TokenUtils;
+export default async (esClient: Client) =>
+  makeExecutableSchema({
+    typeDefs,
+    resolvers: await resolvers(esClient),
+  });

@@ -1,0 +1,43 @@
+# Swagger documentation for Donor Aggregator router
+
+tags:
+  - name: Donor Aggregator API
+    description: Restricted access endpoints for DCC Admin to interact with the Donor Submission Aggregartor
+
+paths:
+  '/donor-aggregator/sync':
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Donor Aggregator API
+      summary: Sync Donor Aggregations for Program
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                programId:
+                  type: string
+      responses:
+        '200':
+          description: Successfully queued sync event for aggregator
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Authorization error - invalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                example: '{"error": "not authorized"}'
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                example: '{"error": "internal server error"}'
+                type: string

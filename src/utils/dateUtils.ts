@@ -17,9 +17,22 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import createEgoUtils from '@icgc-argo/ego-token-utils';
-import { EGO_PUBLIC_KEY } from 'config';
+import { formatISO } from 'date-fns';
+import logger from 'utils/logger';
 
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+export const validateISODate = (dateInput: string | Date) => {
+  const date = new Date(dateInput);
+  try {
+    const result = formatISO(date);
+    return !!result;
+  } catch (err) {
+    logger.error(`Date string can't be used as an ISO string: ${err}`);
+    return false;
+  }
+};
 
-export default TokenUtils;
+export const convertStringToISODate = (dateInput: string | Date) => {
+  const date = new Date(dateInput);
+  const result = formatISO(date);
+  return new Date(result);
+};

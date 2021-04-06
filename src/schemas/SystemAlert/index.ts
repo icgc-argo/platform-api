@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ *
+ * This program and the accompanying materials are made available under the terms of
+ * the GNU Affero General Public License v3.0. You should have received a copy of the
+ * GNU Affero General Public License along with this program.
+ *  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createCheckers } from "ts-interface-checker";
@@ -10,11 +29,11 @@ const { SystemAlertTI } = createCheckers(systemAlertTI);
 // using TS interfaces/types and the "ts-interface-checker" library,
 // rather than validating with TypeScript at buildtime.
 
-// this is to avoid breaking the build if a alert is invalid.
+// this is to avoid breaking the build if an alert is invalid.
 // there's no other checks on alert data,
 // because it's in an env variable, not a database.
 
-// if a alert is invalid, the error will be logged,
+// if an alert is invalid, the error will be logged,
 // the build will continue, and valid system alerts will still be served.
 
 interface SystemAlert {

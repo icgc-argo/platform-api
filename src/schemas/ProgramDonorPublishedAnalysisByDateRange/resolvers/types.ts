@@ -17,9 +17,40 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import createEgoUtils from '@icgc-argo/ego-token-utils';
-import { EGO_PUBLIC_KEY } from 'config';
+export type BaseQueryArguments = {
+  programShortName: string;
+};
 
-const TokenUtils = createEgoUtils(EGO_PUBLIC_KEY);
+export type ResponseBucket = {
+  date: string;
+  donors: number;
+}
 
-export default TokenUtils;
+export type ProgramDonorGqlResponse = {
+  buckets: ResponseBucket[];
+  title: string;
+};
+
+// keys are from elasticsearch
+export type EsAggsBucket = {
+  doc_count: number;
+  key: string;
+  to_as_string: string; // ISO date time
+  to: number;
+};
+
+export type EsAggsBuckets = {
+  buckets: EsAggsBucket[];
+};
+
+export type DonorFields = 
+  'alignmentFirstPublishedDate' |
+  'createdAt' |
+  'mutectFirstPublishedDate' |
+  'rawReadsFirstPublishedDate' |
+  'sangerVcsFirstPublishedDate';
+  // TODO replace createdAt with clinical published date
+
+export type EsAggs = {
+  [key in DonorFields]: EsAggsBuckets;
+};
