@@ -45,11 +45,10 @@ export type EsAggsBuckets = {
 
 export type DonorFields = 
   'alignmentFirstPublishedDate' |
-  'createdAt' |
+  'coreCompletionDate' |
   'mutectFirstPublishedDate' |
   'rawReadsFirstPublishedDate' |
   'sangerVcsFirstPublishedDate';
-  // TODO replace createdAt with clinical published date
 
 export type EsAggs = {
   [key in DonorFields]: EsAggsBuckets;

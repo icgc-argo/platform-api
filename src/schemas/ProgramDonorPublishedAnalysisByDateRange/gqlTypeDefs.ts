@@ -47,9 +47,9 @@ export default gql`
     """
     alignmentFirstPublishedDate
     """
-    TODO - Timestamp of when this donor first had clinical data published
+    Timestamp of when this donor first had core clinical data completed
     """
-    createdAt
+    coreCompletionDate
     """
     Timestamp of when this donor first had Mutect2 variant callings data published
     """
@@ -62,7 +62,6 @@ export default gql`
     Timestamp of when this donor first had Sanger VC data published
     """
     sangerVcsFirstPublishedDate
-    # TODO replace createdAt with clinical published date
   }
 
   type Query {
