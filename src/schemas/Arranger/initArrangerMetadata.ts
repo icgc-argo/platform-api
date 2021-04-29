@@ -51,43 +51,40 @@ const { projectManifest } = metadata;
 
 export default async (esClient: Client) => {
   const initMetadata = async () => {
-    // TODO: make a promise.all for projects & project metadata
-
-    // logger.info(`found ES index ${ARRANGER_PROJECTS_INDEX}, updating mapping`);
-    // try {
-    //   const res = await esClient.indices.putMapping({
-    //     ...projectsEsConfig,
-    //     body: metadata, // TODO check this is OK
-    //   });
-    //   logger.info(`updated ES index ${ARRANGER_PROJECTS_INDEX}`);
-    //   return res;
-    // } catch (err) {
-    //   logger.warn(`unable to update ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`);
-    //   return err;
-    // }
-
     await Promise.all([
-      esClient.indices.exists({ index: 'ARRANGER_PROJECTS_INDEX' })
+      esClient.indices.create({ index: ARRANGER_PROJECTS_INDEX })
+        .catch(err => logger.warn(`failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`)),
+      esClient.indices.exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
         .then(async ({ body: indexExists = false }) => {
           if (indexExists) {
-            logger.info(`ES index ${ARRANGER_PROJECTS_INDEX} exists`);
-          } else {
-            logger.info(`creating ES index ${ARRANGER_PROJECTS_INDEX}...`);
+            logger.info(`found ES index ${ARRANGER_PROJECT_METADATA_INDEX}, trying to update mapping`);
             try {
-              const res = await esClient.indices.create({ index: ARRANGER_PROJECTS_INDEX });
-              logger.info(`created ES index ${ARRANGER_PROJECTS_INDEX}: ${res}`);
+              const res = await esClient.indices.putMapping({
+                ...projectsEsConfig,
+                body: metadata, // TODO check this is OK
+              });
+              logger.info(`updated ES index ${ARRANGER_PROJECT_METADATA_INDEX}`);
               return res;
             } catch (err) {
-              logger.warn(`unable to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`);
+              logger.warn(`failed to update ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`);
+              return err;
+            }
+          } else {
+            logger.info(`creating ES index ${ARRANGER_PROJECT_METADATA_INDEX}...`);
+            try {
+              const res = await esClient.indices.create({ index: ARRANGER_PROJECT_METADATA_INDEX });
+              logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${res}`);
+              return res;
+            } catch (err) {
+              logger.warn(`failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`);
               return err;
             }
           }
         })
         .catch(err => {
-          logger.warn(`unable to check if ES index ${ARRANGER_PROJECTS_INDEX} exists: ${err}`);
+          logger.warn(`failed to check if ES index ${ARRANGER_PROJECT_METADATA_INDEX} exists: ${err}`);
           return err;
         }),
-
     ]);
 
     // await Promise.all([
