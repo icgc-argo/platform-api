@@ -35,7 +35,7 @@ export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.fi
 type EsConfig = {
   id: string;
   index: string;
-}
+};
 
 const projectsEsConfig: EsConfig = {
   id: ARRANGER_PROJECT_ID,
@@ -49,96 +49,93 @@ const projectMetadataEsConfig: EsConfig = {
 
 const { projectManifest } = metadata;
 
+// for ARRANGER_PROJECT_METADATA_INDEX
+const esUpdateBody = {
+  doc: harmonizedFileCentricConfig,
+};
+
 export default async (esClient: Client) => {
   const initMetadata = async () => {
     await Promise.all([
-      esClient.indices.create({ index: ARRANGER_PROJECTS_INDEX })
+      esClient.indices
+        .create({ index: ARRANGER_PROJECTS_INDEX })
+        .then(() => logger.info(`created ES index ${ARRANGER_PROJECTS_INDEX}`))
         .catch(err => logger.warn(`failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`)),
-      esClient.indices.exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
-        .then(async ({ body: indexExists = false }) => {
-          if (indexExists) {
-            logger.info(`found ES index ${ARRANGER_PROJECT_METADATA_INDEX}, trying to update mapping`);
-            try {
-              const res = await esClient.indices.putMapping({
-                ...projectsEsConfig,
-                body: metadata, // TODO check this is OK
-              });
-              logger.info(`updated ES index ${ARRANGER_PROJECT_METADATA_INDEX}`);
-              return res;
-            } catch (err) {
-              logger.warn(`failed to update ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`);
-              return err;
-            }
-          } else {
-            logger.info(`creating ES index ${ARRANGER_PROJECT_METADATA_INDEX}...`);
-            try {
-              const res = await esClient.indices.create({ index: ARRANGER_PROJECT_METADATA_INDEX });
-              logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${res}`);
-              return res;
-            } catch (err) {
-              logger.warn(`failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`);
-              return err;
-            }
-          }
-        })
-        .catch(err => {
-          logger.warn(`failed to check if ES index ${ARRANGER_PROJECT_METADATA_INDEX} exists: ${err}`);
-          return err;
-        }),
+      esClient.indices
+        .exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
+        .then(async ({ body: indexExists = false }) =>
+          indexExists
+            ? await esClient
+                .update({ ...projectMetadataEsConfig, body: esUpdateBody })
+                .then(() =>
+                  logger.info(
+                    `updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`,
+                  ),
+                )
+                .catch(err =>
+                  logger.warn(
+                    `failed to update ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
+                  ),
+                )
+            : await esClient.indices
+                .create({ index: ARRANGER_PROJECT_METADATA_INDEX })
+                .then(() =>
+                  logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`),
+                )
+                .catch(err =>
+                  logger.warn(
+                    `failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
+                  ),
+                ),
+        )
+        .catch(err =>
+          logger.warn(
+            `failed to check if ES index ${ARRANGER_PROJECT_METADATA_INDEX} exists: ${err}`,
+          ),
+        ),
     ]);
 
-    // await Promise.all([
-    //   esClient.indices
-    //     .create({ index: ARRANGER_PROJECTS_INDEX })
-    //     .catch(err => logger.warn(`trying to create es index ${ARRANGER_PROJECTS_INDEX}: ${err}`)),
-    //   esClient.indices
-    //     .create({ index: ARRANGER_PROJECT_METADATA_INDEX })
-    //     .catch(err =>
-    //       logger.warn(`trying to create es index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`),
-    //     ),
-    // ]);
+    try {
+      await Promise.all([
+        esClient.index({
+          ...projectsEsConfig,
+          body: projectManifest,
+          refresh: 'wait_for',
+        }),
+        esClient.index({
+          ...projectMetadataEsConfig,
+          body: harmonizedFileCentricConfig,
+          refresh: 'wait_for',
+        }),
+      ]);
+    } catch (err) {
+      // we'll validate the data and only kill the app if the data doesn't match
+      logger.warn(`failed to index metadata, will now check ES to confirm data: ${err}`);
+    }
 
-    // try {
-    //   await Promise.all([
-    //     esClient.index({
-    //       ...projectsEsConfig,
-    //       body: projectManifest,
-    //       refresh: 'wait_for',
-    //     }),
-    //     esClient.index({
-    //       ...projectMetadataEsConfig,
-    //       body: harmonizedFileCentricConfig,
-    //       refresh: 'wait_for',
-    //     }),
-    //   ]);
-    // } catch (err) {
-    //   // we'll validate the data and only kill the app if the data doesn't match
-    //   logger.warn('failed to index metadata, will now check ES to confirm data');
-    // }
+    const [projectManifestInEs, fileCentricArrangerSetting]: [
+      typeof projectManifest,
+      typeof metadata.projectIndexConfigs.file_centric,
+    ] = await Promise.all([
+      esClient
+        .get(projectsEsConfig)
+        .then(response => response.body._source),
+      esClient
+        .get(projectMetadataEsConfig)
+        .then(response => response.body._source),
+    ]);
 
-    // const [projectManifestInEs, fileCentricArrangerSetting]: [
-    //   typeof projectManifest,
-    //   typeof metadata.projectIndexConfigs.file_centric,
-    // ] = await Promise.all([
-    //   esClient
-    //     .get(projectsEsConfig)
-    //     .then(response => response.body._source),
-    //   esClient
-    //     .get(projectMetadataEsConfig)
-    //     .then(response => response.body._source),
-    // ]);
-
-    // if (
-    //   isEqual(projectManifestInEs, projectManifest) &&
-    //   isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
-    //   // TODO do i need to update these ^^^
-    // ) {
-    //   console.log('arranger metadata init success!!!');
-    //   return true;
-    // } else {
-    //   throw new Error('arranger metadata mismatch in elasticsearch');
-    // }
+    if (
+      isEqual(projectManifestInEs, projectManifest) &&
+      isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
+      // TODO do i need to update these ^^^
+    ) {
+      console.log('arranger metadata init success!!!');
+      return true;
+    } else {
+      throw new Error('arranger metadata mismatch in elasticsearch');
+    }
   };
   logger.info('initializing arranger metadata');
-  return retry(initMetadata, { retries: 1 }); // TODO put this back to 10
+  return retry(initMetadata, { retries: 10 });
 };

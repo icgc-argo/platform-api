@@ -33,6 +33,12 @@
               "type": "Aggregations"
             },
             {
+              "field": "clinical__donor__primary_site",
+              "show": false,
+              "active": true,
+              "type": "Aggregations"
+            },
+            {
               "field": "data_category",
               "show": false,
               "active": true,
@@ -956,6 +962,18 @@
             "quickSearchEnabled": false,
             "field": "analysis.workflow.workflow_version",
             "displayName": "Workflow Version",
+            "active": false,
+            "isArray": false,
+            "rangeStep": 1,
+            "type": "keyword",
+            "primaryKey": false
+          },
+          {
+            "unit": null,
+            "displayValues": {},
+            "quickSearchEnabled": false,
+            "field": "clinical.donor.primary_site",
+            "displayName": "Primary Site",
             "active": false,
             "isArray": false,
             "rangeStep": 1,
