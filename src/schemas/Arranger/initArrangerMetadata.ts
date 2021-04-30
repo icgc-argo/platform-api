@@ -128,7 +128,6 @@ export default async (esClient: Client) => {
     if (
       isEqual(projectManifestInEs, projectManifest) &&
       isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
-      // TODO do i need to update these ^^^
     ) {
       console.log('arranger metadata init success!!!');
       return true;
