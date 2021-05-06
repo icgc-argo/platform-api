@@ -18,7 +18,6 @@ const releaseStages = [
 const gender = ['Male', 'Female'];
 const donorIds = range(0, 100).map(num => `fake_donor_${num}`);
 const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
-const primarySites = ['brain', 'liver', 'lung', 'pancreas', 'skin'];
 
 const args = process.argv.slice(2);
 
@@ -74,11 +73,6 @@ const args = process.argv.slice(2);
         analysis_type: 'sequencing_experiment',
         analysis_version: 1,
         experiment: { platform: 'ILLUMINA', library_strategy: 'WGS' },
-      },
-      clinical: {
-        donor: {
-          primary_site: sample(primarySites)
-        }
       },
       file: {
         file_id: `FI_Fake_${i}`,
