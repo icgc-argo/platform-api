@@ -167,7 +167,6 @@ const createResolvers = (egoClient: EgoClient) => {
       generateAccessKey: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
         const { Authorization, egoToken } = context;
         const decodedToken = egoTokenUtils.decodeToken(egoToken);
-        const userName = decodedToken.context.user.name;
         const userId = decodedToken.sub;
 
         // delete old keys
@@ -176,7 +175,7 @@ const createResolvers = (egoClient: EgoClient) => {
           await egoClient.deleteKeys(keys, Authorization);
         }
         // get scopes for new token
-        const { scopes } = await egoClient.getScopes(userName, Authorization);
+        const { scopes } = await egoClient.getScopes(userId, Authorization);
 
         const egoApiKeyObj = await egoClient.generateEgoAccessKey(userId, scopes, Authorization);
         return {
