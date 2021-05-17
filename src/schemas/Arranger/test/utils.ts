@@ -25,7 +25,6 @@ import { Request } from 'express';
 import getArrangerGqlSchema, { ArrangerGqlContext } from '..';
 import { ARRANGER_PROJECT_ID } from 'config';
 import { ApolloServer } from 'apollo-server-express';
-import _ from 'lodash';
 import { Client } from '@elastic/elasticsearch';
 import { ArrangerFilter } from '../arrangerFilterTypes';
 // import { EgoJwtData, UserStatus, UserType } from '@icgc-argo/ego-token-utils/dist/common';
@@ -42,10 +41,11 @@ const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
       firstName: '',
       lastLogin: 0,
       lastName: '',
-      name: '',
       preferredLanguage: '',
       status: 'APPROVED',
       type: 'USER',
+      providerType: 'GOOGLE',
+      providerSubjectId: ''
     },
   },
   exp: Infinity,
