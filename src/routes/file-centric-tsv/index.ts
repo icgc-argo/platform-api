@@ -32,6 +32,7 @@ import {
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
+import fileTableTsvSchema from './tsvSchemas/fileTableTsv';
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
 
 const createDownloadHandler = ({
@@ -82,6 +83,15 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
     ARRANGER_FILE_CENTRIC_INDEX,
   );
 
+  router.use(
+    '/file-table',
+    createDownloadHandler({
+      esClient,
+      parseFilterStringToEsQuery,
+      defaultFileName: req => `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
+      tsvSchema: fileTableTsvSchema,
+    }),
+  );
   router.use(
     '/score-manifest',
     createDownloadHandler({
