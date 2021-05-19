@@ -186,10 +186,10 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   };
 
   const getScopes = async (
-    userName: string,
+    userId: string,
     Authorization: string,
   ): Promise<{ scopes: string[] }> => {
-    const url = `${EGO_ROOT_REST}/o/scopes?userName=${userName}`;
+    const url = `${EGO_ROOT_REST}/o/scopes?userId=${userId}`;
     const response = await fetch(url, {
       method: 'get',
       headers: { Authorization },
@@ -271,7 +271,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     client_id: string;
     exp: number;
     scope: string[];
-    user_name: string;
+    user_id: string;
   }> =>
     fetch(`${EGO_ROOT_REST}/o/check_api_key?apiKey=${apiKey}`, {
       method: 'POST',
