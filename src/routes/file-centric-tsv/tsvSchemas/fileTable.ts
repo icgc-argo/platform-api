@@ -19,18 +19,18 @@
 import fileSize from 'filesize';
 import { EsFileDocument, TsvFileSchema } from '../types';
 
-const demoTsvSchema: TsvFileSchema<EsFileDocument> = [
+const fileTableTsvSchema: TsvFileSchema<EsFileDocument> = [
   {
     header: 'Object ID',
     getter: source => source.object_id,
   },
   {
     header: 'Donor ID',
-    getter: source => source.donors[0].donor_id,
+    getter: source => source.donors.map(donor => donor.donor_id).join(','),
   },
   {
     header: 'Submitter Donor ID',
-    getter: source => source.donors[0].submitter_donor_id,
+    getter: source => source.donors.map(donor => donor.submitter_donor_id).join(','),
   },
   {
     header: 'Program ID',
@@ -54,4 +54,4 @@ const demoTsvSchema: TsvFileSchema<EsFileDocument> = [
   },
 ];
 
-export default demoTsvSchema;
+export default fileTableTsvSchema;

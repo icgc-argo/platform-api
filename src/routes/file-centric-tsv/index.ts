@@ -32,7 +32,7 @@ import {
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
-import fileTableTsvSchema from './tsvSchemas/fileTableTsv';
+import fileTableTsvSchema from './tsvSchemas/fileTable';
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
 
 const createDownloadHandler = ({
