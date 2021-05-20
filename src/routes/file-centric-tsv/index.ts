@@ -20,6 +20,8 @@
 import express, { Response, RequestHandler, Request } from 'express';
 import { Client } from '@elastic/elasticsearch';
 import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import { get } from 'lodash';
+import fileSize from 'filesize';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
 import { format } from 'date-fns';
@@ -32,8 +34,11 @@ import {
 
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 import demoTsvSchema from './tsvSchemas/demo';
-import fileTableTsvSchema from './tsvSchemas/fileTable';
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
+
+const specialColumnHeaders = {
+  fileSize: ['Size'],
+};
 
 const createDownloadHandler = ({
   defaultFileName,
@@ -42,12 +47,24 @@ const createDownloadHandler = ({
   esClient,
 }: {
   defaultFileName: (req: Request) => string;
-  tsvSchema: TsvFileSchema<EsFileDocument>;
+  tsvSchema?: TsvFileSchema<EsFileDocument>;
   parseFilterStringToEsQuery: FilterStringParser;
   esClient: Client;
 }): RequestHandler => {
   return async (req, res) => {
-    const { filter: filterStr, fileName }: { filter?: string; fileName?: string } = req.query;
+    const {
+      columns,
+      filter: filterStr,
+      fileName,
+    }: { columns?: string; filter?: string; fileName?: string } = req.query;
+    
+    if (!columns && !tsvSchema) {
+      const err = 'No schema provided';
+      res.status(400).send(err);
+      logger.error(err);
+      throw err;
+    }
+
     let esQuery: object | undefined;
     try {
       esQuery = filterStr ? await parseFilterStringToEsQuery(filterStr) : undefined;
@@ -62,13 +79,28 @@ const createDownloadHandler = ({
       esQuery,
       sortField: FILE_METADATA_FIELDS['object_id'],
     });
+
+    const columnsSchema =
+      columns &&
+      JSON.parse(decodeURIComponent(columns)).map(
+        ({ header, getter }: { header: string; getter: string }) => ({
+          header,
+          getter: (source: EsFileDocument) => {
+            const getSource = get(source, getter);
+            return specialColumnHeaders.fileSize.includes(header)
+              ? fileSize(getSource)
+              : getSource;
+          },
+        }),
+      );
+
     res.setHeader(
       'Content-disposition',
       `attachment; filename=${
         fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
       }`,
     );
-    await writeTsvStreamToWritableTarget(fileCentricDocumentStream, res, tsvSchema);
+    await writeTsvStreamToWritableTarget(fileCentricDocumentStream, res, columnsSchema || tsvSchema);
     res.end();
   };
 };
@@ -89,7 +121,6 @@ const createFileCentricTsvRouter = async (esClient: Client) => {
       esClient,
       parseFilterStringToEsQuery,
       defaultFileName: req => `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
-      tsvSchema: fileTableTsvSchema,
     }),
   );
   router.use(
