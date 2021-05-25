@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@arranger/server": "^2.12.17",
+    "@arranger/server": "^2.13.1",
     "@babel/core": "^7.4.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
