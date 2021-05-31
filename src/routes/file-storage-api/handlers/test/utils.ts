@@ -132,7 +132,7 @@ export const createMockEgoClient = (): Partial<EgoClient> => {
         client_id: 'test',
         exp: Infinity,
         scope: MOCK_API_KEY_SCOPES[apiKey],
-        user_name: 'yup',
+        user_id: 'yup',
       }),
   };
   return mockEgoClient;
