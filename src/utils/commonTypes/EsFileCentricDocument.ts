@@ -3,12 +3,18 @@ export type EsFileCentricDocument = {
   study_id: string;
   object_id: string;
   file_type: string;
-  release_stage: FILE_RELEASE_STAGE;
+  embargo_stage: FILE_EMBARGO_STAGE;
+  release_state: FILE_RELEASE_STATE;
   program_access_date: string;
   data_type: string;
   data_category: string;
   analysis_tools: string;
   file_access: FILE_ACCESS;
+  meta: {
+    embargo_stage: FILE_EMBARGO_STAGE;
+    release_stage: FILE_RELEASE_STATE;
+    study_id: string;
+  };
   analysis: {
     analysis_id: string;
     analysis_type: string;
@@ -185,12 +191,19 @@ export const FILE_METADATA_FIELDS = {
   study_id: 'study_id' as 'study_id',
   object_id: 'object_id' as 'object_id',
   file_type: 'file_type' as 'file_type',
-  release_stage: 'release_stage' as 'release_stage',
+  release_state: 'release_state' as 'release_state',
+  embargo_stage: 'embargo_stage' as 'embargo_stage',
   program_access_date: 'program_access_date' as 'program_access_date',
   data_type: 'data_type' as 'data_type',
   data_category: 'data_category' as 'data_category',
   analysis_tools: 'analysis_tools' as 'analysis_tools',
   file_access: 'file_access' as 'file_access',
+
+  meta: {
+    embargo_stage: 'embargo_stage' as 'embargo_stage',
+    release_state: 'release_state' as 'release_state',
+    study_id: 'study_id' as 'study_id',
+  },
 
   analysis: 'analysis' as 'analysis',
   'analysis.analysis_id': 'analysis.analysis_id' as 'analysis.analysis_id',
@@ -357,10 +370,15 @@ export enum FILE_ACCESS {
   CONTROLLED = 'controlled',
 }
 
-export enum FILE_RELEASE_STAGE {
-  OWN_PROGRAM = 'OWN_PROGRAM',
-  FULL_PROGRAMS = 'FULL_PROGRAMS',
-  ASSOCIATE_PROGRAMS = 'ASSOCIATE_PROGRAMS',
-  PUBLIC_QUEUE = 'PUBLIC_QUEUE',
+export enum FILE_EMBARGO_STAGE {
+  OWN_PROGRAM = 'PROGRAM_ONLY',
+  FULL_PROGRAMS = 'MEMBER_ACCESS',
+  ASSOCIATE_PROGRAMS = 'ASSOCIATE_ACCESS',
+  PUBLIC = 'PUBLIC',
+}
+
+export enum FILE_RELEASE_STATE {
+  RESTRICTED = 'RESTRICTED',
+  QUEUED = 'QUEUED',
   PUBLIC = 'PUBLIC',
 }
