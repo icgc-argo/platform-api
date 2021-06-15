@@ -68,9 +68,7 @@ export default async (esClient: Client) => {
             ? await esClient
                 .update({ ...projectMetadataEsConfig, body: esUpdateBody })
                 .then(() =>
-                  logger.info(
-                    `updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`,
-                  ),
+                  logger.info(`updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`),
                 )
                 .catch(err =>
                   logger.warn(
@@ -79,9 +77,7 @@ export default async (esClient: Client) => {
                 )
             : await esClient.indices
                 .create({ index: ARRANGER_PROJECT_METADATA_INDEX })
-                .then(() =>
-                  logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`),
-                )
+                .then(() => logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`))
                 .catch(err =>
                   logger.warn(
                     `failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
@@ -117,19 +113,15 @@ export default async (esClient: Client) => {
       typeof projectManifest,
       typeof metadata.projectIndexConfigs.file_centric,
     ] = await Promise.all([
-      esClient
-        .get(projectsEsConfig)
-        .then(response => response.body._source),
-      esClient
-        .get(projectMetadataEsConfig)
-        .then(response => response.body._source),
+      esClient.get(projectsEsConfig).then(response => response.body._source),
+      esClient.get(projectMetadataEsConfig).then(response => response.body._source),
     ]);
 
     if (
       isEqual(projectManifestInEs, projectManifest) &&
       isEqual(fileCentricArrangerSetting, harmonizedFileCentricConfig)
     ) {
-      console.log('arranger metadata init success!!!');
+      logger.info('arranger metadata init success!!!');
       return true;
     } else {
       throw new Error('arranger metadata mismatch in elasticsearch');
