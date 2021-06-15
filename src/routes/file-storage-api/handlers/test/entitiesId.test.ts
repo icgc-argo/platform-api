@@ -43,7 +43,7 @@ import _ from 'lodash';
 import {
   EsFileCentricDocument,
   FILE_ACCESS,
-  FILE_RELEASE_STAGE,
+  FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { SongEntity } from 'routes/file-storage-api/utils';
 
@@ -70,7 +70,7 @@ describe('storage-api/entities/{id}', () => {
     esClient = await createEsClient({
       node: esHost,
     });
-    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run releaseStageEsInit`);
+    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
     if (stderr.length) {
       throw stderr;
     }
@@ -157,7 +157,7 @@ describe('storage-api/entities/{id}', () => {
       // this is a function because `describe` callback happens before test run
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
-          .filter(obj => obj.release_stage === FILE_RELEASE_STAGE.PUBLIC)
+          .filter(obj => obj.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC)
           .map(doc => doc.object_id);
 
       it('returns all the publicly released data for authenticated users', async () => {
@@ -218,12 +218,11 @@ describe('storage-api/entities/{id}', () => {
           .filter(
             obj =>
               [
-                FILE_RELEASE_STAGE.FULL_PROGRAMS,
-                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
-                FILE_RELEASE_STAGE.PUBLIC,
-                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
-              ].includes(obj.release_stage) ||
-              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+                FILE_EMBARGO_STAGE.FULL_PROGRAMS,
+                FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_EMBARGO_STAGE.PUBLIC,
+              ].includes(obj.embargo_stage) ||
+              (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);
@@ -261,14 +260,12 @@ describe('storage-api/entities/{id}', () => {
         Object.values(allIndexedDocuments)
           .filter(
             obj =>
-              [
-                FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
-                FILE_RELEASE_STAGE.PUBLIC_QUEUE,
-                FILE_RELEASE_STAGE.PUBLIC,
-              ].includes(obj.release_stage) ||
-              (obj.release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+              [FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS, FILE_EMBARGO_STAGE.PUBLIC].includes(
+                obj.embargo_stage,
+              ) ||
+              (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM) ||
-              (obj.release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS &&
+              (obj.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
                 obj.study_id === TEST_PROGRAM),
           )
           .map(doc => doc.object_id);

@@ -25,6 +25,7 @@ import { EgoClient, EgoGrpcUser, ListUserSortOptions } from '../../services/ego'
 import { EGO_DACO_POLICY_NAME } from '../../config';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
+import logger from '../../utils/logger';
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
@@ -138,8 +139,10 @@ const createResolvers = (egoClient: EgoClient) => {
         return egoUserList.map(egoUser => convertEgoUser(egoUser));
       },
       self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
-        const { Authorization, egoToken } = context;
-        const decodedToken = egoTokenUtils.decodeToken(egoToken);
+        const { Authorization, egoToken, userJwtData } = context;
+        logger.info({ Authorization, egoToken, userJwtData });
+        const jwt = egoToken.replace('Bearer ', '');
+        const decodedToken = egoTokenUtils.decodeToken(jwt);
         const userId = decodedToken.sub;
         const userScopes = decodedToken.context.scope;
         const isDacoApproved =
@@ -166,7 +169,7 @@ const createResolvers = (egoClient: EgoClient) => {
     Mutation: {
       generateAccessKey: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
         const { Authorization, egoToken } = context;
-        const decodedToken = egoTokenUtils.decodeToken(egoToken);
+        const decodedToken = egoTokenUtils.decodeToken(egoToken.replace('Bearer ', ''));
         const userId = decodedToken.sub;
 
         // delete old keys

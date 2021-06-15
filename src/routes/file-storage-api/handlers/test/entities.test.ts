@@ -43,7 +43,7 @@ import _ from 'lodash';
 import {
   EsFileCentricDocument,
   FILE_ACCESS,
-  FILE_RELEASE_STAGE,
+  FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { SongEntity } from 'routes/file-storage-api/utils';
 
@@ -70,7 +70,7 @@ describe('storage-api/entities', () => {
     esClient = await createEsClient({
       node: esHost,
     });
-    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run releaseStageEsInit`);
+    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
     if (stderr.length) {
       throw stderr;
     }
@@ -121,7 +121,7 @@ describe('storage-api/entities', () => {
         id => allIndexedDocuments[id || ''],
       );
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        doc => doc.release_stage === FILE_RELEASE_STAGE.PUBLIC,
+        doc => doc.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
       expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
@@ -147,12 +147,11 @@ describe('storage-api/entities', () => {
         retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE,
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS,
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
-        ({ study_id, release_stage }) =>
-          release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS,
+        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+        ({ study_id, embargo_stage }) =>
+          embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some(scope => scope.includes(study_id)),
       ];
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
@@ -176,14 +175,13 @@ describe('storage-api/entities', () => {
         retrievedObject => allIndexedDocuments[retrievedObject.id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC,
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.PUBLIC_QUEUE,
-        ({ release_stage }) => release_stage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS,
-        ({ study_id, release_stage }) =>
-          release_stage === FILE_RELEASE_STAGE.FULL_PROGRAMS &&
+        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+        ({ study_id, embargo_stage }) =>
+          embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
           userScopes.some(scope => scope.includes(study_id)),
-        ({ study_id, release_stage }) =>
-          release_stage === FILE_RELEASE_STAGE.OWN_PROGRAM &&
+        ({ study_id, embargo_stage }) =>
+          embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some(scope => scope.includes(study_id)),
       ];
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
