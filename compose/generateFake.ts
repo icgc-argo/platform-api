@@ -8,13 +8,8 @@ const SCORE_URL = 'https://score.rdpc-dev.cancercollaboratory.org';
 
 const studyIds = ['PACA-CA', 'OCCAMS-GB', 'DASH-CA', 'TEST-CA'];
 const studyToLoadFromRdpc = 'TEST-CA';
-const releaseStages = [
-  'OWN_PROGRAM',
-  'FULL_PROGRAMS',
-  'ASSOCIATE_PROGRAMS',
-  'PUBLIC_QUEUE',
-  'PUBLIC',
-];
+const releaseStates = ['RESTRICTED', 'QUEUED', 'PUBLIC'];
+const embargoStages = ['PROGRAM_ONLY', 'MEMBER_ACCESS', 'ASSOCIATE_ACCESS']; // Note: No PUBLIC here because we only put PUBLIC when release_state == PUBLIC
 const gender = ['Male', 'Female'];
 const donorIds = range(0, 100).map(num => `fake_donor_${num}`);
 const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
@@ -59,6 +54,13 @@ const args = process.argv.slice(2);
     if (useDataFromRdpc) {
       usedIds[nextIdCandidate] = true;
     }
+    const release_state = sample(releaseStates);
+    const embargo_stage =
+      release_state === 'PUBLIC'
+        ? 'PUBLIC'
+        : release_state === 'QUEUED'
+        ? 'ASSOCIATE_ACCESS'
+        : sample(embargoStages);
     return {
       object_id:
         useDataFromRdpc && nextIdCandidate
@@ -68,7 +70,8 @@ const args = process.argv.slice(2);
       file_access: sample(['controlled', 'open']),
       data_type: 'unaligned_reads',
       file_type: 'FASTQ',
-      release_stage: sample(releaseStages),
+      embargo_stage,
+      release_state,
       analysis: {
         analysis_id: `fake_analysis_${i}`,
         analysis_type: 'sequencing_experiment',
@@ -77,8 +80,8 @@ const args = process.argv.slice(2);
       },
       clinical: {
         donor: {
-          primary_site: sample(primarySites)
-        }
+          primary_site: sample(primarySites),
+        },
       },
       file: {
         file_id: `FI_Fake_${i}`,

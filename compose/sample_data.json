@@ -1,1 +1,872 @@
-[{"object_id":"fake_file_0","study_id":"TEST-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"OWN_PROGRAM","analysis":{"analysis_id":"fake_analysis_0","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_0","size":0,"md5sum":"fakeMd5_0","name":"fake_file_0.gz"},"donors":{"donor_id":"fake_donor_0","submitter_donor_id":"fake_submitter_donor_0","gender":"Male","specimens":{"specimen_id":"fake_specimen_0","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_0","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_1","study_id":"OCCAMS-GB","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"ASSOCIATE_PROGRAMS","analysis":{"analysis_id":"fake_analysis_1","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_1","size":0,"md5sum":"fakeMd5_1","name":"fake_file_1.gz"},"donors":{"donor_id":"fake_donor_1","submitter_donor_id":"fake_submitter_donor_1","gender":"Male","specimens":{"specimen_id":"fake_specimen_1","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_1","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_2","study_id":"OCCAMS-GB","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_2","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_2","size":0,"md5sum":"fakeMd5_2","name":"fake_file_2.gz"},"donors":{"donor_id":"fake_donor_2","submitter_donor_id":"fake_submitter_donor_2","gender":"Male","specimens":{"specimen_id":"fake_specimen_2","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_2","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_3","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC","analysis":{"analysis_id":"fake_analysis_3","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_3","size":0,"md5sum":"fakeMd5_3","name":"fake_file_3.gz"},"donors":{"donor_id":"fake_donor_3","submitter_donor_id":"fake_submitter_donor_3","gender":"Female","specimens":{"specimen_id":"fake_specimen_3","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_3","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_4","study_id":"PACA-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"OWN_PROGRAM","analysis":{"analysis_id":"fake_analysis_4","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_4","size":0,"md5sum":"fakeMd5_4","name":"fake_file_4.gz"},"donors":{"donor_id":"fake_donor_4","submitter_donor_id":"fake_submitter_donor_4","gender":"Male","specimens":{"specimen_id":"fake_specimen_4","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_4","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_5","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_5","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_5","size":0,"md5sum":"fakeMd5_5","name":"fake_file_5.gz"},"donors":{"donor_id":"fake_donor_5","submitter_donor_id":"fake_submitter_donor_5","gender":"Male","specimens":{"specimen_id":"fake_specimen_5","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_5","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_6","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC","analysis":{"analysis_id":"fake_analysis_6","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_6","size":0,"md5sum":"fakeMd5_6","name":"fake_file_6.gz"},"donors":{"donor_id":"fake_donor_6","submitter_donor_id":"fake_submitter_donor_6","gender":"Female","specimens":{"specimen_id":"fake_specimen_6","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_6","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_7","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC","analysis":{"analysis_id":"fake_analysis_7","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_7","size":0,"md5sum":"fakeMd5_7","name":"fake_file_7.gz"},"donors":{"donor_id":"fake_donor_7","submitter_donor_id":"fake_submitter_donor_7","gender":"Male","specimens":{"specimen_id":"fake_specimen_7","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_7","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_8","study_id":"OCCAMS-GB","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC_QUEUE","analysis":{"analysis_id":"fake_analysis_8","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_8","size":0,"md5sum":"fakeMd5_8","name":"fake_file_8.gz"},"donors":{"donor_id":"fake_donor_8","submitter_donor_id":"fake_submitter_donor_8","gender":"Female","specimens":{"specimen_id":"fake_specimen_8","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_8","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_9","study_id":"TEST-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"OWN_PROGRAM","analysis":{"analysis_id":"fake_analysis_9","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_9","size":0,"md5sum":"fakeMd5_9","name":"fake_file_9.gz"},"donors":{"donor_id":"fake_donor_9","submitter_donor_id":"fake_submitter_donor_9","gender":"Male","specimens":{"specimen_id":"fake_specimen_9","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_9","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_10","study_id":"OCCAMS-GB","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"OWN_PROGRAM","analysis":{"analysis_id":"fake_analysis_10","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_10","size":0,"md5sum":"fakeMd5_10","name":"fake_file_10.gz"},"donors":{"donor_id":"fake_donor_10","submitter_donor_id":"fake_submitter_donor_10","gender":"Male","specimens":{"specimen_id":"fake_specimen_10","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_10","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_11","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_11","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_11","size":0,"md5sum":"fakeMd5_11","name":"fake_file_11.gz"},"donors":{"donor_id":"fake_donor_11","submitter_donor_id":"fake_submitter_donor_11","gender":"Female","specimens":{"specimen_id":"fake_specimen_11","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_11","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_12","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_12","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_12","size":0,"md5sum":"fakeMd5_12","name":"fake_file_12.gz"},"donors":{"donor_id":"fake_donor_12","submitter_donor_id":"fake_submitter_donor_12","gender":"Female","specimens":{"specimen_id":"fake_specimen_12","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_12","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_13","study_id":"PACA-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_13","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_13","size":0,"md5sum":"fakeMd5_13","name":"fake_file_13.gz"},"donors":{"donor_id":"fake_donor_13","submitter_donor_id":"fake_submitter_donor_13","gender":"Male","specimens":{"specimen_id":"fake_specimen_13","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_13","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_14","study_id":"TEST-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC","analysis":{"analysis_id":"fake_analysis_14","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_14","size":0,"md5sum":"fakeMd5_14","name":"fake_file_14.gz"},"donors":{"donor_id":"fake_donor_14","submitter_donor_id":"fake_submitter_donor_14","gender":"Male","specimens":{"specimen_id":"fake_specimen_14","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_14","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_15","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"OWN_PROGRAM","analysis":{"analysis_id":"fake_analysis_15","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_15","size":0,"md5sum":"fakeMd5_15","name":"fake_file_15.gz"},"donors":{"donor_id":"fake_donor_15","submitter_donor_id":"fake_submitter_donor_15","gender":"Male","specimens":{"specimen_id":"fake_specimen_15","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_15","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_16","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"ASSOCIATE_PROGRAMS","analysis":{"analysis_id":"fake_analysis_16","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_16","size":0,"md5sum":"fakeMd5_16","name":"fake_file_16.gz"},"donors":{"donor_id":"fake_donor_16","submitter_donor_id":"fake_submitter_donor_16","gender":"Male","specimens":{"specimen_id":"fake_specimen_16","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_16","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_17","study_id":"PACA-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC_QUEUE","analysis":{"analysis_id":"fake_analysis_17","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_17","size":0,"md5sum":"fakeMd5_17","name":"fake_file_17.gz"},"donors":{"donor_id":"fake_donor_17","submitter_donor_id":"fake_submitter_donor_17","gender":"Male","specimens":{"specimen_id":"fake_specimen_17","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_17","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_18","study_id":"DASH-CA","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"PUBLIC_QUEUE","analysis":{"analysis_id":"fake_analysis_18","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_18","size":0,"md5sum":"fakeMd5_18","name":"fake_file_18.gz"},"donors":{"donor_id":"fake_donor_18","submitter_donor_id":"fake_submitter_donor_18","gender":"Female","specimens":{"specimen_id":"fake_specimen_18","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_18","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}},{"object_id":"fake_file_19","study_id":"OCCAMS-GB","file_access":"controlled","data_type":"unaligned_reads","file_type":"FASTQ","release_stage":"FULL_PROGRAMS","analysis":{"analysis_id":"fake_analysis_19","analysis_type":"sequencing_experiment","analysis_version":1,"experiment":{"platform":"ILLUMINA","library_strategy":"WGS"}},"file":{"file_id":"FI_Fake_19","size":0,"md5sum":"fakeMd5_19","name":"fake_file_19.gz"},"donors":{"donor_id":"fake_donor_19","submitter_donor_id":"fake_submitter_donor_19","gender":"Male","specimens":{"specimen_id":"fake_specimen_19","submitter_specimen_id":"insilico_2_tumor","tumour_normal_designation":"Tumour","specimen_tissue_source":"Blood derived","specimen_type":"Primary tumour","samples":{"sample_id":"fake_sample_19","submitter_sample_id":"insilico_2_tumor","sample_type":"Total DNA","matched_normal_submitter_sample_id":"insilico_2_normal"}}},"repositories":{"code":"Cancer Collaboratory","name":"Canadian RDPC","organization":"Ontario Institute for Cancer Research","country":"Canada","url":"https://song.rdpc-dev.cancercollaboratory.org"}}]
+[
+  {
+    "object_id": "fake_file_0",
+    "study_id": "TEST-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PROGRAM_ONLY",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_0",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_0", "size": 0, "md5sum": "fakeMd5_0", "name": "fake_file_0.gz" },
+    "donors": {
+      "donor_id": "fake_donor_0",
+      "submitter_donor_id": "fake_submitter_donor_0",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_0",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_0",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_1",
+    "study_id": "OCCAMS-GB",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "ASSOCIATE_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_1",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_1", "size": 0, "md5sum": "fakeMd5_1", "name": "fake_file_1.gz" },
+    "donors": {
+      "donor_id": "fake_donor_1",
+      "submitter_donor_id": "fake_submitter_donor_1",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_1",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_1",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_2",
+    "study_id": "OCCAMS-GB",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_2",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_2", "size": 0, "md5sum": "fakeMd5_2", "name": "fake_file_2.gz" },
+    "donors": {
+      "donor_id": "fake_donor_2",
+      "submitter_donor_id": "fake_submitter_donor_2",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_2",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_2",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_3",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PUBLIC",
+    "release_state": "PUBLIC",
+    "analysis": {
+      "analysis_id": "fake_analysis_3",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_3", "size": 0, "md5sum": "fakeMd5_3", "name": "fake_file_3.gz" },
+    "donors": {
+      "donor_id": "fake_donor_3",
+      "submitter_donor_id": "fake_submitter_donor_3",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_3",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_3",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_4",
+    "study_id": "PACA-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PROGRAM_ONLY",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_4",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_4", "size": 0, "md5sum": "fakeMd5_4", "name": "fake_file_4.gz" },
+    "donors": {
+      "donor_id": "fake_donor_4",
+      "submitter_donor_id": "fake_submitter_donor_4",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_4",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_4",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_5",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_5",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_5", "size": 0, "md5sum": "fakeMd5_5", "name": "fake_file_5.gz" },
+    "donors": {
+      "donor_id": "fake_donor_5",
+      "submitter_donor_id": "fake_submitter_donor_5",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_5",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_5",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_6",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PUBLIC",
+    "release_state": "PUBLIC",
+    "analysis": {
+      "analysis_id": "fake_analysis_6",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_6", "size": 0, "md5sum": "fakeMd5_6", "name": "fake_file_6.gz" },
+    "donors": {
+      "donor_id": "fake_donor_6",
+      "submitter_donor_id": "fake_submitter_donor_6",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_6",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_6",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_7",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PUBLIC",
+    "release_state": "PUBLIC",
+    "analysis": {
+      "analysis_id": "fake_analysis_7",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_7", "size": 0, "md5sum": "fakeMd5_7", "name": "fake_file_7.gz" },
+    "donors": {
+      "donor_id": "fake_donor_7",
+      "submitter_donor_id": "fake_submitter_donor_7",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_7",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_7",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_8",
+    "study_id": "OCCAMS-GB",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "ASSOCIATE_ACCESS",
+    "release_state": "QUEUED",
+    "analysis": {
+      "analysis_id": "fake_analysis_8",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_8", "size": 0, "md5sum": "fakeMd5_8", "name": "fake_file_8.gz" },
+    "donors": {
+      "donor_id": "fake_donor_8",
+      "submitter_donor_id": "fake_submitter_donor_8",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_8",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_8",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_9",
+    "study_id": "TEST-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PROGRAM_ONLY",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_9",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": { "file_id": "FI_Fake_9", "size": 0, "md5sum": "fakeMd5_9", "name": "fake_file_9.gz" },
+    "donors": {
+      "donor_id": "fake_donor_9",
+      "submitter_donor_id": "fake_submitter_donor_9",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_9",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_9",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_10",
+    "study_id": "OCCAMS-GB",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PROGRAM_ONLY",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_10",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_10",
+      "size": 0,
+      "md5sum": "fakeMd5_10",
+      "name": "fake_file_10.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_10",
+      "submitter_donor_id": "fake_submitter_donor_10",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_10",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_10",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_11",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_11",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_11",
+      "size": 0,
+      "md5sum": "fakeMd5_11",
+      "name": "fake_file_11.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_11",
+      "submitter_donor_id": "fake_submitter_donor_11",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_11",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_11",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_12",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_12",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_12",
+      "size": 0,
+      "md5sum": "fakeMd5_12",
+      "name": "fake_file_12.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_12",
+      "submitter_donor_id": "fake_submitter_donor_12",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_12",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_12",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_13",
+    "study_id": "PACA-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_13",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_13",
+      "size": 0,
+      "md5sum": "fakeMd5_13",
+      "name": "fake_file_13.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_13",
+      "submitter_donor_id": "fake_submitter_donor_13",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_13",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_13",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_14",
+    "study_id": "TEST-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PUBLIC",
+    "release_state": "PUBLIC",
+    "analysis": {
+      "analysis_id": "fake_analysis_14",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_14",
+      "size": 0,
+      "md5sum": "fakeMd5_14",
+      "name": "fake_file_14.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_14",
+      "submitter_donor_id": "fake_submitter_donor_14",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_14",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_14",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_15",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "PROGRAM_ONLY",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_15",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_15",
+      "size": 0,
+      "md5sum": "fakeMd5_15",
+      "name": "fake_file_15.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_15",
+      "submitter_donor_id": "fake_submitter_donor_15",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_15",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_15",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_16",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "ASSOCIATE_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_16",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_16",
+      "size": 0,
+      "md5sum": "fakeMd5_16",
+      "name": "fake_file_16.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_16",
+      "submitter_donor_id": "fake_submitter_donor_16",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_16",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_16",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_17",
+    "study_id": "PACA-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "ASSOCIATE_ACCESS",
+    "release_state": "QUEUED",
+    "analysis": {
+      "analysis_id": "fake_analysis_17",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_17",
+      "size": 0,
+      "md5sum": "fakeMd5_17",
+      "name": "fake_file_17.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_17",
+      "submitter_donor_id": "fake_submitter_donor_17",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_17",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_17",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_18",
+    "study_id": "DASH-CA",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "ASSOCIATE_ACCESS",
+    "release_state": "QUEUED",
+    "analysis": {
+      "analysis_id": "fake_analysis_18",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_18",
+      "size": 0,
+      "md5sum": "fakeMd5_18",
+      "name": "fake_file_18.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_18",
+      "submitter_donor_id": "fake_submitter_donor_18",
+      "gender": "Female",
+      "specimens": {
+        "specimen_id": "fake_specimen_18",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_18",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  },
+  {
+    "object_id": "fake_file_19",
+    "study_id": "OCCAMS-GB",
+    "file_access": "controlled",
+    "data_type": "unaligned_reads",
+    "file_type": "FASTQ",
+    "embargo_stage": "MEMBER_ACCESS",
+    "release_state": "RESTRICTED",
+    "analysis": {
+      "analysis_id": "fake_analysis_19",
+      "analysis_type": "sequencing_experiment",
+      "analysis_version": 1,
+      "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
+    },
+    "file": {
+      "file_id": "FI_Fake_19",
+      "size": 0,
+      "md5sum": "fakeMd5_19",
+      "name": "fake_file_19.gz"
+    },
+    "donors": {
+      "donor_id": "fake_donor_19",
+      "submitter_donor_id": "fake_submitter_donor_19",
+      "gender": "Male",
+      "specimens": {
+        "specimen_id": "fake_specimen_19",
+        "submitter_specimen_id": "insilico_2_tumor",
+        "tumour_normal_designation": "Tumour",
+        "specimen_tissue_source": "Blood derived",
+        "specimen_type": "Primary tumour",
+        "samples": {
+          "sample_id": "fake_sample_19",
+          "submitter_sample_id": "insilico_2_tumor",
+          "sample_type": "Total DNA",
+          "matched_normal_submitter_sample_id": "insilico_2_normal"
+        }
+      }
+    },
+    "repositories": {
+      "code": "Cancer Collaboratory",
+      "name": "Canadian RDPC",
+      "organization": "Ontario Institute for Cancer Research",
+      "country": "Canada",
+      "url": "https://song.rdpc-dev.cancercollaboratory.org"
+    }
+  }
+]
