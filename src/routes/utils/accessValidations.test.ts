@@ -22,6 +22,7 @@ import {
   EsFileCentricDocument,
   FILE_ACCESS,
   FILE_EMBARGO_STAGE,
+  FILE_RELEASE_STATE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EGO_DACO_POLICY_NAME } from 'config';
 import { PERMISSIONS, PermissionScopeObj } from '@icgc-argo/ego-token-utils';
@@ -37,6 +38,12 @@ const baseFile: EsFileCentricDocument = {
   analysis_tools: '',
   file_access: FILE_ACCESS.OPEN,
   embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+  release_state: FILE_RELEASE_STATE.PUBLIC,
+  meta: {
+    embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+    release_state: FILE_RELEASE_STATE.PUBLIC,
+    study_id: 'fake_study_id',
+  },
   analysis: {
     analysis_id: '',
     analysis_type: '',

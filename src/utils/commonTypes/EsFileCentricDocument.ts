@@ -12,7 +12,7 @@ export type EsFileCentricDocument = {
   file_access: FILE_ACCESS;
   meta: {
     embargo_stage: FILE_EMBARGO_STAGE;
-    release_stage: FILE_RELEASE_STATE;
+    release_state: FILE_RELEASE_STATE;
     study_id: string;
   };
   analysis: {
