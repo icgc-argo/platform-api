@@ -36,14 +36,14 @@ export const hasSufficientProgramMembershipAccess = (config: {
 }): boolean => {
   if (config.file) {
     const { scopes, file } = config;
-    const embargoStage = file.embargo_stage;
+    const embargoStage = file.meta.embargo_stage;
 
     const serializedScopes = scopes.map(egoTokenUtils.serializeScope);
     const accessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
       permissions: serializedScopes,
     });
 
-    const programId = file.study_id;
+    const programId = file.meta.study_id;
 
     if (embargoStage === FILE_EMBARGO_STAGE.OWN_PROGRAM) {
       return (
