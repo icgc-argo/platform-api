@@ -5,7 +5,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_0",
@@ -41,7 +41,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -193,7 +193,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_4",
@@ -229,7 +229,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -287,7 +287,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_6",
@@ -323,7 +323,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -1599,7 +1599,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_32",
@@ -1640,7 +1640,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -1703,7 +1703,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_34",
@@ -1744,7 +1744,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -2463,7 +2463,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_49",
@@ -2504,7 +2504,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -2567,7 +2567,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_51",
@@ -2608,7 +2608,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -2671,7 +2671,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_53",
@@ -2712,7 +2712,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -2875,7 +2875,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_57",
@@ -2916,7 +2916,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -3083,7 +3083,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_61",
@@ -3124,7 +3124,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -3135,7 +3135,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_62",
@@ -3176,7 +3176,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -3391,7 +3391,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_67",
@@ -3432,7 +3432,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -3591,7 +3591,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_71",
@@ -3632,7 +3632,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -4051,7 +4051,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_80",
@@ -4092,7 +4092,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -4719,7 +4719,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_93",
@@ -4760,7 +4760,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -4771,7 +4771,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_94",
@@ -4812,7 +4812,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -4823,7 +4823,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_95",
@@ -4864,7 +4864,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -4927,7 +4927,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_97",
@@ -4968,7 +4968,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -5079,7 +5079,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_100",
@@ -5120,7 +5120,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -5335,7 +5335,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_105",
@@ -5376,7 +5376,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -5595,7 +5595,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_110",
@@ -5636,7 +5636,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -5747,7 +5747,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_113",
@@ -5788,7 +5788,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -5951,7 +5951,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_117",
@@ -5992,7 +5992,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -6003,7 +6003,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_118",
@@ -6044,7 +6044,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -6259,7 +6259,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_123",
@@ -6300,7 +6300,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -6463,7 +6463,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_127",
@@ -6504,7 +6504,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -6515,7 +6515,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_128",
@@ -6556,7 +6556,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -7395,7 +7395,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_145",
@@ -7436,7 +7436,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -7903,7 +7903,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_155",
@@ -7944,7 +7944,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -7955,7 +7955,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_156",
@@ -7996,7 +7996,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -8211,7 +8211,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_161",
@@ -8252,7 +8252,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -9687,7 +9687,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_190",
@@ -9728,7 +9728,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -10051,7 +10051,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_197",
@@ -10092,7 +10092,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -10151,7 +10151,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_199",
@@ -10192,7 +10192,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -10303,7 +10303,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_202",
@@ -10344,7 +10344,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -10815,7 +10815,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_212",
@@ -10856,7 +10856,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -10967,7 +10967,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_215",
@@ -11008,7 +11008,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -11227,7 +11227,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_220",
@@ -11268,7 +11268,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -11279,7 +11279,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_221",
@@ -11320,7 +11320,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -11331,7 +11331,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_222",
@@ -11372,7 +11372,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -11483,7 +11483,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_225",
@@ -11524,7 +11524,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -11691,7 +11691,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_229",
@@ -11732,7 +11732,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -11947,7 +11947,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_234",
@@ -11988,7 +11988,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -11999,7 +11999,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_235",
@@ -12040,7 +12040,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -12359,7 +12359,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_242",
@@ -12400,7 +12400,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -12463,7 +12463,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_244",
@@ -12504,7 +12504,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -12563,7 +12563,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_246",
@@ -12604,7 +12604,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -13323,7 +13323,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_261",
@@ -13364,7 +13364,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -13375,7 +13375,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_262",
@@ -13416,7 +13416,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -13427,7 +13427,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_263",
@@ -13468,7 +13468,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -14259,7 +14259,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_279",
@@ -14300,7 +14300,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -14763,7 +14763,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_289",
@@ -14804,7 +14804,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -14867,7 +14867,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_291",
@@ -14908,7 +14908,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -15371,7 +15371,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_301",
@@ -15412,7 +15412,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -15423,7 +15423,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_302",
@@ -15464,7 +15464,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -15475,7 +15475,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_303",
@@ -15516,7 +15516,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -15787,7 +15787,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_309",
@@ -15828,7 +15828,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -15939,7 +15939,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_312",
@@ -15980,7 +15980,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -16199,7 +16199,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_317",
@@ -16240,7 +16240,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -16303,7 +16303,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_319",
@@ -16344,7 +16344,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -16455,7 +16455,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_322",
@@ -16496,7 +16496,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -16507,7 +16507,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_323",
@@ -16548,7 +16548,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -16559,7 +16559,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_324",
@@ -16600,7 +16600,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -16715,7 +16715,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_327",
@@ -16756,7 +16756,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -16867,7 +16867,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_330",
@@ -16908,7 +16908,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -17683,7 +17683,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_346",
@@ -17724,7 +17724,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -17991,7 +17991,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_352",
@@ -18032,7 +18032,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -18459,7 +18459,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_361",
@@ -18500,7 +18500,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -18611,7 +18611,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_364",
@@ -18652,7 +18652,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -18663,7 +18663,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_365",
@@ -18704,7 +18704,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -18767,7 +18767,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_367",
@@ -18808,7 +18808,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -18871,7 +18871,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_369",
@@ -18912,7 +18912,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -19123,7 +19123,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_374",
@@ -19164,7 +19164,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -19435,7 +19435,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_380",
@@ -19476,7 +19476,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -19695,7 +19695,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_385",
@@ -19736,7 +19736,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -19747,7 +19747,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_386",
@@ -19788,7 +19788,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -19799,7 +19799,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_387",
@@ -19840,7 +19840,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -19899,7 +19899,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_389",
@@ -19940,7 +19940,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -20107,7 +20107,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_393",
@@ -20148,7 +20148,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -20159,7 +20159,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_394",
@@ -20200,7 +20200,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -20519,7 +20519,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_401",
@@ -20560,7 +20560,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -20975,7 +20975,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_410",
@@ -21016,7 +21016,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -21175,7 +21175,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_414",
@@ -21216,7 +21216,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -21227,7 +21227,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_415",
@@ -21268,7 +21268,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -21535,7 +21535,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_421",
@@ -21576,7 +21576,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -21843,7 +21843,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_427",
@@ -21884,7 +21884,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -22203,7 +22203,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_434",
@@ -22244,7 +22244,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -22867,7 +22867,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_447",
@@ -22908,7 +22908,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -22971,7 +22971,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_449",
@@ -23012,7 +23012,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -23023,7 +23023,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_450",
@@ -23064,7 +23064,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -23075,7 +23075,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_451",
@@ -23116,7 +23116,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -23227,7 +23227,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_454",
@@ -23268,7 +23268,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -23531,7 +23531,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_460",
@@ -23572,7 +23572,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -23687,7 +23687,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_463",
@@ -23728,7 +23728,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -23947,7 +23947,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_468",
@@ -23988,7 +23988,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -24103,7 +24103,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_471",
@@ -24144,7 +24144,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -24311,7 +24311,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_475",
@@ -24352,7 +24352,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -24363,7 +24363,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_476",
@@ -24404,7 +24404,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -24519,7 +24519,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_479",
@@ -24560,7 +24560,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -24727,7 +24727,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_483",
@@ -24768,7 +24768,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -24779,7 +24779,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_484",
@@ -24820,7 +24820,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -25547,7 +25547,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_499",
@@ -25588,7 +25588,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -25651,7 +25651,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_501",
@@ -25692,7 +25692,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -25859,7 +25859,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_505",
@@ -25900,7 +25900,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -25963,7 +25963,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_507",
@@ -26004,7 +26004,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -26471,7 +26471,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_517",
@@ -26512,7 +26512,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -26523,7 +26523,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_518",
@@ -26564,7 +26564,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -26575,7 +26575,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_519",
@@ -26616,7 +26616,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -26783,7 +26783,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_523",
@@ -26824,7 +26824,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -27191,7 +27191,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_531",
@@ -27232,7 +27232,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -27703,7 +27703,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_541",
@@ -27744,7 +27744,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -27807,7 +27807,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_543",
@@ -27848,7 +27848,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -28015,7 +28015,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_547",
@@ -28056,7 +28056,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -28119,7 +28119,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_549",
@@ -28160,7 +28160,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -28319,7 +28319,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_553",
@@ -28360,7 +28360,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -28675,7 +28675,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_560",
@@ -28716,7 +28716,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -28775,7 +28775,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_562",
@@ -28816,7 +28816,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -28827,7 +28827,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_563",
@@ -28868,7 +28868,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -28879,7 +28879,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_564",
@@ -28920,7 +28920,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -29035,7 +29035,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_567",
@@ -29076,7 +29076,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -29087,7 +29087,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_568",
@@ -29128,7 +29128,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -30227,7 +30227,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_590",
@@ -30268,7 +30268,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -30379,7 +30379,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_593",
@@ -30420,7 +30420,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -30431,7 +30431,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_594",
@@ -30472,7 +30472,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -30483,7 +30483,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_595",
@@ -30524,7 +30524,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -30587,7 +30587,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_597",
@@ -30628,7 +30628,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -30739,7 +30739,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_600",
@@ -30780,7 +30780,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -31251,7 +31251,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_610",
@@ -31292,7 +31292,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -32059,7 +32059,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_626",
@@ -32100,7 +32100,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -32371,7 +32371,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_632",
@@ -32412,7 +32412,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -32527,7 +32527,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_635",
@@ -32568,7 +32568,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -32731,7 +32731,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_639",
@@ -32772,7 +32772,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -33039,7 +33039,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_645",
@@ -33080,7 +33080,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -33291,7 +33291,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_650",
@@ -33332,7 +33332,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -33343,7 +33343,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_651",
@@ -33384,7 +33384,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -33751,7 +33751,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_659",
@@ -33792,7 +33792,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -33855,7 +33855,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_661",
@@ -33896,7 +33896,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -34111,7 +34111,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_666",
@@ -34152,7 +34152,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -34163,7 +34163,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_667",
@@ -34204,7 +34204,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -34879,7 +34879,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_681",
@@ -34920,7 +34920,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -34931,7 +34931,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_682",
@@ -34972,7 +34972,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -34983,7 +34983,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_683",
@@ -35024,7 +35024,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -35035,7 +35035,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_684",
@@ -35076,7 +35076,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -35191,7 +35191,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_687",
@@ -35232,7 +35232,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -35547,7 +35547,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_694",
@@ -35588,7 +35588,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -35599,7 +35599,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_695",
@@ -35640,7 +35640,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -35651,7 +35651,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_696",
@@ -35692,7 +35692,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -35703,7 +35703,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_697",
@@ -35744,7 +35744,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -36115,7 +36115,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_705",
@@ -36156,7 +36156,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -36219,7 +36219,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_707",
@@ -36260,7 +36260,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -36271,7 +36271,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_708",
@@ -36312,7 +36312,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -36527,7 +36527,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_713",
@@ -36568,7 +36568,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -36631,7 +36631,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_715",
@@ -36672,7 +36672,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -36735,7 +36735,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_717",
@@ -36776,7 +36776,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -36839,7 +36839,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_719",
@@ -36880,7 +36880,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -36891,7 +36891,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_720",
@@ -36932,7 +36932,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -37303,7 +37303,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_728",
@@ -37344,7 +37344,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -37355,7 +37355,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_729",
@@ -37396,7 +37396,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -37607,7 +37607,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_734",
@@ -37648,7 +37648,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -37919,7 +37919,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_740",
@@ -37960,7 +37960,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -38023,7 +38023,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_742",
@@ -38064,7 +38064,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -38075,7 +38075,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_743",
@@ -38116,7 +38116,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -38127,7 +38127,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_744",
@@ -38168,7 +38168,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -38539,7 +38539,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_752",
@@ -38580,7 +38580,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -38743,7 +38743,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_756",
@@ -38784,7 +38784,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -38899,7 +38899,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_759",
@@ -38940,7 +38940,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -39055,7 +39055,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_762",
@@ -39096,7 +39096,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -39211,7 +39211,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_765",
@@ -39252,7 +39252,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -39263,7 +39263,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_766",
@@ -39304,7 +39304,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -39415,7 +39415,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_769",
@@ -39456,7 +39456,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -40331,7 +40331,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_787",
@@ -40372,7 +40372,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -40487,7 +40487,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_790",
@@ -40528,7 +40528,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -40843,7 +40843,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_797",
@@ -40884,7 +40884,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -40895,7 +40895,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_798",
@@ -40936,7 +40936,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -40995,7 +40995,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_800",
@@ -41036,7 +41036,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -41203,7 +41203,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_804",
@@ -41244,7 +41244,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -41459,7 +41459,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_809",
@@ -41500,7 +41500,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -41559,7 +41559,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_811",
@@ -41600,7 +41600,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -41611,7 +41611,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_812",
@@ -41652,7 +41652,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -41919,7 +41919,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_818",
@@ -41960,7 +41960,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -42019,7 +42019,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_820",
@@ -42060,7 +42060,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -42735,7 +42735,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_834",
@@ -42776,7 +42776,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -42839,7 +42839,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_836",
@@ -42880,7 +42880,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -42995,7 +42995,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_839",
@@ -43036,7 +43036,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -43047,7 +43047,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_840",
@@ -43088,7 +43088,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -43199,7 +43199,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_843",
@@ -43240,7 +43240,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -43251,7 +43251,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_844",
@@ -43292,7 +43292,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -43303,7 +43303,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_845",
@@ -43344,7 +43344,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -43459,7 +43459,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_848",
@@ -43500,7 +43500,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -43871,7 +43871,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_856",
@@ -43912,7 +43912,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -44335,7 +44335,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_865",
@@ -44376,7 +44376,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -44387,7 +44387,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_866",
@@ -44428,7 +44428,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -44491,7 +44491,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_868",
@@ -44532,7 +44532,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -44699,7 +44699,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_872",
@@ -44740,7 +44740,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -44803,7 +44803,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_874",
@@ -44844,7 +44844,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -44855,7 +44855,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_875",
@@ -44896,7 +44896,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -45167,7 +45167,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_881",
@@ -45208,7 +45208,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -45271,7 +45271,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_883",
@@ -45312,7 +45312,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -45731,7 +45731,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_892",
@@ -45772,7 +45772,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -46347,7 +46347,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_904",
@@ -46388,7 +46388,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -46399,7 +46399,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_905",
@@ -46440,7 +46440,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -46755,7 +46755,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_912",
@@ -46796,7 +46796,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -46963,7 +46963,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_916",
@@ -47004,7 +47004,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -47119,7 +47119,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_919",
@@ -47160,7 +47160,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -47275,7 +47275,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_922",
@@ -47316,7 +47316,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -47379,7 +47379,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_924",
@@ -47420,7 +47420,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -47635,7 +47635,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_929",
@@ -47676,7 +47676,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -47791,7 +47791,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_932",
@@ -47832,7 +47832,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -47947,7 +47947,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_935",
@@ -47988,7 +47988,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -48763,7 +48763,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_951",
@@ -48804,7 +48804,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -49023,7 +49023,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_956",
@@ -49064,7 +49064,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -49075,7 +49075,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_957",
@@ -49116,7 +49116,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -49127,7 +49127,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_958",
@@ -49168,7 +49168,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -49179,7 +49179,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_959",
@@ -49220,7 +49220,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -49483,7 +49483,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_965",
@@ -49524,7 +49524,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -49631,7 +49631,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_968",
@@ -49672,7 +49672,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -49683,7 +49683,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_969",
@@ -49724,7 +49724,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "OCCAMS-GB"
     }
@@ -49839,7 +49839,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_972",
@@ -49880,7 +49880,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -49995,7 +49995,7 @@
     "file_access": "controlled",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_975",
@@ -50036,7 +50036,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "TEST-CA"
     }
@@ -50355,7 +50355,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_982",
@@ -50396,7 +50396,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
@@ -50407,7 +50407,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_983",
@@ -50448,7 +50448,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -50771,7 +50771,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_990",
@@ -50812,7 +50812,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "DASH-CA"
     }
@@ -51023,7 +51023,7 @@
     "file_access": "open",
     "data_type": "unaligned_reads",
     "file_type": "FASTQ",
-    "embargo_stage": "ASSOCIATE_PROGRAMS",
+    "embargo_stage": "ASSOCIATE_ACCESS",
     "release_state": "QUEUED",
     "analysis": {
       "analysis_id": "fake_analysis_995",
@@ -51064,7 +51064,7 @@
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
     "meta": {
-      "embargo_stage": "ASSOCIATE_PROGRAMS",
+      "embargo_stage": "ASSOCIATE_ACCESS",
       "release_stage": "QUEUED",
       "study_id": "PACA-CA"
     }
