@@ -9,7 +9,7 @@ import { SongEntity, toSongEntity } from '../utils';
 import {
   EsFileCentricDocument,
   FILE_METADATA_FIELDS,
-  FILE_RELEASE_STAGE,
+  FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 
@@ -53,6 +53,8 @@ type RequestBodyQuery = {
   size: string;
 };
 
+const FILE_EMBARGO_FILTER_FIELD = FILE_METADATA_FIELDS['embargo_stage'];
+
 const emptyFilter = () => esb.boolQuery();
 
 const getAccessControlFilter = (
@@ -68,7 +70,7 @@ const getAccessControlFilter = (
   const isFromOtherPrograms = not([esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
   const isUnReleasedFromOtherPrograms = all([
     isFromOtherPrograms,
-    esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.OWN_PROGRAM),
+    esb.termsQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.OWN_PROGRAM),
   ]);
   /******************/
 
@@ -82,11 +84,11 @@ const getAccessControlFilter = (
       not([
         all([
           isFromOtherPrograms,
-          esb.termQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.FULL_PROGRAMS),
+          esb.termQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.FULL_PROGRAMS),
         ]),
       ]),
     ]),
-    PUBLIC_MEMBER: esb.termsQuery(FILE_METADATA_FIELDS['release_stage'], FILE_RELEASE_STAGE.PUBLIC),
+    PUBLIC_MEMBER: esb.termsQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.PUBLIC),
   };
   return userPermissionToQueryMap[programMembershipAccessLevel];
 };

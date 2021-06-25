@@ -60,7 +60,6 @@ import { loadVaultSecret } from 'services/vault';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
-
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
 
@@ -122,12 +121,15 @@ const init = async () => {
       schemas,
     }),
     context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
-      const authHeader = req.headers?.authorization;
+      const authHeader = req.headers.authorization;
       let userJwtData: EgoJwtData | null = null;
       try {
-        userJwtData = authHeader ? egoTokenUtils.decodeToken(authHeader) : null;
+        if (authHeader) {
+          const jwt = authHeader.replace('Bearer ', '');
+          userJwtData = egoTokenUtils.decodeToken(jwt);
+        }
       } catch (err) {
-        userJwtData = null
+        userJwtData = null;
       }
       return {
         isUserRequest: true,
@@ -154,7 +156,7 @@ const init = async () => {
   app.use('/kafka', createKafkaRouter(egoClient));
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
-  app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient))
+  app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
   if (FEATURE_STORAGE_API_ENABLED) {
     const rdpcRepoProxyPath = '/storage-api';
@@ -174,10 +176,6 @@ const init = async () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
     logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
     logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
-      console.log(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
-    }
   });
 };
 

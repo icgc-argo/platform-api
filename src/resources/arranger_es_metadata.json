@@ -21,7 +21,13 @@
               "type": "Aggregations"
             },
             {
-              "field": "release_stage",
+              "field": "release_state",
+              "show": false,
+              "active": true,
+              "type": "Aggregations"
+            },
+            {
+              "field": "embargo_stage",
               "show": false,
               "active": true,
               "type": "Aggregations"
@@ -298,10 +304,21 @@
               },
               {
                 "canChangeShow": true,
-                "field": "release_stage",
+                "field": "release_state",
                 "query": null,
                 "show": false,
-                "accessor": "release_stage",
+                "accessor": "release_state",
+                "jsonPath": null,
+                "sortable": true,
+                "id": null,
+                "type": "string"
+              },
+              {
+                "canChangeShow": true,
+                "field": "embargo_stage",
+                "query": null,
+                "show": false,
+                "accessor": "embargo_stage",
                 "jsonPath": null,
                 "sortable": true,
                 "id": null,
@@ -852,8 +869,20 @@
             "unit": null,
             "displayValues": {},
             "quickSearchEnabled": false,
-            "field": "release_stage",
-            "displayName": "Release Stage",
+            "field": "release_state",
+            "displayName": "Release State",
+            "active": false,
+            "isArray": false,
+            "rangeStep": 1,
+            "type": "keyword",
+            "primaryKey": false
+          },
+          {
+            "unit": null,
+            "displayValues": {},
+            "quickSearchEnabled": false,
+            "field": "embargo_stage",
+            "displayName": "Access Tier",
             "active": false,
             "isArray": false,
             "rangeStep": 1,

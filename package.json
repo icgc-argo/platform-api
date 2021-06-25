@@ -12,7 +12,7 @@
     "start::prod": "NODE_PATH=./dist node dist/index.js",
     "programDashboardEsInit": "ts-node --project tsconfig.script.json ./compose/programDashboardEsInit.ts",
     "fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts",
-    "releaseStageEsInit": "ts-node --project tsconfig.script.json ./compose/releaseStageEsInit.ts",
+    "embargoStageEsInit": "ts-node --project tsconfig.script.json ./compose/embargoStageEsInit.ts",
     "generateFakeEsFiles": "ts-node --project tsconfig.script.json ./compose/generateFake.ts"
   },
   "keywords": [],

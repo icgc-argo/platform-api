@@ -21,7 +21,7 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import {
   EsFileCentricDocument,
   FILE_ACCESS,
-  FILE_RELEASE_STAGE,
+  FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import {
   PERMISSIONS,
@@ -36,23 +36,23 @@ export const hasSufficientProgramMembershipAccess = (config: {
 }): boolean => {
   if (config.file) {
     const { scopes, file } = config;
-    const releaseStage = file.release_stage;
+    const embargoStage = file.meta.embargo_stage;
 
     const serializedScopes = scopes.map(egoTokenUtils.serializeScope);
     const accessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
       permissions: serializedScopes,
     });
 
-    const programId = file.study_id;
+    const programId = file.meta.study_id;
 
-    if (releaseStage === FILE_RELEASE_STAGE.OWN_PROGRAM) {
+    if (embargoStage === FILE_EMBARGO_STAGE.OWN_PROGRAM) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
         egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId })
       );
     }
 
-    if (releaseStage === FILE_RELEASE_STAGE.FULL_PROGRAMS) {
+    if (embargoStage === FILE_EMBARGO_STAGE.FULL_PROGRAMS) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
         egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
@@ -60,10 +60,7 @@ export const hasSufficientProgramMembershipAccess = (config: {
       );
     }
 
-    if (
-      releaseStage === FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS ||
-      releaseStage === FILE_RELEASE_STAGE.PUBLIC_QUEUE
-    ) {
+    if (embargoStage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
         egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
@@ -72,7 +69,7 @@ export const hasSufficientProgramMembershipAccess = (config: {
       );
     }
 
-    if (releaseStage === FILE_RELEASE_STAGE.PUBLIC) {
+    if (embargoStage === FILE_EMBARGO_STAGE.PUBLIC) {
       return true;
     }
   }

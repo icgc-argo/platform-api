@@ -21,7 +21,8 @@ import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from '.
 import {
   EsFileCentricDocument,
   FILE_ACCESS,
-  FILE_RELEASE_STAGE,
+  FILE_EMBARGO_STAGE,
+  FILE_RELEASE_STATE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EGO_DACO_POLICY_NAME } from 'config';
 import { PERMISSIONS, PermissionScopeObj } from '@icgc-argo/ego-token-utils';
@@ -36,7 +37,13 @@ const baseFile: EsFileCentricDocument = {
   data_category: 'fake_data_category',
   analysis_tools: '',
   file_access: FILE_ACCESS.OPEN,
-  release_stage: FILE_RELEASE_STAGE.PUBLIC,
+  embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+  release_state: FILE_RELEASE_STATE.PUBLIC,
+  meta: {
+    embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+    release_state: FILE_RELEASE_STATE.PUBLIC,
+    study_id: 'fake_study_id',
+  },
   analysis: {
     analysis_id: '',
     analysis_type: '',
@@ -251,7 +258,7 @@ describe('accesValidations', () => {
       it('allows access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.OWN_PROGRAM },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -259,7 +266,7 @@ describe('accesValidations', () => {
       it('allows access for programs with full membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.FULL_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -267,7 +274,7 @@ describe('accesValidations', () => {
       it('allows access for programs with associate membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -275,7 +282,8 @@ describe('accesValidations', () => {
       it('allows access for public release controlled', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.PUBLIC },
+          file_access: FILE_ACCESS.CONTROLLED,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -283,7 +291,8 @@ describe('accesValidations', () => {
       it('allows access  for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.PUBLIC },
+          file_access: FILE_ACCESS.OPEN,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -306,7 +315,7 @@ describe('accesValidations', () => {
       it('denies access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.OWN_PROGRAM },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -314,7 +323,7 @@ describe('accesValidations', () => {
       it('allows access for programs with full membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.FULL_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -322,7 +331,7 @@ describe('accesValidations', () => {
       it('allows access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -330,7 +339,11 @@ describe('accesValidations', () => {
       it('allows access  for public release controlled', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.CONTROLLED,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -338,7 +351,11 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.OPEN,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -361,7 +378,7 @@ describe('accesValidations', () => {
       it('denies access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.OWN_PROGRAM },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -369,7 +386,7 @@ describe('accesValidations', () => {
       it('denies access for programs with full membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.FULL_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -377,7 +394,7 @@ describe('accesValidations', () => {
       it('allows access for programs with associate membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -385,7 +402,11 @@ describe('accesValidations', () => {
       it('allows access for public release controlled', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.CONTROLLED,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -393,7 +414,11 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.OPEN,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -410,7 +435,7 @@ describe('accesValidations', () => {
       it('denies access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.OWN_PROGRAM },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -418,7 +443,7 @@ describe('accesValidations', () => {
       it('denies access for programs with full membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.FULL_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -426,7 +451,7 @@ describe('accesValidations', () => {
         it('denies access for programs with associate membership', () => {
           const file = {
             ...baseFile,
-            ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+            meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS },
           };
           const res = hasSufficientProgramMembershipAccess({ scopes, file });
           expect(res).toBe(false);
@@ -434,7 +459,11 @@ describe('accesValidations', () => {
       it('allows access for public release controlled', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.CONTROLLED },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.CONTROLLED,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -442,7 +471,11 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.OPEN,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -459,7 +492,7 @@ describe('accesValidations', () => {
       it('denies access for programs associated with file', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.OWN_PROGRAM },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.OWN_PROGRAM },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -467,7 +500,7 @@ describe('accesValidations', () => {
       it('denies access for programs with full membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.FULL_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.FULL_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -475,7 +508,7 @@ describe('accesValidations', () => {
       it('denies access for programs with associate membership', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.ASSOCIATE_PROGRAMS },
+          meta: { ...baseFile.meta, embargo_stage: FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS },
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(false);
@@ -483,7 +516,11 @@ describe('accesValidations', () => {
       it('allows access for public release open', () => {
         const file = {
           ...baseFile,
-          ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.OPEN },
+          meta: {
+            ...baseFile.meta,
+            embargo_stage: FILE_EMBARGO_STAGE.PUBLIC,
+          },
+          file_access: FILE_ACCESS.OPEN,
         };
         const res = hasSufficientProgramMembershipAccess({ scopes, file });
         expect(res).toBe(true);
@@ -537,7 +574,7 @@ describe('accesValidations', () => {
   const scopes: PermissionScopeObj[] = [{ policy: '', permission: PERMISSIONS.READ }];
   const file = {
     ...baseFile,
-    ...{ release_stage: FILE_RELEASE_STAGE.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
+    meta: { ...baseFile.meta, embargo_stage: FILE_embargo_stage.PUBLIC, file_access: FILE_ACCESS.PUBLIC },
   };
   const hasAccess = hasSufficientProgramMembershipAccess({ file, scopes });
   expect(hasAccess).toBe(true);
