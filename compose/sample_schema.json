@@ -1,6 +1,22 @@
 {
+  "settings": {
+    "index.number_of_shards": 3,
+    "index.number_of_replicas": 2,
+    "analysis": {
+      "analyzer": {
+        "whitespaceAnalyzer": {
+          "tokenizer": "whitespace",
+          "filter": ["lowercase"]
+        }
+      }
+    }
+  },
   "mappings": {
     "properties": {
+      "combinedDonorId": {
+        "type": "text",
+        "analyzer": "whitespaceAnalyzer"
+      },
       "programId": {
         "type": "keyword"
       },
@@ -11,14 +27,19 @@
         "type": "keyword"
       },
       "donorId": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": ["combinedDonorId"]
       },
       "submitterDonorId": {
-        "type": "keyword"
+        "type": "keyword",
+        "copy_to": ["combinedDonorId"]
       },
       "submittedCoreDataPercent": {
         "type": "scaled_float",
         "scaling_factor": 100
+      },
+      "coreCompletionDate": {
+        "type": "date"
       },
       "submittedExtendedDataPercent": {
         "type": "scaled_float",
@@ -36,6 +57,9 @@
       "publishedTumourAnalysis": {
         "type": "byte"
       },
+      "rawReadsFirstPublishedDate": {
+        "type": "date"
+      },
       "alignmentsCompleted": {
         "type": "byte"
       },
@@ -44,6 +68,21 @@
       },
       "alignmentsFailed": {
         "type": "byte"
+      },
+      "alignmentFirstPublishedDate": {
+        "type": "date"
+      },
+      "mutectCompleted": {
+        "type": "byte"
+      },
+      "mutectRunning": {
+        "type": "byte"
+      },
+      "mutectFailed": {
+        "type": "byte"
+      },
+      "mutectFirstPublishedDate": {
+        "type": "date"
       },
       "sangerVcsCompleted": {
         "type": "byte"
@@ -54,14 +93,8 @@
       "sangerVcsFailed": {
         "type": "byte"
       },
-      "mutectCompleted" : {
-        "type" : "byte"
-      },
-      "mutectFailed" : {
-        "type" : "byte"
-      },
-      "mutectRunning" : {
-        "type" : "byte"
+      "sangerVcsFirstPublishedDate": {
+        "type": "date"
       },
       "processingStatus": {
         "type": "keyword"
