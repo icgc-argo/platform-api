@@ -17,7 +17,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import esb from 'elastic-builder';
+import esb, { Query } from 'elastic-builder';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
 import {
@@ -62,13 +62,23 @@ const programDonorSummaryEntriesResolver: (
     });
   }
 
+  const queries : Query[] = [];
+  queries.push(esb.termsQuery(EsDonorDocumentField.programId, programShortName));
+
+  args.filters.map(filter => {
+    const field = filter.field;
+    if (field === EsDonorDocumentField.combinedDonorId && filter.values.length > 0) {
+      // use wildcard quey for donor_id and submitter_donor_id partial match
+      const regex = `*${filter.values[0].toLowerCase()}*`;
+      const wildcardQuery = esb.wildcardQuery(EsDonorDocumentField.combinedDonorId, regex);
+      queries.push( wildcardQuery );
+    }
+  });
+
   const esQuery = esb
     .requestBodySearch()
     .query(
-      esb.boolQuery().must([
-        //using an array to accommodate filters in the future
-        esb.matchQuery(EsDonorDocumentField.programId, programShortName),
-      ]),
+      esb.boolQuery().must( queries ),
     )
     .sorts(args.sorts.map(({ field, order }) => esb.sort(field, order)))
     .from(args.offset)
