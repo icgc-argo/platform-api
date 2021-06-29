@@ -59,7 +59,7 @@ export type DonorSummaryEntry = {
   createdAt: Date;
 };
 
-type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry;
+type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof { combinedDonorId: string };
 
 export type ProgramDonorSummaryFilter = {
   field: ProgramDonorSummaryEntryField;
@@ -105,6 +105,7 @@ export enum EsDonorDocumentField {
   alignmentsRunning = 'alignmentsRunning',
   createdAt = 'createdAt',
   donorId = 'donorId',
+  combinedDonorId = 'combinedDonorId',
   processingStatus = 'processingStatus',
   programId = 'programId',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
