@@ -155,7 +155,7 @@ const init = async () => {
 
   app.use('/kafka', createKafkaRouter(egoClient));
   app.use('/clinical', clinicalProxyRoute);
-  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient));
+  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
   app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
   if (FEATURE_STORAGE_API_ENABLED) {
