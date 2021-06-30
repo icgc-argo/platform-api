@@ -37,14 +37,13 @@ export const parseFilterString = (filterString: string): {} => {
   }
 };
 
-export type FilterStringParser = (filterStr: string) => Promise<{}>;
-export const createFilterStringToEsQueryParser = async (esClient: Client, index: string) => {
+export type FilterStringParser = (filterStr: {}) => Promise<{}>;
+export const createFilterToEsQueryConverter = async (esClient: Client, index: string) => {
   const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({ index });
   const [indexMapping] = Object.values(body);
   const nestedFields = getNestedFields(indexMapping.mappings);
 
-  return (async (filterStr: string) => {
-    const filter = filterStr ? parseFilterString(filterStr) : null;
+  return (async (filter: {}) => {
     const esQuery = filter
       ? buildQuery({
           filters: filter,
@@ -61,7 +60,9 @@ export const createFilterStringToEsQueryParser = async (esClient: Client, index:
     });
     if (!valid) {
       throw new Error(
-        `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${filterStr}`,
+        `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${JSON.stringify(
+          filter,
+        )}`,
       );
     }
     return esQuery;
