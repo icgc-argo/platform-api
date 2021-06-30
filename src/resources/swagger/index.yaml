@@ -141,6 +141,8 @@ paths:
     get:
       tags:
         - File Centric TSVs
+    security:
+        - bearerAuth: []
       summary: Download the score manifest tsv file
       responses:
         "200":
