@@ -29,6 +29,7 @@ import {
   DonorMolecularDataProcessingStatus,
   DonorMolecularDataReleaseStatus,
   BaseQueryArguments,
+  coreDataPercentAggregationValue,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -67,11 +68,33 @@ const programDonorSummaryEntriesResolver: (
 
   args.filters.map(filter => {
     const field = filter.field;
+
     if (field === EsDonorDocumentField.combinedDonorId && filter.values.length > 0) {
-      // use wildcard quey for donor_id and submitter_donor_id partial match
+      // use wildcard query for donor_id and submitter_donor_id partial match
       const regex = `*${filter.values[0].toLowerCase()}*`;
       const wildcardQuery = esb.wildcardQuery(EsDonorDocumentField.combinedDonorId, regex);
       queries.push( wildcardQuery );
+    }
+
+    if (field === EsDonorDocumentField.coreDataPercentAggregation && filter.values.length > 0) {
+      const corePercentqueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case coreDataPercentAggregationValue.COMPLETE:
+            corePercentqueries.push(esb.matchQuery(EsDonorDocumentField.submittedCoreDataPercent, '1'));
+            break;
+          case coreDataPercentAggregationValue.INCOMPLETE:
+            corePercentqueries.push(esb.rangeQuery(EsDonorDocumentField.submittedCoreDataPercent).gt(0).lt(1))
+            break;
+          case coreDataPercentAggregationValue.NO_DATA:
+            corePercentqueries.push(esb.matchQuery(EsDonorDocumentField.submittedCoreDataPercent, "0"))
+            break;
+          default:
+            break;
+        }
+      }
+      const boolQuery = esb.boolQuery().should(corePercentqueries);
+      queries.push(boolQuery);
     }
   });
 
