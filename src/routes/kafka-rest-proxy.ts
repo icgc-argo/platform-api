@@ -69,7 +69,7 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
         },
       ],
     });
-    return fetch(url, {
+    return await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/vnd.kafka.json.v2+json',

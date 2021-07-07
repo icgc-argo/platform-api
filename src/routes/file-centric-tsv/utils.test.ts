@@ -24,7 +24,7 @@ import { Client } from '@elastic/elasticsearch';
 import { EsFileDocument } from './types';
 import {
   createEsDocumentStream,
-  createFilterStringToEsQueryParser,
+  createFilterToEsQueryConverter,
   FilterStringParser,
   writeTsvStreamToWritableTarget,
 } from './utils';
@@ -155,23 +155,21 @@ describe('createEsDocumentStream', () => {
   describe('query string parser (createFilterStringToEsQueryParser)', () => {
     let parseFilterString: FilterStringParser;
     beforeAll(async () => {
-      parseFilterString = await createFilterStringToEsQueryParser(esClient, testIndex);
+      parseFilterString = await createFilterToEsQueryConverter(esClient, testIndex);
     });
     it('must accept valid sqon', async () => {
-      const parsed = await parseFilterString(
-        JSON.stringify({
-          op: 'and',
-          content: [
-            {
-              op: 'in',
-              content: {
-                field: 'study_id',
-                value: 'study_1',
-              },
+      const parsed = await parseFilterString({
+        op: 'and',
+        content: [
+          {
+            op: 'in',
+            content: {
+              field: 'study_id',
+              value: 'study_1',
             },
-          ],
-        }),
-      );
+          },
+        ],
+      });
       expect(parsed).toBeDefined();
     });
     it('must reject invalid sqons', async () => {
