@@ -59,7 +59,7 @@ export type DonorSummaryEntry = {
   createdAt: Date;
 };
 
-type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof { combinedDonorId: string };
+type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof { combinedDonorId: string, coreDataPercentAggregation: string };
 
 export type ProgramDonorSummaryFilter = {
   field: ProgramDonorSummaryEntryField;
@@ -106,6 +106,7 @@ export enum EsDonorDocumentField {
   createdAt = 'createdAt',
   donorId = 'donorId',
   combinedDonorId = 'combinedDonorId',
+  coreDataPercentAggregation = 'coreDataPercentAggregation',
   processingStatus = 'processingStatus',
   programId = 'programId',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
@@ -155,3 +156,9 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.totalFilesCount]: number;
   [EsDonorDocumentField.filesToQcCount]: number;
 };
+
+export enum coreDataPercentAggregationValue {
+  INCOMPLETE = 'INCOMPLETE',
+  COMPLETE = 'COMPLETE',
+  NO_DATA = 'NO_DATA'
+}
