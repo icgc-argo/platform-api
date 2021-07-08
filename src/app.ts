@@ -149,7 +149,7 @@ const init = async () => {
 
   // Cors Config
   const corsOptions = {
-    allowedHeaders: ['content-disposition'],
+    exposedHeaders: ['content-disposition'],
   };
   app.use(cors(corsOptions));
 
