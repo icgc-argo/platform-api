@@ -37,6 +37,7 @@ export default gql`
   enum ProgramDonorSummaryEntryField {
     donorId
     combinedDonorId
+    coreDataPercentAggregation
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId

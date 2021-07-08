@@ -114,7 +114,7 @@ const createDownloadHandler = ({
       );
 
     res.setHeader(
-      'Content-disposition',
+      'content-disposition',
       `attachment; filename=${
         fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
       }`,

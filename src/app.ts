@@ -146,13 +146,25 @@ const init = async () => {
   });
 
   const app = express();
-  app.use(cors());
+
+  // Cors Config
+  const corsOptions = {
+    allowedHeaders: ['content-disposition'],
+  };
+  app.use(cors(corsOptions));
+
+  // Request Logging
   app.use(expressWinston.logger(loggerConfig));
+
+  // Attach Arranger
   server.applyMiddleware({ app, path: '/graphql' });
+
+  // Health Check / Status Endpoint
   app.get('/status', (req, res) => {
     res.json(version);
   });
 
+  // Routers
   app.use('/kafka', createKafkaRouter(egoClient));
   app.use('/clinical', clinicalProxyRoute);
   app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
