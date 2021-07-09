@@ -71,9 +71,14 @@ const programDonorSummaryEntriesResolver: (
 
     if (field === EsDonorDocumentField.combinedDonorId && filter.values.length > 0) {
       // use wildcard query for donor_id and submitter_donor_id partial match
-      const regex = `*${filter.values[0].toLowerCase()}*`;
-      const wildcardQuery = esb.wildcardQuery(EsDonorDocumentField.combinedDonorId, regex);
-      queries.push( wildcardQuery );
+      const donorIdQueries: Query[] =[];
+      for (const value of filter.values) {
+        const regex = `*${value.toLowerCase()}*`;
+        const wildcardQuery = esb.wildcardQuery(EsDonorDocumentField.combinedDonorId, regex);
+        donorIdQueries.push(wildcardQuery);
+      }
+      const boolQuery = esb.boolQuery().should(donorIdQueries);
+      queries.push(boolQuery);
     }
 
     if (field === EsDonorDocumentField.coreDataPercentAggregation && filter.values.length > 0) {
