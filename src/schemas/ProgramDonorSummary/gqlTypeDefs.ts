@@ -36,7 +36,14 @@ export default gql`
 
   enum ProgramDonorSummaryEntryField {
     donorId
+    """
+    use this field to filter donor entries by partially matching donorId or submitterDonorId, e.g.: "donor", "donor5"
+    """
     combinedDonorId
+    """
+    use this field to filter donor entries by 3 aggregations of submittedCoreDataPercent,
+    3 enum options to filter by: NO_DATA, COMPLETE, INCOMPLETE.
+    """
     coreDataPercentAggregation
     validWithCurrentDictionary
     releaseStatus
