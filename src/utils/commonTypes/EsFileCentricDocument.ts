@@ -199,11 +199,10 @@ export const FILE_METADATA_FIELDS = {
   analysis_tools: 'analysis_tools' as 'analysis_tools',
   file_access: 'file_access' as 'file_access',
 
-  meta: {
-    embargo_stage: 'embargo_stage' as 'embargo_stage',
-    release_state: 'release_state' as 'release_state',
-    study_id: 'study_id' as 'study_id',
-  },
+  meta: 'meta' as 'meta',
+  'meta.embargo_stage': 'meta.embargo_stage' as 'meta.embargo_stage',
+  'meta.release_state': 'meta.release_state' as 'meta.release_state',
+  'meta.study_id': 'meta.study_id' as 'meta.study_id',
 
   analysis: 'analysis' as 'analysis',
   'analysis.analysis_id': 'analysis.analysis_id' as 'analysis.analysis_id',
