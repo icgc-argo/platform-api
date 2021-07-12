@@ -30,8 +30,8 @@ import {
 import { uniq } from 'lodash';
 import logger from '../../utils/logger';
 
-const FILE_EMBARGO_FILTER_FIELD = FILE_METADATA_FIELDS.meta.embargo_stage;
-const FILE_STUDY_FILTER_FIELD = FILE_METADATA_FIELDS.meta.study_id;
+const FILE_EMBARGO_FILTER_FIELD = FILE_METADATA_FIELDS['meta.embargo_stage'];
+const FILE_STUDY_FILTER_FIELD = FILE_METADATA_FIELDS['meta.study_id'];
 
 const emptyFilter = (): ArrangerFilter => ({
   op: 'and',
