@@ -30,6 +30,7 @@ import {
   DonorMolecularDataReleaseStatus,
   BaseQueryArguments,
   coreDataPercentAggregationValue,
+  registeredSamplePairsValue,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -99,6 +100,28 @@ const programDonorSummaryEntriesResolver: (
         }
       }
       const boolQuery = esb.boolQuery().should(corePercentqueries);
+      queries.push(boolQuery);
+    }
+
+    if (field === EsDonorDocumentField.registeredSamplePairs && filter.values.length > 0) {
+      const sampleQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case registeredSamplePairsValue.INVALID:
+            const shouldQueries: Query[] = [];
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.registeredNormalSamples).lte(0));
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.registeredTumourSamples).lte(0));
+            sampleQueries.push(esb.boolQuery().should(shouldQueries));
+            break;
+          case registeredSamplePairsValue.VALID:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.registeredNormalSamples).gte(1));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.registeredTumourSamples).gte(1));
+            sampleQueries.push(esb.boolQuery().must(mustQueries));
+            break;
+        }
+      }
+      const boolQuery = esb.boolQuery().should(sampleQueries);
       queries.push(boolQuery);
     }
   });
