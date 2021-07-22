@@ -51,6 +51,12 @@ export default gql`
     INVALID means the donor has not registered any tumour or normal samples.
     """
     registeredSamplePairs
+    """
+    use this field to filter donor entries by 2 enum values: VALID, INVALID.
+    VALID means the donor has at least 1 submitted tumour/normal sequencing reads.
+    INVALID means the donor has not registered any tumour or sequencing reads.
+    """
+    rawReads
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
