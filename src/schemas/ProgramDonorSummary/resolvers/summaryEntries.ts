@@ -31,6 +31,7 @@ import {
   BaseQueryArguments,
   coreDataPercentAggregationValue,
   registeredSamplePairsValue,
+  rawReadsValue,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -122,6 +123,28 @@ const programDonorSummaryEntriesResolver: (
         }
       }
       const boolQuery = esb.boolQuery().should(sampleQueries);
+      queries.push(boolQuery);
+    }
+
+    if (field === EsDonorDocumentField.rawReads && filter.values.length > 0) {
+      const rawReadsQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case rawReadsValue.INVALID:
+            const shouldQueries: Query[] = [];
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.publishedNormalAnalysis).lte(0));
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.publishedTumourAnalysis).lte(0));
+            rawReadsQueries.push(esb.boolQuery().should(shouldQueries));
+            break;
+          case rawReadsValue.VALID:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.publishedNormalAnalysis).gte(1));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.publishedTumourAnalysis).gte(1));
+            rawReadsQueries.push(esb.boolQuery().must(mustQueries));
+            break;
+        }
+      }
+      const boolQuery = esb.boolQuery().should(rawReadsQueries);
       queries.push(boolQuery);
     }
   });
