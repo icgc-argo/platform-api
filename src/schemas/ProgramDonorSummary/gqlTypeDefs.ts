@@ -45,6 +45,18 @@ export default gql`
     3 enum options to filter by: NO_DATA, COMPLETE, INCOMPLETE.
     """
     coreDataPercentAggregation
+    """
+    use this field to filter donor entries by 2 enum values: VALID, INVALID.
+    VALID means the donor has at least 1 registered tumour/normal sample pair.
+    INVALID means the donor has not registered any tumour or normal samples.
+    """
+    registeredSamplePairs
+    """
+    use this field to filter donor entries by 2 enum values: VALID, INVALID.
+    VALID means the donor has at least 1 submitted tumour/normal sequencing reads.
+    INVALID means the donor has not registered any tumour or sequencing reads.
+    """
+    rawReads
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
