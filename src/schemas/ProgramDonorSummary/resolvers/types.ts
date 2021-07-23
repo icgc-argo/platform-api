@@ -59,7 +59,12 @@ export type DonorSummaryEntry = {
   createdAt: Date;
 };
 
-type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof { combinedDonorId: string, coreDataPercentAggregation: string };
+type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof
+  { combinedDonorId: string,
+    coreDataPercentAggregation: string,
+    registeredSamplePairs: string,
+    rawReads: string,
+  };
 
 export type ProgramDonorSummaryFilter = {
   field: ProgramDonorSummaryEntryField;
@@ -107,6 +112,8 @@ export enum EsDonorDocumentField {
   donorId = 'donorId',
   combinedDonorId = 'combinedDonorId',
   coreDataPercentAggregation = 'coreDataPercentAggregation',
+  registeredSamplePairs = 'registeredSamplePairs',
+  rawReads = 'rawReads',
   processingStatus = 'processingStatus',
   programId = 'programId',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
@@ -161,4 +168,14 @@ export enum coreDataPercentAggregationValue {
   INCOMPLETE = 'INCOMPLETE',
   COMPLETE = 'COMPLETE',
   NO_DATA = 'NO_DATA'
+}
+
+export enum registeredSamplePairsValue {
+  VALID = 'VALID',
+  INVALID = 'INVALID',
+}
+
+export enum rawReadsValue {
+  VALID = 'VALID',
+  INVALID = 'INVALID',
 }
