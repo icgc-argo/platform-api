@@ -57,6 +57,14 @@ export default gql`
     INVALID means the donor has not registered any tumour or sequencing reads.
     """
     rawReads
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has more than 1 completed alignment workflow;
+    IN_PROGRESS = donor has more than 1 running alignment workflow;
+    FAILED = donor has more than 1 failed alignment workflow;
+    NO_DATA = donor has 0 of all the above alignment workflow.
+    """
+    alignmentStatus
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
