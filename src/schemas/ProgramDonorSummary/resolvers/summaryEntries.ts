@@ -32,6 +32,7 @@ import {
   coreDataPercentAggregationValue,
   registeredSamplePairsValue,
   rawReadsValue,
+  alignmentStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -146,6 +147,33 @@ const programDonorSummaryEntriesResolver: (
       }
       const boolQuery = esb.boolQuery().should(rawReadsQueries);
       queries.push(boolQuery);
+    }
+
+    if (field === EsDonorDocumentField.alignmentStatus && filter.values.length > 0) {
+      const shouldQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case alignmentStatus.COMPLETED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsCompleted).gte(1));
+            break;
+          case alignmentStatus.IN_PROGRESS:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsRunning).gte(1));
+            break;
+          case alignmentStatus.FAILED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsFailed).gte(1));
+            break;
+          case alignmentStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsCompleted).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsRunning).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsFailed).lte(0));
+            const noDataQuery = esb.boolQuery().must(mustQueries);
+            shouldQueries.push(noDataQuery);
+            break;
+        }
+      }
+      const alignmentStatusQuery = esb.boolQuery().should(shouldQueries);
+      queries.push(alignmentStatusQuery);
     }
   });
 
