@@ -64,7 +64,9 @@ type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof
     coreDataPercentAggregation: string,
     registeredSamplePairs: string,
     rawReads: string,
-    alignmentStatus: string
+    alignmentStatus: string,
+    sangerVCStatus: string,
+    mutectStatus: string,
   };
 
 export type ProgramDonorSummaryFilter = {
@@ -116,6 +118,8 @@ export enum EsDonorDocumentField {
   registeredSamplePairs = 'registeredSamplePairs',
   rawReads = 'rawReads',
   alignmentStatus = 'alignmentStatus',
+  sangerVCStatus = 'sangerVCStatus',
+  mutectStatus = 'mutectStatus',
   processingStatus = 'processingStatus',
   programId = 'programId',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
@@ -182,7 +186,7 @@ export enum rawReadsValue {
   INVALID = 'INVALID',
 }
 
-export enum alignmentStatus {
+export enum workflowStatus {
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',
   IN_PROGRESS = 'IN_PROGRESS',
