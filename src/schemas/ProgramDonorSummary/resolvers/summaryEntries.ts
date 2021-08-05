@@ -32,7 +32,7 @@ import {
   coreDataPercentAggregationValue,
   registeredSamplePairsValue,
   rawReadsValue,
-  alignmentStatus,
+  workflowStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -153,16 +153,16 @@ const programDonorSummaryEntriesResolver: (
       const shouldQueries: Query[] = [];
       for (const value of filter.values) {
         switch (value) {
-          case alignmentStatus.COMPLETED:
+          case workflowStatus.COMPLETED:
             shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsCompleted).gte(1));
             break;
-          case alignmentStatus.IN_PROGRESS:
+          case workflowStatus.IN_PROGRESS:
             shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsRunning).gte(1));
             break;
-          case alignmentStatus.FAILED:
+          case workflowStatus.FAILED:
             shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsFailed).gte(1));
             break;
-          case alignmentStatus.NO_DATA:
+          case workflowStatus.NO_DATA:
             const mustQueries: Query[] = [];
             mustQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsCompleted).lte(0));
             mustQueries.push(esb.rangeQuery(EsDonorDocumentField.alignmentsRunning).lte(0));
@@ -174,6 +174,60 @@ const programDonorSummaryEntriesResolver: (
       }
       const alignmentStatusQuery = esb.boolQuery().should(shouldQueries);
       queries.push(alignmentStatusQuery);
+    }
+
+    if (field === EsDonorDocumentField.sangerVCStatus && filter.values.length > 0) {
+      const shouldQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case workflowStatus.COMPLETED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsCompleted).gte(1));
+            break;
+          case workflowStatus.IN_PROGRESS:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsRunning).gte(1));
+            break;
+          case workflowStatus.FAILED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsFailed).gte(1));
+            break;
+          case workflowStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsRunning).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsCompleted).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.sangerVcsFailed).lte(0));
+            const noDataQuery = esb.boolQuery().must(mustQueries);
+            shouldQueries.push(noDataQuery);
+            break;
+        }
+      }
+      const sangerVCStatusQuery = esb.boolQuery().should(shouldQueries);
+      queries.push(sangerVCStatusQuery);
+    }
+
+    if (field === EsDonorDocumentField.mutectStatus && filter.values.length > 0) {
+      const shouldQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case workflowStatus.COMPLETED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectCompleted).gte(1));
+            break;
+          case workflowStatus.IN_PROGRESS:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectRunning).gte(1));
+            break;
+          case workflowStatus.FAILED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectFailed).gte(1));
+            break;
+          case workflowStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectCompleted).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectRunning).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.mutectFailed).lte(0));
+            const noDataQuery = esb.boolQuery().must(mustQueries);
+            shouldQueries.push(noDataQuery);
+            break;
+        }
+      }
+      const mutectStatusQuery = esb.boolQuery().should(shouldQueries);
+      queries.push(mutectStatusQuery);
     }
   });
 
