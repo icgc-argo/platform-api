@@ -65,7 +65,7 @@ const downloadHandler = ({
 
       const scoreUrl = dataCenter?.scoreUrl;
       const handleRequest = proxyMiddlewareFactory({
-        target: repositoryUrl,
+        target: scoreUrl,
         pathRewrite: normalizePath(rootPath),
         onError: (err: Error, req: Request, res: Response) => {
           logger.error('Score Router Error - ' + err);
