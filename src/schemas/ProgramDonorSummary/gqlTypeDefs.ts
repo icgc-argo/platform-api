@@ -65,6 +65,22 @@ export default gql`
     NO_DATA = donor has 0 of all the above alignment workflow.
     """
     alignmentStatus
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has more than 1 completed sanger VC workflow;
+    IN_PROGRESS = donor has more than 1 running sanger VC workflow;
+    FAILED = donor has more than 1 failed sanger VC workflow;
+    NO_DATA = donor has 0 of all the above sanger VC workflow.
+    """
+    sangerVCStatus
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has more than 1 completed Mutect 2 workflow;
+    IN_PROGRESS = donor has more than 1 running Mutect 2 workflow;
+    FAILED = donor has more than 1 failed Mutect 2 workflow;
+    NO_DATA = donor has 0 of all the above Mutect 2 workflow.
+    """
+    mutectStatus
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
