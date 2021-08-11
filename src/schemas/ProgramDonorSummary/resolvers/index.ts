@@ -19,8 +19,7 @@
 
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
-import programDonorSummaryEntriesResolver from './summaryEntries';
-import programDonorSummaryStatsResolver from './summaryStats';
+import programDonorSummaryEntryAndStatsResolver from './summaryEntryAndStats';
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
@@ -73,16 +72,11 @@ const createResolvers = async (
 ): Promise<IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>> => {
   return {
     Query: {
-      programDonorSummaryEntries: (...resolverArguments) =>
+      programDonorSummaryEntryAndStats: (...resolverArguments) =>
         resolveWithProgramAuth(
-          programDonorSummaryEntriesResolver(esClient)(...resolverArguments),
+          programDonorSummaryEntryAndStatsResolver(esClient)(...resolverArguments),
           resolverArguments,
-        ),
-      programDonorSummaryStats: (...resolverArguments) =>
-        resolveWithProgramAuth(
-          programDonorSummaryStatsResolver(esClient)(...resolverArguments),
-          resolverArguments,
-        ),
+        )
     },
   };
 };
