@@ -32,6 +32,11 @@ export enum DonorMolecularDataProcessingStatus {
   REGISTERED = 'REGISTERED',
 }
 
+export type DonorSummary = {
+  entries: DonorSummaryEntry[],
+  stats: ProgramDonorSummaryStats,
+}
+
 export type DonorSummaryEntry = {
   id: string;
   donorId: string;
