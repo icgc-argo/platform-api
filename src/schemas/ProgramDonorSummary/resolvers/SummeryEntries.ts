@@ -33,8 +33,6 @@ import {
   registeredSamplePairsValue,
   rawReadsValue,
   workflowStatus,
-  DonorSummaryEntryAndStats,
-  ProgramDonorSummaryStats,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -52,13 +50,13 @@ type DonorEntriesResolverType = GraphQLFieldResolver<
   }
 >;
 
-const programDonorSummaryEntryAndStatsResolver: (
+const programDonorSummaryEntriesResolver: (
   esClient: Client,
 ) => DonorEntriesResolverType = esClient => async (
   source,
   args,
   context,
-): Promise<DonorSummaryEntryAndStats> => {
+): Promise<DonorSummaryEntry[]> => {
   const { programShortName } = args;
 
   const MAXIMUM_SUMMARY_PAGE_SIZE = 500;
@@ -233,84 +231,11 @@ const programDonorSummaryEntryAndStatsResolver: (
     }
   });
 
-  type AggregationName =
-  | keyof ProgramDonorSummaryStats
-  | 'donorsWithAllCoreClinicalData'
-  | 'donorsInvalidWithCurrentDictionary';
-
-  const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
-    esb.filterAggregation(name, filterQuery);
-
   const esQuery = esb
     .requestBodySearch()
-    .query(esb.boolQuery().must( queries ))
-    // these aggregations are later used for calculating dashboard stats.
-    .aggs([
-      filterAggregation('fullyReleasedDonorsCount' as AggregationName).filter(
-        esb
-          .termsQuery()
-          .field(EsDonorDocumentField.releaseStatus)
-          .values([DonorMolecularDataReleaseStatus.FULLY_RELEASED]),
-      ),
-      filterAggregation('partiallyReleasedDonorsCount' as AggregationName).filter(
-        esb
-          .termsQuery()
-          .field(EsDonorDocumentField.releaseStatus)
-          .values([DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED]),
-      ),
-      filterAggregation('noReleaseDonorsCount' as AggregationName).filter(
-        esb
-          .termsQuery()
-          .field(EsDonorDocumentField.releaseStatus)
-          .values([DonorMolecularDataReleaseStatus.NO_RELEASE, '']),
-      ),
-      filterAggregation('donorsProcessingMolecularDataCount' as AggregationName).filter(
-        esb
-          .termsQuery()
-          .field(EsDonorDocumentField.processingStatus)
-          .values([DonorMolecularDataProcessingStatus.PROCESSING]),
-      ),
-      filterAggregation('donorsWithReleasedFilesCount' as AggregationName).filter(
-        esb
-          .termsQuery()
-          .field(EsDonorDocumentField.releaseStatus)
-          .values([
-            DonorMolecularDataReleaseStatus.PARTIALLY_RELEASED,
-            DonorMolecularDataReleaseStatus.FULLY_RELEASED,
-          ]),
-      ),
-      filterAggregation('donorsWithPublishedNormalAndTumourSamples' as AggregationName).filter(
-        esb.boolQuery().must([
-          esb
-            .rangeQuery()
-            .field(EsDonorDocumentField.publishedTumourAnalysis)
-            .gt(0),
-          esb
-            .rangeQuery()
-            .field(EsDonorDocumentField.publishedNormalAnalysis)
-            .gt(0),
-        ]),
-      ),
-      filterAggregation('donorsWithAllCoreClinicalData' as AggregationName).filter(
-        esb
-          .rangeQuery()
-          .field(EsDonorDocumentField.submittedCoreDataPercent)
-          .gte(1),
-      ),
-      filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
-        esb
-          .termQuery()
-          .field(EsDonorDocumentField.validWithCurrentDictionary)
-          .value(false),
-      ),
-      esb
-        .sumAggregation('allFilesCount' as AggregationName)
-        .field(EsDonorDocumentField.totalFilesCount),
-      esb
-        .sumAggregation('filesToQcCount' as AggregationName)
-        .field(EsDonorDocumentField.filesToQcCount),
-      esb.maxAggregation('lastUpdate' as AggregationName).field(EsDonorDocumentField.updatedAt),
-    ])
+    .query(
+      esb.boolQuery().must( queries ),
+    )
     .sorts(args.sorts.map(({ field, order }) => esb.sort(field, order)))
     .from(args.offset)
     .size(args.first);
@@ -319,113 +244,48 @@ const programDonorSummaryEntryAndStatsResolver: (
     _source: ElasticsearchDonorDocument;
   }>;
 
-  type FilterAggregationResult = { doc_count: number };
-  type NumericAggregationResult = { value: number };
-  type DateAggregationResult = { value: Date };
-
-  type QueryResult = {
-    hits: {
-      total: { value: number; relation: string };
-      hits: EsHits,
-    };
-    aggregations: {
-      fullyReleasedDonorsCount: FilterAggregationResult;
-      partiallyReleasedDonorsCount: FilterAggregationResult;
-      noReleaseDonorsCount: FilterAggregationResult;
-      donorsProcessingMolecularDataCount: FilterAggregationResult;
-      donorsWithReleasedFilesCount: FilterAggregationResult;
-      donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
-      donorsWithAllCoreClinicalData: FilterAggregationResult;
-      donorsInvalidWithCurrentDictionary: FilterAggregationResult;
-      allFilesCount: NumericAggregationResult;
-      filesToQcCount: NumericAggregationResult;
-      lastUpdate?: DateAggregationResult;
-    };
-  };
-
-  const result: QueryResult = await esClient
+  const esHits: EsHits = await esClient
     .search({
       index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
-      track_total_hits: true,
     })
-    .then(res => {
-      return res.body;
-    })
+    .then(res => res.body.hits.hits)
     .catch(err => {
       logger.error('error reading data from Elasticsearch: ', err);
-      return {
-        hits: {
-          total: { value: 0, relation: '' },
-          hits: []
-        },
-        aggregations: {
-          fullyReleasedDonorsCount: { doc_count: 0 },
-          partiallyReleasedDonorsCount: { doc_count: 0 },
-          noReleaseDonorsCount: { doc_count: 0 },
-          donorsProcessingMolecularDataCount: { doc_count: 0 },
-          donorsWithReleasedFilesCount: { doc_count: 0 },
-          donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
-          donorsWithAllCoreClinicalData: { doc_count: 0 },
-          donorsInvalidWithCurrentDictionary: { doc_count: 0 },
-          allFilesCount: { value: 0 },
-          filesToQcCount: { value: 0 },
-        }
-      }
+      return [] as EsHits;
     });
-
-  return {
-    entry: result.hits.hits
-          .map(({ _source }) => _source)
-          .map(
-            doc =>
-              ({
-                id: `${programShortName}::${doc.donorId}`,
-                programShortName: doc.programId,
-                alignmentsCompleted: doc.alignmentsCompleted,
-                alignmentsFailed: doc.alignmentsFailed,
-                alignmentsRunning: doc.alignmentsRunning,
-                donorId: doc.donorId,
-                processingStatus: doc.processingStatus || DonorMolecularDataProcessingStatus.REGISTERED,
-                programId: doc.programId,
-                publishedNormalAnalysis: doc.publishedNormalAnalysis,
-                publishedTumourAnalysis: doc.publishedTumourAnalysis,
-                registeredNormalSamples: doc.registeredNormalSamples,
-                registeredTumourSamples: doc.registeredTumourSamples,
-                releaseStatus: doc.releaseStatus || DonorMolecularDataReleaseStatus.NO_RELEASE,
-                sangerVcsCompleted: doc.sangerVcsCompleted,
-                sangerVcsFailed: doc.sangerVcsFailed,
-                sangerVcsRunning: doc.sangerVcsRunning,
-                mutectCompleted: doc.mutectCompleted,
-                mutectRunning: doc.mutectRunning,
-                mutectFailed: doc.mutectFailed,
-                submittedCoreDataPercent: doc.submittedCoreDataPercent,
-                submittedExtendedDataPercent: doc.submittedExtendedDataPercent,
-                submitterDonorId: doc.submitterDonorId,
-                validWithCurrentDictionary: doc.validWithCurrentDictionary,
-                createdAt: new Date(doc.createdAt),
-                updatedAt: new Date(doc.updatedAt),
-              } as DonorSummaryEntry)),
-    stats: {
-      registeredDonorsCount: result.hits.total.value,
-      fullyReleasedDonorsCount: result.aggregations.fullyReleasedDonorsCount.doc_count,
-      partiallyReleasedDonorsCount: result.aggregations.partiallyReleasedDonorsCount.doc_count,
-      noReleaseDonorsCount: result.aggregations.noReleaseDonorsCount.doc_count,
-      donorsProcessingMolecularDataCount: result.aggregations.donorsProcessingMolecularDataCount.doc_count,
-      donorsWithReleasedFilesCount: result.aggregations.donorsWithReleasedFilesCount.doc_count,
-      percentageTumourAndNormal: result.hits.total.value
-        ? result.aggregations.donorsWithPublishedNormalAndTumourSamples.doc_count / result.hits.total.value
-        : 0,
-      percentageCoreClinical: result.hits.total.value
-        ? result.aggregations.donorsWithAllCoreClinicalData.doc_count / result.hits.total.value
-        : 0,
-      allFilesCount: result.aggregations.allFilesCount.value,
-      filesToQcCount: result.aggregations.filesToQcCount.value,
-      donorsInvalidWithCurrentDictionaryCount:
-      result.aggregations.donorsInvalidWithCurrentDictionary.doc_count,
-      lastUpdate: result.aggregations.lastUpdate?.value ? new Date(result.aggregations.lastUpdate.value) : undefined,
-    }
-  }
+  return esHits
+    .map(({ _source }) => _source)
+    .map(
+      doc =>
+        ({
+          id: `${programShortName}::${doc.donorId}`,
+          programShortName: doc.programId,
+          alignmentsCompleted: doc.alignmentsCompleted,
+          alignmentsFailed: doc.alignmentsFailed,
+          alignmentsRunning: doc.alignmentsRunning,
+          donorId: doc.donorId,
+          processingStatus: doc.processingStatus || DonorMolecularDataProcessingStatus.REGISTERED,
+          programId: doc.programId,
+          publishedNormalAnalysis: doc.publishedNormalAnalysis,
+          publishedTumourAnalysis: doc.publishedTumourAnalysis,
+          registeredNormalSamples: doc.registeredNormalSamples,
+          registeredTumourSamples: doc.registeredTumourSamples,
+          releaseStatus: doc.releaseStatus || DonorMolecularDataReleaseStatus.NO_RELEASE,
+          sangerVcsCompleted: doc.sangerVcsCompleted,
+          sangerVcsFailed: doc.sangerVcsFailed,
+          sangerVcsRunning: doc.sangerVcsRunning,
+          mutectCompleted: doc.mutectCompleted,
+          mutectRunning: doc.mutectRunning,
+          mutectFailed: doc.mutectFailed,
+          submittedCoreDataPercent: doc.submittedCoreDataPercent,
+          submittedExtendedDataPercent: doc.submittedExtendedDataPercent,
+          submitterDonorId: doc.submitterDonorId,
+          validWithCurrentDictionary: doc.validWithCurrentDictionary,
+          createdAt: new Date(doc.createdAt),
+          updatedAt: new Date(doc.updatedAt),
+        } as DonorSummaryEntry),
+    );
 };
 
-export default programDonorSummaryEntryAndStatsResolver;
+export default programDonorSummaryEntriesResolver;

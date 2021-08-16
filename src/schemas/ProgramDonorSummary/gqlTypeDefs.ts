@@ -120,8 +120,8 @@ export default gql`
     order: SortOrder
   }
 
-  type DonorSummaryEntryAndStats {
-    entry: [DonorSummaryEntry!]
+  type DonorSummary {
+    entries: [DonorSummaryEntry!]
     stats: ProgramDonorSummaryStats!
   }
 
@@ -295,7 +295,7 @@ export default gql`
     """
     Paginated list of donor data summary given a program
     """
-    programDonorSummaryEntryAndStats(
+    programDonorSummary(
       programShortName: String!
       """
       Maximum page size of 500
@@ -304,6 +304,28 @@ export default gql`
       offset: Int = 0
       sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
-    ): DonorSummaryEntryAndStats!
+    ): DonorSummary!
+
+    """
+    To be removed
+    """
+    programDonorSummaryEntries(
+      programShortName: String!
+      """
+      Maximum page size of 500
+      """
+      first: Int = 20
+      offset: Int = 0
+      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
+      filters: [ProgramDonorSummaryFilter!] = []
+    ): [DonorSummaryEntry]!
+
+    """
+    To be removed
+    """
+    programDonorSummaryStats(
+      programShortName: String!
+      filters: [ProgramDonorSummaryFilter!] = []
+    ): ProgramDonorSummaryStats
   }
 `;
