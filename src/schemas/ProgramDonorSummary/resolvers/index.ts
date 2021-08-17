@@ -19,13 +19,14 @@
 
 import { IResolvers } from 'graphql-tools';
 import { GlobalGqlContext } from 'app';
-import programDonorSummaryEntriesResolver from './summaryEntries';
-import programDonorSummaryStatsResolver from './summaryStats';
+import programDonorSummaryEntriesAndStatsResolver from './summaryEntriesAndStats';
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
 import { BaseQueryArguments, ProgramDonorSummaryStatsGqlResponse } from './types';
 import { Client } from '@elastic/elasticsearch';
+import programDonorSummaryEntriesResolver from './SummeryEntries';
+import programDonorSummaryStatsResolver from './SummaryStats';
 
 class UnauthorizedError extends ApolloError {
   constructor(message: string) {
@@ -83,6 +84,11 @@ const createResolvers = async (
           programDonorSummaryStatsResolver(esClient)(...resolverArguments),
           resolverArguments,
         ),
+      programDonorSummary: (...resolverArguments) =>
+        resolveWithProgramAuth(
+          programDonorSummaryEntriesAndStatsResolver(esClient)(...resolverArguments),
+          resolverArguments,
+        )
     },
   };
 };

@@ -120,6 +120,12 @@ export default gql`
     order: SortOrder
   }
 
+  type DonorSummary {
+    entries: [DonorSummaryEntry!]
+    stats: ProgramDonorSummaryStats!
+  }
+
+
   """
   Includes status summary of clinical and molecular data processing for the given donor
   """
@@ -289,6 +295,20 @@ export default gql`
     """
     Paginated list of donor data summary given a program
     """
+    programDonorSummary(
+      programShortName: String!
+      """
+      Maximum page size of 500
+      """
+      first: Int = 20
+      offset: Int = 0
+      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
+      filters: [ProgramDonorSummaryFilter!] = []
+    ): DonorSummary!
+
+    """
+    To be removed
+    """
     programDonorSummaryEntries(
       programShortName: String!
       """
@@ -299,6 +319,10 @@ export default gql`
       sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
     ): [DonorSummaryEntry]!
+
+    """
+    To be removed
+    """
     programDonorSummaryStats(
       programShortName: String!
       filters: [ProgramDonorSummaryFilter!] = []
