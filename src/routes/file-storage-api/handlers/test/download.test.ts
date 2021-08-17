@@ -16,7 +16,6 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import { Client } from '@elastic/elasticsearch';
 import { createEsClient } from 'services/elasticsearch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
@@ -45,11 +44,29 @@ import {
   FILE_ACCESS,
   FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
-import { SongEntity } from 'routes/file-storage-api/utils';
+import { getDataCenter } from 'services/dataCenterRegistry';
 
 const asyncExec = promisify(exec);
 
 chai.use(chaiHttp);
+
+jest.mock('services/dataCenterRegistry');
+const mockGetDataCenter = getDataCenter as jest.Mock;
+mockGetDataCenter.mockResolvedValue(
+  new Promise((resolve, reject) =>
+    resolve({
+      centerId: 'collab',
+      country: 'CA',
+      name: 'Cancer Collaboratory Cloud2',
+      organization: 'Acme',
+      contactEmail: 'joe.smith@example.com',
+      storageType: 'S3',
+      scoreUrl: 'https://api.example.com',
+      songUrl: 'https://api.example.com',
+      type: 'RDPC',
+    }),
+  ),
+);
 
 describe('storage-api/download', () => {
   let esContainer: StartedTestContainer;
@@ -76,7 +93,7 @@ describe('storage-api/download', () => {
     }
     await new Promise(resolve => {
       setTimeout(() => {
-        resolve();
+        resolve(true);
       }, 1000);
     });
     app.use(
@@ -97,7 +114,7 @@ describe('storage-api/download', () => {
       },
       {} as typeof allIndexedDocuments,
     );
-  }, 120000);
+  }, 180000);
 
   afterAll(async () => {
     await esContainer.stop();

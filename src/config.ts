@@ -65,6 +65,8 @@ export const CLINICAL_SERVICE_ROOT = process.env.CLINICAL_SERVICE_ROOT || 'http:
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
 export const DONOR_AGGREGATOR_API_ROOT =
   process.env.DONOR_AGGREGATOR_API_ROOT || 'http://localhost:7000';
+export const DATA_CENTER_REGISTRY_API_ROOT =
+  process.env.DATA_CENTER_REGISTRY_API_ROOT || 'http://localhost:3003';
 
 export const APP_DIR = __dirname;
 
