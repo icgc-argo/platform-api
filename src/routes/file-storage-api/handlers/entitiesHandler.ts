@@ -131,7 +131,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
         : [],
       fileName: req.query.fileName || undefined,
       id: req.query.id || undefined,
-      analysisId: req.query.analysisId || undefined,
+      analysisId: req.query.analysisId || req.query.gnosId || undefined,
       projectCode: req.query.projectCode || undefined,
     };
 
