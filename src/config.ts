@@ -47,6 +47,11 @@ export const EGO_VAULT_SECRET_PATH = process.env.EGO_VAULT_SECRET_PATH as string
 export const EGO_CLIENT_ID = process.env.EGO_CLIENT_ID;
 export const EGO_CLIENT_SECRET = process.env.EGO_CLIENT_SECRET;
 
+// Ego Credentials for Score Proxy
+export const EGO_VAULT_SCORE_PROXY_SECRET_PATH = process.env.EGO_VAULT_SECRET_PATH as string;
+export const EGO_SCORE_PROXY_CLIENT_ID = process.env.EGO_SCORE_PROXY_CLIENT_ID;
+export const EGO_SCORE_PROXY_CLIENT_SECRET = process.env.EGO_SCORE_PROXY_CLIENT_SECRET;
+
 // Vault
 export const USE_VAULT = process.env.USE_VAULT === 'true';
 export const VAULT_TOKEN = process.env.VAULT_TOKEN as string;

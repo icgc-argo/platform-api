@@ -81,7 +81,7 @@ describe('storage-api/entities/{id}', () => {
     });
     app.use(
       '/',
-      createFileStorageApi({
+      await createFileStorageApi({
         egoClient: mockEgoClient,
         rootPath: '/',
         esClient,

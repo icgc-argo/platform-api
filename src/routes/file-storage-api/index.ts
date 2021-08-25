@@ -27,8 +27,9 @@ import createEntitiesIdHandler from './handlers/entitiesIdHandler';
 import authenticatedRequestMiddleware from 'routes/middleware/authenticatedRequestMiddleware';
 import { EgoClient } from 'services/ego';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { createScoreAuthClient } from 'services/ego/scoreAuthClient';
 
-export default ({
+export default async ({
   rootPath,
   esClient,
   egoClient,
@@ -38,8 +39,10 @@ export default ({
   esClient: Client;
   egoClient: EgoClient;
   downloadProxyMiddlewareFactory?: typeof createProxyMiddleware;
-}): Router => {
+}): Promise<Router> => {
   const router = express.Router();
+
+  const scoreAuthClient = await createScoreAuthClient(egoClient);
 
   /****************************************************************
    * Score client uses this to validate server availability.
@@ -73,6 +76,7 @@ export default ({
     downloadProxy({
       rootPath,
       esClient,
+      scoreAuthClient,
       proxyMiddlewareFactory: downloadProxyMiddlewareFactory,
     }),
   );

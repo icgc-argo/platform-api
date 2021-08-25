@@ -174,7 +174,7 @@ const init = async () => {
     const rdpcRepoProxyPath = '/storage-api';
     app.use(
       rdpcRepoProxyPath,
-      createFileStorageApi({
+      await createFileStorageApi({
         rootPath: rdpcRepoProxyPath,
         esClient,
         egoClient,
