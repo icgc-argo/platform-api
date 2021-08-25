@@ -314,11 +314,15 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
         'Content-type': 'application/json',
       },
     });
-    const authResponse = (await response.json()) as EgoAccessToken | EgoAccessTokenError;
-    if ((authResponse as EgoAccessTokenError).error) {
-      throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
+    const authResponse = await response.json();
+    if (authResponse.error) {
+      throw new Error(
+        `Failed to authorize application: ${
+          (authResponse as EgoAccessTokenError).error_description
+        }`,
+      );
     }
-    return authResponse.access_token;
+    return (authResponse as EgoAccessToken).access_token;
   };
 
   return {
