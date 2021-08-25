@@ -25,7 +25,8 @@ export const loggerConfig = {
   format: combine(timestamp(), printf(info => `${info.timestamp} ${info.level}: ${info.message}`)),
   transports: [
     new transports.Console({
-      level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+      // level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+      level: 'debug',
     }),
     new transports.File({ filename: 'debug.log', level: 'debug' }),
   ],
