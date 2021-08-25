@@ -18,7 +18,7 @@
  */
 
 import { Express } from 'express';
-import { EgoClient } from 'services/ego';
+import { EgoClient, EgoApplicationCredential } from 'services/ego';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { EntitiesPageResponseBody } from '../entitiesHandler';
@@ -134,6 +134,9 @@ export const createMockEgoClient = (): Partial<EgoClient> => {
         scope: MOCK_API_KEY_SCOPES[apiKey],
         user_id: 'yup',
       }),
+    getApplicationJwt: async (applicationCredentials: EgoApplicationCredential) => {
+      return 'mock jwt string';
+    },
   };
   return mockEgoClient;
 };

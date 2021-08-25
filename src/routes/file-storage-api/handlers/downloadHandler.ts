@@ -28,6 +28,7 @@ import {
 import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
 import { getDataCenter } from 'services/dataCenterRegistry';
+import { ScoreAuthClient } from 'services/ego/scoreAuthClient';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
@@ -35,10 +36,12 @@ const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
 const downloadHandler = ({
   rootPath,
   esClient,
+  scoreAuthClient,
   proxyMiddlewareFactory = createProxyMiddleware,
 }: {
   rootPath: string;
   esClient: Client;
+  scoreAuthClient: ScoreAuthClient;
   proxyMiddlewareFactory: typeof createProxyMiddleware;
 }): Handler => async (req: AuthenticatedRequest, res, next) => {
   const { fileObjectId } = req.params;
@@ -61,9 +64,10 @@ const downloadHandler = ({
   if (isAuthorized) {
     const repositoryCode = esFileObject.repositories[0].code;
     const dataCenter = await getDataCenter(repositoryCode);
-    if(dataCenter) {
+    const scoreProxyJwt = await scoreAuthClient.getAuth();
 
-      const scoreUrl = dataCenter?.scoreUrl;
+    if (dataCenter) {
+      const scoreUrl = dataCenter.scoreUrl;
       const handleRequest = proxyMiddlewareFactory({
         target: scoreUrl,
         pathRewrite: normalizePath(rootPath),
@@ -71,14 +75,30 @@ const downloadHandler = ({
           logger.error('Score Router Error - ' + err);
           return res.status(500).end();
         },
+        headers: {
+          Authorization: `Bearer ${scoreProxyJwt}`,
+        },
         changeOrigin: true,
       });
       handleRequest(req, res, next);
     } else {
-      res.status(500).json({error:'File repository unavailable'}).end();
+      res
+        .status(500)
+        .json({ error: 'File repository unavailable' })
+        .end();
     }
   } else {
-    res.status(req.auth.authenticated ? 403 : 401).end();
+    if (req.auth.authenticated) {
+      res
+        .status(403)
+        .send('Insufficient data access permissions.')
+        .end();
+    } else {
+      res
+        .status(401)
+        .send('Invalid Authorization token')
+        .end();
+    }
   }
 };
 
