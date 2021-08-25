@@ -61,6 +61,19 @@ export type EgoApplicationCredential = {
   clientSecret: string;
 };
 
+type EgoAccessToken = {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+  groups: string;
+};
+
+type EgoAccessTokenError = {
+  error: string;
+  error_description: string;
+};
+
 const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   const appCredentialBase64 = Buffer.from(
     `${applicationCredential.clientId}:${applicationCredential.clientSecret}`,
@@ -287,6 +300,27 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
   };
 
+  const getApplicationJwt = async (
+    applicationCredentials: EgoApplicationCredential,
+  ): Promise<string> => {
+    logger.debug(`EgoClient: Fetching application jwt for ${applicationCredentials.clientId}...`);
+    const url = urlJoin(
+      EGO_ROOT_REST,
+      `/oauth/token?client_id=${applicationCredentials.clientId}&client_secret=${applicationCredentials.clientSecret}&grant_type=client_credentials`,
+    );
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+    });
+    const authResponse = (await response.json()) as EgoAccessToken | EgoAccessTokenError;
+    if ((authResponse as EgoAccessTokenError).error) {
+      throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
+    }
+    return authResponse.access_token;
+  };
+
   return {
     getUser,
     listUsers,
@@ -297,6 +331,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     getDacoIds,
     getTimeToExpiry,
     checkApiKey,
+    getApplicationJwt,
   };
 };
 
