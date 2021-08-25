@@ -6,7 +6,7 @@ import {
   USE_VAULT,
   EGO_SCORE_PROXY_CLIENT_ID,
   EGO_SCORE_PROXY_CLIENT_SECRET,
-  EGO_VAULT_SECRET_PATH,
+  EGO_VAULT_SCORE_PROXY_SECRET_PATH,
 } from 'config';
 
 export type ScoreAuthClient = {
@@ -23,8 +23,8 @@ export const createScoreAuthClient = async (egoClient: EgoClient) => {
   const vaultSecretLoader = await loadVaultSecret();
 
   const scoreProxyAppCredentials = USE_VAULT
-    ? ((await vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
-        logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
+    ? ((await vaultSecretLoader(EGO_VAULT_SCORE_PROXY_SECRET_PATH).catch((err: any) => {
+        logger.error(`could not read Vault secret at path ${EGO_VAULT_SCORE_PROXY_SECRET_PATH}`);
         throw err; //fail fast
       })) as EgoApplicationCredential)
     : ({
