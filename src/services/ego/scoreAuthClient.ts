@@ -40,6 +40,7 @@ export const createScoreAuthClient = async (egoClient: EgoClient) => {
     if (latestJwt && egoTokenUtils.isValidJwt(latestJwt)) {
       return latestJwt;
     }
+    logger.debug(`Score Proxy JWT is no longer valid, fetching new token from ego...`);
     return await egoClient.getApplicationJwt(scoreProxyAppCredentials);
   };
 

@@ -44,7 +44,6 @@ const downloadHandler = ({
   scoreAuthClient: ScoreAuthClient;
   proxyMiddlewareFactory: typeof createProxyMiddleware;
 }): Handler => async (req: AuthenticatedRequest, res, next) => {
-  console.info(`Entering Proxy Handler!`);
   const { fileObjectId } = req.params;
   const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
 
@@ -66,8 +65,6 @@ const downloadHandler = ({
     const repositoryCode = esFileObject.repositories[0].code;
     const dataCenter = await getDataCenter(repositoryCode);
     const scoreProxyJwt = await scoreAuthClient.getAuth();
-
-    console.info(`isAuthorized - ${JSON.stringify(dataCenter)} - ${scoreProxyJwt}`);
 
     if (dataCenter) {
       const scoreUrl = dataCenter.scoreUrl;
