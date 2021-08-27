@@ -303,7 +303,6 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   const getApplicationJwt = async (
     applicationCredentials: EgoApplicationCredential,
   ): Promise<string> => {
-    logger.debug(`EgoClient: Fetching application jwt for ${applicationCredentials.clientId}...`);
     const url = urlJoin(
       EGO_ROOT_REST,
       `/oauth/token?client_id=${applicationCredentials.clientId}&client_secret=${applicationCredentials.clientSecret}&grant_type=client_credentials`,
