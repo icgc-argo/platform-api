@@ -1,9 +1,8 @@
 # For a quick mongo/elasticSearch local enviornment
-
-version: '3'
+version: "3"
 services:
   elasticsearch:
-    image: 'elasticsearch:7.5.0'
+    image: "elasticsearch:7.5.0"
     ports:
       - 9200:9200
     volumes:
@@ -11,55 +10,14 @@ services:
     environment:
       - discovery.type=single-node
       - cluster.name=workflow.elasticsearch
-      - 'ES_JAVA_OPTS=-Xms512m -Xmx2048m'
+      - "ES_JAVA_OPTS=-Xms512m -Xmx2048m"
 
   kibana:
-    image: 'kibana:7.5.0'
+    image: "kibana:7.5.0"
     depends_on:
       - elasticsearch
     ports:
       - 5601:5601
-
-  ego-db:
-    image: '${POSTGRES_IMAGE}'
-    environment:
-      PGPORT: 5432
-      POSTGRES_DB: ego
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    volumes:
-      - 'ego_postgresql_data:/egodb'
-    ports:
-      - 18888:5432
-  ego-api:
-    image: '${EGO_IMAGE}'
-    depends_on:
-      - ego-db
-    volumes:
-      - ./ego_bootstrap:/ego_boostrap
-    environment:
-      SERVER_PORT: 8088
-      SERVER_MANAGEMENT_PORT: 8089
-      SPRING_PROFILES_ACTIVE: 'auth'
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://ego-db:5432/ego?stringtype=unspecified'
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: password
-      SPRING_FLYWAY_ENABLED: 'true'
-      SERVER_SERVLET_CONTEXT_PATH: '/api'
-      SPRING_FLYWAY_LOCATIONS: 'classpath:flyway/sql,classpath:db/migration,filesystem:/ego_boostrap'
-      GOOGLE_CLIENT_CLIENTID: '${GOOGLE_CLIENT_CLIENTID}'
-      GOOGLE_CLIENT_CLIENTSECRET: '${GOOGLE_CLIENT_CLIENTSECRET}'
-    ports:
-      - 8088:8088
-      - 50052:50051
-  ego-ui:
-    image: '${EGO_UI_IMAGE}'
-    depends_on:
-      - ego-api
-    environment:
-      REACT_APP_API: 'http://localhost:8088/api'
-    ports:
-      - 3501:80
 
 volumes:
   es_data:
