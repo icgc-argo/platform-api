@@ -91,6 +91,31 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
+  donorsWithCompleteCoreCompletion: number;
+  donorsWithIncompleteCoreCompletion: number;
+  donorsWithNoCoreCompletion: number;
+
+  donorsWithValidSamplePairs: number;
+  donorsWithInvalidSamplePairs: number;
+
+  donorsWithValidRawReads: number;
+  donorsWithInvalidRawReads: number;
+
+  donorsWithCompletedAlignment: number;
+  donorsWithInProgressAlignment: number;
+  donorsWithFailedAlignment: number;
+  donorsWithNoAlignment: number;
+
+  donorsWithCompletedSanger: number;
+  donorsWithInProgressSanger: number;
+  donorsWithFailedSanger: number;
+  donorsWithNoSanger: number;
+
+  donorsWithCompletedMutect: number;
+  donorsWithInProgressMutect: number;
+  donorsWithFailedMutect: number;
+  donorsWithNoMutect: number;
+
   lastUpdate?: Date;
 };
 

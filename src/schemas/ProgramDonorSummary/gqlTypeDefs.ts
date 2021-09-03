@@ -248,9 +248,6 @@ export default gql`
     Percentage of core clinical data fields submitted over total core clinical data fields
     """
     percentageCoreClinical: Float!
-    """
-
-    """
     percentageTumourAndNormal: Float!
     """
     Number of donors whose molecular data is being processed
@@ -284,7 +281,86 @@ export default gql`
     Number of donors registered to the program who currently has no released genomic file
     """
     noReleaseDonorsCount: Int!
+    """
+    Number of donors that are clinically complete at 100% core fields
+    """
+    donorsWithCompleteCoreCompletion: Int!
+    """
+    Number of donors that have incomplete core clinical fields
+    """
+    donorsWithIncompleteCoreCompletion: Int!
+    """
+    Number of donors that have no data for core clinical fields
+    """
+    donorsWithNoCoreCompletion: Int!
+    """
+    Number of donors that have at least 1 tumour/normal sample pairs
+    """
+    donorsWithValidSamplePairs: Int!
+    """
+    Number of donors that have 0 tumour or normal sample
+    """
+    donorsWithInvalidSamplePairs: Int!
 
+    """
+    Number of donors that have at least 1 tumour/normal raw reads pairs
+    """
+    donorsWithValidRawReads: Int!
+    """
+    Number of donors that have 0 tumour or normal raw read
+    """
+    donorsWithInvalidRawReads: Int!
+
+    """
+    Number of donors that have COMPLETED as alignment workflow status
+    """
+    donorsWithCompletedAlignment: Int!
+    """
+    Number of donors that have IN_PROGRESS as alignment workflow status
+    """
+    donorsWithInProgressAlignment: Int!
+    """
+    Number of donors that have FAILED as alignment workflow status
+    """
+    donorsWithFailedAlignment: Int!
+    """
+    Number of donors that have no alignment workflow status
+    """
+    donorsWithNoAlignment: Int!
+
+    """
+    Number of donors that have COMPLETED as sanger workflow status
+    """
+    donorsWithCompletedSanger: Int!
+    """
+    Number of donors that have IN_PROGRESS as sanger workflow status
+    """
+    donorsWithInProgressSanger: Int!
+    """
+    Number of donors that have FAILED as sanger workflow status
+    """
+    donorsWithFailedSanger: Int!
+    """
+    Number of donors that have no sanger workflow status
+    """
+    donorsWithNoSanger: Int!
+
+    """
+    Number of donors that have COMPLETED as mutect2 workflow status
+    """
+    donorsWithCompletedMutect: Int!
+    """
+    Number of donors that have IN_PROGRESS as mutect2 workflow status
+    """
+    donorsWithInProgressMutect: Int!
+    """
+    Number of donors that have FAILED as mutect2 workflow status
+    """
+    donorsWithFailedMutect: Int!
+    """
+    Number of donors that have no mutect2 workflow status
+    """
+    donorsWithNoMutect: Int!
     """
     Date of the most recent update to the donor summary index for this program. Can be null if no documents for this program
     """

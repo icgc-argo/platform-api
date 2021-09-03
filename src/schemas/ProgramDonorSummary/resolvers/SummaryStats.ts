@@ -121,6 +121,178 @@ const programDonorSummaryStatsResolver: (
           .field(EsDonorDocumentField.validWithCurrentDictionary)
           .values([false]),
       ),
+      filterAggregation('donorsWithCompleteCoreCompletion' as AggregationName).filter(
+        esb
+          .termQuery()
+          .field(EsDonorDocumentField.submittedCoreDataPercent)
+          .value(1),
+      ),
+      filterAggregation('donorsWithIncompleteCoreCompletion' as AggregationName).filter(
+        esb
+        .rangeQuery()
+        .field(EsDonorDocumentField.submittedCoreDataPercent)
+        .gt(0)
+        .lt(1),
+      ),
+      filterAggregation('donorsWithNoCoreCompletion' as AggregationName).filter(
+        esb
+          .termQuery()
+          .field(EsDonorDocumentField.submittedCoreDataPercent)
+          .value(0),
+      ),
+      filterAggregation('donorsWithValidSamplePairs' as AggregationName).filter(
+        esb.boolQuery().must([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.registeredNormalSamples)
+            .gt(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.registeredTumourSamples)
+            .gt(0),
+        ]),
+      ),
+      filterAggregation('donorsWithInvalidSamplePairs' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.registeredNormalSamples)
+            .lte(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.registeredTumourSamples)
+            .lte(0),
+        ]),
+      ),
+      filterAggregation('donorsWithValidRawReads' as AggregationName).filter(
+        esb.boolQuery().must([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.publishedNormalAnalysis)
+            .gte(1),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.publishedTumourAnalysis)
+            .gte(1),
+        ]),
+      ),
+      filterAggregation('donorsWithInvalidRawReads' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.publishedNormalAnalysis)
+            .lte(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.publishedTumourAnalysis)
+            .lte(0),
+        ]),
+      ),
+      filterAggregation('donorsWithCompletedAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.alignmentsCompleted)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithInProgressAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.alignmentsRunning)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithFailedAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.alignmentsFailed)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithNoAlignment' as AggregationName).filter(
+        esb
+          .boolQuery().must([
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.alignmentsCompleted)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.alignmentsRunning)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.alignmentsFailed)
+            .lte(0)
+          ])
+      ),
+      filterAggregation('donorsWithCompletedSanger' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.sangerVcsCompleted)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithInProgressSanger' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.sangerVcsRunning)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithFailedSanger' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.sangerVcsFailed)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithNoSanger' as AggregationName).filter(
+        esb
+          .boolQuery().must([
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.sangerVcsCompleted)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.sangerVcsRunning)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.sangerVcsFailed)
+            .lte(0)
+          ])
+      ),
+      filterAggregation('donorsWithCompletedMutect' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.mutectCompleted)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithInProgressMutect' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.mutectRunning)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithFailedMutect' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.mutectFailed)
+          .gte(1),
+      ),
+      filterAggregation('donorsWithNoMutect' as AggregationName).filter(
+        esb
+          .boolQuery().must([
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.mutectCompleted)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.mutectRunning)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.mutectFailed)
+            .lte(0)
+          ])
+      ),
       esb
         .sumAggregation('allFilesCount' as AggregationName)
         .field(EsDonorDocumentField.totalFilesCount),
@@ -146,6 +318,32 @@ const programDonorSummaryStatsResolver: (
       donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
       donorsWithAllCoreClinicalData: FilterAggregationResult;
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
+
+      donorsWithCompleteCoreCompletion: FilterAggregationResult;
+      donorsWithIncompleteCoreCompletion: FilterAggregationResult;
+      donorsWithNoCoreCompletion: FilterAggregationResult;
+
+      donorsWithValidSamplePairs: FilterAggregationResult;
+      donorsWithInvalidSamplePairs: FilterAggregationResult;
+
+      donorsWithValidRawReads: FilterAggregationResult;
+      donorsWithInvalidRawReads: FilterAggregationResult;
+
+      donorsWithCompletedAlignment: FilterAggregationResult;
+      donorsWithInProgressAlignment: FilterAggregationResult;
+      donorsWithFailedAlignment: FilterAggregationResult;
+      donorsWithNoAlignment: FilterAggregationResult;
+
+      donorsWithCompletedSanger: FilterAggregationResult;
+      donorsWithInProgressSanger: FilterAggregationResult;
+      donorsWithFailedSanger: FilterAggregationResult;
+      donorsWithNoSanger: FilterAggregationResult;
+
+      donorsWithCompletedMutect: FilterAggregationResult;
+      donorsWithInProgressMutect: FilterAggregationResult;
+      donorsWithFailedMutect: FilterAggregationResult;
+      donorsWithNoMutect: FilterAggregationResult;
+
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
       lastUpdate?: DateAggregationResult;
@@ -171,6 +369,32 @@ const programDonorSummaryStatsResolver: (
           donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
           donorsWithAllCoreClinicalData: { doc_count: 0 },
           donorsInvalidWithCurrentDictionary: { doc_count: 0 },
+
+          donorsWithCompleteCoreCompletion: { doc_count: 0 },
+          donorsWithIncompleteCoreCompletion: { doc_count: 0 },
+          donorsWithNoCoreCompletion: { doc_count: 0 },
+
+          donorsWithValidSamplePairs: { doc_count: 0 },
+          donorsWithInvalidSamplePairs: { doc_count: 0 },
+
+          donorsWithValidRawReads: { doc_count: 0 },
+          donorsWithInvalidRawReads: { doc_count: 0 },
+
+          donorsWithCompletedAlignment: { doc_count: 0 },
+          donorsWithInProgressAlignment: { doc_count: 0 },
+          donorsWithFailedAlignment: { doc_count: 0 },
+          donorsWithNoAlignment: { doc_count: 0 },
+
+          donorsWithCompletedSanger: { doc_count: 0 },
+          donorsWithInProgressSanger: { doc_count: 0 },
+          donorsWithFailedSanger: { doc_count: 0 },
+          donorsWithNoSanger: { doc_count: 0 },
+
+          donorsWithCompletedMutect: { doc_count: 0 },
+          donorsWithInProgressMutect: { doc_count: 0 },
+          donorsWithFailedMutect: { doc_count: 0 },
+          donorsWithNoMutect: { doc_count: 0 },
+
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
         },
@@ -203,6 +427,32 @@ const programDonorSummaryStatsResolver: (
     filesToQcCount: aggregations.filesToQcCount.value,
     donorsInvalidWithCurrentDictionaryCount:
       aggregations.donorsInvalidWithCurrentDictionary.doc_count,
+
+      donorsWithCompleteCoreCompletion: aggregations.donorsWithCompleteCoreCompletion.doc_count,
+      donorsWithIncompleteCoreCompletion: aggregations.donorsWithIncompleteCoreCompletion.doc_count,
+      donorsWithNoCoreCompletion: aggregations.donorsWithNoCoreCompletion.doc_count,
+
+      donorsWithValidSamplePairs: aggregations.donorsWithValidSamplePairs.doc_count,
+      donorsWithInvalidSamplePairs: aggregations.donorsWithInvalidSamplePairs.doc_count,
+
+      donorsWithValidRawReads: aggregations.donorsWithValidRawReads.doc_count,
+      donorsWithInvalidRawReads: aggregations.donorsWithInvalidRawReads.doc_count,
+
+      donorsWithCompletedAlignment: aggregations.donorsWithCompletedAlignment.doc_count,
+      donorsWithInProgressAlignment: aggregations.donorsWithInProgressAlignment.doc_count,
+      donorsWithFailedAlignment: aggregations.donorsWithFailedAlignment.doc_count,
+      donorsWithNoAlignment: aggregations.donorsWithNoAlignment.doc_count,
+
+      donorsWithCompletedSanger: aggregations.donorsWithCompletedSanger.doc_count,
+      donorsWithInProgressSanger: aggregations.donorsWithInProgressSanger.doc_count,
+      donorsWithFailedSanger: aggregations.donorsWithFailedSanger.doc_count,
+      donorsWithNoSanger: aggregations.donorsWithNoSanger.doc_count,
+
+      donorsWithCompletedMutect: aggregations.donorsWithCompletedMutect.doc_count,
+      donorsWithInProgressMutect: aggregations.donorsWithInProgressMutect.doc_count,
+      donorsWithFailedMutect: aggregations.donorsWithFailedMutect.doc_count,
+      donorsWithNoMutect: aggregations.donorsWithNoMutect.doc_count,
+
     lastUpdate: aggregations.lastUpdate?.value ? new Date(aggregations.lastUpdate.value) : undefined,
   };
 };
