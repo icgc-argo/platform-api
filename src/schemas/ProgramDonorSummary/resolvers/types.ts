@@ -91,33 +91,39 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
-  donorsWithCompleteCoreCompletion: number;
-  donorsWithIncompleteCoreCompletion: number;
-  donorsWithNoCoreCompletion: number;
 
-  donorsWithValidSamplePairs: number;
-  donorsWithInvalidSamplePairs: number;
+  coreCompletion: CoreCompletionStatusCount;
 
-  donorsWithValidRawReads: number;
-  donorsWithInvalidRawReads: number;
+  sampleStatus: SamplePairsStatusCount;
 
-  donorsWithCompletedAlignment: number;
-  donorsWithInProgressAlignment: number;
-  donorsWithFailedAlignment: number;
-  donorsWithNoAlignment: number;
+  rawReadsStatus: SamplePairsStatusCount;
 
-  donorsWithCompletedSanger: number;
-  donorsWithInProgressSanger: number;
-  donorsWithFailedSanger: number;
-  donorsWithNoSanger: number;
+  alignmentStatusCount: WorkflowStatusCount;
 
-  donorsWithCompletedMutect: number;
-  donorsWithInProgressMutect: number;
-  donorsWithFailedMutect: number;
-  donorsWithNoMutect: number;
+  sangerStatusCount: WorkflowStatusCount;
+
+  mutectStatusCount: WorkflowStatusCount;
 
   lastUpdate?: Date;
 };
+
+type CoreCompletionStatusCount = {
+  completed: number;
+  incomplete: number;
+  noData: number;
+}
+
+type SamplePairsStatusCount = {
+  valid: number;
+  invalid: number;
+}
+
+type WorkflowStatusCount = {
+  noData: number;
+  completed: number;
+  inProgress: number;
+  failed: number;
+}
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
   id: string;

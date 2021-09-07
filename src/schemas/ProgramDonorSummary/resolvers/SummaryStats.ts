@@ -121,26 +121,26 @@ const programDonorSummaryStatsResolver: (
           .field(EsDonorDocumentField.validWithCurrentDictionary)
           .values([false]),
       ),
-      filterAggregation('donorsWithCompleteCoreCompletion' as AggregationName).filter(
+      filterAggregation('completeCoreCompletion' as AggregationName).filter(
         esb
           .termQuery()
           .field(EsDonorDocumentField.submittedCoreDataPercent)
           .value(1),
       ),
-      filterAggregation('donorsWithIncompleteCoreCompletion' as AggregationName).filter(
+      filterAggregation('incompleteCoreCompletion' as AggregationName).filter(
         esb
         .rangeQuery()
         .field(EsDonorDocumentField.submittedCoreDataPercent)
         .gt(0)
         .lt(1),
       ),
-      filterAggregation('donorsWithNoCoreCompletion' as AggregationName).filter(
+      filterAggregation('noCoreCompletion' as AggregationName).filter(
         esb
           .termQuery()
           .field(EsDonorDocumentField.submittedCoreDataPercent)
           .value(0),
       ),
-      filterAggregation('donorsWithValidSamplePairs' as AggregationName).filter(
+      filterAggregation('validSamplePairs' as AggregationName).filter(
         esb.boolQuery().must([
           esb
             .rangeQuery()
@@ -152,7 +152,7 @@ const programDonorSummaryStatsResolver: (
             .gt(0),
         ]),
       ),
-      filterAggregation('donorsWithInvalidSamplePairs' as AggregationName).filter(
+      filterAggregation('invalidSamplePairs' as AggregationName).filter(
         esb.boolQuery().should([
           esb
             .rangeQuery()
@@ -164,7 +164,7 @@ const programDonorSummaryStatsResolver: (
             .lte(0),
         ]),
       ),
-      filterAggregation('donorsWithValidRawReads' as AggregationName).filter(
+      filterAggregation('validRawReads' as AggregationName).filter(
         esb.boolQuery().must([
           esb
             .rangeQuery()
@@ -176,7 +176,7 @@ const programDonorSummaryStatsResolver: (
             .gte(1),
         ]),
       ),
-      filterAggregation('donorsWithInvalidRawReads' as AggregationName).filter(
+      filterAggregation('invalidRawReads' as AggregationName).filter(
         esb.boolQuery().should([
           esb
             .rangeQuery()
@@ -188,25 +188,25 @@ const programDonorSummaryStatsResolver: (
             .lte(0),
         ]),
       ),
-      filterAggregation('donorsWithCompletedAlignment' as AggregationName).filter(
+      filterAggregation('completedAlignment' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.alignmentsCompleted)
           .gte(1),
       ),
-      filterAggregation('donorsWithInProgressAlignment' as AggregationName).filter(
+      filterAggregation('inProgressAlignment' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.alignmentsRunning)
           .gte(1),
       ),
-      filterAggregation('donorsWithFailedAlignment' as AggregationName).filter(
+      filterAggregation('failedAlignment' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.alignmentsFailed)
           .gte(1),
       ),
-      filterAggregation('donorsWithNoAlignment' as AggregationName).filter(
+      filterAggregation('noAlignment' as AggregationName).filter(
         esb
           .boolQuery().must([
             esb
@@ -223,25 +223,25 @@ const programDonorSummaryStatsResolver: (
             .lte(0)
           ])
       ),
-      filterAggregation('donorsWithCompletedSanger' as AggregationName).filter(
+      filterAggregation('completedSanger' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.sangerVcsCompleted)
           .gte(1),
       ),
-      filterAggregation('donorsWithInProgressSanger' as AggregationName).filter(
+      filterAggregation('inProgressSanger' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.sangerVcsRunning)
           .gte(1),
       ),
-      filterAggregation('donorsWithFailedSanger' as AggregationName).filter(
+      filterAggregation('failedSanger' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.sangerVcsFailed)
           .gte(1),
       ),
-      filterAggregation('donorsWithNoSanger' as AggregationName).filter(
+      filterAggregation('noSanger' as AggregationName).filter(
         esb
           .boolQuery().must([
             esb
@@ -258,25 +258,25 @@ const programDonorSummaryStatsResolver: (
             .lte(0)
           ])
       ),
-      filterAggregation('donorsWithCompletedMutect' as AggregationName).filter(
+      filterAggregation('completedMutect' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.mutectCompleted)
           .gte(1),
       ),
-      filterAggregation('donorsWithInProgressMutect' as AggregationName).filter(
+      filterAggregation('inProgressMutect' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.mutectRunning)
           .gte(1),
       ),
-      filterAggregation('donorsWithFailedMutect' as AggregationName).filter(
+      filterAggregation('failedMutect' as AggregationName).filter(
         esb
           .rangeQuery()
           .field(EsDonorDocumentField.mutectFailed)
           .gte(1),
       ),
-      filterAggregation('donorsWithNoMutect' as AggregationName).filter(
+      filterAggregation('noMutect' as AggregationName).filter(
         esb
           .boolQuery().must([
             esb
@@ -319,30 +319,30 @@ const programDonorSummaryStatsResolver: (
       donorsWithAllCoreClinicalData: FilterAggregationResult;
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 
-      donorsWithCompleteCoreCompletion: FilterAggregationResult;
-      donorsWithIncompleteCoreCompletion: FilterAggregationResult;
-      donorsWithNoCoreCompletion: FilterAggregationResult;
+      completeCoreCompletion: FilterAggregationResult;
+      incompleteCoreCompletion: FilterAggregationResult;
+      noCoreCompletion: FilterAggregationResult;
 
-      donorsWithValidSamplePairs: FilterAggregationResult;
-      donorsWithInvalidSamplePairs: FilterAggregationResult;
+      validSamplePairs: FilterAggregationResult;
+      invalidSamplePairs: FilterAggregationResult;
 
-      donorsWithValidRawReads: FilterAggregationResult;
-      donorsWithInvalidRawReads: FilterAggregationResult;
+      validRawReads: FilterAggregationResult;
+      invalidRawReads: FilterAggregationResult;
 
-      donorsWithCompletedAlignment: FilterAggregationResult;
-      donorsWithInProgressAlignment: FilterAggregationResult;
-      donorsWithFailedAlignment: FilterAggregationResult;
-      donorsWithNoAlignment: FilterAggregationResult;
+      completedAlignment: FilterAggregationResult;
+      inProgressAlignment: FilterAggregationResult;
+      failedAlignment: FilterAggregationResult;
+      noAlignment: FilterAggregationResult;
 
-      donorsWithCompletedSanger: FilterAggregationResult;
-      donorsWithInProgressSanger: FilterAggregationResult;
-      donorsWithFailedSanger: FilterAggregationResult;
-      donorsWithNoSanger: FilterAggregationResult;
+      completedSanger: FilterAggregationResult;
+      inProgressSanger: FilterAggregationResult;
+      failedSanger: FilterAggregationResult;
+      noSanger: FilterAggregationResult;
 
-      donorsWithCompletedMutect: FilterAggregationResult;
-      donorsWithInProgressMutect: FilterAggregationResult;
-      donorsWithFailedMutect: FilterAggregationResult;
-      donorsWithNoMutect: FilterAggregationResult;
+      completedMutect: FilterAggregationResult;
+      inProgressMutect: FilterAggregationResult;
+      failedMutect: FilterAggregationResult;
+      noMutect: FilterAggregationResult;
 
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
@@ -370,30 +370,30 @@ const programDonorSummaryStatsResolver: (
           donorsWithAllCoreClinicalData: { doc_count: 0 },
           donorsInvalidWithCurrentDictionary: { doc_count: 0 },
 
-          donorsWithCompleteCoreCompletion: { doc_count: 0 },
-          donorsWithIncompleteCoreCompletion: { doc_count: 0 },
-          donorsWithNoCoreCompletion: { doc_count: 0 },
+          completeCoreCompletion: { doc_count: 0 },
+          incompleteCoreCompletion: { doc_count: 0 },
+          noCoreCompletion: { doc_count: 0 },
 
-          donorsWithValidSamplePairs: { doc_count: 0 },
-          donorsWithInvalidSamplePairs: { doc_count: 0 },
+          validSamplePairs: { doc_count: 0 },
+          invalidSamplePairs: { doc_count: 0 },
 
-          donorsWithValidRawReads: { doc_count: 0 },
-          donorsWithInvalidRawReads: { doc_count: 0 },
+          validRawReads: { doc_count: 0 },
+          invalidRawReads: { doc_count: 0 },
 
-          donorsWithCompletedAlignment: { doc_count: 0 },
-          donorsWithInProgressAlignment: { doc_count: 0 },
-          donorsWithFailedAlignment: { doc_count: 0 },
-          donorsWithNoAlignment: { doc_count: 0 },
+          completedAlignment: { doc_count: 0 },
+          inProgressAlignment: { doc_count: 0 },
+          failedAlignment: { doc_count: 0 },
+          noAlignment: { doc_count: 0 },
 
-          donorsWithCompletedSanger: { doc_count: 0 },
-          donorsWithInProgressSanger: { doc_count: 0 },
-          donorsWithFailedSanger: { doc_count: 0 },
-          donorsWithNoSanger: { doc_count: 0 },
+          completedSanger: { doc_count: 0 },
+          inProgressSanger: { doc_count: 0 },
+          failedSanger: { doc_count: 0 },
+          noSanger: { doc_count: 0 },
 
-          donorsWithCompletedMutect: { doc_count: 0 },
-          donorsWithInProgressMutect: { doc_count: 0 },
-          donorsWithFailedMutect: { doc_count: 0 },
-          donorsWithNoMutect: { doc_count: 0 },
+          completedMutect: { doc_count: 0 },
+          inProgressMutect: { doc_count: 0 },
+          failedMutect: { doc_count: 0 },
+          noMutect: { doc_count: 0 },
 
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
@@ -428,32 +428,44 @@ const programDonorSummaryStatsResolver: (
     donorsInvalidWithCurrentDictionaryCount:
       aggregations.donorsInvalidWithCurrentDictionary.doc_count,
 
-      donorsWithCompleteCoreCompletion: aggregations.donorsWithCompleteCoreCompletion.doc_count,
-      donorsWithIncompleteCoreCompletion: aggregations.donorsWithIncompleteCoreCompletion.doc_count,
-      donorsWithNoCoreCompletion: aggregations.donorsWithNoCoreCompletion.doc_count,
+      coreCompletion: {
+        completed: aggregations.completeCoreCompletion.doc_count,
+        incomplete: aggregations.incompleteCoreCompletion.doc_count,
+        noData: aggregations.noCoreCompletion.doc_count,
+      },
 
-      donorsWithValidSamplePairs: aggregations.donorsWithValidSamplePairs.doc_count,
-      donorsWithInvalidSamplePairs: aggregations.donorsWithInvalidSamplePairs.doc_count,
+      sampleStatus: {
+        valid: aggregations.validSamplePairs.doc_count,
+        invalid: aggregations.invalidSamplePairs.doc_count,
+      },
 
-      donorsWithValidRawReads: aggregations.donorsWithValidRawReads.doc_count,
-      donorsWithInvalidRawReads: aggregations.donorsWithInvalidRawReads.doc_count,
+      rawReadsStatus: {
+        valid: aggregations.validRawReads.doc_count,
+        invalid: aggregations.invalidRawReads.doc_count,
+      },
 
-      donorsWithCompletedAlignment: aggregations.donorsWithCompletedAlignment.doc_count,
-      donorsWithInProgressAlignment: aggregations.donorsWithInProgressAlignment.doc_count,
-      donorsWithFailedAlignment: aggregations.donorsWithFailedAlignment.doc_count,
-      donorsWithNoAlignment: aggregations.donorsWithNoAlignment.doc_count,
+      alignmentStatusCount: {
+        completed: aggregations.completedAlignment.doc_count,
+        inProgress: aggregations.inProgressAlignment.doc_count,
+        failed: aggregations.failedAlignment.doc_count,
+        noData: aggregations.noAlignment.doc_count,
+      },
 
-      donorsWithCompletedSanger: aggregations.donorsWithCompletedSanger.doc_count,
-      donorsWithInProgressSanger: aggregations.donorsWithInProgressSanger.doc_count,
-      donorsWithFailedSanger: aggregations.donorsWithFailedSanger.doc_count,
-      donorsWithNoSanger: aggregations.donorsWithNoSanger.doc_count,
+      sangerStatusCount: {
+        completed: aggregations.completedSanger.doc_count,
+        inProgress: aggregations.inProgressSanger.doc_count,
+        failed: aggregations.failedSanger.doc_count,
+        noData: aggregations.noSanger.doc_count,
+      },
 
-      donorsWithCompletedMutect: aggregations.donorsWithCompletedMutect.doc_count,
-      donorsWithInProgressMutect: aggregations.donorsWithInProgressMutect.doc_count,
-      donorsWithFailedMutect: aggregations.donorsWithFailedMutect.doc_count,
-      donorsWithNoMutect: aggregations.donorsWithNoMutect.doc_count,
+      mutectStatusCount: {
+        completed: aggregations.completedMutect.doc_count,
+        inProgress: aggregations.inProgressMutect.doc_count,
+        failed: aggregations.failedMutect.doc_count,
+        noData: aggregations.noMutect.doc_count,
+      },
 
-    lastUpdate: aggregations.lastUpdate?.value ? new Date(aggregations.lastUpdate.value) : undefined,
+      lastUpdate: aggregations.lastUpdate?.value ? new Date(aggregations.lastUpdate.value) : undefined,
   };
 };
 
