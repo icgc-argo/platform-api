@@ -91,8 +91,39 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
+
+  coreCompletion: CoreCompletionStatusCount;
+
+  sampleStatus: SamplePairsStatusCount;
+
+  rawReadsStatus: SamplePairsStatusCount;
+
+  alignmentStatusCount: WorkflowStatusCount;
+
+  sangerStatusCount: WorkflowStatusCount;
+
+  mutectStatusCount: WorkflowStatusCount;
+
   lastUpdate?: Date;
 };
+
+type CoreCompletionStatusCount = {
+  completed: number;
+  incomplete: number;
+  noData: number;
+}
+
+type SamplePairsStatusCount = {
+  valid: number;
+  invalid: number;
+}
+
+type WorkflowStatusCount = {
+  noData: number;
+  completed: number;
+  inProgress: number;
+  failed: number;
+}
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
   id: string;

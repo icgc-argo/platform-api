@@ -125,6 +125,23 @@ export default gql`
     stats: ProgramDonorSummaryStats!
   }
 
+  type WorkflowStatusCount {
+    noData: Int!
+    completed: Int!
+    inProgress: Int!
+    failed: Int!
+  }
+
+  type SamplePairsStatusCount {
+    valid: Int!
+    invalid: Int!
+  }
+
+  type CoreCompletionStatusCount {
+    completed: Int!
+    incomplete: Int!
+    noData: Int!
+  }
 
   """
   Includes status summary of clinical and molecular data processing for the given donor
@@ -248,9 +265,6 @@ export default gql`
     Percentage of core clinical data fields submitted over total core clinical data fields
     """
     percentageCoreClinical: Float!
-    """
-
-    """
     percentageTumourAndNormal: Float!
     """
     Number of donors whose molecular data is being processed
@@ -284,6 +298,36 @@ export default gql`
     Number of donors registered to the program who currently has no released genomic file
     """
     noReleaseDonorsCount: Int!
+
+    """
+    Number of donors that are clinically completed/incomplete/no core fields
+    """
+    coreCompletion: CoreCompletionStatusCount!
+
+    """
+    Number of donors that have VALID/INVALID sample pairs
+    """
+    sampleStatus: SamplePairsStatusCount!
+
+    """
+    Number of donors that have VALID/INVALID raw reads
+    """
+    rawReadsStatus: SamplePairsStatusCount!
+
+    """
+    Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as alignment workflow status
+    """
+    alignmentStatusCount: WorkflowStatusCount!
+
+    """
+    Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as Sanger VC workflow status
+    """
+    sangerStatusCount: WorkflowStatusCount!
+
+    """
+    Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as mutect2 workflow status
+    """
+    mutectStatusCount: WorkflowStatusCount!
 
     """
     Date of the most recent update to the donor summary index for this program. Can be null if no documents for this program

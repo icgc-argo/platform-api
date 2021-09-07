@@ -1,5 +1,4 @@
 # For a quick mongo/elasticSearch local enviornment
-
 version: "3"
 services:
   elasticsearch:
