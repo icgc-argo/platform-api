@@ -236,7 +236,6 @@ const programDonorSummaryEntriesAndStatsResolver: (
 
   type AggregationName =
   | keyof ProgramDonorSummaryStats
-  | 'donorsWithAllCoreClinicalData'
   | 'donorsInvalidWithCurrentDictionary';
 
   const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
@@ -293,12 +292,6 @@ const programDonorSummaryEntriesAndStatsResolver: (
             .field(EsDonorDocumentField.publishedNormalAnalysis)
             .gt(0),
         ]),
-      ),
-      filterAggregation('donorsWithAllCoreClinicalData' as AggregationName).filter(
-        esb
-          .rangeQuery()
-          .field(EsDonorDocumentField.submittedCoreDataPercent)
-          .gte(1),
       ),
       filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
         esb
@@ -510,7 +503,6 @@ const programDonorSummaryEntriesAndStatsResolver: (
       donorsProcessingMolecularDataCount: FilterAggregationResult;
       donorsWithReleasedFilesCount: FilterAggregationResult;
       donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
-      donorsWithAllCoreClinicalData: FilterAggregationResult;
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 
       completeCoreCompletion: FilterAggregationResult;
@@ -567,8 +559,33 @@ const programDonorSummaryEntriesAndStatsResolver: (
           donorsProcessingMolecularDataCount: { doc_count: 0 },
           donorsWithReleasedFilesCount: { doc_count: 0 },
           donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
-          donorsWithAllCoreClinicalData: { doc_count: 0 },
           donorsInvalidWithCurrentDictionary: { doc_count: 0 },
+
+          completeCoreCompletion: { doc_count: 0 },
+          incompleteCoreCompletion: { doc_count: 0 },
+          noCoreCompletion: { doc_count: 0 },
+
+          validSamplePairs: { doc_count: 0 },
+          invalidSamplePairs: { doc_count: 0 },
+
+          validRawReads: { doc_count: 0 },
+          invalidRawReads: { doc_count: 0 },
+
+          completedAlignment: { doc_count: 0 },
+          inProgressAlignment: { doc_count: 0 },
+          failedAlignment: { doc_count: 0 },
+          noAlignment: { doc_count: 0 },
+
+          completedSanger: { doc_count: 0 },
+          inProgressSanger: { doc_count: 0 },
+          failedSanger: { doc_count: 0 },
+          noSanger: { doc_count: 0 },
+
+          completedMutect: { doc_count: 0 },
+          inProgressMutect: { doc_count: 0 },
+          failedMutect: { doc_count: 0 },
+          noMutect: { doc_count: 0 },
+
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
         }
@@ -618,7 +635,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
         ? result.aggregations.donorsWithPublishedNormalAndTumourSamples.doc_count / result.hits.total.value
         : 0,
       percentageCoreClinical: result.hits.total.value
-        ? result.aggregations.donorsWithAllCoreClinicalData.doc_count / result.hits.total.value
+        ? result.aggregations.completeCoreCompletion.doc_count / result.hits.total.value
         : 0,
       allFilesCount: result.aggregations.allFilesCount.value,
       filesToQcCount: result.aggregations.filesToQcCount.value,

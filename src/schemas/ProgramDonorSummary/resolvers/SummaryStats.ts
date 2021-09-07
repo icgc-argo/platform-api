@@ -54,7 +54,6 @@ const programDonorSummaryStatsResolver: (
 
   type AggregationName =
     | keyof ProgramDonorSummaryStats
-    | 'donorsWithAllCoreClinicalData'
     | 'donorsInvalidWithCurrentDictionary';
 
   const filterAggregation = (name: AggregationName, filterQuery?: esb.Query | undefined) =>
@@ -108,12 +107,6 @@ const programDonorSummaryStatsResolver: (
             .field(EsDonorDocumentField.publishedTumourAnalysis)
             .gt(0),
         ]),
-      ),
-      filterAggregation('donorsWithAllCoreClinicalData' as AggregationName).filter(
-        esb
-          .rangeQuery()
-          .field(EsDonorDocumentField.submittedCoreDataPercent)
-          .gte(1),
       ),
       filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
         esb
@@ -316,7 +309,6 @@ const programDonorSummaryStatsResolver: (
       donorsProcessingMolecularDataCount: FilterAggregationResult;
       donorsWithReleasedFilesCount: FilterAggregationResult;
       donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
-      donorsWithAllCoreClinicalData: FilterAggregationResult;
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 
       completeCoreCompletion: FilterAggregationResult;
@@ -367,7 +359,6 @@ const programDonorSummaryStatsResolver: (
           donorsProcessingMolecularDataCount: { doc_count: 0 },
           donorsWithReleasedFilesCount: { doc_count: 0 },
           donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
-          donorsWithAllCoreClinicalData: { doc_count: 0 },
           donorsInvalidWithCurrentDictionary: { doc_count: 0 },
 
           completeCoreCompletion: { doc_count: 0 },
@@ -421,7 +412,7 @@ const programDonorSummaryStatsResolver: (
       ? aggregations.donorsWithPublishedNormalAndTumourSamples.doc_count / hits.total.value
       : 0,
     percentageCoreClinical: hits.total.value
-      ? aggregations.donorsWithAllCoreClinicalData.doc_count / hits.total.value
+      ? aggregations.completeCoreCompletion.doc_count / hits.total.value
       : 0,
     allFilesCount: aggregations.allFilesCount.value,
     filesToQcCount: aggregations.filesToQcCount.value,
