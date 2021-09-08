@@ -151,7 +151,7 @@ export type EsFileCentricDocument = {
     size: number;
     md5sum: string;
     name: string;
-    index_file: {
+    index_file?: {
       object_id: string;
       file_type: string;
       md5sum: string;
@@ -334,6 +334,8 @@ export const FILE_METADATA_FIELDS = {
   'file.md5sum': 'file.md5sum' as 'file.md5sum',
   'file.name': 'file.name' as 'file.name',
   'file.index_file': 'file.index_file' as 'file.index_file',
+  'file.index_file.id': 'file.index_file.id' as 'file.index_file.id',
+  'file.index_file.object_id': 'file.index_file.object_id' as 'file.index_file.object_id',
   'file.object_id': 'file.object_id' as 'file.object_id',
   'file.file_type': 'file.file_type' as 'file.file_type',
   'file.file_type.md5sum': 'file.file_type.md5sum' as 'file.file_type.md5sum',

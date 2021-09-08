@@ -24,7 +24,7 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import esb from 'elastic-builder';
-import { SongEntity, toSongEntity } from '../utils';
+import { SongEntity, toSongEntity, getIndexFile } from '../utils';
 import {
   EsFileCentricDocument,
   FILE_METADATA_FIELDS,
@@ -149,9 +149,15 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           .boolQuery()
           // TODO: All of the `as string` casting in this section was added to silence the typescript compiler, it needs to be tested
           // the solution is likely in the types being applied to the Request object, such that it doesnt know if the query params are string or parsed into arrays
-          .must([
+          .should([
             parsedRequestQuery.id
               ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id as string)
+              : emptyFilter(),
+            parsedRequestQuery.id
+              ? esb.termsQuery(
+                  FILE_METADATA_FIELDS['file.index_file.id'],
+                  parsedRequestQuery.id as string,
+                )
               : emptyFilter(),
             parsedRequestQuery.fileName
               ? esb.termsQuery(
@@ -188,7 +194,13 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)
-      .map(toSongEntity)
+      .map(esFile => {
+        const index = getIndexFile(esFile) as SongEntity;
+        const file = toSongEntity(esFile);
+
+        return !!index ? [index, file] : file;
+      })
+      .flat() // Flatten to separate out the index files, if found
       .map(file =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
