@@ -149,7 +149,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           .boolQuery()
           // TODO: All of the `as string` casting in this section was added to silence the typescript compiler, it needs to be tested
           // the solution is likely in the types being applied to the Request object, such that it doesnt know if the query params are string or parsed into arrays
-          .should([
+          .must([
             parsedRequestQuery.id
               ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id as string)
               : emptyFilter(),
