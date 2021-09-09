@@ -11,9 +11,13 @@ export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: stri
   esClient
     .search({
       index: ARRANGER_FILE_CENTRIC_INDEX,
-      body: esb
-        .requestBodySearch()
-        .query(esb.boolQuery().must(esb.termQuery(FILE_METADATA_FIELDS['object_id'], objectId))),
+      body: esb.requestBodySearch().query(
+        esb.boolQuery().should([
+          // ID could be file ID or index_file ID
+          esb.termQuery(FILE_METADATA_FIELDS['object_id'], objectId),
+          esb.termsQuery(FILE_METADATA_FIELDS['file.index_file.object_id'], objectId),
+        ]),
+      ),
     })
     .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
 
@@ -32,3 +36,17 @@ export const toSongEntity = (file: EsFileCentricDocument): SongEntity => ({
   gnosId: file.analysis.analysis_id,
   projectCode: file.study_id,
 });
+
+export const getIndexFile = (file: EsFileCentricDocument): SongEntity | undefined => {
+  if (!file.file.index_file) {
+    return;
+  }
+  const output = {
+    access: file.file_access,
+    fileName: file.file.index_file.name,
+    id: file.file.index_file.object_id,
+    gnosId: file.analysis.analysis_id,
+    projectCode: file.study_id,
+  };
+  return output;
+};

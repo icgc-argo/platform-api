@@ -24,7 +24,7 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import _ from 'lodash';
 import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import esb from 'elastic-builder';
-import { SongEntity, toSongEntity } from '../utils';
+import { SongEntity, toSongEntity, getIndexFile } from '../utils';
 import {
   EsFileCentricDocument,
   FILE_METADATA_FIELDS,
@@ -188,7 +188,13 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)
-      .map(toSongEntity)
+      .map(esFile => {
+        const index = getIndexFile(esFile) as SongEntity;
+        const file = toSongEntity(esFile);
+
+        return !!index ? [index, file] : file;
+      })
+      .flat() // Flatten to separate out the index files, if found
       .map(file =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
