@@ -153,12 +153,6 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
             parsedRequestQuery.id
               ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id as string)
               : emptyFilter(),
-            parsedRequestQuery.id
-              ? esb.termsQuery(
-                  FILE_METADATA_FIELDS['file.index_file.id'],
-                  parsedRequestQuery.id as string,
-                )
-              : emptyFilter(),
             parsedRequestQuery.fileName
               ? esb.termsQuery(
                   FILE_METADATA_FIELDS['file.name'],
