@@ -218,7 +218,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
         },
         unpaged: false,
       },
-      empty: !!data.length,
+      empty: data.length === 0,
       first: parsedRequestQuery.page === 0,
       last: data.length < parsedRequestQuery.size,
       size: data.length,
