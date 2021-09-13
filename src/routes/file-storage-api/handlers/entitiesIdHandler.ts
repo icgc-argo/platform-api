@@ -29,7 +29,7 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
     if (!req.auth.authenticated) {
       // token was invalid
       res
-        .status(403)
+        .status(401)
         .send('Invalid access token')
         .end();
       return;
@@ -52,7 +52,7 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
     } else {
       // token is valid but permissions are not sufficient
       res
-        .status(401)
+        .status(403)
         .send('Not authorized to access the requested data')
         .end();
     }
