@@ -35,7 +35,6 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
       return;
     }
     const file = await getEsFileDocumentByObjectId(esClient)(req.params.fileObjectId);
-    console.log(`file`, file);
     if (!file) {
       res
         .status(404)
