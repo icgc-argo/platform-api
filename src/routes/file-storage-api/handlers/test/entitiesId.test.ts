@@ -169,6 +169,15 @@ describe('storage-api/entities/{id}', () => {
           }),
         );
         const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        console.log(`allRetrievedIds`, allRetrievedIds.length);
+        console.log(`expectedRetrievableIds`, expectedRetrievableIds.length);
+        const missingIds = expectedRetrievableIds.filter(id => !allRetrievedIds.includes(id));
+        console.log(
+          `The missing files`,
+          JSON.stringify(
+            allEntitiesRetrievable.filter(obj => missingIds.includes((obj as SongEntity).id)),
+          ),
+        );
         expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
         expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
       });
