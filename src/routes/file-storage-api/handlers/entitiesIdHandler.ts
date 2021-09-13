@@ -26,7 +26,22 @@ import { getEsFileDocumentByObjectId, toSongEntity } from '../utils';
 
 const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (req: AuthenticatedRequest, res, next) => {
+    if (!req.auth.authenticated) {
+      // token was invalid
+      res
+        .status(401)
+        .send('Invalid access token')
+        .end();
+      return;
+    }
     const file = await getEsFileDocumentByObjectId(esClient)(req.params.fileObjectId);
+    if (!file) {
+      res
+        .status(404)
+        .send(`No file found with the provided ObjectId: ${req.params.fileObjectId}`)
+        .end();
+      return;
+    }
     const isAuthorized = hasSufficientProgramMembershipAccess({
       scopes: req.auth.scopes,
       file,
@@ -34,7 +49,11 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
     if (isAuthorized) {
       res.status(200).send(toSongEntity(file as EsFileCentricDocument));
     } else {
-      res.status(req.auth.authenticated ? 403 : 401).end();
+      // token is valid but permissions are not sufficient
+      res
+        .status(403)
+        .send('Not authorized to access the requested data')
+        .end();
     }
   };
 };
