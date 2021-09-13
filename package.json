@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test-arranger-acl": "jest --testPathPattern='src/schemas/Arranger/test/metadataAccessControl.test.ts'",
-    "test-base": "jest --runInBand --testPathIgnorePatterns='src/schemas/Arranger/test/metadataAccessControl.test.ts'",
+    "test-base": "jest --runInBand --testPathIgnorePatterns='src/schemas/Arranger/test/metadataAccessControl.test.ts' --testPathIgnorePatterns='src/routes/file-storage-api/handlers/test/entitiesId.test.ts'",
     "test": "npm run test-base && npm run test-arranger-acl",
     "dev": "NODE_PATH=./src ts-node-dev ./src/index.ts -p ./tsconfig.json",
     "build": "rm -rf dist && tsc -p ./tsconfig.build.json && cp -r ./src/resources ./dist",
