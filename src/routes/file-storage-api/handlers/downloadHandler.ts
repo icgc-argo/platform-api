@@ -89,14 +89,16 @@ const downloadHandler = ({
     }
   } else {
     if (req.auth.authenticated) {
+      // token is valid but permissions are not sufficient
       res
         .status(403)
-        .send('Insufficient data access permissions.')
+        .send('Not authorized to access the requested data')
         .end();
     } else {
+      // token was invalid
       res
         .status(401)
-        .send('Invalid Authorization token')
+        .send('Invalid access token')
         .end();
     }
   }
