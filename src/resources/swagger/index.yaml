@@ -87,7 +87,8 @@ paths:
           in: query
           description: Boolean value for whether to exclude downloading sample registration file. Accepted values are "true" or "false", default to false.
           required: false
-          type: boolean
+          schema:
+            type: boolean
       responses:
         "200":
           description: "A zip file with all schema templates"
