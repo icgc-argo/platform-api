@@ -76,7 +76,7 @@ paths:
                 format: binary
         "500":
           description: Internal server error
-  "/clinical/template/all/{excludeSampleRegistration}":
+  "/clinical/template/all":
     get:
       tags:
         - Clinical Proxies
@@ -84,10 +84,10 @@ paths:
       description: "- the file name of the zip file is not determined by this endpoint"
       parameters:
         - name: excludeSampleRegistration
-          in: path
-          description: boolean value for whether to exclude downloading sample registration file. Accepted values are "true" or "false".
-          required: true
-          type: string
+          in: query
+          description: Boolean value for whether to exclude downloading sample registration file. Accepted values are "true" or "false", default to false.
+          required: false
+          type: boolean
       responses:
         "200":
           description: "A zip file with all schema templates"

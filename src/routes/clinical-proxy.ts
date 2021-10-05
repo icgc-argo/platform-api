@@ -36,18 +36,19 @@ const handleError = (err: Error, req: Request, res: Response) => {
 };
 
 router.use(
-  '/template/all/:excludeSampleRegistration',
+  '/template/all',
   createProxyMiddleware({
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
-      const exclude = req.params.excludeSampleRegistration;
+      const param = req.query.excludeSampleRegistration;
+      const exclude = param === undefined ? 'false' : param === 'true';
       return urlJoin('/dictionary/template/all', `?excludeSampleRegistration=${exclude}`);
     },
     onError: handleError,
     changeOrigin: true,
     onProxyReq(proxyReq, req, res) {
-      const exclude = req.params.excludeSampleRegistration;
-      if (exclude !== 'true' && exclude !== 'false') {
+      const exclude = req.query.excludeSampleRegistration;
+      if (exclude !== 'true' && exclude !== 'false' && exclude !== undefined) {
         res.status(400).send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
       }
     }
