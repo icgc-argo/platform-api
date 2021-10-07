@@ -471,6 +471,36 @@ const programDonorSummaryEntriesAndStatsResolver: (
             .lte(0)
           ])
       ),
+      // 'Completed' workflow runs => completed all workflows that have been initiated
+      // i.e. can't have anything failed or in-progress, must have at least one completed
+      filterAggregation('completedWorkflowRuns' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb.rangeQuery().field(EsDonorDocumentField.alignmentsCompleted).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.sangerVcsCompleted).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.mutectCompleted).gte(1),
+        ]).mustNot([
+          esb.rangeQuery().field(EsDonorDocumentField.alignmentsRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.sangerVcsRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.mutectRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.alignmentsFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.sangerVcsFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.mutectFailed).gte(1),
+        ]),
+      ),
+      filterAggregation('inProgressWorkflowRuns' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb.rangeQuery().field(EsDonorDocumentField.alignmentsRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.sangerVcsRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.mutectRunning).gte(1),
+        ]),
+      ),
+      filterAggregation('failedWorkflowRuns' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb.rangeQuery().field(EsDonorDocumentField.alignmentsFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.sangerVcsFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.mutectFailed).gte(1),
+        ]),
+      ),
       esb
         .sumAggregation('allFilesCount' as AggregationName)
         .field(EsDonorDocumentField.totalFilesCount),
@@ -530,6 +560,10 @@ const programDonorSummaryEntriesAndStatsResolver: (
       failedMutect: FilterAggregationResult;
       noMutect: FilterAggregationResult;
 
+      completedWorkflowRuns: FilterAggregationResult;
+      inProgressWorkflowRuns: FilterAggregationResult;
+      failedWorkflowRuns: FilterAggregationResult;
+
       allFilesCount: NumericAggregationResult;
       filesToQcCount: NumericAggregationResult;
       lastUpdate?: DateAggregationResult;
@@ -586,6 +620,10 @@ const programDonorSummaryEntriesAndStatsResolver: (
           failedMutect: { doc_count: 0 },
           noMutect: { doc_count: 0 },
 
+          completedWorkflowRuns: { doc_count: 0 },
+          inProgressWorkflowRuns: { doc_count: 0 },
+          failedWorkflowRuns: { doc_count: 0 },
+
           allFilesCount: { value: 0 },
           filesToQcCount: { value: 0 },
         }
@@ -641,6 +679,10 @@ const programDonorSummaryEntriesAndStatsResolver: (
       filesToQcCount: result.aggregations.filesToQcCount.value,
       donorsInvalidWithCurrentDictionaryCount:
       result.aggregations.donorsInvalidWithCurrentDictionary.doc_count,
+
+      completedWorkflowRuns: result.aggregations.completedWorkflowRuns.doc_count,
+      inProgressWorkflowRuns: result.aggregations.inProgressWorkflowRuns.doc_count,
+      failedWorkflowRuns: result.aggregations.failedWorkflowRuns.doc_count,
 
       coreCompletion: {
         completed: result.aggregations.completeCoreCompletion.doc_count,
