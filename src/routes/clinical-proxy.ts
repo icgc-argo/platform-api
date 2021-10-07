@@ -22,10 +22,9 @@ import { CLINICAL_SERVICE_ROOT } from '../config';
 import logger from '../utils/logger';
 import express from 'express';
 import { Request, Response } from 'express';
-const router = express.Router();
-
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
+const router = express.Router();
 // Our specification download service can't use GraphQL because GraphQL specification requires the content-type
 // that it returns be json, and we want to be able to return other content types, such as tab-separated-values,
 // so that the user is automatically prompted to save the file from their browser.
@@ -35,6 +34,25 @@ const handleError = (err: Error, req: Request, res: Response) => {
   logger.error('Clinical Router Error - ' + err);
   return res.status(500).send('Internal Server Error');
 };
+
+router.use(
+  '/template/all',
+  createProxyMiddleware({
+    target: CLINICAL_SERVICE_ROOT,
+    pathRewrite: (pathName: string, req: Request) => {
+      const exclude = req.query.excludeSampleRegistration === 'true';
+      return urlJoin('/dictionary/template/all', `?excludeSampleRegistration=${exclude}`);
+    },
+    onError: handleError,
+    changeOrigin: true,
+    onProxyReq(proxyReq, req, res) {
+      const exclude = req.query.excludeSampleRegistration;
+      if (exclude && exclude !== 'true' && exclude !== 'false') {
+        res.status(400).send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
+      }
+    }
+  }),
+);
 
 router.use(
   '/template/:template',

@@ -26,14 +26,6 @@ import { getEsFileDocumentByObjectId, toSongEntity } from '../utils';
 
 const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler => {
   return async (req: AuthenticatedRequest, res, next) => {
-    if (!req.auth.authenticated) {
-      // token was invalid
-      res
-        .status(401)
-        .send('Invalid access token')
-        .end();
-      return;
-    }
     const file = await getEsFileDocumentByObjectId(esClient)(req.params.fileObjectId);
     if (!file) {
       res
