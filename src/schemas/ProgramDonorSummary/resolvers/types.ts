@@ -91,9 +91,9 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
-  completedWorkflowRuns?: number,
-  inProgressWorkflowRuns?: number,
-  failedWorkflowRuns?: number,
+  completedWorkflowRuns: number,
+  inProgressWorkflowRuns: number,
+  failedWorkflowRuns: number,
 
   coreCompletion: CoreCompletionStatusCount;
 
