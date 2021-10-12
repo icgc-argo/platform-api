@@ -25,9 +25,6 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
 import { BaseQueryArguments, ProgramDonorSummaryStatsGqlResponse } from './types';
 import { Client } from '@elastic/elasticsearch';
-import programDonorSummaryEntriesResolver from './SummeryEntries';
-import programDonorSummaryStatsResolver from './SummaryStats';
-
 class UnauthorizedError extends ApolloError {
   constructor(message: string) {
     super(message);
@@ -74,16 +71,6 @@ const createResolvers = async (
 ): Promise<IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>> => {
   return {
     Query: {
-      programDonorSummaryEntries: (...resolverArguments) =>
-        resolveWithProgramAuth(
-          programDonorSummaryEntriesResolver(esClient)(...resolverArguments),
-          resolverArguments,
-        ),
-      programDonorSummaryStats: (...resolverArguments) =>
-        resolveWithProgramAuth(
-          programDonorSummaryStatsResolver(esClient)(...resolverArguments),
-          resolverArguments,
-        ),
       programDonorSummary: (...resolverArguments) =>
         resolveWithProgramAuth(
           programDonorSummaryEntriesAndStatsResolver(esClient)(...resolverArguments),
