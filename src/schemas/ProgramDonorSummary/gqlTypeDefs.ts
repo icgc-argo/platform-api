@@ -349,27 +349,5 @@ export default gql`
       sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
     ): DonorSummary!
-
-    """
-    To be removed
-    """
-    programDonorSummaryEntries(
-      programShortName: String!
-      """
-      Maximum page size of 500
-      """
-      first: Int = 20
-      offset: Int = 0
-      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
-      filters: [ProgramDonorSummaryFilter!] = []
-    ): [DonorSummaryEntry]!
-
-    """
-    To be removed
-    """
-    programDonorSummaryStats(
-      programShortName: String!
-      filters: [ProgramDonorSummaryFilter!] = []
-    ): ProgramDonorSummaryStats
   }
 `;
