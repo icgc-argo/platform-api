@@ -333,6 +333,22 @@ export default gql`
     Date of the most recent update to the donor summary index for this program. Can be null if no documents for this program
     """
     lastUpdate: DateTime
+
+    """
+    Number of donors whose initiated workflows are all complete
+    """
+    completedWorkflowRuns: Int!
+
+    """
+    Number of donors with workflow runs that are currently running
+    """
+    inProgressWorkflowRuns: Int!
+
+    """
+    Number of donors with workflow runs that have failed
+    """
+    failedWorkflowRuns: Int!
+
   }
 
   type Query {
@@ -349,27 +365,5 @@ export default gql`
       sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
       filters: [ProgramDonorSummaryFilter!] = []
     ): DonorSummary!
-
-    """
-    To be removed
-    """
-    programDonorSummaryEntries(
-      programShortName: String!
-      """
-      Maximum page size of 500
-      """
-      first: Int = 20
-      offset: Int = 0
-      sorts: [DonorSummaryEntrySort] = [{ field: donorId, order: asc }]
-      filters: [ProgramDonorSummaryFilter!] = []
-    ): [DonorSummaryEntry]!
-
-    """
-    To be removed
-    """
-    programDonorSummaryStats(
-      programShortName: String!
-      filters: [ProgramDonorSummaryFilter!] = []
-    ): ProgramDonorSummaryStats
   }
 `;
