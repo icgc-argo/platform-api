@@ -62,6 +62,10 @@ export default gql`
     Timestamp of when this donor first had Sanger VC data published
     """
     sangerVcsFirstPublishedDate
+    """
+    Timestamp of when this donor first had Open Access data published
+    """
+    openAccessFirstPublishedDate
   }
 
   type Query {

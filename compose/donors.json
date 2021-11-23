@@ -11,6 +11,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -29,7 +32,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -43,6 +47,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -60,7 +67,8 @@
     "createdAt": "2020-11-09T21:25:17.717Z","alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -74,6 +82,9 @@
     "mutectCompleted": 3,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 3,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -92,7 +103,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -106,6 +118,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -123,7 +138,8 @@
     "createdAt": "2020-11-09T21:25:17.717Z","alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -137,6 +153,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -155,7 +174,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -169,6 +189,9 @@
     "mutectCompleted": 1,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 1,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -187,7 +210,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -201,6 +225,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -219,7 +246,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 2,
@@ -233,6 +261,9 @@
     "mutectCompleted": 2,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 2,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -251,7 +282,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -265,6 +297,9 @@
     "mutectCompleted": 1,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 1,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -283,7 +318,8 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   },
   {
     "publishedNormalAnalysis": 1,
@@ -297,6 +333,9 @@
     "mutectCompleted": 1,
     "mutectRunning": 0,
     "mutectFailed": 0,
+    "openAccessCompleted": 1,
+    "openAccessRunning": 0,
+    "openAccessFailed": 0,
     "totalFilesCount": 0,
     "filesToQcCount": 0,
     "releaseStatus": "NO_RELEASE",
@@ -315,6 +354,7 @@
     "alignmentFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "mutectFirstPublishedDate": "2020-12-11T19:35:42.567Z",
     "rawReadsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
-    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z"
+    "sangerVcsFirstPublishedDate": "2020-12-11T19:35:42.567Z",
+    "openAccessFirstPublishedDate": "2020-12-11T19:35:42.567Z"
   }
 ]
