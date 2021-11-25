@@ -232,6 +232,33 @@ const programDonorSummaryEntriesAndStatsResolver: (
       const mutectStatusQuery = esb.boolQuery().should(shouldQueries);
       queries.push(mutectStatusQuery);
     }
+
+    if (field === EsDonorDocumentField.openAccessStatus && filter.values.length > 0) {
+      const shouldQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case workflowStatus.COMPLETED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessCompleted).gte(1));
+            break;
+          case workflowStatus.IN_PROGRESS:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessRunning).gte(1));
+            break;
+          case workflowStatus.FAILED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessFailed).gte(1));
+            break;
+          case workflowStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessCompleted).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessRunning).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.openAccessFailed).lte(0));
+            const noDataQuery = esb.boolQuery().must(mustQueries);
+            shouldQueries.push(noDataQuery);
+            break;
+        }
+      }
+      const openAccessStatusQuery = esb.boolQuery().should(shouldQueries);
+      queries.push(openAccessStatusQuery);
+    }
   });
 
   type AggregationName =
@@ -471,6 +498,41 @@ const programDonorSummaryEntriesAndStatsResolver: (
             .lte(0)
           ])
       ),
+      filterAggregation('completedOpenAccess' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.openAccessCompleted)
+          .gte(1),
+      ),
+      filterAggregation('inProgressOpenAccess' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.openAccessRunning)
+          .gte(1),
+      ),
+      filterAggregation('failedOpenAccess' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.openAccessFailed)
+          .gte(1),
+      ),
+      filterAggregation('noOpenAccess' as AggregationName).filter(
+        esb
+          .boolQuery().must([
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.openAccessCompleted)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.openAccessRunning)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.openAccessFailed)
+            .lte(0)
+          ])
+      ),
       // 'Completed' workflow runs => completed all workflows that have been initiated
       // i.e. can't have anything failed or in-progress, must have at least one completed
       filterAggregation('completedWorkflowRuns' as AggregationName).filter(
@@ -478,13 +540,16 @@ const programDonorSummaryEntriesAndStatsResolver: (
           esb.rangeQuery().field(EsDonorDocumentField.alignmentsCompleted).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.sangerVcsCompleted).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.mutectCompleted).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.openAccessCompleted).gte(1),
         ]).mustNot([
           esb.rangeQuery().field(EsDonorDocumentField.alignmentsRunning).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.sangerVcsRunning).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.mutectRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.openAccessRunning).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.alignmentsFailed).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.sangerVcsFailed).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.mutectFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.openAccessFailed).gte(1),
         ]),
       ),
       filterAggregation('inProgressWorkflowRuns' as AggregationName).filter(
@@ -492,6 +557,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
           esb.rangeQuery().field(EsDonorDocumentField.alignmentsRunning).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.sangerVcsRunning).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.mutectRunning).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.openAccessRunning).gte(1),
         ]),
       ),
       filterAggregation('failedWorkflowRuns' as AggregationName).filter(
@@ -499,6 +565,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
           esb.rangeQuery().field(EsDonorDocumentField.alignmentsFailed).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.sangerVcsFailed).gte(1),
           esb.rangeQuery().field(EsDonorDocumentField.mutectFailed).gte(1),
+          esb.rangeQuery().field(EsDonorDocumentField.openAccessFailed).gte(1),
         ]),
       ),
       esb
@@ -560,6 +627,11 @@ const programDonorSummaryEntriesAndStatsResolver: (
       failedMutect: FilterAggregationResult;
       noMutect: FilterAggregationResult;
 
+      completedOpenAccess: FilterAggregationResult;
+      inProgressOpenAccess: FilterAggregationResult;
+      failedOpenAccess: FilterAggregationResult;
+      noOpenAccess: FilterAggregationResult;
+
       completedWorkflowRuns: FilterAggregationResult;
       inProgressWorkflowRuns: FilterAggregationResult;
       failedWorkflowRuns: FilterAggregationResult;
@@ -620,6 +692,11 @@ const programDonorSummaryEntriesAndStatsResolver: (
           failedMutect: { doc_count: 0 },
           noMutect: { doc_count: 0 },
 
+          completedOpenAccess: { doc_count: 0 },
+          inProgressOpenAccess: { doc_count: 0 },
+          failedOpenAccess: { doc_count: 0 },
+          noOpenAccess: { doc_count: 0 },
+
           completedWorkflowRuns: { doc_count: 0 },
           inProgressWorkflowRuns: { doc_count: 0 },
           failedWorkflowRuns: { doc_count: 0 },
@@ -655,6 +732,9 @@ const programDonorSummaryEntriesAndStatsResolver: (
                 mutectCompleted: doc.mutectCompleted,
                 mutectRunning: doc.mutectRunning,
                 mutectFailed: doc.mutectFailed,
+                openAccessCompleted: doc.openAccessCompleted,
+                openAccessRunning: doc.openAccessRunning,
+                openAccessFailed: doc.openAccessFailed,
                 submittedCoreDataPercent: doc.submittedCoreDataPercent,
                 submittedExtendedDataPercent: doc.submittedExtendedDataPercent,
                 submitterDonorId: doc.submitterDonorId,
@@ -719,6 +799,13 @@ const programDonorSummaryEntriesAndStatsResolver: (
         inProgress: result.aggregations.inProgressMutect.doc_count,
         failed: result.aggregations.failedMutect.doc_count,
         noData: result.aggregations.noMutect.doc_count,
+      },
+
+      openAccessStatusCount: {
+        completed: result.aggregations.completedOpenAccess.doc_count,
+        inProgress: result.aggregations.inProgressOpenAccess.doc_count,
+        failed: result.aggregations.failedOpenAccess.doc_count,
+        noData: result.aggregations.noOpenAccess.doc_count,
       },
 
       lastUpdate: result.aggregations.lastUpdate?.value ? new Date(result.aggregations.lastUpdate.value) : undefined,

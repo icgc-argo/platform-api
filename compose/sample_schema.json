@@ -96,6 +96,18 @@
       "sangerVcsFirstPublishedDate": {
         "type": "date"
       },
+      "openAccessCompleted": {
+        "type": "byte"
+      },
+      "openAccessRunning": {
+        "type": "byte"
+      },
+      "openAccessFailed": {
+        "type": "byte"
+      },
+      "openAccessFirstPublishedDate": {
+        "type": "date"
+      },
       "processingStatus": {
         "type": "keyword"
       },

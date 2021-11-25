@@ -48,7 +48,8 @@ export type DonorFields =
   'coreCompletionDate' |
   'mutectFirstPublishedDate' |
   'rawReadsFirstPublishedDate' |
-  'sangerVcsFirstPublishedDate';
+  'sangerVcsFirstPublishedDate' |
+  'openAccessFirstPublishedDate';
 
 export type EsAggs = {
   [key in DonorFields]: EsAggsBuckets;

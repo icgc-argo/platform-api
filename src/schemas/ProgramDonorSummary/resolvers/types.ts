@@ -59,6 +59,9 @@ export type DonorSummaryEntry = {
   mutectCompleted: number;
   mutectRunning: number;
   mutectFailed: number;
+  openAccessCompleted: number;
+  openAccessRunning: number;
+  openAccessFailed: number;
   processingStatus: DonorMolecularDataProcessingStatus;
   updatedAt: Date;
   createdAt: Date;
@@ -72,6 +75,7 @@ type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof
     alignmentStatus: string,
     sangerVCStatus: string,
     mutectStatus: string,
+    openAccessStatus: string,
   };
 
 export type ProgramDonorSummaryFilter = {
@@ -106,6 +110,8 @@ export type ProgramDonorSummaryStats = {
   sangerStatusCount: WorkflowStatusCount;
 
   mutectStatusCount: WorkflowStatusCount;
+
+  openAccessStatusCount: WorkflowStatusCount;
 
   lastUpdate?: Date;
 };
@@ -159,6 +165,7 @@ export enum EsDonorDocumentField {
   alignmentStatus = 'alignmentStatus',
   sangerVCStatus = 'sangerVCStatus',
   mutectStatus = 'mutectStatus',
+  openAccessStatus = 'openAccessStatus',
   processingStatus = 'processingStatus',
   programId = 'programId',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
@@ -172,6 +179,9 @@ export enum EsDonorDocumentField {
   mutectCompleted = 'mutectCompleted',
   mutectRunning = 'mutectRunning',
   mutectFailed = 'mutectFailed',
+  openAccessCompleted = 'openAccessCompleted',
+  openAccessRunning = 'openAccessRunning',
+  openAccessFailed = 'openAccessFailed',
   submittedCoreDataPercent = 'submittedCoreDataPercent',
   submittedExtendedDataPercent = 'submittedExtendedDataPercent',
   submitterDonorId = 'submitterDonorId',
@@ -200,6 +210,9 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.mutectCompleted]: number;
   [EsDonorDocumentField.mutectRunning]: number;
   [EsDonorDocumentField.mutectFailed]: number;
+  [EsDonorDocumentField.openAccessCompleted]: number;
+  [EsDonorDocumentField.openAccessRunning]: number;
+  [EsDonorDocumentField.openAccessFailed]: number;
   [EsDonorDocumentField.submittedCoreDataPercent]: number;
   [EsDonorDocumentField.submittedExtendedDataPercent]: number;
   [EsDonorDocumentField.submitterDonorId]: string;

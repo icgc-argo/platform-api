@@ -81,6 +81,14 @@ export default gql`
     NO_DATA = donor has 0 of all the above Mutect 2 workflow.
     """
     mutectStatus
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has 1 or more completed Open Access workflow;
+    IN_PROGRESS = donor has 1 or more running Open Access workflow;
+    FAILED = donor has 1 or more failed Open Access workflow;
+    NO_DATA = donor has 0 of all the above Open Access workflow.
+    """
+    openAccessStatus
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
@@ -100,6 +108,9 @@ export default gql`
     mutectCompleted
     mutectRunning
     mutectFailed
+    openAccessCompleted
+    openAccessRunning
+    openAccessFailed
     processingStatus
     updatedAt
     createdAt
@@ -232,6 +243,18 @@ export default gql`
     """
     mutectFailed: Int!
     """
+    Number of Open Access completed for this donor
+    """
+    openAccessCompleted: Int!
+    """
+    Number of Open Access currently running for this donor
+    """
+    openAccessRunning: Int!
+    """
+    Number of Open Access that is failed for this donor
+    """
+    openAccessFailed: Int!
+    """
     Molecular data processing status of this donor
     """
     processingStatus: DonorMolecularDataProcessingStatus!
@@ -328,6 +351,11 @@ export default gql`
     Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as mutect2 workflow status
     """
     mutectStatusCount: WorkflowStatusCount!
+
+    """
+    Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as Open Access workflow status
+    """
+    openAccessStatusCount: WorkflowStatusCount!
 
     """
     Date of the most recent update to the donor summary index for this program. Can be null if no documents for this program
