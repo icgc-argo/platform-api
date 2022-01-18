@@ -154,7 +154,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMdd')}.tsv`,
+      defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
   );
