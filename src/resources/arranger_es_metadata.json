@@ -1217,6 +1217,18 @@
             "unit": null,
             "displayValues": {},
             "quickSearchEnabled": false,
+            "field": "file_id",
+            "displayName": "File ID",
+            "active": false,
+            "isArray": false,
+            "rangeStep": 1,
+            "type": "object",
+            "primaryKey": false
+          },
+          {
+            "unit": null,
+            "displayValues": {},
+            "quickSearchEnabled": false,
             "field": "file.index_file",
             "displayName": "Index File",
             "active": false,

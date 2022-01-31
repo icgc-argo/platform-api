@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -28,6 +28,7 @@ const manifestFileFields: TsvFileSchema<EsFileDocument> = [
   { header: 'analysis_id', getter: fileObj => fileObj.analysis.analysis_id },
   { header: 'object_id', getter: fileObj => fileObj.object_id },
   { header: 'file_type', getter: fileObj => fileObj.file_type },
+  { header: 'file_id', getter: fileObj => fileObj.file_id },
   { header: 'file_name', getter: fileObj => fileObj.file.name },
   { header: 'file_size', getter: fileObj => String(fileObj.file.size) },
   { header: 'md5sum', getter: fileObj => fileObj.file.md5sum },
