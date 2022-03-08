@@ -447,18 +447,27 @@
           "analysis_type": {
             "type": "keyword"
           },
+          "analysis_state": {
+            "type": "keyword"
+          },
           "analysis_version": {
             "type": "integer"
           },
-          "publish_date": {
+          "updated_at": {
             "type": "date"
           },
-          "workflow": {
+          "first_published_at": {
+            "type": "date"
+          },
+          "published_at": {
+            "type": "date"
+          },
+          "experiment": {
             "properties": {
-              "workflow_name": {
+              "experimental_strategy": {
                 "type": "keyword"
               },
-              "workflow_version": {
+              "platform": {
                 "type": "keyword"
               }
             }
@@ -466,13 +475,12 @@
           "variant_class": {
             "type": "keyword"
           },
-          "experiment": {
-            "type": "object",
+          "workflow": {
             "properties": {
-              "platform": {
+              "workflow_name": {
                 "type": "keyword"
               },
-              "experimental_strategy": {
+              "workflow_version": {
                 "type": "keyword"
               }
             }
@@ -586,6 +594,59 @@
             "type": "keyword"
           },
           "url": {
+            "type": "keyword"
+          }
+        }
+      },
+      "metrics": {
+        "properties": {
+          "average_insert_size": {
+            "type": "float"
+          },
+          "average_length": {
+            "type": "integer"
+          },
+          "duplicated_bases": {
+            "type": "long"
+          },
+          "error_rate": {
+            "type": "float"
+          },
+          "mapped_bases_cigar": {
+            "type": "long"
+          },
+          "mapped_reads": {
+            "type": "long"
+          },
+          "mismatch_bases": {
+            "type": "long"
+          },
+          "paired_reads": {
+            "type": "long"
+          },
+          "pairs_on_different_chromosomes": {
+            "type": "long"
+          },
+          "properly_paired_reads": {
+            "type": "long"
+          },
+          "total_bases": {
+            "type": "long"
+          },
+          "total_reads": {
+            "type": "long"
+          }
+        }
+      },
+      "meta": {
+        "properties": {
+          "study_id": {
+            "type": "keyword"
+          },
+          "release_state": {
+            "type": "keyword"
+          },
+          "embargo_stage": {
             "type": "keyword"
           }
         }
