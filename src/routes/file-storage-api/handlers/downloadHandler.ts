@@ -29,9 +29,10 @@ import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
 import { getDataCenter } from 'services/dataCenterRegistry';
 import { ScoreAuthClient } from 'services/ego/scoreAuthClient';
-import { MAX_UI_FILE_DOWNLOAD_SIZE } from 'constants/fileStorage';
 import fetch from 'node-fetch';
 import { get } from 'lodash';
+
+const MAX_UI_FILE_DOWNLOAD_SIZE = 100000000; // 100MB
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
