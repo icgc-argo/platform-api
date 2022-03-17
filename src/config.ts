@@ -91,6 +91,9 @@ export const RECAPTCHA_SECRET_KEY = String(process.env.RECAPTCHA_SECRET_KEY);
 export const RECAPTCHA_VAULT_SECRET_PATH = String(process.env.RECAPTCHA_VAULT_SECRET_PATH);
 export const DEV_RECAPTCHA_DISABLED = process.env.DEV_RECAPTCHA_DISABLED === 'true';
 
+// File Storage API
+export const MAX_FILE_DOWNLOAD_SIZE = Number(process.env.MAX_FILE_DOWNLOAD_SIZE) || 100000000; // 100MB
+
 // TSV download configs
 export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
   Number(process.env.DEFAULT_TSV_STREAM_CHUNK_SIZE) || 1000;

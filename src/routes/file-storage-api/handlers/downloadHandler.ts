@@ -27,12 +27,11 @@ import {
 } from 'routes/utils/accessValidations';
 import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
+import { MAX_FILE_DOWNLOAD_SIZE } from 'config';
 import { getDataCenter } from 'services/dataCenterRegistry';
 import { ScoreAuthClient } from 'services/ego/scoreAuthClient';
 import fetch from 'node-fetch';
 import { get } from 'lodash';
-
-const MAX_UI_FILE_DOWNLOAD_SIZE = 100000000; // 100MB
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
   pathName.replace(rootPath, '').replace('//', '/');
@@ -123,7 +122,7 @@ export const getDownloadUrl = ({
 
   const fileSize = esFileObject.file.size;
 
-  if (fileSize > MAX_UI_FILE_DOWNLOAD_SIZE) {
+  if (fileSize > MAX_FILE_DOWNLOAD_SIZE) {
     return res
       .status(400)
       .send('File is too large to download over UI. Please use the SCORE client instead')
