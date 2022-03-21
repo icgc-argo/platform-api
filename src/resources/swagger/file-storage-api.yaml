@@ -169,6 +169,28 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
+  "/storage-api/get-download-url/{id}":
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - File Storage Api
+      summary: Fetch public download URL for small file downloads directly from object storage
+      parameters:
+        - name: id
+          in: path
+          description: object_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Not Found
 
 definitions:
   Analysis:
