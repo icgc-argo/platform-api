@@ -106,7 +106,7 @@ const downloadHandler = ({
     }
   }
 };
-export const getDownloadUrl = ({
+export const downloadFile = ({
   esClient,
   scoreAuthClient,
 }: {
@@ -161,12 +161,30 @@ export const getDownloadUrl = ({
 
       const scoreDownloadUrl = get(scoreResponse, 'parts[0].url', undefined);
 
-      if (scoreDownloadUrl) {
-        return res.status(200).json({url: scoreDownloadUrl}).end();
+      if (!scoreDownloadUrl) {
+        // if we get here, the score response didn't contain a download url
+        return res.status(404).end();
       }
 
-      // if we get here, the score response didn't contain a download url
-      return res.status(404).end();
+      // download file from score and return it to the client with the correct filename
+      await fetch(scoreDownloadUrl)
+        .then(response => {
+          res.header('Content-Disposition', `attachment; filename="${esFileObject.file.name}"`);
+
+          response.body.pipe(res);
+
+          response.body.on('error', (err) => {
+            logger.error('Error piping file from Score - ' + err);
+            return res.status(500).end();
+          });
+        })
+        .then(() => {
+          return res.status(200).end();
+        })
+        .catch(err => {
+          logger.error('Score Download Error - ' + err);
+          return res.status(500).end();
+        });
     } else {
       res
         .status(500)
