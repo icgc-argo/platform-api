@@ -169,13 +169,13 @@ paths:
           description: Forbidden
         "404":
           description: Not Found
-  "/storage-api/get-download-url/{id}":
+  "/storage-api/download-file/{id}":
     get:
       security:
         - bearerAuth: []
       tags:
         - File Storage Api
-      summary: Fetch public download URL for small file downloads directly from object storage
+      summary: Download small files directly from object storage
       parameters:
         - name: id
           in: path

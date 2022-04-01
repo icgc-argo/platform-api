@@ -21,7 +21,7 @@ import { Client } from '@elastic/elasticsearch';
 import express, { Router } from 'express';
 import urljoin from 'url-join';
 import { ADVERTISED_HOST } from 'config';
-import downloadProxy, { getDownloadUrl } from './handlers/downloadHandler';
+import downloadProxy, { downloadFile } from './handlers/downloadHandler';
 import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
 import authenticatedRequestMiddleware from 'routes/middleware/authenticatedRequestMiddleware';
@@ -81,9 +81,9 @@ export default async ({
     }),
   );
   router.get(
-    '/get-download-url/:fileObjectId',
+    '/download-file/:fileObjectId',
     authenticatedRequestMiddleware({ egoClient }),
-    getDownloadUrl({
+    downloadFile({
       esClient,
       scoreAuthClient,
     }),
