@@ -178,9 +178,6 @@ export const downloadFile = ({
             return res.status(500).end();
           });
         })
-        .then(() => {
-          return res.status(200).end();
-        })
         .catch(err => {
           logger.error('Score Download Error - ' + err);
           return res.status(500).end();
