@@ -112,7 +112,7 @@ const convertRegistrationDataToGql = (
         (record, i) => convertClinicalRecordToGql(i, record),
       ),
     errors: schemaAndValidationErrors?.map(convertRegistrationErrorToGql),
-    fileErrors: fileErrors?.map(convertClinicalFileErrorrToGql),
+    fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
     newDonors: () => convertRegistrationStatsToGql(get(registration, 'stats.newDonorIds', [])),
     newSpecimens: () =>
       convertRegistrationStatsToGql(get(registration, 'stats.newSpecimenIds', [])),
@@ -161,11 +161,11 @@ const convertClinicalSubmissionDataToGql = (
         convertClinicalSubmissionEntityToGql(clinicalEntity.clinicalType, clinicalEntity),
       );
     },
-    fileErrors: fileErrors?.map(convertClinicalFileErrorrToGql),
+    fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
   };
 };
 
-const convertClinicalFileErrorrToGql = (fileError: {
+const convertClinicalFileErrorToGql = (fileError: {
   message: string;
   batchNames: string[];
   code: string;
