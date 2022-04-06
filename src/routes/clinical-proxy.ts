@@ -48,9 +48,11 @@ router.use(
     onProxyReq(proxyReq, req, res) {
       const exclude = req.query.excludeSampleRegistration;
       if (exclude && exclude !== 'true' && exclude !== 'false') {
-        res.status(400).send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
+        res
+          .status(400)
+          .send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
       }
-    }
+    },
   }),
 );
 
@@ -76,6 +78,19 @@ router.use(
     pathRewrite: (pathName: string, req: Request) => {
       const programId = req.params.programId;
       return urlJoin('/clinical/program/', programId, '/tsv-export');
+    },
+    onError: handleError,
+    changeOrigin: true,
+  }),
+);
+
+router.use(
+  '/program/:programId/submitted-data',
+  createProxyMiddleware({
+    target: CLINICAL_SERVICE_ROOT,
+    pathRewrite: (pathName: string, req: Request) => {
+      const programId = req.params.programId;
+      return urlJoin('/clinical/program/', programId, '/clinical-data');
     },
     onError: handleError,
     changeOrigin: true,
