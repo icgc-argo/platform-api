@@ -85,7 +85,7 @@ router.use(
 );
 
 router.use(
-  '/program/:programId/submitted-data',
+  '/program/:programId/clinical-data',
   createProxyMiddleware({
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
