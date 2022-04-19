@@ -24,9 +24,11 @@ import chaiHttp from 'chai-http';
 import { EntitiesPageResponseBody } from '../entitiesHandler';
 import { Client } from '@elastic/elasticsearch';
 import esb from 'elastic-builder';
-import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
+import {
+  FILE_METADATA_FIELDS,
+  EsFileCentricDocument,
+} from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
-import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument.ts';
 import { reduce } from 'axax/es5/reduce';
 import _ from 'lodash';
 
