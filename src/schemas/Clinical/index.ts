@@ -165,20 +165,32 @@ const convertClinicalSubmissionDataToGql = (
     };
   };
 
+type ClinicalData = {
+  programShortName: string;
+  clinicalEntities: ClinicalDataEntities;
+};
+
+interface DataEntityRecord { 
+  entityName: string,
+  records: [{}],
+  entityFields: [string],
+};
+
 const convertClinicalDataToGql = (
   programShortName: string,
-  data: [{ 
-    entityName: string,
-    records: [{}],
-    entityFields: [string],
-  }],
-) => {
-  const clinicalEntities = data;
-
-  return {
-    programShortName,
-    clinicalEntities,
+  data: [DataEntityRecord],
+): ClinicalData => {
+  const clinicalData = data.reduce((data: ClinicalData, entity: DataEntityRecord)=> {
+    const { entityName, records } = entity;
+    const clinicalEntities = {
+      ...data.clinicalEntities,
+      [entityName]: records
     };
+    return { ...data, clinicalEntities };
+  }, { programShortName, clinicalEntities: {} } as ClinicalData);
+  console.log('clinicalEntities', clinicalData);
+
+  return clinicalData
   };
 
 const convertClinicalFileErrorToGql = (fileError: {
