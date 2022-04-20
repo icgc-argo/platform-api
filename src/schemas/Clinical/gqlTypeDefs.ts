@@ -72,11 +72,11 @@ export default gql`
     version: String
     updatedBy: String
     updatedAt: DateTime
-    clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
+    clinicalEntities: [ClinicalSubmissionEntity]! @cost(complexity: 20)
     fileErrors: [ClinicalFileError]
   }
 
-  type ClinicalEntityData {
+  type ClinicalSubmissionEntity {
     clinicalType: String!
     batchName: String
     creator: String
@@ -87,6 +87,21 @@ export default gql`
     dataUpdates: [ClinicalSubmissionUpdate]!
     dataWarnings: [ClinicalSubmissionSchemaError]!
     createdAt: DateTime
+  }
+
+  type ClinicalDataRecord {
+    program_id: String
+  }
+
+  type ClinicalDataEntity {
+    entityName: String
+    records: [ClinicalDataRecord]!
+    entityFields: [String]
+  }
+
+  type ClinicalData {
+    programShortName: String!
+    clinicalEntities: [ClinicalDataEntity]!
   }
 
   """
@@ -192,6 +207,11 @@ export default gql`
     Retrieve current Clinical Submission disabled state for both sample_registration and clinical entity files
     """
     clinicalSubmissionSystemDisabled: Boolean!
+
+    """
+    Retrieve all stored Clinical Data for a program
+    """
+    clinicalData(programShortName: String!): ClinicalData!
   }
 
   type Mutation {
