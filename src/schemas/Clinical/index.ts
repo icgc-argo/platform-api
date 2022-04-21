@@ -167,10 +167,10 @@ const convertClinicalSubmissionDataToGql = (
 
 type ClinicalData = {
   programShortName: string;
-  clinicalEntities: ClinicalDataEntities;
+  clinicalEntities: [ ClinicalDataEntity ];
 };
 
-interface DataEntityRecord { 
+interface ClinicalDataEntity { 
   entityName: string,
   records: [{}],
   entityFields: [string],
@@ -178,17 +178,13 @@ interface DataEntityRecord {
 
 const convertClinicalDataToGql = (
   programShortName: string,
-  data: [DataEntityRecord],
+  data: [ClinicalDataEntity],
 ): ClinicalData => {
-  const clinicalData = data.reduce((data: ClinicalData, entity: DataEntityRecord)=> {
-    const { entityName, records } = entity;
-    const clinicalEntities = {
-      ...data.clinicalEntities,
-      [entityName]: records
+
+  const clinicalData = {
+      programShortName,
+      clinicalEntities: data,
     };
-    return { ...data, clinicalEntities };
-  }, { programShortName, clinicalEntities: {} } as ClinicalData);
-  console.log('clinicalEntities', clinicalData);
 
   return clinicalData
   };
@@ -333,6 +329,7 @@ const resolvers = {
         programShortName,
         Authorization,
       );
+
       return convertClinicalDataToGql(programShortName, response);
     },
     clinicalSubmissions: async (

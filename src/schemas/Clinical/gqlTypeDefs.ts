@@ -183,7 +183,7 @@ export default gql`
 
   type ClinicalData {
     programShortName: String!
-    clinicalEntities: ClinicalDataEntities!
+    clinicalEntities: [ClinicalDataEntities]!
   }
 
   type Query {
