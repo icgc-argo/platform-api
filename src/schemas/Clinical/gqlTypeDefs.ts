@@ -173,6 +173,7 @@ export default gql`
   type ClinicalDataEntities {
     entityName: String
     records: [ClinicalDataRecord]!
+    entityFields: [String]
   }
 
   type ClinicalDataRecord {
