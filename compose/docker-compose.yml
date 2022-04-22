@@ -2,7 +2,8 @@
 version: "3"
 services:
   elasticsearch:
-    image: "elasticsearch:7.5.0"
+    container_name: platformapi_es
+    image: "docker.elastic.co/elasticsearch/elasticsearch:7.10.2"
     ports:
       - 9200:9200
     volumes:
@@ -13,12 +14,53 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx2048m"
 
   kibana:
+    container_name: platformapi_kibana
     image: "kibana:7.5.0"
     depends_on:
       - elasticsearch
     ports:
       - 5601:5601
+  
+  programservice:
+    container_name: platformapi_programs
+    image: ghcr.io/icgc-argo/program-service:1.16.0
+    depends_on:
+      - programs_db
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+        reservations:
+          cpus: 1
+          
+    ports: 
+      - 50051:50051
+    environment:
+      app.egoUrl: https://ego.qa.argo.cancercollaboratory.org/api
+      app.egoClientId: program-service
+      app.egoClientSecret: redacted
+      app.mail-enabled: "false"
+      spring.profiles.active: default,auth
+      spring.datasource.url: jdbc:postgresql://docker.for.mac.localhost:9432/program_db
+      spring.datasource.username: postgres
+      spring.datasource.password: password
+      spring.flyway.enabled: "true"
+
+  programs_db:
+    container_name: platformapi_programsdb
+    image: postgres:11.1
+    volumes:
+      - programs_data:/var/lib/postgresql
+    ports:
+      - 9432:9432
+    environment:
+      PGPORT: 9432
+      POSTGRES_DB: program_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
 
 volumes:
   es_data:
+    driver: local
+  programs_data:
     driver: local
