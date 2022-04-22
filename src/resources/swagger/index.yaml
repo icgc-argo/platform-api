@@ -68,12 +68,20 @@ paths:
       description: '- the file name of the zip file is not determined by this endpoint'
       responses:
         '200':
-          description: 'A zip file with all program submitted data'
+          description: 'All program submitted data as JSON'
           content:
-            application/zip:
+            application/json:
               schema:
-                type: string
-                format: binary
+              type: object
+              properties:
+                programShortName:
+                  type: string
+                clinicalEntities:
+                  type: array
+                schemaMetadata:
+                  type: array
+                completionStats:
+                  type: array
         '500':
           description: Internal server error
   '/clinical/program/{programId}/clinical-data':
