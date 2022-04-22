@@ -167,23 +167,39 @@ const convertClinicalSubmissionDataToGql = (
 
 type ClinicalData = {
   programShortName: string;
-  clinicalEntities: [ ClinicalDataEntity ];
+  clinicalEntities: ClinicalDataEntity [];
 };
 
 interface ClinicalDataEntity { 
   entityName: string,
-  records: [{}],
-  entityFields: [string],
+  records: EntityRecord[][],
+  entityFields: string[],
 };
 
 const convertClinicalDataToGql = (
   programShortName: string,
-  data: [ClinicalDataEntity],
+  data: any,
 ): ClinicalData => {
+  const clinicalEntities: ClinicalDataEntity[] = data.map((entity: any) => {
+    
+    const records: EntityRecord[][] = entity.records.map((record: any) => (
+      Object.keys(record)
+        .map(key => key && ({ name: key, value: record[key] })
+    )));
 
+    const entityData = {
+      entityName: entity.entityName,
+      entityFields: entity.entityFields,
+      records,
+    };
+
+    return entityData;
+  });
+
+  console.log('clinicalEntities', clinicalEntities);
   const clinicalData = {
       programShortName,
-      clinicalEntities: data,
+      clinicalEntities,
     };
 
   return clinicalData

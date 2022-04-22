@@ -172,13 +172,8 @@ export default gql`
   """
   type ClinicalDataEntities {
     entityName: String
-    records: [ClinicalDataRecord]!
+    records: [[ClinicalRecordField]]!
     entityFields: [String]
-  }
-
-  type ClinicalDataRecord {
-    program_id: String
-    submitter_donor_id: String
   }
 
   type ClinicalData {
