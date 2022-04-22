@@ -68,20 +68,12 @@ paths:
       description: '- the file name of the zip file is not determined by this endpoint'
       responses:
         '200':
-          description: 'All program submitted data as JSON'
+          description: 'A zip file with all program submitted data'
           content:
-            application/json:
+            application/zip:
               schema:
-              type: object
-              properties:
-                programShortName:
-                  type: string
-                clinicalEntities:
-                  type: array
-                schemaMetadata:
-                  type: array
-                completionStats:
-                  type: array
+                type: string
+                format: binary
         '500':
           description: Internal server error
   '/clinical/program/{programId}/clinical-data':
@@ -98,15 +90,15 @@ paths:
       security:
         - bearerAuth: []
       summary: Query program data from clinical service
-      description: 'Query program data from clinical service'
+      description: 'Query program data by ID from clinical service'
       responses:
         '200':
-          description: 'Query all program submitted data'
+          description: 'Returns programShortName, clinicalEntities[], schemaMetadata[], completionStats[]'
           content:
-            application/zip:
+            application/json:
               schema:
-                type: string
-                format: binary
+                type: object
+
         '500':
           description: Internal server error
   '/clinical/template/all':
