@@ -170,15 +170,39 @@ export default gql`
   """
   Clinical Data Schemas
   """
+  type ClinicalData {
+    programShortName: String!
+    clinicalEntities: [ClinicalDataEntities]!
+    schemaMetadata: [SchemaMetadata]
+    completionStats: [CompletionStats]
+  }
+
   type ClinicalDataEntities {
     entityName: String
     records: [[ClinicalRecordField]]!
     entityFields: [String]
   }
 
-  type ClinicalData {
-    programShortName: String!
-    clinicalEntities: [ClinicalDataEntities]!
+  type CompletionStats {
+    coreCompletion: CoreCompletionFields
+    coreCompletionDate: String
+    coreCompletionPercentage: Int!
+    overriddenCoreCompletion: [String]
+  }
+
+  type CoreCompletionFields {
+    donor: Int!
+    specimens: Int!
+    primaryDiagnosis: Int!
+    followUps: Int!
+    treatments: Int!
+  }
+
+  type SchemaMetadata {
+    lastValidSchemaVersion: String!
+    originalSchemaVersion: String!
+    isValid: Boolean!
+    lastMigrationId: String
   }
 
   type Query {

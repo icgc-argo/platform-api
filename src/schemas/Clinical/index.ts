@@ -168,7 +168,35 @@ const convertClinicalSubmissionDataToGql = (
 type ClinicalData = {
   programShortName: string;
   clinicalEntities: ClinicalDataEntity [];
+  schemaMetadata: SchemaMetadata;
+  completionStats: CompletionStats;
 };
+
+enum CoreClinicalEntities {
+  'donor',
+  'specimens',
+  'primaryDiagnosis',
+  'followUps',
+  'treatments',
+}
+
+type CompletionStats = {
+  coreCompletion: CoreCompletionFields;
+  coreCompletionDate: string;
+  coreCompletionPercentage: Number;
+  overriddenCoreCompletion: [CoreClinicalEntities];
+}
+
+type CoreCompletionFields = {
+  [k in CoreClinicalEntities]: Number;
+}
+
+type SchemaMetadata = {
+  lastValidSchemaVersion: string;
+  originalSchemaVersion: string;
+  isValid: boolean;
+  lastMigrationId: string;
+}
 
 interface ClinicalDataEntity { 
   entityName: string,
@@ -180,7 +208,8 @@ const convertClinicalDataToGql = (
   programShortName: string,
   data: any,
 ): ClinicalData => {
-  const clinicalEntities: ClinicalDataEntity[] = data.map((entity: any) => {
+  const { schemaMetadata, completionStats } = data;
+  const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
     
     const records: EntityRecord[][] = entity.records.map((record: any) => (
       Object.keys(record)
@@ -195,13 +224,13 @@ const convertClinicalDataToGql = (
 
     return entityData;
   });
-
-  console.log('clinicalEntities', clinicalEntities);
   const clinicalData = {
-      programShortName,
-      clinicalEntities,
-    };
-
+    programShortName,
+    clinicalEntities,
+    schemaMetadata,
+    completionStats,
+  };
+    
   return clinicalData
   };
 
@@ -345,7 +374,7 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-
+      console.log('convert', convertClinicalDataToGql(programShortName, response));
       return convertClinicalDataToGql(programShortName, response);
     },
     clinicalSubmissions: async (
