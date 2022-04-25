@@ -374,7 +374,6 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-      console.log('convert', convertClinicalDataToGql(programShortName, response));
       return convertClinicalDataToGql(programShortName, response);
     },
     clinicalSubmissions: async (
