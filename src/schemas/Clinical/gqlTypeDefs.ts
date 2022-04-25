@@ -186,8 +186,9 @@ export default gql`
   type CompletionStats {
     coreCompletion: CoreCompletionFields
     coreCompletionDate: String
-    coreCompletionPercentage: Int!
+    coreCompletionPercentage: Int
     overriddenCoreCompletion: [String]
+    donorId: String
   }
 
   type CoreCompletionFields {
@@ -196,6 +197,7 @@ export default gql`
     primaryDiagnosis: Int!
     followUps: Int!
     treatments: Int!
+    familyHistory: Int
   }
 
   type SchemaMetadata {
@@ -203,6 +205,7 @@ export default gql`
     originalSchemaVersion: String!
     isValid: Boolean!
     lastMigrationId: String
+    donorId: String!
   }
 
   type Query {

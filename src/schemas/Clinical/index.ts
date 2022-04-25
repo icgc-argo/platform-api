@@ -178,6 +178,7 @@ enum CoreClinicalEntities {
   'primaryDiagnosis',
   'followUps',
   'treatments',
+  'familyHistory'
 }
 
 type CompletionStats = {
@@ -185,17 +186,19 @@ type CompletionStats = {
   coreCompletionDate: string;
   coreCompletionPercentage: Number;
   overriddenCoreCompletion: [CoreClinicalEntities];
+  donorId: string;
 }
 
 type CoreCompletionFields = {
-  [k in CoreClinicalEntities]: Number;
-}
+  [k in CoreClinicalEntities]?: Number;
+};
 
 type SchemaMetadata = {
   lastValidSchemaVersion: string;
   originalSchemaVersion: string;
   isValid: boolean;
   lastMigrationId: string;
+  donorId: string;
 }
 
 interface ClinicalDataEntity { 
@@ -210,7 +213,7 @@ const convertClinicalDataToGql = (
 ): ClinicalData => {
   const { schemaMetadata, completionStats } = data;
   const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
-    
+
     const records: EntityRecord[][] = entity.records.map((record: any) => (
       Object.keys(record)
         .map(key => key && ({ name: key, value: record[key] })
@@ -230,7 +233,7 @@ const convertClinicalDataToGql = (
     schemaMetadata,
     completionStats,
   };
-    
+  
   return clinicalData
   };
 
