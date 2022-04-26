@@ -173,7 +173,6 @@ export default gql`
   type ClinicalData {
     programShortName: String!
     clinicalEntities: [ClinicalDataEntities]!
-    schemaMetadata: [SchemaMetadata]
     completionStats: [CompletionStats]
   }
 
@@ -198,14 +197,6 @@ export default gql`
     followUps: Int!
     treatments: Int!
     familyHistory: Int
-  }
-
-  type SchemaMetadata {
-    lastValidSchemaVersion: String!
-    originalSchemaVersion: String!
-    isValid: Boolean!
-    lastMigrationId: String
-    donorId: String!
   }
 
   type Query {
