@@ -168,7 +168,6 @@ const convertClinicalSubmissionDataToGql = (
 type ClinicalData = {
   programShortName: string;
   clinicalEntities: ClinicalDataEntity [];
-  schemaMetadata: SchemaMetadata;
   completionStats: CompletionStats;
 };
 
@@ -193,14 +192,6 @@ type CoreCompletionFields = {
   [k in CoreClinicalEntities]?: Number;
 };
 
-type SchemaMetadata = {
-  lastValidSchemaVersion: string;
-  originalSchemaVersion: string;
-  isValid: boolean;
-  lastMigrationId: string;
-  donorId: string;
-}
-
 interface ClinicalDataEntity { 
   entityName: string,
   records: EntityRecord[][],
@@ -208,10 +199,17 @@ interface ClinicalDataEntity {
 };
 
 const convertClinicalDataToGql = (
-  programShortName: string,
+  args: {
+    programShortName: string,
+    first: number,
+    offset: number,
+    filters: JSON,
+    sort: {}[],
+  },
   data: any,
 ): ClinicalData => {
-  const { schemaMetadata, completionStats } = data;
+  const { programShortName } = args;
+  const { completionStats } = data;
   const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
 
     const records: EntityRecord[][] = entity.records.map((record: any) => (
@@ -227,13 +225,13 @@ const convertClinicalDataToGql = (
 
     return entityData;
   });
+
   const clinicalData = {
     programShortName,
     clinicalEntities,
-    schemaMetadata,
     completionStats,
   };
-  
+
   return clinicalData
   };
 
@@ -367,7 +365,7 @@ const resolvers = {
     },
     clinicalData: async (
       obj: unknown,
-      args: { programShortName: string },
+      args: { programShortName: string, first: number, offset: number, filters: JSON, sort: {}[] },
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
@@ -377,7 +375,7 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-      return convertClinicalDataToGql(programShortName, response);
+      return convertClinicalDataToGql(args, response);
     },
     clinicalSubmissions: async (
       obj: unknown,
