@@ -134,8 +134,16 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
   return response;
 };
 
-const getClinicalData = async (programShortName, Authorization) => {
-  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-data/`;
+const getClinicalData = async ({ variables }, Authorization) => {
+  const { programShortName } = variables;
+
+  const query = new URLSearchParams({
+    ...variables,
+    filters: JSON.stringify(variables.filters),
+    sort: JSON.stringify(variables.sort),
+  }).toString();
+
+  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-data?${query}`;
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },

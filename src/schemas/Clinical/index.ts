@@ -166,10 +166,19 @@ const convertClinicalSubmissionDataToGql = (
   };
 
 type ClinicalData = {
-  programShortName: string;
   clinicalEntities: ClinicalDataEntity [];
   completionStats: CompletionStats;
 };
+
+type ClinicalVariables = {
+  variables: {
+    programShortName: string, 
+    first: number, 
+    offset: number, 
+    filters: {}, 
+    sort: {}[]
+  }
+}
 
 enum CoreClinicalEntities {
   'donor',
@@ -199,16 +208,10 @@ interface ClinicalDataEntity {
 };
 
 const convertClinicalDataToGql = (
-  args: {
-    programShortName: string,
-    first: number,
-    offset: number,
-    filters: JSON,
-    sort: {}[],
-  },
+  { variables }: ClinicalVariables,
   data: any,
 ): ClinicalData => {
-  const { programShortName } = args;
+  const { programShortName } = variables;
   const { completionStats } = data;
   const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
 
@@ -365,17 +368,16 @@ const resolvers = {
     },
     clinicalData: async (
       obj: unknown,
-      args: { programShortName: string, first: number, offset: number, filters: JSON, sort: {}[] },
+      variables: ClinicalVariables,
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
-      const { programShortName } = args;
-
+      console.log('clinicalData args', variables);
       const response = await clinicalService.getClinicalData(
-        programShortName,
+        variables,
         Authorization,
       );
-      return convertClinicalDataToGql(args, response);
+      return convertClinicalDataToGql(variables, response);
     },
     clinicalSubmissions: async (
       obj: unknown,

@@ -170,10 +170,26 @@ export default gql`
   """
   Clinical Data Schemas
   """
-  type ClinicalData {
+  input ClinicalQueryVariables {
     programShortName: String!
+    first: Int!
+    offset: Int!
+    filters: QueryFilter
+    sort: [QuerySort]
+  }
+
+  type ClinicalData {
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
+  }
+
+  input QuerySort {
+    field: String!
+    order: String!
+  }
+
+  input QueryFilter {
+    test: String
   }
 
   type ClinicalDataEntities {
@@ -228,7 +244,7 @@ export default gql`
     """
     Retrieve all stored Clinical Data for a program
     """
-    clinicalData(programShortName: String!): ClinicalData!
+    clinicalData(variables: ClinicalQueryVariables): ClinicalData!
   }
 
   type Mutation {
