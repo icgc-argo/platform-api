@@ -173,6 +173,7 @@ type ClinicalData = {
 type ClinicalVariables = {
   variables: {
     programShortName: string, 
+    withErrors: Boolean,
     first: number, 
     offset: number, 
     filters: {}, 
