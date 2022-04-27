@@ -173,6 +173,7 @@ export default gql`
   input ClinicalQueryVariables {
     programShortName: String!
     withErrors: Boolean
+    entityTypes: [String]
     first: Int!
     offset: Int!
     filters: QueryFilter

@@ -172,7 +172,8 @@ type ClinicalData = {
 
 type ClinicalVariables = {
   variables: {
-    programShortName: string, 
+    programShortName: string,
+    entityTypes: string[], 
     withErrors: Boolean,
     first: number, 
     offset: number, 
