@@ -175,8 +175,8 @@ type ClinicalVariables = {
     programShortName: string,
     entityTypes: string[], 
     withErrors: Boolean,
-    first: number, 
-    offset: number, 
+    page: number, 
+    limit: number, 
     filters: {}, 
     sort: string
   }

@@ -174,8 +174,8 @@ export default gql`
     programShortName: String!
     withErrors: Boolean
     entityTypes: [String]
-    first: Int!
-    offset: Int!
+    page: Int!
+    limit: Int!
     filters: QueryFilter
     sort: String!
   }
