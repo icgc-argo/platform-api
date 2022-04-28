@@ -177,17 +177,12 @@ export default gql`
     first: Int!
     offset: Int!
     filters: QueryFilter
-    sort: [QuerySort]
+    sort: String!
   }
 
   type ClinicalData {
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
-  }
-
-  input QuerySort {
-    field: String!
-    order: String!
   }
 
   input QueryFilter {

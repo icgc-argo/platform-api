@@ -178,7 +178,7 @@ type ClinicalVariables = {
     first: number, 
     offset: number, 
     filters: {}, 
-    sort: {}[]
+    sort: string
   }
 }
 
