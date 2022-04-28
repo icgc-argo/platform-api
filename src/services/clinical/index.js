@@ -135,12 +135,13 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
 };
 
 const getClinicalData = async ({ variables }, Authorization) => {
-  const { programShortName } = variables;
+  const { programShortName, entityTypes, filters, sort } = variables;
 
   const query = new URLSearchParams({
     ...variables,
-    filters: JSON.stringify(variables.filters),
-    sort: JSON.stringify(variables.sort),
+    entityTypes: JSON.stringify(entityTypes),
+    filters: JSON.stringify(filters),
+    sort: JSON.stringify(sort),
   }).toString();
 
   const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-data?${query}`;
