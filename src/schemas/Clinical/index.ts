@@ -168,6 +168,7 @@ const convertClinicalSubmissionDataToGql = (
 type ClinicalData = {
   clinicalEntities: ClinicalDataEntity [];
   completionStats: CompletionStats;
+  clinicalErrors: ClinicalError[];
 };
 
 type ClinicalVariables = {
@@ -194,13 +195,13 @@ enum CoreClinicalEntities {
 type CompletionStats = {
   coreCompletion: CoreCompletionFields;
   coreCompletionDate: string;
-  coreCompletionPercentage: Number;
+  coreCompletionPercentage: number;
   overriddenCoreCompletion: [CoreClinicalEntities];
   donorId: string;
 }
 
 type CoreCompletionFields = {
-  [k in CoreClinicalEntities]?: Number;
+  [k in CoreClinicalEntities]?: number;
 };
 
 interface ClinicalDataEntity { 
@@ -209,12 +210,24 @@ interface ClinicalDataEntity {
   entityFields: string[],
 };
 
+type ClinicalError = {
+    donorId: number;
+    submitterDonorId: string;
+    errors: ClinicalErrorRecord[];
+}
+
+type ClinicalErrorRecord = {
+     entityName: string;
+     errorType: string;
+     fieldName: string;
+     index: number;
+     message: string;
+}
+
 const convertClinicalDataToGql = (
-  { variables }: ClinicalVariables,
   data: any,
 ): ClinicalData => {
-  const { programShortName } = variables;
-  const { completionStats } = data;
+  const { completionStats, clinicalErrors } = data;
   const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
 
     const records: EntityRecord[][] = entity.records.map((record: any) => (
@@ -232,9 +245,9 @@ const convertClinicalDataToGql = (
   });
 
   const clinicalData = {
-    programShortName,
     clinicalEntities,
     completionStats,
+    clinicalErrors
   };
 
   return clinicalData
@@ -374,12 +387,11 @@ const resolvers = {
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
-      console.log('clinicalData args', variables);
       const response = await clinicalService.getClinicalData(
         variables,
         Authorization,
       );
-      return convertClinicalDataToGql(variables, response);
+      return convertClinicalDataToGql(response);
     },
     clinicalSubmissions: async (
       obj: unknown,

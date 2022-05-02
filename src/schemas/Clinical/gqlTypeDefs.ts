@@ -183,6 +183,7 @@ export default gql`
   type ClinicalData {
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
+    clinicalErrors: [ClinicalMigrationError]
   }
 
   input QueryFilter {
@@ -210,6 +211,22 @@ export default gql`
     followUps: Int!
     treatments: Int!
     familyHistory: Int
+  }
+
+  type ClinicalMigrationError {
+    donorId: Int
+    submitterDonorId: String
+    programId: String
+    errors: [ClinicalError]
+  }
+
+  type ClinicalError {
+    errorType: String
+    fieldName: String
+    index: Int
+    info: ClinicalRecordField
+    message: String
+    entityName: String
   }
 
   type Query {
