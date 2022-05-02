@@ -93,7 +93,7 @@ paths:
       description: 'Query program data by ID from clinical service'
       responses:
         '200':
-          description: 'Returns programShortName, clinicalEntities[], schemaMetadata[], completionStats[]'
+          description: 'Returns clinicalEntities[], completionStats[] & clinicalErrors[]'
           content:
             application/json:
               schema:
