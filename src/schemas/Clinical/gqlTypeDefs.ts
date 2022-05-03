@@ -172,7 +172,6 @@ export default gql`
   """
   input ClinicalQueryVariables {
     programShortName: String!
-    withErrors: Boolean
     entityTypes: [String]
     page: Int!
     limit: Int!
