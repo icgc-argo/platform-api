@@ -172,12 +172,16 @@ type ClinicalEntityData = {
 };
 
 type ClinicalVariables = {
-    programShortName: string,
-    entityTypes: string[], 
-    page: number, 
-    limit: number, 
-    filters: {}, 
-    sort: string
+    programShortName: string;
+    filters: {
+      entityTypes: string[];
+      page: number;
+      limit: number; 
+      donorIds: [String];
+      submitterDonorIds: [String];
+      errorState: String;
+      sort: string;
+    }, 
 }
 
 enum CoreClinicalEntities {
@@ -396,8 +400,25 @@ const resolvers = {
         args,
         Authorization,
       );
+      console.log('obj', obj);
       return convertClinicalDataToGql(args.programShortName, response);
     },
+    clinicalErrors: async (
+      parent: ClinicalEntityData,
+      args: ClinicalVariables,
+      context: GlobalGqlContext,
+        ) => {
+          console.log('args', args);
+          const { Authorization } = context;
+          const response = await clinicalService.getClinicalErrors(
+            parent.programShortName,
+            Authorization,
+          );
+          console.log('parent', parent);
+          console.log('args', args);
+  
+          return convertClinicalErrorsToGql(response);
+      },
     clinicalSubmissions: async (
       obj: unknown,
       args: { programShortName: string },
@@ -584,21 +605,21 @@ const resolvers = {
       return response ? true : false;
     },
   },
-  ClinicalData: {
-    errors: async (
-        parent: ClinicalEntityData,
-        args: {},
-        context: GlobalGqlContext,
-      ) => {
-        const { Authorization } = context;
-        const response = await clinicalService.getClinicalErrors(
-          parent.programShortName,
-          Authorization,
-        );
+  // ClinicalData: {
+  //   errors: async (
+  //       parent: ClinicalEntityData,
+  //       args: {},
+  //       context: GlobalGqlContext,
+  //     ) => {
+  //       const { Authorization } = context;
+  //       const response = await clinicalService.getClinicalErrors(
+  //         parent.programShortName,
+  //         Authorization,
+  //       );
 
-        return convertClinicalErrorsToGql(response);
-    },
-  }
+  //       return convertClinicalErrorsToGql(response);
+  //   },
+  // }
 };
 
 export default makeExecutableSchema({
