@@ -585,7 +585,7 @@ const resolvers = {
     },
   },
   ClinicalData: {
-    clinicalErrors: async (
+    errors: async (
         parent: ClinicalEntityData,
         args: {},
         context: GlobalGqlContext,
