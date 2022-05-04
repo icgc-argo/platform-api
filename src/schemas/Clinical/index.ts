@@ -587,6 +587,7 @@ const resolvers = {
   ClinicalData: {
     clinicalErrors: async (
         parent: ClinicalEntityData,
+        args: {},
         context: GlobalGqlContext,
       ) => {
         const { Authorization } = context;
@@ -595,8 +596,7 @@ const resolvers = {
           Authorization,
         );
 
-        console.log('response.data', response.data);
-        return convertClinicalErrorsToGql(response.data);
+        return convertClinicalErrorsToGql(response);
     },
   }
 };
