@@ -166,6 +166,7 @@ const convertClinicalSubmissionDataToGql = (
   };
 
 type ClinicalEntityData = {
+  programShortName: string;
   clinicalEntities: ClinicalEntityRecord[];
   completionStats: CompletionStats;
 };
@@ -221,6 +222,7 @@ type ClinicalErrorRecord = {
 }
 
 const convertClinicalDataToGql = (
+  programShortName: string,
   data: any,
 ): ClinicalEntityData => {
   const { completionStats } = data;
@@ -241,6 +243,7 @@ const convertClinicalDataToGql = (
   });
 
   const clinicalData = {
+    programShortName,
     clinicalEntities,
     completionStats,
   };
@@ -393,7 +396,7 @@ const resolvers = {
         args,
         Authorization,
       );
-      return convertClinicalDataToGql(response);
+      return convertClinicalDataToGql(args.programShortName, response);
     },
     clinicalSubmissions: async (
       obj: unknown,
@@ -583,8 +586,7 @@ const resolvers = {
   },
   ClinicalData: {
     clinicalErrors: async (
-        parent,
-        args,
+        parent: ClinicalEntityData,
         context: GlobalGqlContext,
       ) => {
         const { Authorization } = context;

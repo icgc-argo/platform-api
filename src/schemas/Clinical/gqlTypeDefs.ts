@@ -171,9 +171,10 @@ export default gql`
   Clinical Data Schemas
   """
   type ClinicalData {
+    programShortName: String
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
-    clinicalErrors: [ClinicalErrors]
+    clinicalErrors(programShortName: String): [ClinicalErrors]
   }
 
   type ClinicalDataEntities {
