@@ -170,23 +170,10 @@ export default gql`
   """
   Clinical Data Schemas
   """
-  input ClinicalQueryVariables {
-    programShortName: String!
-    entityTypes: [String]
-    page: Int!
-    limit: Int!
-    filters: QueryFilter
-    sort: String!
-  }
-
   type ClinicalData {
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
-    clinicalErrors: [ClinicalMigrationError]
-  }
-
-  input QueryFilter {
-    test: String
+    clinicalErrors: [ClinicalErrors]
   }
 
   type ClinicalDataEntities {
@@ -212,20 +199,42 @@ export default gql`
     familyHistory: Int
   }
 
-  type ClinicalMigrationError {
+  type ClinicalErrors {
     donorId: Int
     submitterDonorId: String
     programId: String
-    errors: [ClinicalError]
+    errors: [ClinicalErrorRecord]
   }
 
-  type ClinicalError {
+  type ClinicalErrorRecord {
     errorType: String
     fieldName: String
     index: Int
     info: ClinicalRecordField
     message: String
     entityName: String
+  }
+
+  enum EntityTypes {
+    sampleRegistration
+    donor
+    specimens
+    primaryDiagnoses
+    familyHistory
+    treatment
+    chemotherapy
+    immunotherapy
+    surgery
+    radiation
+    followUps
+    hormoneTherapy
+    exposure
+    comorbidity
+    biomarker
+  }
+
+  input QueryFilter {
+    test: String
   }
 
   type Query {
@@ -257,7 +266,14 @@ export default gql`
     """
     Retrieve all stored Clinical Data for a program
     """
-    clinicalData(variables: ClinicalQueryVariables): ClinicalData!
+    clinicalData(
+      programShortName: String!
+      entityTypes: [EntityTypes]
+      page: Int!
+      limit: Int!
+      filters: QueryFilter
+      sort: String!
+    ): ClinicalData!
   }
 
   type Mutation {

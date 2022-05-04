@@ -165,22 +165,18 @@ const convertClinicalSubmissionDataToGql = (
     };
   };
 
-type ClinicalData = {
-  clinicalEntities: ClinicalDataEntity [];
+type ClinicalEntityData = {
+  clinicalEntities: ClinicalEntityRecord[];
   completionStats: CompletionStats;
-  clinicalErrors: ClinicalError[];
 };
 
 type ClinicalVariables = {
-  variables: {
     programShortName: string,
     entityTypes: string[], 
-    withErrors: Boolean,
     page: number, 
     limit: number, 
     filters: {}, 
     sort: string
-  }
 }
 
 enum CoreClinicalEntities {
@@ -204,17 +200,17 @@ type CoreCompletionFields = {
   [k in CoreClinicalEntities]?: number;
 };
 
-interface ClinicalDataEntity { 
+interface ClinicalEntityRecord { 
   entityName: string,
   records: EntityRecord[][],
   entityFields: string[],
 };
 
-type ClinicalError = {
+type ClinicalErrors = {
     donorId: number;
     submitterDonorId: string;
     errors: ClinicalErrorRecord[];
-}
+}[];
 
 type ClinicalErrorRecord = {
      entityName: string;
@@ -226,9 +222,9 @@ type ClinicalErrorRecord = {
 
 const convertClinicalDataToGql = (
   data: any,
-): ClinicalData => {
-  const { completionStats, clinicalErrors } = data;
-  const clinicalEntities: ClinicalDataEntity[] = data.clinicalEntities.map((entity: any) => {
+): ClinicalEntityData => {
+  const { completionStats } = data;
+  const clinicalEntities: ClinicalEntityRecord[] = data.clinicalEntities.map((entity: any) => {
 
     const records: EntityRecord[][] = entity.records.map((record: any) => (
       Object.keys(record)
@@ -247,11 +243,17 @@ const convertClinicalDataToGql = (
   const clinicalData = {
     clinicalEntities,
     completionStats,
-    clinicalErrors
   };
 
   return clinicalData
-  };
+};
+
+const convertClinicalErrorsToGql = (
+  data: ClinicalErrors,
+): ClinicalErrors => {
+
+  return data
+};
 
 const convertClinicalFileErrorToGql = (fileError: {
   message: string;
@@ -383,12 +385,12 @@ const resolvers = {
     },
     clinicalData: async (
       obj: unknown,
-      variables: ClinicalVariables,
+      args: ClinicalVariables,
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
       const response = await clinicalService.getClinicalData(
-        variables,
+        args,
         Authorization,
       );
       return convertClinicalDataToGql(response);
@@ -579,6 +581,22 @@ const resolvers = {
       return response ? true : false;
     },
   },
+  ClinicalData: {
+    clinicalErrors: async (
+        parent,
+        args,
+        context: GlobalGqlContext,
+      ) => {
+        const { Authorization } = context;
+        const response = await clinicalService.getClinicalErrors(
+          parent.programShortName,
+          Authorization,
+        );
+
+        console.log('response.data', response.data);
+        return convertClinicalErrorsToGql(response.data);
+    },
+  }
 };
 
 export default makeExecutableSchema({
