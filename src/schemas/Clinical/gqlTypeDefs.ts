@@ -188,7 +188,7 @@ export default gql`
     coreCompletionDate: String
     coreCompletionPercentage: Int
     overriddenCoreCompletion: [String]
-    donorId: String
+    donorId: Int
   }
 
   type CoreCompletionFields {

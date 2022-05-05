@@ -198,7 +198,7 @@ type CompletionStats = {
   coreCompletionDate: string;
   coreCompletionPercentage: number;
   overriddenCoreCompletion: [CoreClinicalEntities];
-  donorId: string;
+  donorId: number;
 }
 
 type CoreCompletionFields = {
@@ -403,22 +403,6 @@ const resolvers = {
       console.log('obj', obj);
       return convertClinicalDataToGql(args.programShortName, response);
     },
-    clinicalErrors: async (
-      parent: ClinicalEntityData,
-      args: ClinicalVariables,
-      context: GlobalGqlContext,
-        ) => {
-          console.log('args', args);
-          const { Authorization } = context;
-          const response = await clinicalService.getClinicalErrors(
-            parent.programShortName,
-            Authorization,
-          );
-          console.log('parent', parent);
-          console.log('args', args);
-  
-          return convertClinicalErrorsToGql(response);
-      },
     clinicalSubmissions: async (
       obj: unknown,
       args: { programShortName: string },
@@ -605,21 +589,21 @@ const resolvers = {
       return response ? true : false;
     },
   },
-  // ClinicalData: {
-  //   errors: async (
-  //       parent: ClinicalEntityData,
-  //       args: {},
-  //       context: GlobalGqlContext,
-  //     ) => {
-  //       const { Authorization } = context;
-  //       const response = await clinicalService.getClinicalErrors(
-  //         parent.programShortName,
-  //         Authorization,
-  //       );
+  ClinicalData: {
+    clinicalErrors: async (
+      parent: ClinicalEntityData,
+      args: ClinicalVariables,
+      context: GlobalGqlContext,
+        ) => {
+          const { Authorization } = context;
+          const response = await clinicalService.getClinicalErrors(
+            parent.programShortName,
+            Authorization,
+          );
 
-  //       return convertClinicalErrorsToGql(response);
-  //   },
-  // }
+          return response
+      },
+  }
 };
 
 export default makeExecutableSchema({
