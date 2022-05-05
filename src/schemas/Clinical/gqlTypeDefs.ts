@@ -221,7 +221,7 @@ export default gql`
     limit: Int!
     sort: String!
     entityTypes: [String]
-    donorIds: [String]
+    donorIds: [Int]
     submitterDonorIds: [String]
     errorState: String
   }

@@ -177,9 +177,9 @@ type ClinicalVariables = {
       entityTypes: string[];
       page: number;
       limit: number; 
-      donorIds: [String];
-      submitterDonorIds: [String];
-      errorState: String;
+      donorIds: number[];
+      submitterDonorIds: string[];
+      errorState: string;
       sort: string;
     }, 
 }
