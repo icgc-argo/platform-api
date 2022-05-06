@@ -223,7 +223,7 @@ export default gql`
     entityTypes: [String]
     donorIds: [Int]
     submitterDonorIds: [String]
-    errorState: String
+    completionState: String
   }
 
   type Query {

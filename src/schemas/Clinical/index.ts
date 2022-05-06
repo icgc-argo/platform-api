@@ -179,7 +179,7 @@ type ClinicalVariables = {
       limit: number; 
       donorIds: number[];
       submitterDonorIds: string[];
-      errorState: string;
+      completionState: string;
       sort: string;
     }, 
 }
