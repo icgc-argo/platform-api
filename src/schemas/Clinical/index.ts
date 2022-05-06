@@ -255,13 +255,6 @@ const convertClinicalDataToGql = (
   return clinicalData
 };
 
-const convertClinicalErrorsToGql = (
-  data: ClinicalErrors,
-): ClinicalErrors => {
-
-  return data
-};
-
 const convertClinicalFileErrorToGql = (fileError: {
   message: string;
   batchNames: string[];
@@ -596,11 +589,13 @@ const resolvers = {
       context: GlobalGqlContext,
         ) => {
           const { Authorization } = context;
+          console.log(parent);
+          console.log(args);
           const response = await clinicalService.getClinicalErrors(
             parent.programShortName,
             Authorization,
           );
-
+          console.log('response', response);
           return response
       },
   }

@@ -203,7 +203,6 @@ export default gql`
   type ClinicalErrors {
     donorId: Int
     submitterDonorId: String
-    programId: String
     errors: [ClinicalErrorRecord]
   }
 
