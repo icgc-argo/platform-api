@@ -170,6 +170,16 @@ export default gql`
   """
   Clinical Data Schemas
   """
+  input ClinicalInput {
+    page: Int!
+    limit: Int!
+    sort: String!
+    entityTypes: [String]
+    donorIds: [Int]
+    submitterDonorIds: [String]
+    completionState: String
+  }
+
   type ClinicalData {
     programShortName: String
     clinicalEntities: [ClinicalDataEntities]!
@@ -213,16 +223,6 @@ export default gql`
     info: ClinicalRecordField
     message: String
     entityName: String
-  }
-
-  input ClinicalInput {
-    page: Int!
-    limit: Int!
-    sort: String!
-    entityTypes: [String]
-    donorIds: [Int]
-    submitterDonorIds: [String]
-    completionState: String
   }
 
   type Query {
