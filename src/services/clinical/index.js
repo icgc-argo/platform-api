@@ -149,8 +149,8 @@ const getClinicalData = async (variables, Authorization) => {
   return response;
 };
 
-const getClinicalErrors = async (programShortName, Authorization) => {
-  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-errors`;
+const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
+  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-errors?donorIds=${donorIds}`;
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
