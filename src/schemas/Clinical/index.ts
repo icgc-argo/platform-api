@@ -596,7 +596,7 @@ const resolvers = {
             donorIds,
             Authorization,
           );
-          console.log('response', response.length);
+
           return response
       },
   }
