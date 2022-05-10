@@ -98,7 +98,6 @@ paths:
             application/json:
               schema:
                 type: object
-
         '500':
           description: Internal server error
   '/clinical/template/all':
