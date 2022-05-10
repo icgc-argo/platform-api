@@ -407,7 +407,7 @@ const resolvers = {
       const response = await clinicalService.getClinicalSubmissionData(
         programShortName,
         Authorization,
-      );s
+      );
       return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
     },
     clinicalSubmissionTypesList: async (obj: unknown, args: {}, context: GlobalGqlContext) => {
