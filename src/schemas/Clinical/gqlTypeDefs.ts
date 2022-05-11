@@ -173,7 +173,7 @@ export default gql`
   input ClinicalInput {
     page: Int!
     limit: Int!
-    sort: String!
+    sort: String
     entityTypes: [String]
     donorIds: [Int]
     submitterDonorIds: [String]
