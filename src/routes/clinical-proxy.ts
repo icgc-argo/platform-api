@@ -72,19 +72,6 @@ router.use(
 );
 
 router.use(
-  '/program/:programId/all-clinical-data',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const programId = req.params.programId;
-      return urlJoin('/clinical/program/', programId, '/tsv-export');
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
-);
-
-router.use(
   '/program/:programId/clinical-data',
   createProxyMiddleware({
     target: CLINICAL_SERVICE_ROOT,
