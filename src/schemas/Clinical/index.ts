@@ -185,12 +185,12 @@ type ClinicalVariables = {
 }
 
 enum CoreClinicalEntities {
-  'donor',
-  'specimens',
-  'primaryDiagnosis',
-  'followUps',
-  'treatments',
-  'familyHistory'
+  donor='donor',
+  specimens='specimens',
+  primaryDiagnosis='primaryDiagnosis',
+  followUps='followUps',
+  treatments='treatments',
+  familyHistory='familyHistory'
 }
 
 type CompletionStats = {
