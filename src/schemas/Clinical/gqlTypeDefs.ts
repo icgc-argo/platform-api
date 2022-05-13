@@ -168,7 +168,7 @@ export default gql`
   }
 
   """
-  Clinical Data Schemas
+  Query Variables for Pagination & Filtering
   """
   input ClinicalInput {
     page: Int!
@@ -180,6 +180,9 @@ export default gql`
     completionState: String
   }
 
+  """
+  Collated Clinical Data Query Response
+  """
   type ClinicalData {
     programShortName: String
     clinicalEntities: [ClinicalDataEntities]!
@@ -187,12 +190,18 @@ export default gql`
     clinicalErrors(filters: ClinicalInput): [ClinicalErrors]
   }
 
+  """
+  Submitted Program Clinical Data arranged by Entity type
+  """
   type ClinicalDataEntities {
-    entityName: String
+    entityName: String!
     records: [[ClinicalRecordField]]!
     entityFields: [String]
   }
 
+  """
+  Completion Data for a given Donor
+  """
   type CompletionStats {
     coreCompletion: CoreCompletionFields
     coreCompletionDate: String
@@ -201,6 +210,9 @@ export default gql`
     donorId: Int
   }
 
+  """
+  Specific Entity Completion Values
+  """
   type CoreCompletionFields {
     donor: Int!
     specimens: Int!
@@ -210,12 +222,18 @@ export default gql`
     familyHistory: Int
   }
 
+  """
+  Data Submission / Schema Errors for a given Donor
+  """
   type ClinicalErrors {
     donorId: Int
     submitterDonorId: String
     errors: [ClinicalErrorRecord]
   }
 
+  """
+  Specific Error Field + Values
+  """
   type ClinicalErrorRecord {
     errorType: String
     fieldName: String
@@ -252,7 +270,7 @@ export default gql`
     clinicalSubmissionSystemDisabled: Boolean!
 
     """
-    Retrieve all stored Clinical Entity Data for a program
+    Retrieve all stored Clinical Entity and Donor Completion data for a program
     """
     clinicalData(programShortName: String!, filters: ClinicalInput!): ClinicalData!
 
