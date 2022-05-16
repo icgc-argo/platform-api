@@ -336,6 +336,9 @@ export default gql`
     Percentage of core clinical data fields submitted over total core clinical data fields
     """
     percentageCoreClinical: Float!
+    """
+    Percentage of donors with at least 1 matched tumour/normal DNA raw reads pair
+    """
     percentageTumourAndNormal: Float!
     """
     Number of donors whose molecular data is being processed

@@ -308,17 +308,11 @@ const programDonorSummaryEntriesAndStatsResolver: (
             DonorMolecularDataReleaseStatus.FULLY_RELEASED,
           ]),
       ),
-      filterAggregation('donorsWithPublishedNormalAndTumourSamples' as AggregationName).filter(
-        esb.boolQuery().must([
+      filterAggregation('donorsWithMatchedTNPair' as AggregationName).filter(
           esb
-            .rangeQuery()
-            .field(EsDonorDocumentField.publishedTumourAnalysis)
-            .gt(0),
-          esb
-            .rangeQuery()
-            .field(EsDonorDocumentField.publishedNormalAnalysis)
-            .gt(0),
-        ]),
+          .rangeQuery()
+          .field(EsDonorDocumentField.matchedTNPairsDNA)
+          .gt(0)
       ),
       filterAggregation('donorsInvalidWithCurrentDictionary' as AggregationName).filter(
         esb
@@ -683,7 +677,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
       noReleaseDonorsCount: FilterAggregationResult;
       donorsProcessingMolecularDataCount: FilterAggregationResult;
       donorsWithReleasedFilesCount: FilterAggregationResult;
-      donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
+      donorsWithMatchedTNPair: FilterAggregationResult;
       donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 
       completeCoreCompletion: FilterAggregationResult;
@@ -866,7 +860,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
       donorsProcessingMolecularDataCount: result.aggregations.donorsProcessingMolecularDataCount.doc_count,
       donorsWithReleasedFilesCount: result.aggregations.donorsWithReleasedFilesCount.doc_count,
       percentageTumourAndNormal: result.hits.total.value
-        ? result.aggregations.donorsWithPublishedNormalAndTumourSamples.doc_count / result.hits.total.value
+        ? result.aggregations.donorsWithMatchedTNPair.doc_count / result.hits.total.value
         : 0,
       percentageCoreClinical: result.hits.total.value
         ? result.aggregations.completeCoreCompletion.doc_count / result.hits.total.value
