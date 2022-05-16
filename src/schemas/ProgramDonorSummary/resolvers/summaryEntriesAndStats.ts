@@ -345,6 +345,90 @@ const programDonorSummaryEntriesAndStatsResolver: (
           .field(EsDonorDocumentField.submittedCoreDataPercent)
           .value(0),
       ),
+      filterAggregation('rnaRegisteredSamples' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaRegisteredNormalSamples)
+            .gt(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaRegisteredTumourSamples)
+            .gt(0),
+        ]),
+      ),
+      filterAggregation('noRnaRegisteredSamples' as AggregationName).filter(
+        esb.boolQuery().must([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaRegisteredNormalSamples)
+            .lte(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaRegisteredTumourSamples)
+            .lte(0),
+        ]),
+      ),
+
+      filterAggregation('rnaSubmittedRawReads' as AggregationName).filter(
+        esb.boolQuery().should([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaPublishedNormalAnalysis)
+            .gt(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaPublishedTumourAnalysis)
+            .gt(0),
+        ]),
+      ),
+      filterAggregation('noRnaSubmittedRawReads' as AggregationName).filter(
+        esb.boolQuery().must([
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaPublishedNormalAnalysis)
+            .lte(0),
+          esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaPublishedTumourAnalysis)
+            .lte(0),
+        ]),
+      ),
+      filterAggregation('rnaCompletedAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.rnaAlignmentsCompleted)
+          .gte(1),
+      ),
+      filterAggregation('rnaInProgressAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.rnaAlignmentsRunning)
+          .gte(1),
+      ),
+      filterAggregation('rnaFailedAlignment' as AggregationName).filter(
+        esb
+          .rangeQuery()
+          .field(EsDonorDocumentField.rnaAlignmentFailed)
+          .gte(1),
+      ),
+      filterAggregation('rnaNoAlignment' as AggregationName).filter(
+        esb
+          .boolQuery().must([
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaAlignmentsCompleted)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaAlignmentsRunning)
+            .lte(0),
+            esb
+            .rangeQuery()
+            .field(EsDonorDocumentField.rnaAlignmentFailed)
+            .lte(0)
+          ])
+      ),
       filterAggregation('validSamplePairs' as AggregationName).filter(
         esb.boolQuery().must([
           esb
@@ -606,6 +690,17 @@ const programDonorSummaryEntriesAndStatsResolver: (
       incompleteCoreCompletion: FilterAggregationResult;
       noCoreCompletion: FilterAggregationResult;
 
+      rnaRegisteredSamples: FilterAggregationResult;
+      noRnaRegisteredSamples: FilterAggregationResult;
+
+      rnaSubmittedRawReads: FilterAggregationResult;
+      noRnaSubmittedRawReads: FilterAggregationResult;
+
+      rnaCompletedAlignment: FilterAggregationResult;
+      rnaInProgressAlignment: FilterAggregationResult;
+      rnaFailedAlignment: FilterAggregationResult;
+      rnaNoAlignment: FilterAggregationResult;
+
       validSamplePairs: FilterAggregationResult;
       invalidSamplePairs: FilterAggregationResult;
 
@@ -671,6 +766,17 @@ const programDonorSummaryEntriesAndStatsResolver: (
           incompleteCoreCompletion: { doc_count: 0 },
           noCoreCompletion: { doc_count: 0 },
 
+          rnaRegisteredSamples: { doc_count: 0 },
+          noRnaRegisteredSamples: { doc_count: 0 },
+
+          rnaSubmittedRawReads: { doc_count: 0 },
+          noRnaSubmittedRawReads: { doc_count: 0 },
+
+          rnaCompletedAlignment: { doc_count: 0 },
+          rnaInProgressAlignment: { doc_count: 0 },
+          rnaFailedAlignment: { doc_count: 0 },
+          rnaNoAlignment: { doc_count: 0 },
+
           validSamplePairs: { doc_count: 0 },
           invalidSamplePairs: { doc_count: 0 },
 
@@ -721,6 +827,16 @@ const programDonorSummaryEntriesAndStatsResolver: (
                 donorId: doc.donorId,
                 processingStatus: doc.processingStatus || DonorMolecularDataProcessingStatus.REGISTERED,
                 programId: doc.programId,
+
+                rnaRegisteredNormalSamples: doc.rnaRegisteredNormalSamples,
+                rnaRegisteredTumourSamples: doc.rnaRegisteredTumourSamples,
+                rnaPublishedNormalAnalysis: doc.rnaPublishedNormalAnalysis,
+                rnaPublishedTumourAnalysis: doc.rnaPublishedTumourAnalysis,
+                rnaAlignmentsCompleted: doc.rnaAlignmentsCompleted,
+                rnaAlignmentsRunning: doc.rnaAlignmentsRunning,
+                rnaAlignmentFailed: doc.rnaAlignmentFailed,
+
+                matchedTNPairsDNA: doc.matchedTNPairsDNA,
                 publishedNormalAnalysis: doc.publishedNormalAnalysis,
                 publishedTumourAnalysis: doc.publishedTumourAnalysis,
                 registeredNormalSamples: doc.registeredNormalSamples,
@@ -768,6 +884,23 @@ const programDonorSummaryEntriesAndStatsResolver: (
         completed: result.aggregations.completeCoreCompletion.doc_count,
         incomplete: result.aggregations.incompleteCoreCompletion.doc_count,
         noData: result.aggregations.noCoreCompletion.doc_count,
+      },
+
+      rnaSampleStatus: {
+        dataSubmitted: result.aggregations.rnaRegisteredSamples.doc_count,
+        noDataSubmitted: result.aggregations.noRnaRegisteredSamples.doc_count,
+      },
+
+      rnaRawReadStatus: {
+        dataSubmitted: result.aggregations.rnaSubmittedRawReads.doc_count,
+        noDataSubmitted: result.aggregations.noRnaSubmittedRawReads.doc_count,
+      },
+
+      rnaAlignmentStatusCount: {
+        completed: result.aggregations.rnaCompletedAlignment.doc_count,
+        inProgress: result.aggregations.rnaInProgressAlignment.doc_count,
+        failed: result.aggregations.rnaFailedAlignment.doc_count,
+        noData: result.aggregations.rnaNoAlignment.doc_count,
       },
 
       sampleStatus: {

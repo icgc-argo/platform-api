@@ -46,6 +46,16 @@ export type DonorSummaryEntry = {
   programShortName: string;
   submittedCoreDataPercent: number;
   submittedExtendedDataPercent: number;
+
+  rnaRegisteredNormalSamples: number;
+  rnaRegisteredTumourSamples: number;
+  rnaPublishedNormalAnalysis: number;
+  rnaPublishedTumourAnalysis: number;
+  rnaAlignmentsCompleted: number;
+  rnaAlignmentFailed: number;
+  rnaAlignmentsRunning: number;
+
+  matchedTNPairsDNA: number;
   registeredNormalSamples: number;
   registeredTumourSamples: number;
   publishedNormalAnalysis: number;
@@ -101,6 +111,12 @@ export type ProgramDonorSummaryStats = {
 
   coreCompletion: CoreCompletionStatusCount;
 
+  rnaSampleStatus: DataSubmissionStatus;
+
+  rnaRawReadStatus: DataSubmissionStatus;
+
+  rnaAlignmentStatusCount: WorkflowStatusCount;
+
   sampleStatus: SamplePairsStatusCount;
 
   rawReadsStatus: SamplePairsStatusCount;
@@ -125,6 +141,11 @@ type CoreCompletionStatusCount = {
 type SamplePairsStatusCount = {
   valid: number;
   invalid: number;
+}
+
+type DataSubmissionStatus = {
+  dataSubmitted: number;
+  noDataSubmitted: number;
 }
 
 type WorkflowStatusCount = {
@@ -168,6 +189,16 @@ export enum EsDonorDocumentField {
   openAccessStatus = 'openAccessStatus',
   processingStatus = 'processingStatus',
   programId = 'programId',
+
+  rnaRegisteredNormalSamples = 'rnaRegisteredNormalSamples',
+  rnaRegisteredTumourSamples = 'rnaRegisteredTumourSamples',
+  rnaPublishedNormalAnalysis = 'rnaPublishedNormalAnalysis',
+  rnaPublishedTumourAnalysis = 'rnaPublishedTumourAnalysis',
+  rnaAlignmentsCompleted = 'rnaAlignmentsCompleted',
+  rnaAlignmentFailed = 'rnaAlignmentFailed',
+  rnaAlignmentsRunning = 'rnaAlignmentsRunning',
+
+  matchedTNPairsDNA = 'matchedTNPairsDNA',
   publishedNormalAnalysis = 'publishedNormalAnalysis',
   publishedTumourAnalysis = 'publishedTumourAnalysis',
   registeredNormalSamples = 'registeredNormalSamples',
@@ -199,6 +230,16 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.donorId]: string;
   [EsDonorDocumentField.processingStatus]: DonorMolecularDataProcessingStatus | '';
   [EsDonorDocumentField.programId]: string;
+
+  [EsDonorDocumentField.rnaRegisteredNormalSamples]: number;
+  [EsDonorDocumentField.rnaRegisteredTumourSamples]: number;
+  [EsDonorDocumentField.rnaPublishedNormalAnalysis]: number;
+  [EsDonorDocumentField.rnaPublishedTumourAnalysis]: number;
+  [EsDonorDocumentField.rnaAlignmentsCompleted]: number;
+  [EsDonorDocumentField.rnaAlignmentsRunning]: number;
+  [EsDonorDocumentField.rnaAlignmentFailed]: number;
+
+  [EsDonorDocumentField.matchedTNPairsDNA]: number;
   [EsDonorDocumentField.publishedNormalAnalysis]: number;
   [EsDonorDocumentField.publishedTumourAnalysis]: number;
   [EsDonorDocumentField.registeredNormalSamples]: number;
