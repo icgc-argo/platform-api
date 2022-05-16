@@ -130,6 +130,33 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
   })
     .then(restErrorResponseHandler)
     .then(response => response.json());
+
+  return response;
+};
+
+const getClinicalData = async (variables, Authorization) => {
+  const { programShortName, filters } = variables;
+
+  const query = new URLSearchParams(filters).toString();
+
+  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-data?${query}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
+  return response;
+};
+
+const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
+  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-errors?donorIds=${donorIds}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then(response => response.json());
   return response;
 };
 
@@ -231,6 +258,8 @@ export default {
   getClinicalSubmissionSchemaVersion,
   getClinicalSubmissionSystemDisabled,
   getClinicalSubmissionData,
+  getClinicalData,
+  getClinicalErrors,
   uploadClinicalSubmissionData,
   clearClinicalSubmissionData,
   validateClinicalSubmissionData,
