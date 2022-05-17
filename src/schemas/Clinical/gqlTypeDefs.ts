@@ -72,11 +72,11 @@ export default gql`
     version: String
     updatedBy: String
     updatedAt: DateTime
-    clinicalEntities: [ClinicalEntityData]! @cost(complexity: 20)
+    clinicalEntities: [ClinicalSubmissionEntity]! @cost(complexity: 20)
     fileErrors: [ClinicalFileError]
   }
 
-  type ClinicalEntityData {
+  type ClinicalSubmissionEntity {
     clinicalType: String!
     batchName: String
     creator: String
@@ -167,6 +167,82 @@ export default gql`
     donorId: String!
   }
 
+  """
+  Query Variables for Pagination & Filtering
+  """
+  input ClinicalInput {
+    page: Int!
+    limit: Int!
+    sort: String
+    entityTypes: [String]
+    donorIds: [Int]
+    submitterDonorIds: [String]
+    completionState: String
+  }
+
+  """
+  Collated Clinical Data Query Response
+  """
+  type ClinicalData {
+    programShortName: String
+    clinicalEntities: [ClinicalDataEntities]!
+    completionStats: [CompletionStats]
+    clinicalErrors(filters: ClinicalInput): [ClinicalErrors]
+  }
+
+  """
+  Submitted Program Clinical Data arranged by Entity type
+  """
+  type ClinicalDataEntities {
+    entityName: String!
+    records: [[ClinicalRecordField]]!
+    entityFields: [String]
+  }
+
+  """
+  Completion Data for a given Donor
+  """
+  type CompletionStats {
+    coreCompletion: CoreCompletionFields
+    coreCompletionDate: String
+    coreCompletionPercentage: Int
+    overriddenCoreCompletion: [String]
+    donorId: Int
+  }
+
+  """
+  Specific Entity Completion Values
+  """
+  type CoreCompletionFields {
+    donor: Int!
+    specimens: Int!
+    primaryDiagnosis: Int!
+    followUps: Int!
+    treatments: Int!
+    familyHistory: Int
+  }
+
+  """
+  Data Submission / Schema Errors for a given Donor
+  """
+  type ClinicalErrors {
+    donorId: Int
+    submitterDonorId: String
+    errors: [ClinicalErrorRecord]
+  }
+
+  """
+  Specific Error Field + Values
+  """
+  type ClinicalErrorRecord {
+    errorType: String
+    fieldName: String
+    index: Int
+    info: ClinicalRecordField
+    message: String
+    entityName: String
+  }
+
   type Query {
     """
     Retrieve current stored Clinical Registration data for a program
@@ -192,6 +268,16 @@ export default gql`
     Retrieve current Clinical Submission disabled state for both sample_registration and clinical entity files
     """
     clinicalSubmissionSystemDisabled: Boolean!
+
+    """
+    Retrieve all stored Clinical Entity and Donor Completion data for a program
+    """
+    clinicalData(programShortName: String!, filters: ClinicalInput!): ClinicalData!
+
+    """
+    Retrieve all stored Clinical Migration Errors for a program
+    """
+    clinicalErrors(programShortName: String!, filters: ClinicalInput!): ClinicalData!
   }
 
   type Mutation {
