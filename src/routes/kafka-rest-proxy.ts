@@ -34,7 +34,8 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
   const apiRoot = KAFKA_REST_PROXY_ROOT;
 
   // fetch needs to use the json body parser
-  router.use(json());
+  // Kafka can accept message up to max 1mb in size, and there are examples of song sending messages larger than the default 100kb limit
+  router.use(json({ limit: '1mb' }));
 
   router.use(authenticatedRequestMiddleware({ egoClient }));
 
