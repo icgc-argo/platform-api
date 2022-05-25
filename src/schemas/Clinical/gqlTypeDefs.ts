@@ -184,7 +184,8 @@ export default gql`
   Collated Clinical Data Query Response
   """
   type ClinicalData {
-    programShortName: String
+    programShortName: String!
+    totalDocs: Int!
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
     clinicalErrors(filters: ClinicalInput): [ClinicalErrors]

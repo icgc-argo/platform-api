@@ -167,6 +167,7 @@ const convertClinicalSubmissionDataToGql = (
 
 type ClinicalEntityData = {
   programShortName: string;
+  totalDocs: number;
   clinicalEntities: ClinicalEntityRecord[];
   completionStats: CompletionStats[];
 };
@@ -229,7 +230,7 @@ const convertClinicalDataToGql = (
   programShortName: string,
   data: any,
 ): ClinicalEntityData => {
-  const { completionStats } = data;
+  const { totalDocs, completionStats } = data;
   const clinicalEntities: ClinicalEntityRecord[] = data.clinicalEntities.map((entity: any) => {
 
     const records: EntityRecord[][] = entity.records.map((record: any) => (
@@ -248,6 +249,7 @@ const convertClinicalDataToGql = (
 
   const clinicalData = {
     programShortName,
+    totalDocs,
     clinicalEntities,
     completionStats,
   };
