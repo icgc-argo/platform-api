@@ -176,7 +176,7 @@ type ClinicalVariables = {
     filters: {
       entityTypes: string[];
       page: number;
-      limit: number; 
+      pageSize: number; 
       donorIds: number[];
       submitterDonorIds: string[];
       completionState: string;
