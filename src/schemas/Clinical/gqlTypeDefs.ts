@@ -186,7 +186,6 @@ export default gql`
   type ClinicalData {
     programShortName: String!
     clinicalEntities: [ClinicalDataEntities]!
-    completionStats: [CompletionStats]
     clinicalErrors(filters: ClinicalInput): [ClinicalErrors]
   }
 
@@ -198,6 +197,7 @@ export default gql`
     totalDocs: Int!
     records: [[ClinicalRecordField]]!
     entityFields: [String]
+    completionStats: [CompletionStats]
   }
 
   """

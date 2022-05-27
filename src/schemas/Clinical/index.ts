@@ -168,7 +168,6 @@ const convertClinicalSubmissionDataToGql = (
 type ClinicalEntityData = {
   programShortName: string;
   clinicalEntities: ClinicalEntityRecord[];
-  completionStats: CompletionStats[];
 };
 
 type ClinicalVariables = {
@@ -210,6 +209,7 @@ interface ClinicalEntityRecord {
   totalDocs: number,
   records: EntityRecord[][],
   entityFields: string[],
+  completionStats?: CompletionStats[],
 };
 
 type ClinicalErrors = {
@@ -230,7 +230,6 @@ const convertClinicalDataToGql = (
   programShortName: string,
   data: any,
 ): ClinicalEntityData => {
-  const { completionStats } = data;
   const clinicalEntities: ClinicalEntityRecord[] = data.clinicalEntities.map((entity: any) => {
     const records: EntityRecord[][] = entity.records.map((record: any) => (
       Object.keys(record)
@@ -238,9 +237,7 @@ const convertClinicalDataToGql = (
     )));
 
     const entityData = {
-      entityName: entity.entityName,
-      entityFields: entity.entityFields,
-      totalDocs: entity.totalDocs,
+      ...entity,
       records,
     };
 
@@ -250,7 +247,6 @@ const convertClinicalDataToGql = (
   const clinicalData = {
     programShortName,
     clinicalEntities,
-    completionStats,
   };
 
   return clinicalData
@@ -591,7 +587,9 @@ const resolvers = {
         ) => {
           const { Authorization } = context;
 
-          const donorIds = parent.completionStats.map(donor => donor.donorId)
+          const donorEntity = parent.clinicalEntities.find(({entityName}) => entityName === CoreClinicalEntities.donor);
+          const donorIds = donorEntity?.completionStats && donorEntity?.completionStats.map(donor => donor.donorId);
+          
           const response = await clinicalService.getClinicalErrors(
             parent.programShortName,
             donorIds,
