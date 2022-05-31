@@ -176,7 +176,7 @@ type ClinicalVariables = {
     filters: {
       entityTypes: string[];
       page: number;
-      limit: number; 
+      pageSize: number; 
       donorIds: number[];
       submitterDonorIds: string[];
       completionState: string;
@@ -207,6 +207,7 @@ type CoreCompletionFields = {
 
 interface ClinicalEntityRecord { 
   entityName: string,
+  totalDocs: number,
   records: EntityRecord[][],
   entityFields: string[],
 };
@@ -231,7 +232,6 @@ const convertClinicalDataToGql = (
 ): ClinicalEntityData => {
   const { completionStats } = data;
   const clinicalEntities: ClinicalEntityRecord[] = data.clinicalEntities.map((entity: any) => {
-
     const records: EntityRecord[][] = entity.records.map((record: any) => (
       Object.keys(record)
         .map(key => key && ({ name: key, value: record[key] })
@@ -240,6 +240,7 @@ const convertClinicalDataToGql = (
     const entityData = {
       entityName: entity.entityName,
       entityFields: entity.entityFields,
+      totalDocs: entity.totalDocs,
       records,
     };
 
