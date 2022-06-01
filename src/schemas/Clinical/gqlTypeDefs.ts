@@ -172,7 +172,7 @@ export default gql`
   """
   input ClinicalInput {
     page: Int!
-    limit: Int!
+    pageSize: Int!
     sort: String
     entityTypes: [String]
     donorIds: [Int]
@@ -184,7 +184,7 @@ export default gql`
   Collated Clinical Data Query Response
   """
   type ClinicalData {
-    programShortName: String
+    programShortName: String!
     clinicalEntities: [ClinicalDataEntities]!
     completionStats: [CompletionStats]
     clinicalErrors(filters: ClinicalInput): [ClinicalErrors]
@@ -195,6 +195,7 @@ export default gql`
   """
   type ClinicalDataEntities {
     entityName: String!
+    totalDocs: Int!
     records: [[ClinicalRecordField]]!
     entityFields: [String]
   }

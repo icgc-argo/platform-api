@@ -81,6 +81,9 @@ type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof
   { combinedDonorId: string,
     coreDataPercentAggregation: string,
     registeredSamplePairs: string,
+    rnaRegisteredSample: string,
+    rnaRawReads: string,
+    rnaAlignmentStatus: string,
     rawReads: string,
     alignmentStatus: string,
     sangerVCStatus: string,
@@ -182,6 +185,9 @@ export enum EsDonorDocumentField {
   combinedDonorId = 'combinedDonorId',
   coreDataPercentAggregation = 'coreDataPercentAggregation',
   registeredSamplePairs = 'registeredSamplePairs',
+  rnaRegisteredSample = 'rnaRegisteredSample',
+  rnaRawReads = 'rnaRawReads',
+  rnaAlignmentStatus = 'rnaAlignmentStatus',
   rawReads = 'rawReads',
   alignmentStatus = 'alignmentStatus',
   sangerVCStatus = 'sangerVCStatus',
@@ -272,6 +278,11 @@ export enum coreDataPercentAggregationValue {
 export enum registeredSamplePairsValue {
   VALID = 'VALID',
   INVALID = 'INVALID',
+}
+
+export enum RnaFilterStatus {
+  DATA_SUBMITTED = 'DATA_SUBMITTED',
+  NO_DATA = 'NO_DATA',
 }
 
 export enum rawReadsValue {
