@@ -35,6 +35,7 @@ import {
   workflowStatus,
   DonorSummary,
   ProgramDonorSummaryStats,
+  RnaFilterStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -259,6 +260,79 @@ const programDonorSummaryEntriesAndStatsResolver: (
       const openAccessStatusQuery = esb.boolQuery().should(shouldQueries);
       queries.push(openAccessStatusQuery);
     }
+
+    if (field === EsDonorDocumentField.rnaRegisteredSample && filter.values.length > 0) {
+      const sampleQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case RnaFilterStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaRegisteredNormalSamples).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaRegisteredTumourSamples).lte(0));
+            sampleQueries.push(esb.boolQuery().must(mustQueries));
+            break;
+          case RnaFilterStatus.DATA_SUBMITTED:
+            const shouldQueries: Query[] = [];
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaRegisteredNormalSamples).gte(1));
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaRegisteredTumourSamples).gte(1));
+            sampleQueries.push(esb.boolQuery().should(shouldQueries));
+            break;
+        }
+      }
+      const boolQuery = esb.boolQuery().should(sampleQueries);
+      queries.push(boolQuery);
+    }
+
+    if (field === EsDonorDocumentField.rnaRawReads && filter.values.length > 0) {
+      const sampleQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case RnaFilterStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaPublishedNormalAnalysis).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaPublishedTumourAnalysis).lte(0));
+            sampleQueries.push(esb.boolQuery().must(mustQueries));
+            break;
+          case RnaFilterStatus.DATA_SUBMITTED:
+            const shouldQueries: Query[] = [];
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaPublishedNormalAnalysis).gte(1));
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaPublishedTumourAnalysis).gte(1));
+            sampleQueries.push(esb.boolQuery().should(shouldQueries));
+            break;
+        }
+      }
+      const boolQuery = esb.boolQuery().should(sampleQueries);
+      queries.push(boolQuery);
+    }
+
+    if (field === EsDonorDocumentField.rnaAlignmentStatus && filter.values.length > 0) {
+      const shouldQueries: Query[] = [];
+      for (const value of filter.values) {
+        switch (value) {
+          case workflowStatus.COMPLETED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentsCompleted).gte(1));
+            break;
+          case workflowStatus.IN_PROGRESS:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentsRunning).gte(1));
+            break;
+          case workflowStatus.FAILED:
+            shouldQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentFailed).gte(1));
+            break;
+          case workflowStatus.NO_DATA:
+            const mustQueries: Query[] = [];
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentsCompleted).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentsRunning).lte(0));
+            mustQueries.push(esb.rangeQuery(EsDonorDocumentField.rnaAlignmentFailed).lte(0));
+            const noDataQuery = esb.boolQuery().must(mustQueries);
+            shouldQueries.push(noDataQuery);
+            break;
+        }
+      }
+      const alignmentStatusQuery = esb.boolQuery().should(shouldQueries);
+      queries.push(alignmentStatusQuery);
+    }
+
+
   });
 
   type AggregationName =

@@ -89,6 +89,30 @@ export default gql`
     NO_DATA = donor has 0 of all the above Open Access workflow.
     """
     openAccessStatus
+
+    """
+    use this field to filter donor entries by 2 enum values: DATA_SUBMITTED, NO_DATA.
+    DATA_SUBMITTED means the donor has at least 1 registered tumour or 1 normal RNA sample.
+    NO_DATA means the donor has not registered any tumour or normal RNA samples.
+    """
+    rnaRegisteredSample
+
+    """
+    use this field to filter donor entries by 2 enum values: DATA_SUBMITTED, NO_DATA.
+    DATA_SUBMITTED means the donor has at least 1 published tumour or 1 published normal RNA raw reads.
+    NO_DATA means the donor has no tumour and normal RNA raw reads.
+    """
+    rnaRawReads
+
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has more than 1 completed RNA alignment workflow;
+    IN_PROGRESS = donor has more than 1 running RNA alignment workflow;
+    FAILED = donor has more than 1 failed RNA alignment workflow;
+    NO_DATA = donor has 0 of all the above RNA alignment workflow.
+    """
+    rnaAlignmentStatus
+
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
