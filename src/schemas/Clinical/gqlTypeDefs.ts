@@ -221,6 +221,8 @@ export default gql`
     followUps: Int!
     treatments: Int!
     familyHistory: Int
+    tumourSpecimens: Int
+    normalSpecimens: Int
   }
 
   """

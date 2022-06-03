@@ -201,7 +201,14 @@ type CompletionStats = {
 }
 
 type CoreCompletionFields = {
-  [k in CoreClinicalEntities]?: number;
+  donor: number;
+  specimens: number;
+  primaryDiagnosis: number;
+  followUps: number;
+  treatments: number;
+  familyHistory: number;
+  tumourSpecimens?: number;
+  normalSpecimens?: number;
 };
 
 interface ClinicalEntityRecord { 
