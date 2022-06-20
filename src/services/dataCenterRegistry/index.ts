@@ -55,7 +55,7 @@ async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
   })
     .then(async (response: Response) => (await response.json()) as DataCenter)
     .catch(async (response: Response) => {
-      const responseJson = await response.json();
+      const responseJson: any = await response.json();
       logger.error(
         `Failed to fetch data center from registry for repository code: ${code}. Error ${response.status}: ${responseJson.message}`,
       );

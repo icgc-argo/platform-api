@@ -83,6 +83,13 @@ type EgoAccessTokenError = {
   error_description: string;
 };
 
+interface APIKeyResp {
+  client_id: string;
+  exp: number;
+  scope: string[];
+  user_id: string;
+}
+
 const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   const appCredentialBase64 = Buffer.from(
     `${applicationCredential.clientId}:${applicationCredential.clientSecret}`,
@@ -304,23 +311,14 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       return response;
     });
 
-  const checkApiKey = ({
-    apiKey,
-  }: {
-    apiKey: string;
-  }): Promise<{
-    client_id: string;
-    exp: number;
-    scope: string[];
-    user_id: string;
-  }> =>
+  const checkApiKey = ({ apiKey }: { apiKey: string }): Promise<APIKeyResp> =>
     fetch(`${EGO_ROOT_REST}/o/check_api_key?apiKey=${apiKey}`, {
       method: 'POST',
       headers: {
         accept: 'application/json',
         Authorization: `Basic ${appCredentialBase64}`,
       },
-    }).then((res) => res.json());
+    }).then(res => res.json() as Promise<APIKeyResp>);
 
   const toTimestamp = (str: string) =>
     Math.round(new Date(str).getTime() / 1000);
@@ -328,6 +326,9 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   const getTimeToExpiry = (accessKeyObj: EgoAccessKeyObj): number => {
     return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
   };
+
+  const isAuthError = (resp: EgoAccessToken | EgoAccessTokenError): resp is EgoAccessTokenError =>
+    (resp as EgoAccessTokenError).error !== undefined;
 
   const getApplicationJwt = async (
     applicationCredentials: EgoApplicationCredential,
@@ -342,13 +343,9 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
         'Content-type': 'application/json',
       },
     });
-    const authResponse = await response.json();
-    if (authResponse.error) {
-      throw new Error(
-        `Failed to authorize application: ${
-          (authResponse as EgoAccessTokenError).error_description
-        }`,
-      );
+    const authResponse: any = await response.json();
+    if (isAuthError(authResponse) && authResponse.error) {
+      throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
     }
     return (authResponse as EgoAccessToken).access_token;
   };

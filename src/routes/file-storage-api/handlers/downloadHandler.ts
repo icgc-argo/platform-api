@@ -170,13 +170,12 @@ export const downloadFile =
           return res.status(404).end();
         }
 
-        // download file from score and return it to the client with the correct filename
-        await fetch(scoreDownloadUrl)
-          .then((response) => {
-            res.header(
-              'Content-Disposition',
-              `attachment; filename="${esFileObject.file.name}"`,
-            );
+      // download file from score and return it to the client with the correct filename
+      await fetch(scoreDownloadUrl)
+        .then(response => {
+          if (!response.body) throw 'response body is undefined';
+
+          res.header('Content-Disposition', `attachment; filename="${esFileObject.file.name}"`);
 
             response.body.pipe(res);
 
