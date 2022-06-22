@@ -76,7 +76,7 @@ describe('storage-api/entities/{id}', () => {
     if (stderr.length) {
       throw stderr;
     }
-    await new Promise((resolve) => {
+    await new Promise<void>(resolve => {
       setTimeout(() => {
         resolve();
       }, 1000);
@@ -92,13 +92,10 @@ describe('storage-api/entities/{id}', () => {
         },
       }),
     );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
-      (acc, doc) => {
-        acc[doc.object_id] = doc;
-        return acc;
-      },
-      {} as typeof allIndexedDocuments,
-    );
+    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+      acc[doc.object_id] = doc;
+      return acc;
+    }, {} as typeof allIndexedDocuments);
   }, 120000);
 
   afterAll(async () => {
