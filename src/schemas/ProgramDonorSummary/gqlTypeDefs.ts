@@ -89,12 +89,46 @@ export default gql`
     NO_DATA = donor has 0 of all the above Open Access workflow.
     """
     openAccessStatus
+
+    """
+    use this field to filter donor entries by 2 enum values: DATA_SUBMITTED, NO_DATA.
+    DATA_SUBMITTED means the donor has at least 1 registered tumour or 1 normal RNA sample.
+    NO_DATA means the donor has not registered any tumour or normal RNA samples.
+    """
+    rnaRegisteredSample
+
+    """
+    use this field to filter donor entries by 2 enum values: DATA_SUBMITTED, NO_DATA.
+    DATA_SUBMITTED means the donor has at least 1 published tumour or 1 published normal RNA raw reads.
+    NO_DATA means the donor has no tumour and normal RNA raw reads.
+    """
+    rnaRawReads
+
+    """
+    use this field to filter donor entries by 4 enum values: COMPLETED, IN_PROGRESS, FAILED, NO_DATA.
+    COMPLETED = donor has more than 1 completed RNA alignment workflow;
+    IN_PROGRESS = donor has more than 1 running RNA alignment workflow;
+    FAILED = donor has more than 1 failed RNA alignment workflow;
+    NO_DATA = donor has 0 of all the above RNA alignment workflow.
+    """
+    rnaAlignmentStatus
+
     validWithCurrentDictionary
     releaseStatus
     submitterDonorId
     programShortName
     submittedCoreDataPercent
     submittedExtendedDataPercent
+
+    rnaRegisteredNormalSamples
+    rnaRegisteredTumourSamples
+    rnaPublishedNormalAnalysis
+    rnaPublishedTumourAnalysis
+    rnaAlignmentsCompleted
+    rnaAlignmentsRunning
+    rnaAlignmentFailed
+
+    matchedTNPairsDNA
     registeredNormalSamples
     registeredTumourSamples
     publishedNormalAnalysis
@@ -148,6 +182,11 @@ export default gql`
     invalid: Int!
   }
 
+  type DataSubmissionStatus {
+    dataSubmitted: Int!
+    noDataSubmitted: Int!
+  }
+
   type CoreCompletionStatusCount {
     completed: Int!
     incomplete: Int!
@@ -191,55 +230,88 @@ export default gql`
     """
     submittedExtendedDataPercent: Float!
     """
-    Number of normal samples registered for this donor
+    Number of normal RNA samples registered for this donor
+    """
+    rnaRegisteredNormalSamples: Int!
+    """
+    Number of tumour RNA samples registered for this donor
+    """
+    rnaRegisteredTumourSamples: Int!
+    """
+    Number of normal RNA sample analysis that has been published for this donor
+    """
+    rnaPublishedNormalAnalysis: Int!
+
+    """
+    Number of tumour RNA sample analysis that has been published for this donor
+    """
+    rnaPublishedTumourAnalysis: Int!
+    """
+    Number of RNA alignments completed for this donor
+    """
+    rnaAlignmentsCompleted: Int!
+    """
+    Number of RNA alignments currently running for this donor
+    """
+    rnaAlignmentsRunning: Int!
+    """
+    Number of RNA alignments that are failing for this donor
+    """
+    rnaAlignmentFailed: Int!
+    """
+    Number of matched normal/tumour DNA sample pairs registered for this donor
+    """
+    matchedTNPairsDNA: Int!
+    """
+    Number of normal DNA samples registered for this donor
     """
     registeredNormalSamples: Int!
     """
-    Number of tumour samples registered for this donor
+    Number of tumour DNA samples registered for this donor
     """
     registeredTumourSamples: Int!
     """
-    Number of normal sample analysis that has been published for this donor
+    Number of normal DNA sample analysis that has been published for this donor
     """
     publishedNormalAnalysis: Int!
     """
-    Number of tumour sample analysis that has been published for this donor
+    Number of tumour DNA sample analysis that has been published for this donor
     """
     publishedTumourAnalysis: Int!
     """
-    Number of alignments completed for this donor
+    Number of DNA alignments completed for this donor
     """
     alignmentsCompleted: Int!
     """
-    Number of alignments currently running for this donor
+    Number of DNA alignments currently running for this donor
     """
     alignmentsRunning: Int!
     """
-    Number of alignments that is failing for this donor
+    Number of DNA alignments that is failing for this donor
     """
     alignmentsFailed: Int!
     """
-    Number of Sanger VCs completed for this donor
+    Number of DNA Sanger VCs completed for this donor
     """
     sangerVcsCompleted: Int!
     """
-    Number of Sanger VCs currently running for this donor
+    Number of DNA Sanger VCs currently running for this donor
     """
     sangerVcsRunning: Int!
     """
-    Number of Sanger VCs that is failing for this donor
+    Number of DNA Sanger VCs that is failing for this donor
     """
     sangerVcsFailed: Int!
     """
-    Number of Mutect2 completed for this donor
+    Number of DNA Mutect2 completed for this donor
     """
     mutectCompleted: Int!
     """
-    Number of Mutect2 currently running for this donor
+    Number of DNA Mutect2 currently running for this donor
     """
     mutectRunning: Int!
     """
-    Number of Mutect2 that is failed for this donor
+    Number of DNA Mutect2 that is failed for this donor
     """
     mutectFailed: Int!
     """
@@ -247,11 +319,11 @@ export default gql`
     """
     openAccessCompleted: Int!
     """
-    Number of Open Access currently running for this donor
+    Number of DNA Open Access currently running for this donor
     """
     openAccessRunning: Int!
     """
-    Number of Open Access that is failed for this donor
+    Number of DNA Open Access that is failed for this donor
     """
     openAccessFailed: Int!
     """
@@ -288,6 +360,9 @@ export default gql`
     Percentage of core clinical data fields submitted over total core clinical data fields
     """
     percentageCoreClinical: Float!
+    """
+    Percentage of donors with at least 1 matched tumour/normal DNA raw reads pair
+    """
     percentageTumourAndNormal: Float!
     """
     Number of donors whose molecular data is being processed
@@ -326,7 +401,18 @@ export default gql`
     Number of donors that are clinically completed/incomplete/no core fields
     """
     coreCompletion: CoreCompletionStatusCount!
-
+    """
+    Number of donors that have submitted RNA samples
+    """
+    rnaSampleStatus: DataSubmissionStatus!
+    """
+    Number of donors that have submitted RNA published raw reads
+    """
+    rnaRawReadStatus: DataSubmissionStatus!
+    """
+    Number of donors that have COMPLETED/IN_PROGRESS/FAILED/NO_DATA as RNA alignment workflow status
+    """
+    rnaAlignmentStatusCount: WorkflowStatusCount!
     """
     Number of donors that have VALID/INVALID sample pairs
     """

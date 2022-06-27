@@ -34,7 +34,8 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
   const apiRoot = KAFKA_REST_PROXY_ROOT;
 
   // fetch needs to use the json body parser
-  router.use(json());
+  // Kafka can accept message up to max 1mb in size, and there are examples of song sending messages larger than the default 100kb limit
+  router.use(json({ limit: '1mb' }));
 
   router.use(authenticatedRequestMiddleware({ egoClient }));
 
@@ -57,6 +58,7 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
     });
     if (!hasPermission) {
       res.status(403).json({ error: 'not authorized' });
+      return;
     }
 
     const url = urlJoin(apiRoot, 'topics', topic);
@@ -69,7 +71,7 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
         },
       ],
     });
-    return await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/vnd.kafka.json.v2+json',
@@ -80,12 +82,15 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
       .then(response => {
         res.contentType('application/vnd.kafka.v2+json');
         res.status(response.status);
-        return response.body.pipe(res);
+        response.body.pipe(res);
+        return;
       })
       .catch(e => {
         logger.error('failed to send message to kafka proxy' + e);
-        return res.status(500).send(e);
+        res.status(500).send(e);
+        return;
       });
+    return;
   });
 
   return router;
