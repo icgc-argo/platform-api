@@ -166,7 +166,7 @@ const convertClinicalSubmissionDataToGql = (
     };
     
 type EntityDisplayRecord = { name: string; value: string};
-type EntityDataRecord = { [k: string]: unknown };
+type EntityDataRecord = { [k: string]: any };
 
 type ClinicalEntityData = {
   programShortName: string;
@@ -222,7 +222,7 @@ type CoreCompletionFields = {
 interface ClinicalEntityRecord { 
   entityName: string,
   totalDocs: number,
-  records: EntityDisplayRecord[][],
+  records: EntityDisplayRecord[][] | EntityDataRecord[],
   entityFields: string[],
   completionStats?: CompletionStats[],
 };
@@ -242,13 +242,15 @@ type ClinicalErrorRecord = {
 }
 
 const convertClinicalDataToGql = ({programShortName, clinicalEntities}: ClinicalResponseData) => {
-  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map((entity: any) => {
-    const records: EntityDisplayRecord[][] = entity.records.map((record: any) => (
-      Object.keys(record)
-        .map(key => key && ({ name: key, value: record[key] })
-    )));
+  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map((entity: ClinicalEntityRecord) => {
+    const records: EntityDisplayRecord[][] = [];
+    entity.records.forEach((record: EntityDataRecord) => {
+      const displayRecords: EntityDisplayRecord[] = [];
+      for ( const [name, value] of Object.entries(record)) if (name) displayRecords.push({ name, value });
+      records.push(displayRecords);
+    });
 
-    const entityData = {
+    const entityData: ClinicalEntityRecord = {
       ...entity,
       records,
     };
@@ -597,13 +599,14 @@ const resolvers = {
       context: GlobalGqlContext,
         ) => {
           const { Authorization } = context;
-          const entity = parent.clinicalEntities[0];
-          const donorIds = entity.records.map((displayRecord: EntityDisplayRecord[]) => {
-            const donor = displayRecord.find(({name}) => name === 'donor_id');
-            const id = donor !== undefined && donor.value;
-            return id;
-          });
-            
+          let donorIds: string[] = [];
+          
+          parent.clinicalEntities.forEach(entity =>
+            entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+              const donor = displayRecord.find(({name}) => name === 'donor_id');
+              if (donor && donor.value) donorIds.push(donor.value);
+            }));
+
           const response = await clinicalService.getClinicalErrors(
             parent.programShortName,
             donorIds,
