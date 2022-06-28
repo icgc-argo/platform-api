@@ -92,7 +92,7 @@ const convertRegistrationDataToGql = (
       creator: string;
       batchName: string;
       createdAt: string | number;
-      records: EntityRecord[];
+      records: EntityDataRecord[];
     };
     errors?: RegistrationErrorData[];
     batchErrors?: unknown[];
@@ -159,15 +159,23 @@ const convertClinicalSubmissionDataToGql = (
         }));
         return filledClinicalEntities.map(clinicalEntity =>
           convertClinicalSubmissionEntityToGql(clinicalEntity.clinicalType, clinicalEntity),
-        );
-      },
-      fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
+          );
+        },
+        fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
+      };
     };
-  };
+    
+type EntityDisplayRecord = { name: string; value: string};
+type EntityDataRecord = { [k: string]: any };
 
 type ClinicalEntityData = {
   programShortName: string;
   clinicalEntities: ClinicalEntityRecord[];
+};
+
+type ClinicalResponseData = {
+  programShortName: string;
+  clinicalEntities: EntityDataRecord[];
 };
 
 type ClinicalVariables = {
@@ -214,7 +222,7 @@ type CoreCompletionFields = {
 interface ClinicalEntityRecord { 
   entityName: string,
   totalDocs: number,
-  records: EntityRecord[][],
+  records: EntityDisplayRecord[][] | EntityDataRecord[],
   entityFields: string[],
   completionStats?: CompletionStats[],
 };
@@ -233,17 +241,16 @@ type ClinicalErrorRecord = {
      message: string;
 }
 
-const convertClinicalDataToGql = (
-  programShortName: string,
-  data: any,
-): ClinicalEntityData => {
-  const clinicalEntities: ClinicalEntityRecord[] = data.clinicalEntities.map((entity: any) => {
-    const records: EntityRecord[][] = entity.records.map((record: any) => (
-      Object.keys(record)
-        .map(key => key && ({ name: key, value: record[key] })
-    )));
+const convertClinicalDataToGql = ({programShortName, clinicalEntities}: ClinicalResponseData) => {
+  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map((entity: ClinicalEntityRecord) => {
+    const records: EntityDisplayRecord[][] = [];
+    entity.records.forEach((record: EntityDataRecord) => {
+      const displayRecords: EntityDisplayRecord[] = [];
+      for ( const [name, value] of Object.entries(record)) if (name) displayRecords.push({ name, value });
+      records.push(displayRecords);
+    });
 
-    const entityData = {
+    const entityData: ClinicalEntityRecord = {
       ...entity,
       records,
     };
@@ -253,7 +260,7 @@ const convertClinicalDataToGql = (
 
   const clinicalData = {
     programShortName,
-    clinicalEntities,
+    clinicalEntities: clinicalDisplayData,
   };
 
   return clinicalData
@@ -274,7 +281,7 @@ const convertClinicalFileErrorToGql = (fileError: {
 type SubmissionEntity = {
   batchName: string;
   creator: string;
-  records: EntityRecord[];
+  records: EntityDataRecord[];
   stats: unknown;
   dataUpdates: UpdateData[];
   schemaErrors: ErrorData[];
@@ -315,8 +322,7 @@ const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: Subm
   };
 };
 
-type EntityRecord = { [k: string]: unknown };
-const convertClinicalRecordToGql = (index: number | string, record: EntityRecord) => {
+const convertClinicalRecordToGql = (index: number | string, record: EntityDataRecord) => {
   const fields = [];
   for (var field in record) {
     const value = normalizeValue(record[field]);
@@ -393,12 +399,12 @@ const resolvers = {
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
-      const response = await clinicalService.getClinicalData(
+      const response: ClinicalResponseData = await clinicalService.getClinicalData(
         args,
         Authorization,
       );
 
-      return convertClinicalDataToGql(args.programShortName, response);
+      return convertClinicalDataToGql({ programShortName: args.programShortName, clinicalEntities: response.clinicalEntities});
     },
     clinicalSubmissions: async (
       obj: unknown,
@@ -593,10 +599,14 @@ const resolvers = {
       context: GlobalGqlContext,
         ) => {
           const { Authorization } = context;
-
-          const donorEntity = parent.clinicalEntities.find(({entityName}) => entityName === CoreClinicalEntities.donor);
-          const donorIds = donorEntity?.completionStats && donorEntity?.completionStats.map(donor => donor.donorId);
+          let donorIds: string[] = [];
           
+          parent.clinicalEntities.forEach(entity =>
+            entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+              const donor = displayRecord.find(({name}) => name === 'donor_id');
+              if (donor && donor.value) donorIds.push(donor.value);
+            }));
+
           const response = await clinicalService.getClinicalErrors(
             parent.programShortName,
             donorIds,
