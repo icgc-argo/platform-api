@@ -22,7 +22,10 @@ import winston, { createLogger, LoggerOptions, transports, format } from 'winsto
 const { combine, timestamp, colorize, prettyPrint, json, printf } = format;
 
 export const loggerConfig = {
-  format: combine(timestamp(), printf(info => `${info.timestamp} ${info.level}: ${info.message}`)),
+  format: combine(
+    timestamp(),
+    printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+  ),
   transports: [
     new transports.Console({
       level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',

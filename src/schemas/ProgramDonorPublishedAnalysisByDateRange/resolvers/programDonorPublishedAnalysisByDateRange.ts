@@ -20,12 +20,7 @@
 import esb from 'elastic-builder';
 import { GlobalGqlContext } from 'app';
 import { GraphQLFieldResolver } from 'graphql';
-import {
-  BaseQueryArguments,
-  DonorFields,
-  EsAggs,
-  ProgramDonorGqlResponse,
-} from './types';
+import { BaseQueryArguments, DonorFields, EsAggs, ProgramDonorGqlResponse } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { ApolloError, UserInputError } from 'apollo-server-express';
@@ -34,9 +29,7 @@ import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch
 import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
 import logger from 'utils/logger';
 
-const programDonorPublishedAnalysisByDateRangeResolver: (
-  esClient: Client,
-) => GraphQLFieldResolver<
+const programDonorPublishedAnalysisByDateRangeResolver: (esClient: Client) => GraphQLFieldResolver<
   unknown,
   GlobalGqlContext,
   BaseQueryArguments & {
@@ -45,89 +38,88 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     dateRangeTo: string;
     donorFields: DonorFields[];
   }
-> = esClient => async (source, args, context): Promise<ProgramDonorGqlResponse[]> => {
-  const {
-    bucketCount,
-    dateRangeTo,
-    dateRangeFrom,
-    donorFields,
-    programShortName
-  } = args;
+> =
+  (esClient) =>
+  async (source, args, context): Promise<ProgramDonorGqlResponse[]> => {
+    const { bucketCount, dateRangeTo, dateRangeFrom, donorFields, programShortName } = args;
 
-  if (bucketCount < 1) {
-    throw new UserInputError(`bucketCount must be at least 1`, {
-      bucketCount,
-    });
-  }
+    if (bucketCount < 1) {
+      throw new UserInputError(`bucketCount must be at least 1`, {
+        bucketCount,
+      });
+    }
 
-  const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
-  if (!areDatesValid) {
-    throw new UserInputError(`Dates must be in ISO format`, {
-      dateRangeFrom,
-      dateRangeTo
-    });
-  }
+    const areDatesValid = validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
+    if (!areDatesValid) {
+      throw new UserInputError(`Dates must be in ISO format`, {
+        dateRangeFrom,
+        dateRangeTo,
+      });
+    }
 
-  const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
-  const isoDateRangeTo = convertStringToISODate(dateRangeTo);
+    const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
+    const isoDateRangeTo = convertStringToISODate(dateRangeTo);
 
-  const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
-  if (daysInRange < 1) {
-    throw new UserInputError(`dateRangeFrom must be a date before dateRangeTo`, {
-      dateRangeFrom,
-      dateRangeTo
-    });
-  }
+    const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
+    if (daysInRange < 1) {
+      throw new UserInputError(`dateRangeFrom must be a date before dateRangeTo`, {
+        dateRangeFrom,
+        dateRangeTo,
+      });
+    }
 
-  if (daysInRange < bucketCount) {
-    throw new UserInputError(`Days in range must be greater than or equal to bucket count`, {
-      bucketCount,
-      dateRangeFrom,
-      dateRangeTo,
-      daysInRange
-    });
-  }
+    if (daysInRange < bucketCount) {
+      throw new UserInputError(`Days in range must be greater than or equal to bucket count`, {
+        bucketCount,
+        dateRangeFrom,
+        dateRangeTo,
+        daysInRange,
+      });
+    }
 
-  const bucketDates = [...Array(bucketCount).keys()]
-    .sort((a, b) => b - a)
-    .map((bucketIndex: number) => subDate(isoDateRangeTo, 
-      { days: Math.floor(daysInRange / bucketCount * bucketIndex) }
-    ))
-    .map((bucketDate: Date) => formatISO(bucketDate));
+    const bucketDates = [...Array(bucketCount).keys()]
+      .sort((a, b) => b - a)
+      .map((bucketIndex: number) =>
+        subDate(isoDateRangeTo, { days: Math.floor((daysInRange / bucketCount) * bucketIndex) }),
+      )
+      .map((bucketDate: Date) => formatISO(bucketDate));
 
-  const esQuery = esb
-    .requestBodySearch()
-    .size(0)
-    .query(
-      esb.boolQuery()
-        .filter(esb.termQuery('programId', programShortName))
-        .should(donorFields
-          .map((donorField: DonorFields) => esb.existsQuery(donorField)))
-        .minimumShouldMatch(1)
-    )
-    .aggs(donorFields.map((donorField: DonorFields) => esb
-      .dateRangeAggregation(donorField, donorField)
-      .format(ELASTICSEARCH_DATE_TIME_FORMAT)
-      .ranges(bucketDates.map(bucketDate => ({ to: bucketDate })))
-    ));
+    const esQuery = esb
+      .requestBodySearch()
+      .size(0)
+      .query(
+        esb
+          .boolQuery()
+          .filter(esb.termQuery('programId', programShortName))
+          .should(donorFields.map((donorField: DonorFields) => esb.existsQuery(donorField)))
+          .minimumShouldMatch(1),
+      )
+      .aggs(
+        donorFields.map((donorField: DonorFields) =>
+          esb
+            .dateRangeAggregation(donorField, donorField)
+            .format(ELASTICSEARCH_DATE_TIME_FORMAT)
+            .ranges(bucketDates.map((bucketDate) => ({ to: bucketDate }))),
+        ),
+      );
 
-  const esAggs: EsAggs = await esClient
-    .search({ 
-      body: esQuery,
-      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-    })
-    .then(res => res.body.aggregations)
-    .catch(err => {
-      throw new ApolloError(err);
-    });
+    const esAggs: EsAggs = await esClient
+      .search({
+        body: esQuery,
+        index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
+      })
+      .then((res) => res.body.aggregations)
+      .catch((err) => {
+        throw new ApolloError(err);
+      });
 
-  return Object.keys(esAggs).map((key: DonorFields) => ({
-    title: key,
-    buckets: esAggs[key].buckets.map((bucket) => ({
-      date: bucket.to_as_string,
-      donors: bucket.doc_count
-    }))
-  }));
-};
+    return Object.keys(esAggs).map((key: DonorFields) => ({
+      title: key,
+      buckets: esAggs[key].buckets.map((bucket) => ({
+        date: bucket.to_as_string,
+        donors: bucket.doc_count,
+      })),
+    }));
+  };
 
 export default programDonorPublishedAnalysisByDateRangeResolver;

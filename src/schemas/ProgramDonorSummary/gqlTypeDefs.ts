@@ -218,7 +218,6 @@ export default gql`
     """
     releaseStatus: DonorMolecularDataReleaseStatus!
     """
-
     """
     submitterDonorId: String!
     """
@@ -462,7 +461,6 @@ export default gql`
     Number of donors with workflow runs that have failed
     """
     failedWorkflowRuns: Int!
-
   }
 
   type Query {

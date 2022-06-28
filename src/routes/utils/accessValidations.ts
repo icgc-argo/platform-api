@@ -81,9 +81,10 @@ export const hasSufficientDacoAccess = (config: {
   file: EsFileCentricDocument;
 }): boolean => {
   const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
-  const userHasDacoAccess = dacoScopes.length > 0
-    && dacoScopes.some(scope => scope.permission === PERMISSIONS.READ)
-    && dacoScopes.every(scope => scope.permission !== PERMISSIONS.DENY);
+  const userHasDacoAccess =
+    dacoScopes.length > 0 &&
+    dacoScopes.some((scope) => scope.permission === PERMISSIONS.READ) &&
+    dacoScopes.every((scope) => scope.permission !== PERMISSIONS.DENY);
   return (
     config.file.file_access === FILE_ACCESS.OPEN ||
     (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)

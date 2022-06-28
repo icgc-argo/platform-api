@@ -136,7 +136,7 @@ const createResolvers = (egoClient: EgoClient) => {
         };
         const response = await egoClient.listUsers(options, egoToken);
         const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
-        return egoUserList.map(egoUser => convertEgoUser(egoUser));
+        return egoUserList.map((egoUser) => convertEgoUser(egoUser));
       },
       self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
         const { Authorization, egoToken, userJwtData } = context;

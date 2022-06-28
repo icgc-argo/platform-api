@@ -62,13 +62,13 @@ const extractUserScopes = async (config: {
       // If it is also not an API Key then the final .catch block will handle setting authenticated to false.
       return egoClient
         .checkApiKey({ apiKey: token })
-        .then(data => ({
+        .then((data) => ({
           scopes: data.scope.map(egoTokenUtils.parseScope),
           serializedScopes: data.scope,
           authenticated: true,
           egoJwt: token,
         }))
-        .catch(err => unauthenticatedResponse);
+        .catch((err) => unauthenticatedResponse);
     }
   } else {
     return { scopes: [], serializedScopes: [], authenticated: false, egoJwt: '' };

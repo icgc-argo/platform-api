@@ -19,7 +19,7 @@ export const getEsFileDocumentByObjectId = (esClient: Client) => (objectId: stri
         ]),
       ),
     })
-    .then(res => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
+    .then((res) => res.body.hits.hits[0]?._source as EsFileCentricDocument | undefined);
 
 export type SongEntity = {
   id: string;

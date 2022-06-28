@@ -34,7 +34,7 @@ import _ from 'lodash';
 
 chai.use(chaiHttp);
 
-export const entitiesStream = async function*({
+export const entitiesStream = async function* ({
   app,
   apiKey,
 }: {
@@ -48,7 +48,7 @@ export const entitiesStream = async function*({
       .request(app)
       .get(`/entities?page=${currentPage}&size=${pageSize}`)
       .set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
-      .then(response => response.body as EntitiesPageResponseBody);
+      .then((response) => response.body as EntitiesPageResponseBody);
 
     if (!pageData.content) {
       console.log('no pageData.content: ', pageData);
@@ -65,13 +65,13 @@ export const entitiesStream = async function*({
 
 export const reduceToEntityList = (stream: ReturnType<typeof entitiesStream>) =>
   reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>((acc, r) => {
-    r.content.forEach(e => {
+    r.content.forEach((e) => {
       acc.push(e);
     });
     return acc;
   }, [])(stream);
 
-const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
+const esDocumentStream = async function* ({ esClient }: { esClient: Client }) {
   let currentIndex = 0;
   const pageSize = 1000;
   cycle: while (true) {
@@ -84,9 +84,9 @@ const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
           .from(currentIndex)
           .size(pageSize),
       })
-      .then(r => r.body as EsHits<EsFileCentricDocument>);
+      .then((r) => r.body as EsHits<EsFileCentricDocument>);
     if (pageData.hits.hits.length > 0) {
-      yield pageData.hits.hits.map(h => h._source);
+      yield pageData.hits.hits.map((h) => h._source);
       currentIndex += pageSize;
     } else {
       break cycle;
@@ -96,7 +96,7 @@ const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
 
 export const getAllIndexedDocuments = (esClient: Client) =>
   reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
-    chunk.forEach(doc => acc.push(doc));
+    chunk.forEach((doc) => acc.push(doc));
     return acc;
   }, [])(esDocumentStream({ esClient }));
 

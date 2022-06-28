@@ -19,9 +19,9 @@
 
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import { createCheckers } from "ts-interface-checker";
+import { createCheckers } from 'ts-interface-checker';
 import logger from '../../utils/logger';
-import systemAlertTI from "./systemAlert-ti";
+import systemAlertTI from './systemAlert-ti';
 
 const { SystemAlertTI } = createCheckers(systemAlertTI);
 
@@ -39,7 +39,7 @@ const { SystemAlertTI } = createCheckers(systemAlertTI);
 interface SystemAlert {
   dismissable: boolean;
   id: string;
-  level: 'error'|'info'|'warning';
+  level: 'error' | 'info' | 'warning';
   message?: string;
   title: string;
 }
@@ -48,13 +48,7 @@ type AllowedFields = keyof SystemAlert;
 
 // deliberately not typed to avoid throwing TS errors
 // if a system alert includes extra fields.
-const allowedFields = [
-  'dismissable',
-  'id',
-  'level',
-  'message',
-  'title',
-];
+const allowedFields = ['dismissable', 'id', 'level', 'message', 'title'];
 
 const logError = (message: string, name: string) => {
   logger.error(`📜 System Alert - ${name} - ${message}`);
@@ -68,21 +62,21 @@ const getSystemAlerts = () => {
 
     const alertsParsed = [].concat(JSON.parse(alertsStr));
 
-    const alertsValidated = alertsParsed.reduce((acc, curr) => ({
-      ...acc,
-      ...(SystemAlertTI.test(curr)
-        ? { valid: [...acc.valid, curr] }
-        : { invalid: [...acc.invalid, curr] }
-      )
-    }), { valid: [], invalid: [] });
+    const alertsValidated = alertsParsed.reduce(
+      (acc, curr) => ({
+        ...acc,
+        ...(SystemAlertTI.test(curr)
+          ? { valid: [...acc.valid, curr] }
+          : { invalid: [...acc.invalid, curr] }),
+      }),
+      { valid: [], invalid: [] },
+    );
 
-    result = alertsValidated.valid
-      .map((alert: SystemAlert) =>
-        Object.keys(alert)
-          .filter(key => allowedFields.includes(key))
-          .reduce((acc, curr: AllowedFields) =>
-            ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert)
-      );
+    result = alertsValidated.valid.map((alert: SystemAlert) =>
+      Object.keys(alert)
+        .filter((key) => allowedFields.includes(key))
+        .reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
+    );
 
     alertsValidated.invalid.forEach((alert: any) => {
       // check() will throw errors on invalid system alerts.
@@ -93,7 +87,7 @@ const getSystemAlerts = () => {
   } finally {
     return result;
   }
-}
+};
 
 const alertsArray = getSystemAlerts();
 
@@ -115,7 +109,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     systemAlerts: () => alertsArray,
-  }
+  },
 };
 
 export default makeExecutableSchema({

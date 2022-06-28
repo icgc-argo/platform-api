@@ -33,9 +33,9 @@ export enum DonorMolecularDataProcessingStatus {
 }
 
 export type DonorSummary = {
-  entries: DonorSummaryEntry[],
-  stats: ProgramDonorSummaryStats,
-}
+  entries: DonorSummaryEntry[];
+  stats: ProgramDonorSummaryStats;
+};
 
 export type DonorSummaryEntry = {
   id: string;
@@ -77,18 +77,19 @@ export type DonorSummaryEntry = {
   createdAt: Date;
 };
 
-type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry & keyof
-  { combinedDonorId: string,
-    coreDataPercentAggregation: string,
-    registeredSamplePairs: string,
-    rnaRegisteredSample: string,
-    rnaRawReads: string,
-    rnaAlignmentStatus: string,
-    rawReads: string,
-    alignmentStatus: string,
-    sangerVCStatus: string,
-    mutectStatus: string,
-    openAccessStatus: string,
+type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry &
+  keyof {
+    combinedDonorId: string;
+    coreDataPercentAggregation: string;
+    registeredSamplePairs: string;
+    rnaRegisteredSample: string;
+    rnaRawReads: string;
+    rnaAlignmentStatus: string;
+    rawReads: string;
+    alignmentStatus: string;
+    sangerVCStatus: string;
+    mutectStatus: string;
+    openAccessStatus: string;
   };
 
 export type ProgramDonorSummaryFilter = {
@@ -108,9 +109,9 @@ export type ProgramDonorSummaryStats = {
   partiallyReleasedDonorsCount: number;
   noReleaseDonorsCount: number;
   donorsInvalidWithCurrentDictionaryCount: number;
-  completedWorkflowRuns: number,
-  inProgressWorkflowRuns: number,
-  failedWorkflowRuns: number,
+  completedWorkflowRuns: number;
+  inProgressWorkflowRuns: number;
+  failedWorkflowRuns: number;
 
   coreCompletion: CoreCompletionStatusCount;
 
@@ -139,24 +140,24 @@ type CoreCompletionStatusCount = {
   completed: number;
   incomplete: number;
   noData: number;
-}
+};
 
 type SamplePairsStatusCount = {
   valid: number;
   invalid: number;
-}
+};
 
 type DataSubmissionStatus = {
   dataSubmitted: number;
   noDataSubmitted: number;
-}
+};
 
 type WorkflowStatusCount = {
   noData: number;
   completed: number;
   inProgress: number;
   failed: number;
-}
+};
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
   id: string;
@@ -272,7 +273,7 @@ export type ElasticsearchDonorDocument = {
 export enum coreDataPercentAggregationValue {
   INCOMPLETE = 'INCOMPLETE',
   COMPLETE = 'COMPLETE',
-  NO_DATA = 'NO_DATA'
+  NO_DATA = 'NO_DATA',
 }
 
 export enum registeredSamplePairsValue {
@@ -294,5 +295,5 @@ export enum workflowStatus {
   COMPLETED = 'COMPLETED',
   FAILED = 'FAILED',
   IN_PROGRESS = 'IN_PROGRESS',
-  NO_DATA = 'NO_DATA'
+  NO_DATA = 'NO_DATA',
 }

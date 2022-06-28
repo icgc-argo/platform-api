@@ -159,7 +159,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       headers: { Authorization },
     })
       .then(restErrorResponseHandler)
-      .then(response => response.json() as EgoApiKeyResponse);
+      .then((response) => response.json() as EgoApiKeyResponse);
     const totalCount = firstResponse.count;
     const firstResults = firstResponse.resultSet;
     const remainingPageIndex = firstResults.length;
@@ -173,7 +173,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       },
     )
       .then(restErrorResponseHandler)
-      .then(response => response.json() as EgoApiKeyResponse);
+      .then((response) => response.json() as EgoApiKeyResponse);
 
     const remainingResults = remainingResponse.resultSet;
 
@@ -194,7 +194,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       headers: { Authorization },
     })
       .then(restErrorResponseHandler)
-      .then(response => response.json());
+      .then((response) => response.json());
     return response;
   };
 
@@ -208,7 +208,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       headers: { Authorization },
     })
       .then(restErrorResponseHandler)
-      .then(response => response.json());
+      .then((response) => response.json());
     return response;
   };
 
@@ -216,16 +216,16 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     keys: EgoAccessKeyObj[],
     Authorization: string,
   ): Promise<{ key: string; success: boolean }[] | null> => {
-    const accessKeys = keys.map(k => k.name);
+    const accessKeys = keys.map((k) => k.name);
     const ps = await Promise.all(
-      accessKeys.map(async key => {
+      accessKeys.map(async (key) => {
         const url = urlJoin(EGO_API_KEY_ENDPOINT, `?apiKey=${encodeURIComponent(key)}`);
         return fetch(url, {
           method: 'delete',
           headers: { Authorization },
         })
-          .then(resp => ({ key, success: true }))
-          .catch(err => {
+          .then((resp) => ({ key, success: true }))
+          .catch((err) => {
             logger.error(err);
             return { key, success: false };
           });
@@ -256,20 +256,22 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
         headers: { Authorization },
       })
         .then(
-          resp =>
+          (resp) =>
             resp.json() as Promise<{
               resultSet: { name: string; id: string }[];
             }>,
         )
-        .then(({ resultSet = [] }) => resultSet.filter(data => data.name === EGO_DACO_POLICY_NAME))
-        .then(group => {
+        .then(({ resultSet = [] }) =>
+          resultSet.filter((data) => data.name === EGO_DACO_POLICY_NAME),
+        )
+        .then((group) => {
           if (group.length === 0) {
             throw new Error('DACO group id not found');
           } else {
             return group[0].id;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           logger.error(err);
           return null;
         });
@@ -292,7 +294,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
         accept: 'application/json',
         Authorization: `Basic ${appCredentialBase64}`,
       },
-    }).then(res => res.json());
+    }).then((res) => res.json());
 
   const toTimestamp = (str: string) => Math.round(new Date(str).getTime() / 1000);
 

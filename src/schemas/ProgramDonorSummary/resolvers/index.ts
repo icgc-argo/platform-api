@@ -34,7 +34,9 @@ class UnauthorizedError extends ApolloError {
   };
 }
 
-export const resolveWithProgramAuth = <ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>>(
+export const resolveWithProgramAuth = <
+  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>,
+>(
   resolver: ResolverType,
   gqlResolverArguments: [unknown, BaseQueryArguments, GlobalGqlContext, unknown],
 ): ResolverType => {
@@ -75,7 +77,7 @@ const createResolvers = async (
         resolveWithProgramAuth(
           programDonorSummaryEntriesAndStatsResolver(esClient)(...resolverArguments),
           resolverArguments,
-        )
+        ),
     },
   };
 };

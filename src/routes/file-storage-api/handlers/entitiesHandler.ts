@@ -126,7 +126,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       fields: req.query.fields
         ? (req.query.fields as string)
             .split(',')
-            .map(str => str.trim())
+            .map((str) => str.trim())
             .filter(_.identity)
         : [],
       fileName: req.query.fileName || undefined,
@@ -188,14 +188,14 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)
-      .map(esFile => {
+      .map((esFile) => {
         const index = getIndexFile(esFile) as SongEntity;
         const file = toSongEntity(esFile);
 
         return !!index ? [index, file] : file;
       })
       .flat() // Flatten to separate out the index files, if found
-      .map(file =>
+      .map((file) =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
               Object.entries(file).filter(([key]) => parsedRequestQuery.fields.includes(key)),

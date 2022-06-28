@@ -70,9 +70,9 @@ describe('Arranger schema', () => {
       body: mockMapping,
     });
   }, 120000);
-  afterAll( async (done) => {
+  afterAll(async (done) => {
     await esContainer.stop();
-    done()
+    done();
   });
 
   describe('initArrangerMetadata', () => {
@@ -94,16 +94,20 @@ describe('Arranger schema', () => {
 
     it('must index data properly', async () => {
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECTS_INDEX,
-          id: ARRANGER_PROJECT_ID,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECTS_INDEX,
+            id: ARRANGER_PROJECT_ID,
+          })
+        ).body._source,
       ).toEqual(metadata.projectManifest);
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
@@ -119,25 +123,31 @@ describe('Arranger schema', () => {
         ]),
       ).resolves.toBeDefined();
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECTS_INDEX,
-          id: ARRANGER_PROJECT_ID,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECTS_INDEX,
+            id: ARRANGER_PROJECT_ID,
+          })
+        ).body._source,
       ).toEqual(metadata.projectManifest);
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
     it('must index data using ARRANGER_FILE_CENTRIC_INDEX config', async () => {
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source.index,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source.index,
       ).toEqual(ARRANGER_FILE_CENTRIC_INDEX);
     });
   });

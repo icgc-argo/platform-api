@@ -74,7 +74,7 @@ describe('storage-api/entities/{id}', () => {
     if (stderr.length) {
       throw stderr;
     }
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 1000);
@@ -90,13 +90,10 @@ describe('storage-api/entities/{id}', () => {
         },
       }),
     );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
-      (acc, doc) => {
-        acc[doc.object_id] = doc;
-        return acc;
-      },
-      {} as typeof allIndexedDocuments,
-    );
+    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+      acc[doc.object_id] = doc;
+      return acc;
+    }, {} as typeof allIndexedDocuments);
   }, 120000);
 
   afterAll(async () => {
@@ -106,17 +103,18 @@ describe('storage-api/entities/{id}', () => {
   describe('/entities/{id} endpoint', () => {
     const fetchEntity = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
       const requestPromise = chai.request(app).get(`/entities/${objectId}`);
-      return (apiKey
-        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
-        : requestPromise
-      ).then(response => {
+      return (
+        apiKey
+          ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+          : requestPromise
+      ).then((response) => {
         if (!response.body.id) {
           throw response.error;
         }
         return response.body as SongEntity;
       });
     };
-    const retrievableObjectStream = async function*({
+    const retrievableObjectStream = async function* ({
       apiKey,
       objectIds,
     }: {
@@ -125,14 +123,14 @@ describe('storage-api/entities/{id}', () => {
     }) {
       for await (const chunk of _.chunk(objectIds, 5)) {
         const data = await Promise.all(
-          chunk.map(objectId => fetchEntity({ apiKey, objectId }).catch(err => null)),
+          chunk.map((objectId) => fetchEntity({ apiKey, objectId }).catch((err) => null)),
         );
-        yield data.filter(entry => !!entry) as SongEntity[];
+        yield data.filter((entry) => !!entry) as SongEntity[];
       }
     };
     const reduceToEntityList = (stream: ReturnType<typeof retrievableObjectStream>) =>
-      reduce<(SongEntity)[], (SongEntity)[]>((acc, r) => {
-        r.forEach(entity => acc.push(entity));
+      reduce<SongEntity[], SongEntity[]>((acc, r) => {
+        r.forEach((entity) => acc.push(entity));
         return acc;
       }, [])(stream);
 
@@ -147,8 +145,8 @@ describe('storage-api/entities/{id}', () => {
         expect(allEntitiesRetrievable.length).toBe(_.size(allIndexedDocuments));
         expect(
           allEntitiesRetrievable
-            .map(obj => (obj as SongEntity).id)
-            .every(id => Object.keys(allIndexedDocuments).includes(id)),
+            .map((obj) => (obj as SongEntity).id)
+            .every((id) => Object.keys(allIndexedDocuments).includes(id)),
         );
       });
     });
@@ -157,8 +155,8 @@ describe('storage-api/entities/{id}', () => {
       // this is a function because `describe` callback happens before test run
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
-          .filter(obj => obj.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC)
-          .map(doc => doc.object_id);
+          .filter((obj) => obj.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC)
+          .map((doc) => doc.object_id);
 
       // [2021-09-13 Jon Eubank] - Test is failing on Jenkins, seems like the auth error checking in the /entities/{id} method is in conflict with the fake auth
       // provided in these tests, but either way there are more files expected than are returned in allEntitiesRetrievable. Tested manually thoroughly and no
@@ -194,9 +192,9 @@ describe('storage-api/entities/{id}', () => {
         const allEntitiesRetrievable = await reduceToEntityList(
           retrievableObjectStream({ objectIds: Object.keys(allIndexedDocuments) }),
         );
-        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
-        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
-        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+        const allRetrievedIds = allEntitiesRetrievable.map((obj) => (obj as SongEntity).id);
+        expect(allRetrievedIds.every((id) => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every((id) => allRetrievedIds.includes(id))).toBe(true);
       });
 
       it('throws the right error when authenticated user requests unauthorized file', async () => {
@@ -219,7 +217,7 @@ describe('storage-api/entities/{id}', () => {
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
           .filter(
-            obj =>
+            (obj) =>
               [
                 FILE_EMBARGO_STAGE.FULL_PROGRAMS,
                 FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
@@ -228,7 +226,7 @@ describe('storage-api/entities/{id}', () => {
               (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM),
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
       it('returns all and only the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
@@ -237,9 +235,9 @@ describe('storage-api/entities/{id}', () => {
             objectIds: Object.keys(allIndexedDocuments),
           }),
         );
-        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
-        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
-        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+        const allRetrievedIds = allEntitiesRetrievable.map((obj) => (obj as SongEntity).id);
+        expect(allRetrievedIds.every((id) => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every((id) => allRetrievedIds.includes(id))).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
@@ -262,7 +260,7 @@ describe('storage-api/entities/{id}', () => {
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
           .filter(
-            obj =>
+            (obj) =>
               [FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS, FILE_EMBARGO_STAGE.PUBLIC].includes(
                 obj.embargo_stage,
               ) ||
@@ -271,7 +269,7 @@ describe('storage-api/entities/{id}', () => {
               (obj.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
                 obj.study_id === TEST_PROGRAM),
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
       it('returns all and only the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToEntityList(
@@ -280,10 +278,10 @@ describe('storage-api/entities/{id}', () => {
             objectIds: Object.keys(allIndexedDocuments),
           }),
         );
-        const allRetrievedIds = allEntitiesRetrievable.map(obj => (obj as SongEntity).id);
+        const allRetrievedIds = allEntitiesRetrievable.map((obj) => (obj as SongEntity).id);
         expect(allRetrievedIds.length).toBe(expectedRetrievableIds.length);
-        expect(allRetrievedIds.every(id => expectedRetrievableIds.includes(id))).toBe(true);
-        expect(expectedRetrievableIds.every(id => allRetrievedIds.includes(id))).toBe(true);
+        expect(allRetrievedIds.every((id) => expectedRetrievableIds.includes(id))).toBe(true);
+        expect(expectedRetrievableIds.every((id) => allRetrievedIds.includes(id))).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {

@@ -146,7 +146,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
+      defaultFileName: (req) => `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
     }),
   );
   router.use(
@@ -154,7 +154,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
+      defaultFileName: (req) => `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
   );
@@ -164,7 +164,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => 'demo',
+      defaultFileName: (req) => 'demo',
       tsvSchema: demoTsvSchema,
     }),
   );

@@ -45,7 +45,7 @@ const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
       status: 'APPROVED',
       type: 'USER',
       providerType: 'GOOGLE',
-      providerSubjectId: ''
+      providerSubjectId: '',
     },
   },
   exp: Infinity,
@@ -74,7 +74,7 @@ const createArrangerApi = async ({
   return graphqlClient;
 };
 
-export const fileDocumentStream = async function*({
+export const fileDocumentStream = async function* ({
   esClient,
   apiKey,
   clientSideFilters,
@@ -137,7 +137,7 @@ export const fileDocumentStream = async function*({
 
 export const reduceToFileHits = (stream: ReturnType<typeof fileDocumentStream>) =>
   reduce<QueryResponse, QueryResponse['file']['hits']['edges']>((acc, r) => {
-    r.file.hits.edges.forEach(edge => {
+    r.file.hits.edges.forEach((edge) => {
       acc.push(edge);
     });
     return acc;

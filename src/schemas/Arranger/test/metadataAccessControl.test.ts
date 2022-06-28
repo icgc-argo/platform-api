@@ -27,7 +27,7 @@ import {
   getAllIndexedDocuments,
   MOCK_API_KEYS,
   MOCK_API_KEY_SCOPES,
-  TEST_PROGRAM
+  TEST_PROGRAM,
 } from 'routes/file-storage-api/handlers/test/utils';
 import { aggregateAllObjectIds, fileDocumentStream, reduceToFileHits } from './utils';
 import _ from 'lodash';
@@ -81,23 +81,19 @@ describe('Arranger metadata access control', () => {
       throw stderr;
     }
     console.log('embargoStageEsInit stdout: ', stdout);
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(() => {
         resolve();
       }, 30000);
     });
-    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
-      (acc, doc) => {
-        acc[doc.object_id] = doc;
-        return acc;
-      },
-      {} as typeof allIndexedDocuments,
-    );
+    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+      acc[doc.object_id] = doc;
+      return acc;
+    }, {} as typeof allIndexedDocuments);
   });
   afterAll(async () => {
     await esContainer.stop();
   });
-
 
   describe('hits query', () => {
     it('returns unique entities', async () => {
@@ -108,7 +104,7 @@ describe('Arranger metadata access control', () => {
       const allRetrievedEntities = await reduceToFileHits(responseStream);
       expect(
         _(allRetrievedEntities)
-          .uniqBy(e => e.node.object_id)
+          .uniqBy((e) => e.node.object_id)
           .size(),
       ).toBe(allRetrievedEntities.length);
     });
@@ -119,19 +115,19 @@ describe('Arranger metadata access control', () => {
         apiKey: MOCK_API_KEYS.PUBLIC,
       });
       const allEntityIdsFromApi = (await reduceToFileHits(responseStream)).map(
-        e => e.node.object_id,
+        (e) => e.node.object_id,
       );
       const equivalentIndexedDocuments = allEntityIdsFromApi.map(
-        id => allIndexedDocuments[id || ''],
+        (id) => allIndexedDocuments[id || ''],
       );
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        doc => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+        (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
     });
@@ -150,10 +146,10 @@ describe('Arranger metadata access control', () => {
       const userScopes = MOCK_API_KEY_SCOPES[apiKey];
       const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
       const allRetrievedEntities = (await reduceToFileHits(responseStream)).map(
-        e => e.node.object_id,
+        (e) => e.node.object_id,
       );
       const equivalentIndexedDocuments = allRetrievedEntities.map(
-        id => allIndexedDocuments[id || ''],
+        (id) => allIndexedDocuments[id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
@@ -163,14 +159,14 @@ describe('Arranger metadata access control', () => {
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           doc.meta.study_id === TEST_PROGRAM,
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
-        validators.some(validate => validate(doc)),
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+        validators.some((validate) => validate(doc)),
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });
@@ -181,26 +177,26 @@ describe('Arranger metadata access control', () => {
       const responseStream = fileDocumentStream({ esClient, apiKey: apiKey });
       const allRetrievedEntities = await reduceToFileHits(responseStream);
       const equivalentIndexedDocuments = allRetrievedEntities.map(
-        retrievedObject => allIndexedDocuments[retrievedObject.node.object_id || ''],
+        (retrievedObject) => allIndexedDocuments[retrievedObject.node.object_id || ''],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
         (doc) =>
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
-          userScopes.some(scope => scope.includes(doc.meta.study_id)),
+          userScopes.some((scope) => scope.includes(doc.meta.study_id)),
         (doc) =>
-        doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
-          userScopes.some(scope => scope.includes(doc.meta.study_id)),
+          doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
+          userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
-        validators.some(validate => validate(doc)),
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+        validators.some((validate) => validate(doc)),
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });
@@ -215,16 +211,16 @@ describe('Arranger metadata access control', () => {
       const allEntityIdsFromApi =
         aggregationResult?.file.aggregations.object_id.buckets.map(({ key }) => key) || [];
       const equivalentIndexedDocuments = allEntityIdsFromApi.map(
-        id => allIndexedDocuments[id || ''],
+        (id) => allIndexedDocuments[id || ''],
       );
       const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        doc => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+        (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
     });
@@ -246,24 +242,24 @@ describe('Arranger metadata access control', () => {
       const allObjectIdsFromApi =
         aggregationResult?.file.aggregations.object_id.buckets.map(({ key }) => key) || [];
       const equivalentIndexedDocuments = allObjectIdsFromApi.map(
-        objectId => allIndexedDocuments[objectId],
+        (objectId) => allIndexedDocuments[objectId],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS,
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
         (doc) =>
-        doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
-          userScopes.some(scope => scope.includes(doc.meta.study_id)),
+          doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
+          userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
-        validators.some(validate => validate(doc)),
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+        validators.some((validate) => validate(doc)),
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });
@@ -275,26 +271,26 @@ describe('Arranger metadata access control', () => {
       const allObjectIdsFromApi =
         aggregationResult?.file.aggregations.object_id.buckets.map(({ key }) => key) || [];
       const equivalentIndexedDocuments = allObjectIdsFromApi.map(
-        objectId => allIndexedDocuments[objectId],
+        (objectId) => allIndexedDocuments[objectId],
       );
       const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
         (doc) => doc.meta.embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
         (doc) =>
-        doc.meta.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
-          userScopes.some(scope => scope.includes(doc.meta.study_id)),
+          doc.meta.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
+          userScopes.some((scope) => scope.includes(doc.meta.study_id)),
         (doc) =>
-        doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
-          userScopes.some(scope => scope.includes(doc.meta.study_id)),
+          doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
+          userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(doc =>
-        validators.some(validate => validate(doc)),
+      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+        validators.some((validate) => validate(doc)),
       );
       expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every(doc => allDocumentsThatQualify.includes(doc))).toBe(
+      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
         true,
       );
-      expect(allDocumentsThatQualify.every(doc => equivalentIndexedDocuments.includes(doc))).toBe(
+      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
         true,
       );
     });

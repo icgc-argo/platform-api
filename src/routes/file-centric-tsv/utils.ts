@@ -69,7 +69,7 @@ export const createFilterToEsQueryConverter = async (esClient: Client, index: st
   }) as FilterStringParser;
 };
 
-export const createEsDocumentStream = async function*<DocumentType>(configs: {
+export const createEsDocumentStream = async function* <DocumentType>(configs: {
   esClient: Client;
   shouldContinue: () => boolean;
   sortField: string;

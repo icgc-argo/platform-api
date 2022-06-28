@@ -56,14 +56,14 @@ export const getNestedFields = (fieldMapping: EsFieldMapping, parentField?: stri
     const { properties } = fieldMapping;
     const currentFields = Object.keys(properties);
     const nestedOrObjectFieldKey = currentFields.filter(
-      field => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
+      (field) => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
     );
-    const nestedFieldKey = nestedOrObjectFieldKey.filter(field =>
+    const nestedFieldKey = nestedOrObjectFieldKey.filter((field) =>
       isNestedFieldMapping(properties[field]),
     );
     return flatMap([
-      ...(parentField ? nestedFieldKey.map(field => `${parentField}.${field}`) : nestedFieldKey),
-      ...nestedOrObjectFieldKey.map(field =>
+      ...(parentField ? nestedFieldKey.map((field) => `${parentField}.${field}`) : nestedFieldKey),
+      ...nestedOrObjectFieldKey.map((field) =>
         getNestedFields(properties[field], parentField ? `${parentField}.${field}` : field),
       ),
     ]);
