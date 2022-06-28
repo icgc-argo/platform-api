@@ -61,7 +61,9 @@ describe('Arranger schema', () => {
       .withEnv('discovery.type', 'single-node')
       .withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
       .start();
-    esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`;
+    esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(
+      9200,
+    )}`;
     esClient = await createEsClient({
       node: esHost,
     });
@@ -70,40 +72,58 @@ describe('Arranger schema', () => {
       body: mockMapping,
     });
   }, 120000);
-  afterAll( async (done) => {
+  afterAll(async (done) => {
     await esContainer.stop();
-    done()
+    done();
   });
 
   describe('initArrangerMetadata', () => {
     it('indices must exist after run', async () => {
       await initArrangerMetadata(esClient);
-      expect((await esClient.indices.exists({ index: ARRANGER_PROJECT_METADATA_INDEX })).body).toBe(
-        true,
-      );
-      expect((await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX })).body).toBe(true);
+      expect(
+        (
+          await esClient.indices.exists({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+          })
+        ).body,
+      ).toBe(true);
+      expect(
+        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
+          .body,
+      ).toBe(true);
     });
 
     it('must handle another run without failing', async () => {
       expect(initArrangerMetadata(esClient)).resolves.toBeDefined();
-      expect((await esClient.indices.exists({ index: ARRANGER_PROJECT_METADATA_INDEX })).body).toBe(
-        true,
-      );
-      expect((await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX })).body).toBe(true);
+      expect(
+        (
+          await esClient.indices.exists({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+          })
+        ).body,
+      ).toBe(true);
+      expect(
+        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
+          .body,
+      ).toBe(true);
     });
 
     it('must index data properly', async () => {
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECTS_INDEX,
-          id: ARRANGER_PROJECT_ID,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECTS_INDEX,
+            id: ARRANGER_PROJECT_ID,
+          })
+        ).body._source,
       ).toEqual(metadata.projectManifest);
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
@@ -119,25 +139,31 @@ describe('Arranger schema', () => {
         ]),
       ).resolves.toBeDefined();
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECTS_INDEX,
-          id: ARRANGER_PROJECT_ID,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECTS_INDEX,
+            id: ARRANGER_PROJECT_ID,
+          })
+        ).body._source,
       ).toEqual(metadata.projectManifest);
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
     it('must index data using ARRANGER_FILE_CENTRIC_INDEX config', async () => {
       expect(
-        (await esClient.get({
-          index: ARRANGER_PROJECT_METADATA_INDEX,
-          id: harmonizedFileCentricConfig.name,
-        })).body._source.index,
+        (
+          await esClient.get({
+            index: ARRANGER_PROJECT_METADATA_INDEX,
+            id: harmonizedFileCentricConfig.name,
+          })
+        ).body._source.index,
       ).toEqual(ARRANGER_FILE_CENTRIC_INDEX);
     });
   });
@@ -146,9 +172,9 @@ describe('Arranger schema', () => {
     it('generates arranger schema with "file" type', async () => {
       try {
         const arrangerSchema = await getArrangerGqlSchema(esClient);
-        expect(arrangerSchema.getType(harmonizedFileCentricConfig.name)?.toString()).toBe(
-          harmonizedFileCentricConfig.name,
-        );
+        expect(
+          arrangerSchema.getType(harmonizedFileCentricConfig.name)?.toString(),
+        ).toBe(harmonizedFileCentricConfig.name);
       } catch (err) {
         throw err;
       }

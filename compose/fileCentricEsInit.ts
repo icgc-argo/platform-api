@@ -33,7 +33,10 @@ import indexData from './file_centric/sample_file_centric.json';
   try {
     await esClient.ping();
   } catch (err) {
-    console.log(`failing to ping elasticsearch at ${ELASTICSEARCH_HOST}: `, err);
+    console.log(
+      `failing to ping elasticsearch at ${ELASTICSEARCH_HOST}: `,
+      err,
+    );
     throw err;
   }
   try {
@@ -65,9 +68,9 @@ import indexData from './file_centric/sample_file_centric.json';
         refresh: 'wait_for',
         body: {
           ...doc,
-          donors: [doc.donors].map(donor => ({
+          donors: [doc.donors].map((donor) => ({
             ...donor,
-            specimens: [donor.specimens].map(specimen => ({
+            specimens: [donor.specimens].map((specimen) => ({
               ...specimen,
               samples: [specimen.samples],
             })),

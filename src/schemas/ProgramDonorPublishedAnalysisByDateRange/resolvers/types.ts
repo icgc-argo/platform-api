@@ -24,7 +24,7 @@ export type BaseQueryArguments = {
 export type ResponseBucket = {
   date: string;
   donors: number;
-}
+};
 
 export type ProgramDonorGqlResponse = {
   buckets: ResponseBucket[];
@@ -43,13 +43,13 @@ export type EsAggsBuckets = {
   buckets: EsAggsBucket[];
 };
 
-export type DonorFields = 
-  'alignmentFirstPublishedDate' |
-  'coreCompletionDate' |
-  'mutectFirstPublishedDate' |
-  'rawReadsFirstPublishedDate' |
-  'sangerVcsFirstPublishedDate' |
-  'openAccessFirstPublishedDate';
+export type DonorFields =
+  | 'alignmentFirstPublishedDate'
+  | 'coreCompletionDate'
+  | 'mutectFirstPublishedDate'
+  | 'rawReadsFirstPublishedDate'
+  | 'sangerVcsFirstPublishedDate'
+  | 'openAccessFirstPublishedDate';
 
 export type EsAggs = {
   [key in DonorFields]: EsAggsBuckets;

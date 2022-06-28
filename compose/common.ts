@@ -44,7 +44,9 @@ export const createClient = async (): Promise<Client> => {
     return esClient;
   } catch (err) {
     console.log(`failing to ping elasticsearch at ${host}: `, err);
-    console.log(`A custom elasticsearch host can also be provided with the ${esHostEnv} env`);
+    console.log(
+      `A custom elasticsearch host can also be provided with the ${esHostEnv} env`,
+    );
     console.log(
       `!!!!!!! If your elasticsearch is password protected, provide the credential through ${esUsernameEnv} and ${esPasswordEnv} env var !!!!!!!`,
     );
@@ -81,31 +83,42 @@ export const createIndex = async (
   console.log('index created');
 };
 
-export const toEsBulkIndexActions = <T = {}>(
-  indexName: string,
-  getDocumentId: (document: T) => string | undefined,
-) => (docs: Array<T>) =>
-  _.flatMap(docs, doc => {
-    const documentId = getDocumentId(doc);
-    return [
-      {
-        index: documentId ? { _index: indexName, _id: documentId } : { _index: indexName },
-      },
-      doc,
-    ];
-  });
+export const toEsBulkIndexActions =
+  <T = {}>(
+    indexName: string,
+    getDocumentId: (document: T) => string | undefined,
+  ) =>
+  (docs: Array<T>) =>
+    _.flatMap(docs, (doc) => {
+      const documentId = getDocumentId(doc);
+      return [
+        {
+          index: documentId
+            ? { _index: indexName, _id: documentId }
+            : { _index: indexName },
+        },
+        doc,
+      ];
+    });
 
-export const index = async (client: Client, index: string, data: typeof indexData) => {
+export const index = async (
+  client: Client,
+  index: string,
+  data: typeof indexData,
+) => {
   let i = 0;
   for (const chunk of _.chunk(data, 1000)) {
     await client.bulk({
       refresh: 'wait_for',
-      body: toEsBulkIndexActions<any>(index, doc => doc.object_id)(
-        chunk.map(doc => ({
+      body: toEsBulkIndexActions<any>(
+        index,
+        (doc) => doc.object_id,
+      )(
+        chunk.map((doc) => ({
           ...doc,
-          donors: [doc.donors].map(donor => ({
+          donors: [doc.donors].map((donor) => ({
             ...donor,
-            specimens: [donor.specimens].map(specimen => ({
+            specimens: [donor.specimens].map((specimen) => ({
               ...specimen,
               samples: [specimen.samples],
             })),

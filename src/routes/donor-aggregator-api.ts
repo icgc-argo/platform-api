@@ -52,7 +52,9 @@ const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
     // Send request to Donor Aggregator
     const programId = req.body.programId;
     try {
-      logger.info(`Initiating Donor Submission Aggregator SYNC request for ${programId}.`);
+      logger.info(
+        `Initiating Donor Submission Aggregator SYNC request for ${programId}.`,
+      );
       await getAuthorizedClient(egoJwt).syncDonorAggregationIndex(programId);
     } catch (error) {
       logger.error(
@@ -64,7 +66,10 @@ const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
 
     res
       .status(200)
-      .json({ message: 'Initiated sync for donor submission aggregation index.', programId });
+      .json({
+        message: 'Initiated sync for donor submission aggregation index.',
+        programId,
+      });
     return;
   });
 

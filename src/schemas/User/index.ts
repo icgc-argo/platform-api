@@ -21,7 +21,11 @@ import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import get from 'lodash/get';
 
-import { EgoClient, EgoGrpcUser, ListUserSortOptions } from '../../services/ego';
+import {
+  EgoClient,
+  EgoGrpcUser,
+  ListUserSortOptions,
+} from '../../services/ego';
 import { EGO_DACO_POLICY_NAME } from '../../config';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
@@ -77,7 +81,13 @@ const typeDefs = gql`
     """
     retrieve paginated list of user data
     """
-    users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
+    users(
+      pageNum: Int
+      limit: Int
+      sort: String
+      groups: [String]
+      query: String
+    ): [User]
 
     """
     retrive user profile data
@@ -124,21 +134,33 @@ const createProfile = ({
 const createResolvers = (egoClient: EgoClient) => {
   return {
     Query: {
-      user: async (obj: unknown, args: { id: string }, context: GlobalGqlContext) => {
+      user: async (
+        obj: unknown,
+        args: { id: string },
+        context: GlobalGqlContext,
+      ) => {
         const { egoToken } = context;
         const egoUser: EgoGrpcUser = await egoClient.getUser(args.id, egoToken);
         return egoUser === null ? null : convertEgoUser(egoUser);
       },
-      users: async (obj: unknown, args: ListUserSortOptions, context: GlobalGqlContext) => {
+      users: async (
+        obj: unknown,
+        args: ListUserSortOptions,
+        context: GlobalGqlContext,
+      ) => {
         const { egoToken } = context;
         const options = {
           ...args,
         };
         const response = await egoClient.listUsers(options, egoToken);
         const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
-        return egoUserList.map(egoUser => convertEgoUser(egoUser));
+        return egoUserList.map((egoUser) => convertEgoUser(egoUser));
       },
-      self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
+      self: async (
+        obj: unknown,
+        args: undefined,
+        context: GlobalGqlContext,
+      ) => {
         const { Authorization, egoToken, userJwtData } = context;
         logger.info({ Authorization, egoToken, userJwtData });
         const jwt = egoToken.replace('Bearer ', '');
@@ -156,7 +178,11 @@ const createResolvers = (egoClient: EgoClient) => {
         if (keys.length === 1) {
           const egoApiKeyObj = keys[0];
           const { name: accessToken } = egoApiKeyObj;
-          apiKey = { key: accessToken, exp: egoClient.getTimeToExpiry(egoApiKeyObj), error: '' };
+          apiKey = {
+            key: accessToken,
+            exp: egoClient.getTimeToExpiry(egoApiKeyObj),
+            error: '',
+          };
         } else {
           const errorMsg =
             'An error has been found with your API key. Please generate a new API key';
@@ -167,9 +193,15 @@ const createResolvers = (egoClient: EgoClient) => {
       },
     },
     Mutation: {
-      generateAccessKey: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
+      generateAccessKey: async (
+        obj: unknown,
+        args: undefined,
+        context: GlobalGqlContext,
+      ) => {
         const { Authorization, egoToken } = context;
-        const decodedToken = egoTokenUtils.decodeToken(egoToken.replace('Bearer ', ''));
+        const decodedToken = egoTokenUtils.decodeToken(
+          egoToken.replace('Bearer ', ''),
+        );
         const userId = decodedToken.sub;
 
         // delete old keys
@@ -180,7 +212,11 @@ const createResolvers = (egoClient: EgoClient) => {
         // get scopes for new token
         const { scopes } = await egoClient.getScopes(userId, Authorization);
 
-        const egoApiKeyObj = await egoClient.generateEgoAccessKey(userId, scopes, Authorization);
+        const egoApiKeyObj = await egoClient.generateEgoAccessKey(
+          userId,
+          scopes,
+          Authorization,
+        );
         return {
           exp: egoClient.getTimeToExpiry(egoApiKeyObj),
           key: egoApiKeyObj.name,

@@ -25,8 +25,7 @@ import clinicalService from '../../services/clinical';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
 import { FileUpload } from 'graphql-upload';
-import typeDefs from './gqlTypeDefs'
-
+import typeDefs from './gqlTypeDefs';
 
 const ARRAY_DELIMETER_CHAR = '|';
 
@@ -51,14 +50,15 @@ const convertRegistrationStatsToGql = (
     count: 0,
     rows: [] as (string | number)[],
     names: [] as string[],
-    values: [] as {name: string, rows: (string | number)[] }[],
+    values: [] as { name: string; rows: (string | number)[] }[],
   };
-  const names = statsEntry.map(se => se.submitterId) || ([] as string[]);
+  const names = statsEntry.map((se) => se.submitterId) || ([] as string[]);
   output.count = names.length;
-  names.forEach(name => {
+  names.forEach((name) => {
     output.names.push(name);
-    const rows = statsEntry.find(se => se.submitterId == name)?.rowNumbers || [];
-    rows.forEach(row => !output.rows.includes(row) && output.rows.push(row));
+    const rows =
+      statsEntry.find((se) => se.submitterId == name)?.rowNumbers || [];
+    rows.forEach((row) => !output.rows.includes(row) && output.rows.push(row));
     output.values.push({ name, rows });
   });
 
@@ -98,8 +98,16 @@ const convertRegistrationDataToGql = (
     batchErrors?: unknown[];
   },
 ) => {
-  const registration = get(data, 'registration', {} as Partial<typeof data.registration>);
-  const schemaAndValidationErrors = get(data, 'errors', [] as typeof data.errors);
+  const registration = get(
+    data,
+    'registration',
+    {} as Partial<typeof data.registration>,
+  );
+  const schemaAndValidationErrors = get(
+    data,
+    'errors',
+    [] as typeof data.errors,
+  );
   const fileErrors = get(data, 'batchErrors', [] as typeof data.batchErrors);
   return {
     id: registration._id || null,
@@ -108,17 +116,27 @@ const convertRegistrationDataToGql = (
     fileName: registration.batchName || null,
     createdAt: registration.createdAt || null,
     records: () =>
-      get(registration, 'records', [] as Required<typeof registration>['records']).map(
-        (record, i) => convertClinicalRecordToGql(i, record),
-      ),
+      get(
+        registration,
+        'records',
+        [] as Required<typeof registration>['records'],
+      ).map((record, i) => convertClinicalRecordToGql(i, record)),
     errors: schemaAndValidationErrors?.map(convertRegistrationErrorToGql),
     fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
-    newDonors: () => convertRegistrationStatsToGql(get(registration, 'stats.newDonorIds', [])),
+    newDonors: () =>
+      convertRegistrationStatsToGql(get(registration, 'stats.newDonorIds', [])),
     newSpecimens: () =>
-      convertRegistrationStatsToGql(get(registration, 'stats.newSpecimenIds', [])),
-    newSamples: () => convertRegistrationStatsToGql(get(registration, 'stats.newSampleIds', [])),
+      convertRegistrationStatsToGql(
+        get(registration, 'stats.newSpecimenIds', []),
+      ),
+    newSamples: () =>
+      convertRegistrationStatsToGql(
+        get(registration, 'stats.newSampleIds', []),
+      ),
     alreadyRegistered: () =>
-      convertRegistrationStatsToGql(get(registration, 'stats.alreadyRegistered', [])),
+      convertRegistrationStatsToGql(
+        get(registration, 'stats.alreadyRegistered', []),
+      ),
   };
 };
 
@@ -133,39 +151,49 @@ const convertClinicalSubmissionDataToGql = (
       updatedAt: string;
       clinicalEntities: { [k: string]: SubmissionEntity };
     };
-      batchErrors?: unknown[];
-    },
-  ) => {
-    const submission = get(data, 'submission', {} as Partial<typeof data.submission>);
-    const fileErrors = get(data, 'batchErrors', [] as typeof data.batchErrors);
-    const clinicalEntities = get(
-      submission,
-      'clinicalEntities',
-      {} as typeof data.submission.clinicalEntities,
-    );
-  
-    return {
-      id: submission._id || null,
-      programShortName,
-      state: submission.state || null,
-      version: submission.version || null,
-      updatedBy: submission.updatedBy || null,
-      updatedAt: submission.updatedAt ? new Date(submission.updatedAt) : null,
-      clinicalEntities: async () => {
-        const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
-        const filledClinicalEntities = clinicalSubmissionTypeList.map(clinicalType => ({
+    batchErrors?: unknown[];
+  },
+) => {
+  const submission = get(
+    data,
+    'submission',
+    {} as Partial<typeof data.submission>,
+  );
+  const fileErrors = get(data, 'batchErrors', [] as typeof data.batchErrors);
+  const clinicalEntities = get(
+    submission,
+    'clinicalEntities',
+    {} as typeof data.submission.clinicalEntities,
+  );
+
+  return {
+    id: submission._id || null,
+    programShortName,
+    state: submission.state || null,
+    version: submission.version || null,
+    updatedBy: submission.updatedBy || null,
+    updatedAt: submission.updatedAt ? new Date(submission.updatedAt) : null,
+    clinicalEntities: async () => {
+      const clinicalSubmissionTypeList =
+        await clinicalService.getClinicalSubmissionTypesList();
+      const filledClinicalEntities = clinicalSubmissionTypeList.map(
+        (clinicalType) => ({
           clinicalType,
           ...(clinicalEntities[clinicalType] || {}),
-        }));
-        return filledClinicalEntities.map(clinicalEntity =>
-          convertClinicalSubmissionEntityToGql(clinicalEntity.clinicalType, clinicalEntity),
-          );
-        },
-        fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
-      };
-    };
-    
-type EntityDisplayRecord = { name: string; value: string};
+        }),
+      );
+      return filledClinicalEntities.map((clinicalEntity) =>
+        convertClinicalSubmissionEntityToGql(
+          clinicalEntity.clinicalType,
+          clinicalEntity,
+        ),
+      );
+    },
+    fileErrors: fileErrors?.map(convertClinicalFileErrorToGql),
+  };
+};
+
+type EntityDisplayRecord = { name: string; value: string };
 type EntityDataRecord = { [k: string]: any };
 
 type ClinicalEntityData = {
@@ -179,25 +207,25 @@ type ClinicalResponseData = {
 };
 
 type ClinicalVariables = {
-    programShortName: string;
-    filters: {
-      entityTypes: string[];
-      page: number;
-      pageSize: number; 
-      donorIds: number[];
-      submitterDonorIds: string[];
-      completionState: string;
-      sort: string;
-    }, 
-}
+  programShortName: string;
+  filters: {
+    entityTypes: string[];
+    page: number;
+    pageSize: number;
+    donorIds: number[];
+    submitterDonorIds: string[];
+    completionState: string;
+    sort: string;
+  };
+};
 
 enum CoreClinicalEntities {
-  donor='donor',
-  specimens='specimens',
-  primaryDiagnosis='primaryDiagnosis',
-  followUps='followUps',
-  treatments='treatments',
-  familyHistory='familyHistory'
+  donor = 'donor',
+  specimens = 'specimens',
+  primaryDiagnosis = 'primaryDiagnosis',
+  followUps = 'followUps',
+  treatments = 'treatments',
+  familyHistory = 'familyHistory',
 }
 
 type CompletionStats = {
@@ -206,7 +234,7 @@ type CompletionStats = {
   coreCompletionPercentage: number;
   overriddenCoreCompletion: [CoreClinicalEntities];
   donorId: number;
-}
+};
 
 type CoreCompletionFields = {
   donor: number;
@@ -219,51 +247,57 @@ type CoreCompletionFields = {
   normalSpecimens?: number;
 };
 
-interface ClinicalEntityRecord { 
-  entityName: string,
-  totalDocs: number,
-  records: EntityDisplayRecord[][] | EntityDataRecord[],
-  entityFields: string[],
-  completionStats?: CompletionStats[],
-};
+interface ClinicalEntityRecord {
+  entityName: string;
+  totalDocs: number;
+  records: EntityDisplayRecord[][] | EntityDataRecord[];
+  entityFields: string[];
+  completionStats?: CompletionStats[];
+}
 
 type ClinicalErrors = {
-    donorId: number;
-    submitterDonorId: string;
-    errors: ClinicalErrorRecord[];
+  donorId: number;
+  submitterDonorId: string;
+  errors: ClinicalErrorRecord[];
 }[];
 
 type ClinicalErrorRecord = {
-     entityName: string;
-     errorType: string;
-     fieldName: string;
-     index: number;
-     message: string;
-}
+  entityName: string;
+  errorType: string;
+  fieldName: string;
+  index: number;
+  message: string;
+};
 
-const convertClinicalDataToGql = ({programShortName, clinicalEntities}: ClinicalResponseData) => {
-  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map((entity: ClinicalEntityRecord) => {
-    const records: EntityDisplayRecord[][] = [];
-    entity.records.forEach((record: EntityDataRecord) => {
-      const displayRecords: EntityDisplayRecord[] = [];
-      for ( const [name, value] of Object.entries(record)) if (name) displayRecords.push({ name, value });
-      records.push(displayRecords);
-    });
+const convertClinicalDataToGql = ({
+  programShortName,
+  clinicalEntities,
+}: ClinicalResponseData) => {
+  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map(
+    (entity: ClinicalEntityRecord) => {
+      const records: EntityDisplayRecord[][] = [];
+      entity.records.forEach((record: EntityDataRecord) => {
+        const displayRecords: EntityDisplayRecord[] = [];
+        for (const [name, value] of Object.entries(record))
+          if (name) displayRecords.push({ name, value });
+        records.push(displayRecords);
+      });
 
-    const entityData: ClinicalEntityRecord = {
-      ...entity,
-      records,
-    };
+      const entityData: ClinicalEntityRecord = {
+        ...entity,
+        records,
+      };
 
-    return entityData;
-  });
+      return entityData;
+    },
+  );
 
   const clinicalData = {
     programShortName,
     clinicalEntities: clinicalDisplayData,
   };
 
-  return clinicalData
+  return clinicalData;
 };
 
 const convertClinicalFileErrorToGql = (fileError: {
@@ -290,7 +324,10 @@ type SubmissionEntity = {
   createdAt: string | number;
 };
 
-const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: SubmissionEntity) => {
+const convertClinicalSubmissionEntityToGql = (
+  clinicalType: string,
+  entity: SubmissionEntity,
+) => {
   return {
     clinicalType,
     batchName: entity.batchName || null,
@@ -302,27 +339,31 @@ const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: Subm
     stats: entity.stats || null,
     schemaErrors: () => {
       const entityErrors = entity.schemaErrors || [];
-      return entityErrors.map(error =>
+      return entityErrors.map((error) =>
         convertClinicalSubmissionSchemaErrorToGql(clinicalType, error),
       );
     },
     dataErrors: () =>
-      get(entity, 'dataErrors', [] as typeof entity.dataErrors).map((error: ErrorData) =>
-        convertClinicalSubmissionDataErrorToGql(error),
+      get(entity, 'dataErrors', [] as typeof entity.dataErrors).map(
+        (error: ErrorData) => convertClinicalSubmissionDataErrorToGql(error),
       ),
-    dataWarnings: () => 
-      get(entity, 'dataWarnings', [] as typeof entity.dataWarnings).map((warning: ErrorData) => 
-        convertClinicalSubmissionDataErrorToGql(warning)
+    dataWarnings: () =>
+      get(entity, 'dataWarnings', [] as typeof entity.dataWarnings).map(
+        (warning: ErrorData) =>
+          convertClinicalSubmissionDataErrorToGql(warning),
       ),
     dataUpdates: () =>
-      get(entity, 'dataUpdates', [] as typeof entity.dataUpdates).map(update =>
-        convertClinicalSubmissionUpdateToGql(update),
+      get(entity, 'dataUpdates', [] as typeof entity.dataUpdates).map(
+        (update) => convertClinicalSubmissionUpdateToGql(update),
       ),
     createdAt: entity.createdAt ? new Date(entity.createdAt) : null,
   };
 };
 
-const convertClinicalRecordToGql = (index: number | string, record: EntityDataRecord) => {
+const convertClinicalRecordToGql = (
+  index: number | string,
+  record: EntityDataRecord,
+) => {
   const fields = [];
   for (var field in record) {
     const value = normalizeValue(record[field]);
@@ -341,15 +382,15 @@ type ErrorData = {
   fieldName: string;
 };
 const convertClinicalSubmissionDataErrorToGql = (errorData: ErrorData) => {
-    // errorData.info.value may come back as null if not provided in uploaded file
+  // errorData.info.value may come back as null if not provided in uploaded file
   const errorValue = get(errorData, 'info.value', '') || '';
   return {
     type: errorData.type,
     message: errorData.message,
     row: errorData.index,
     field: errorData.fieldName,
-    donorId: get(errorData, 'info.donorSubmitterId', '') || '',    
-    value: normalizeValue(errorValue), 
+    donorId: get(errorData, 'info.donorSubmitterId', '') || '',
+    value: normalizeValue(errorValue),
   };
 };
 
@@ -390,8 +431,13 @@ const resolvers = {
       const { Authorization } = context;
       const { shortName } = args;
 
-      const response = await clinicalService.getRegistrationData(shortName, Authorization);
-      return convertRegistrationDataToGql(shortName, { registration: response });
+      const response = await clinicalService.getRegistrationData(
+        shortName,
+        Authorization,
+      );
+      return convertRegistrationDataToGql(shortName, {
+        registration: response,
+      });
     },
     clinicalData: async (
       obj: unknown,
@@ -399,12 +445,13 @@ const resolvers = {
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
-      const response: ClinicalResponseData = await clinicalService.getClinicalData(
-        args,
-        Authorization,
-      );
+      const response: ClinicalResponseData =
+        await clinicalService.getClinicalData(args, Authorization);
 
-      return convertClinicalDataToGql({ programShortName: args.programShortName, clinicalEntities: response.clinicalEntities});
+      return convertClinicalDataToGql({
+        programShortName: args.programShortName,
+        clinicalEntities: response.clinicalEntities,
+      });
     },
     clinicalSubmissions: async (
       obj: unknown,
@@ -418,15 +465,29 @@ const resolvers = {
         programShortName,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, {
+        submission: response,
+      });
     },
-    clinicalSubmissionTypesList: async (obj: unknown, args: {}, context: GlobalGqlContext) => {
+    clinicalSubmissionTypesList: async (
+      obj: unknown,
+      args: {},
+      context: GlobalGqlContext,
+    ) => {
       return await clinicalService.getClinicalSubmissionTypesList();
     },
-    clinicalSubmissionSchemaVersion: async (obj: unknown, args: {}, context: GlobalGqlContext) => {
+    clinicalSubmissionSchemaVersion: async (
+      obj: unknown,
+      args: {},
+      context: GlobalGqlContext,
+    ) => {
       return await clinicalService.getClinicalSubmissionSchemaVersion();
     },
-    clinicalSubmissionSystemDisabled: async (obj: unknown, args: {}, context: GlobalGqlContext) => {
+    clinicalSubmissionSystemDisabled: async (
+      obj: unknown,
+      args: {},
+      context: GlobalGqlContext,
+    ) => {
       return await clinicalService.getClinicalSubmissionSystemDisabled();
     },
   },
@@ -499,17 +560,21 @@ const resolvers = {
     ) => {
       const { Authorization, egoToken } = context;
       const { programShortName, clinicalFiles } = args;
-      const permissions = egoTokenUtils.getPermissionsFromToken(egoToken)
+      const permissions = egoTokenUtils.getPermissionsFromToken(egoToken);
 
       // see reason in uploadRegistration
       if (!egoTokenUtils.canWriteSomeProgramData(permissions)) {
         throw new AuthenticationError('User is not authorized to write data');
       }
 
-      const filesMap: { [k: string]: ReturnType<FileUpload['createReadStream']> } = {};
+      const filesMap: {
+        [k: string]: ReturnType<FileUpload['createReadStream']>;
+      } = {};
 
-      await Promise.all(clinicalFiles).then(val =>
-        val.forEach(file => (filesMap[file.filename] = file.createReadStream())),
+      await Promise.all(clinicalFiles).then((val) =>
+        val.forEach(
+          (file) => (filesMap[file.filename] = file.createReadStream()),
+        ),
       );
       const response = await clinicalService.uploadClinicalSubmissionData(
         programShortName,
@@ -533,7 +598,9 @@ const resolvers = {
         Authorization,
       );
 
-      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, {
+        submission: response,
+      });
     },
     validateClinicalSubmissions: async (
       obj: unknown,
@@ -561,7 +628,9 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, {
+        submission: response,
+      });
     },
     reopenClinicalSubmission: async (
       obj: unknown,
@@ -575,7 +644,9 @@ const resolvers = {
         version,
         Authorization,
       );
-      return convertClinicalSubmissionDataToGql(programShortName, { submission: response });
+      return convertClinicalSubmissionDataToGql(programShortName, {
+        submission: response,
+      });
     },
     approveClinicalSubmission: async (
       obj: unknown,
@@ -597,31 +668,32 @@ const resolvers = {
       parent: ClinicalEntityData,
       args: ClinicalVariables,
       context: GlobalGqlContext,
-        ) => {
-          const { Authorization } = context;
-          let donorIds: string[] = [];
-          
-          parent.clinicalEntities.forEach(entity =>
-            entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
-              const donor = displayRecord.find(({name}) => name === 'donor_id');
-              if (donor && donor.value) donorIds.push(donor.value);
-            }));
+    ) => {
+      const { Authorization } = context;
+      let donorIds: string[] = [];
 
-          const response = await clinicalService.getClinicalErrors(
-            parent.programShortName,
-            donorIds,
-            Authorization,
-          );
+      parent.clinicalEntities.forEach((entity) =>
+        entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+          const donor = displayRecord.find(({ name }) => name === 'donor_id');
+          if (donor && donor.value) donorIds.push(donor.value);
+        }),
+      );
 
-          return response
-      },
-  }
+      const response = await clinicalService.getClinicalErrors(
+        parent.programShortName,
+        donorIds,
+        Authorization,
+      );
+
+      return response;
+    },
+  },
 };
 
 export default makeExecutableSchema({
   typeDefs,
   resolvers,
   resolverValidationOptions: {
-    requireResolversForResolveType: false
-  }
+    requireResolversForResolveType: false,
+  },
 });

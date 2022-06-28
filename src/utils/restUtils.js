@@ -17,12 +17,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthenticationError, UserInputError, ApolloError } from 'apollo-server-express';
+import {
+  AuthenticationError,
+  UserInputError,
+  ApolloError,
+} from 'apollo-server-express';
 import logger from './logger';
 /*
 convert the REST status codes to GQL errors, or return the response if passing
 */
-export const restErrorResponseHandler = async response => {
+export const restErrorResponseHandler = async (response) => {
   // Generic handle 5xx errors
   if (response.status >= 500 && response.status <= 599) {
     const responseBody = await response.text();

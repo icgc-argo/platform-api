@@ -48,14 +48,20 @@ export const hasSufficientProgramMembershipAccess = (config: {
     if (embargoStage === FILE_EMBARGO_STAGE.OWN_PROGRAM) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId })
+        egoTokenUtils.canReadProgramData({
+          permissions: serializedScopes,
+          programId,
+        })
       );
     }
 
     if (embargoStage === FILE_EMBARGO_STAGE.FULL_PROGRAMS) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
+        egoTokenUtils.canReadProgramData({
+          permissions: serializedScopes,
+          programId,
+        }) ||
         accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER
       );
     }
@@ -63,9 +69,13 @@ export const hasSufficientProgramMembershipAccess = (config: {
     if (embargoStage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS) {
       return (
         accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({ permissions: serializedScopes, programId }) ||
+        egoTokenUtils.canReadProgramData({
+          permissions: serializedScopes,
+          programId,
+        }) ||
         accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
-        accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
+        accessLevel ===
+          UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
       );
     }
 
@@ -80,10 +90,13 @@ export const hasSufficientDacoAccess = (config: {
   scopes: PermissionScopeObj[];
   file: EsFileCentricDocument;
 }): boolean => {
-  const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
-  const userHasDacoAccess = dacoScopes.length > 0
-    && dacoScopes.some(scope => scope.permission === PERMISSIONS.READ)
-    && dacoScopes.every(scope => scope.permission !== PERMISSIONS.DENY);
+  const dacoScopes = config.scopes.filter(
+    ({ policy }) => policy === EGO_DACO_POLICY_NAME,
+  );
+  const userHasDacoAccess =
+    dacoScopes.length > 0 &&
+    dacoScopes.some((scope) => scope.permission === PERMISSIONS.READ) &&
+    dacoScopes.every((scope) => scope.permission !== PERMISSIONS.DENY);
   return (
     config.file.file_access === FILE_ACCESS.OPEN ||
     (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)

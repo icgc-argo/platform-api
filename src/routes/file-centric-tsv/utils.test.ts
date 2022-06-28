@@ -68,14 +68,16 @@ describe('createEsDocumentStream', () => {
       .withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
       .start();
     esClient = await createEsClient({
-      node: `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`,
+      node: `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(
+        9200,
+      )}`,
     });
     esClient.indices.create({
       index: testIndex,
       body: mockMapping,
     });
     await Promise.all(
-      testData.map(entry =>
+      testData.map((entry) =>
         esClient.index({
           index: testIndex,
           body: entry,
@@ -155,7 +157,10 @@ describe('createEsDocumentStream', () => {
   describe('query string parser (createFilterStringToEsQueryParser)', () => {
     let parseFilterString: FilterStringParser;
     beforeAll(async () => {
-      parseFilterString = await createFilterToEsQueryConverter(esClient, testIndex);
+      parseFilterString = await createFilterToEsQueryConverter(
+        esClient,
+        testIndex,
+      );
     });
     it('must accept valid sqon', async () => {
       const parsed = await parseFilterString({
@@ -194,7 +199,7 @@ describe('createEsDocumentStream', () => {
 
   describe('writeTsvStreamToWritableTarget', () => {
     it('must generate a proper tsv', async () => {
-      const stream = (async function*() {
+      const stream = (async function* () {
         for (const entry of testData) {
           yield [entry];
         }
@@ -211,13 +216,13 @@ describe('createEsDocumentStream', () => {
       await writeTsvStreamToWritableTarget<typeof testData[0]>(
         stream,
         {
-          write: str => {
+          write: (str) => {
             tsvString = `${tsvString}${str}`;
           },
         },
         [
-          { header: 'Study ID', getter: e => e.study_id || '' },
-          { header: 'Object ID', getter: e => e.object_id || '' },
+          { header: 'Study ID', getter: (e) => e.study_id || '' },
+          { header: 'Object ID', getter: (e) => e.object_id || '' },
         ],
       );
       expect(tsvString).toBe(expectedTsvStr);

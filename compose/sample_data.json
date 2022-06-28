@@ -13,7 +13,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_0", "size": 0, "md5sum": "fakeMd5_0", "name": "fake_file_0.gz" },
+    "file": {
+      "file_id": "FI_Fake_0",
+      "size": 0,
+      "md5sum": "fakeMd5_0",
+      "name": "fake_file_0.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_0",
       "submitter_donor_id": "fake_submitter_donor_0",
@@ -54,7 +59,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_1", "size": 0, "md5sum": "fakeMd5_1", "name": "fake_file_1.gz" },
+    "file": {
+      "file_id": "FI_Fake_1",
+      "size": 0,
+      "md5sum": "fakeMd5_1",
+      "name": "fake_file_1.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_1",
       "submitter_donor_id": "fake_submitter_donor_1",
@@ -95,7 +105,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_2", "size": 0, "md5sum": "fakeMd5_2", "name": "fake_file_2.gz" },
+    "file": {
+      "file_id": "FI_Fake_2",
+      "size": 0,
+      "md5sum": "fakeMd5_2",
+      "name": "fake_file_2.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_2",
       "submitter_donor_id": "fake_submitter_donor_2",
@@ -136,7 +151,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_3", "size": 0, "md5sum": "fakeMd5_3", "name": "fake_file_3.gz" },
+    "file": {
+      "file_id": "FI_Fake_3",
+      "size": 0,
+      "md5sum": "fakeMd5_3",
+      "name": "fake_file_3.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_3",
       "submitter_donor_id": "fake_submitter_donor_3",
@@ -177,7 +197,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_4", "size": 0, "md5sum": "fakeMd5_4", "name": "fake_file_4.gz" },
+    "file": {
+      "file_id": "FI_Fake_4",
+      "size": 0,
+      "md5sum": "fakeMd5_4",
+      "name": "fake_file_4.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_4",
       "submitter_donor_id": "fake_submitter_donor_4",
@@ -218,7 +243,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_5", "size": 0, "md5sum": "fakeMd5_5", "name": "fake_file_5.gz" },
+    "file": {
+      "file_id": "FI_Fake_5",
+      "size": 0,
+      "md5sum": "fakeMd5_5",
+      "name": "fake_file_5.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_5",
       "submitter_donor_id": "fake_submitter_donor_5",
@@ -259,7 +289,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_6", "size": 0, "md5sum": "fakeMd5_6", "name": "fake_file_6.gz" },
+    "file": {
+      "file_id": "FI_Fake_6",
+      "size": 0,
+      "md5sum": "fakeMd5_6",
+      "name": "fake_file_6.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_6",
       "submitter_donor_id": "fake_submitter_donor_6",
@@ -300,7 +335,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_7", "size": 0, "md5sum": "fakeMd5_7", "name": "fake_file_7.gz" },
+    "file": {
+      "file_id": "FI_Fake_7",
+      "size": 0,
+      "md5sum": "fakeMd5_7",
+      "name": "fake_file_7.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_7",
       "submitter_donor_id": "fake_submitter_donor_7",
@@ -341,7 +381,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_8", "size": 0, "md5sum": "fakeMd5_8", "name": "fake_file_8.gz" },
+    "file": {
+      "file_id": "FI_Fake_8",
+      "size": 0,
+      "md5sum": "fakeMd5_8",
+      "name": "fake_file_8.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_8",
       "submitter_donor_id": "fake_submitter_donor_8",
@@ -382,7 +427,12 @@
       "analysis_version": 1,
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
-    "file": { "file_id": "FI_Fake_9", "size": 0, "md5sum": "fakeMd5_9", "name": "fake_file_9.gz" },
+    "file": {
+      "file_id": "FI_Fake_9",
+      "size": 0,
+      "md5sum": "fakeMd5_9",
+      "name": "fake_file_9.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_9",
       "submitter_donor_id": "fake_submitter_donor_9",
