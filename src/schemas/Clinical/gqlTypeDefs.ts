@@ -198,6 +198,7 @@ export default gql`
     totalDocs: Int!
     records: [[ClinicalRecordField]]!
     entityFields: [String]
+    completionStats: [CompletionStats]
   }
 
   """
@@ -221,6 +222,8 @@ export default gql`
     followUps: Int!
     treatments: Int!
     familyHistory: Int
+    tumourSpecimens: Int
+    normalSpecimens: Int
   }
 
   """
