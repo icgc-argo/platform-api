@@ -33,6 +33,7 @@ import { convertStringToISODate, validateISODate } from 'utils/dateUtils';
 import { ELASTICSEARCH_DATE_TIME_FORMAT } from '../../../constants/elasticsearch';
 import { differenceInDays, sub as subDate, formatISO } from 'date-fns';
 import logger from 'utils/logger';
+import { ESBQuery, getQuery } from 'utils/elasticQueryUtils';
 
 const programDonorPublishedAnalysisByDateRangeResolver: (
   esClient: Client,
@@ -111,33 +112,25 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
       .size(0)
       .query(
         esb
-          .boolQuery()
-          .filter(esb.termQuery('programId', programShortName))
-          .should(
-            donorFields.map((donorField: DonorFields) =>
-              esb.existsQuery(donorField),
-            ),
-          )
-          .minimumShouldMatch(1),
-      )
-      .aggs(
-        donorFields.map((donorField: DonorFields) =>
-          esb
-            .dateRangeAggregation(donorField, donorField)
-            .format(ELASTICSEARCH_DATE_TIME_FORMAT)
-            .ranges(bucketDates.map((bucketDate) => ({ to: bucketDate }))),
-        ),
-      );
+          .dateRangeAggregation(donorField, donorField)
+          .format(ELASTICSEARCH_DATE_TIME_FORMAT)
+          .ranges(bucketDates.map(bucketDate => ({ to: bucketDate }))),
+      ),
+    )
+    .toJSON() as ESBQuery;
 
-    const esAggs: EsAggs = await esClient
-      .search({
-        body: esQuery,
+  const esAggs: EsAggs = await esClient
+    .search(
+      {
+        query: getQuery(esQuery),
         index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-      })
-      .then((res) => res.body.aggregations)
-      .catch((err) => {
-        throw new ApolloError(err);
-      });
+      },
+      { meta: true },
+    )
+    .then(res => res.body.aggregations)
+    .catch(err => {
+      throw new ApolloError(err);
+    });
 
     return Object.keys(esAggs).map((key: DonorFields) => ({
       title: key,

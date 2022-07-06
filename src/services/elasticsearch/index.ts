@@ -109,7 +109,7 @@ export const createEsClient = async ({
   let esClient: Client;
   esClient = new Client({
     node,
-    ssl: {
+    tls: {
       rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
     },
     auth: auth

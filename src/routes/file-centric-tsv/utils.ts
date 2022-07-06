@@ -98,18 +98,21 @@ export const createEsDocumentStream = async function* <DocumentType>(configs: {
   while (!completed && shouldContinue()) {
     const {
       body: { hits },
-    } = await esClient.search({
-      index: esIndex,
-      body: {
-        query: esQuery,
-        ...esb
-          .requestBodySearch()
-          .from(currentPage * pageSize)
-          .size(pageSize)
-          .sort(esb.sort(sortField))
-          .toJSON(),
+    } = await esClient.search(
+      {
+        index: esIndex,
+        body: {
+          query: esQuery,
+          ...esb
+            .requestBodySearch()
+            .from(currentPage * pageSize)
+            .size(pageSize)
+            .sort(esb.sort(sortField))
+            .toJSON(),
+        },
       },
-    });
+      { meta: true },
+    );
     if (hits.hits.length) {
       currentPage++;
       yield hits.hits.map(

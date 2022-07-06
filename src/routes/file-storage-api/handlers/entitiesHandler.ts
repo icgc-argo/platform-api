@@ -31,6 +31,7 @@ import {
   FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
+import { ESBQuery, getQuery } from 'utils/elasticQueryUtils';
 
 export type EntitiesPageResponseBody = {
   content: Array<Partial<SongEntity>>;
@@ -199,13 +200,16 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
               : emptyFilter(),
             accessControlFilter,
           ]),
-      );
+      )
+      .toJSON() as ESBQuery;
 
-    const esSearchResponse: { body: EsHits<EsFileCentricDocument> } =
-      await esClient.search({
+    const esSearchResponse: { body: EsHits<EsFileCentricDocument> } = await esClient.search(
+      {
         index: ARRANGER_FILE_CENTRIC_INDEX,
-        body: query,
-      });
+        query: getQuery(query),
+      },
+      { meta: true },
+    );
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)

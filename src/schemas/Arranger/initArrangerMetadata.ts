@@ -122,14 +122,15 @@ export default async (esClient: Client) => {
       );
     }
 
+    type TProjectManifest = typeof projectManifest;
+    type TFileCentric = typeof metadata.projectIndexConfigs.file_centric;
+
     const [projectManifestInEs, fileCentricArrangerSetting]: [
-      typeof projectManifest,
-      typeof metadata.projectIndexConfigs.file_centric,
-    ] = await Promise.all([
-      esClient.get(projectsEsConfig).then((response) => response.body._source),
-      esClient
-        .get(projectMetadataEsConfig)
-        .then((response) => response.body._source),
+      TProjectManifest,
+      TFileCentric,
+    ] = await Promise.all<TProjectManifest, TFileCentric>([
+      esClient.get(projectsEsConfig).then(response => response._source),
+      esClient.get(projectMetadataEsConfig).then(response => response._source),
     ]);
 
     if (

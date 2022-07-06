@@ -41,6 +41,8 @@ import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import logger from 'utils/logger';
+import { ESBQuery, getQuery } from 'utils/elasticQueryUtils';
+import { AggregationsAggregate } from '@elastic/elasticsearch/lib/api/types';
 
 type DonorEntriesResolverType = GraphQLFieldResolver<
   unknown,

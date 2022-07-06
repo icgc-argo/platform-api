@@ -32,17 +32,16 @@ import esb from 'elastic-builder';
 
 describe('createEsDocumentStream', () => {
   const mockMapping = {
-    mappings: {
-      properties: {
-        study_id: {
-          type: 'keyword',
-        },
-        object_id: {
-          type: 'keyword',
-        },
+    properties: {
+      study_id: {
+        type: 'keyword' as 'keyword',
+      },
+      object_id: {
+        type: 'keyword' as 'keyword',
       },
     },
   };
+
   type MockDocument = Partial<EsFileDocument>;
   const testData: MockDocument[] = [
     {
@@ -74,7 +73,7 @@ describe('createEsDocumentStream', () => {
     });
     esClient.indices.create({
       index: testIndex,
-      body: mockMapping,
+      mappings: mockMapping,
     });
     await Promise.all(
       testData.map((entry) =>

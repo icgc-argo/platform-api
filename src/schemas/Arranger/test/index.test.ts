@@ -115,7 +115,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECTS_INDEX,
             id: ARRANGER_PROJECT_ID,
           })
-        ).body._source,
+        )._source,
       ).toEqual(metadata.projectManifest);
       expect(
         (
@@ -123,7 +123,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECT_METADATA_INDEX,
             id: harmonizedFileCentricConfig.name,
           })
-        ).body._source,
+        )._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
@@ -144,7 +144,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECTS_INDEX,
             id: ARRANGER_PROJECT_ID,
           })
-        ).body._source,
+        )._source,
       ).toEqual(metadata.projectManifest);
       expect(
         (
@@ -152,7 +152,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECT_METADATA_INDEX,
             id: harmonizedFileCentricConfig.name,
           })
-        ).body._source,
+        )._source,
       ).toEqual(harmonizedFileCentricConfig);
     });
 
@@ -163,7 +163,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECT_METADATA_INDEX,
             id: harmonizedFileCentricConfig.name,
           })
-        ).body._source.index,
+        )._source.index,
       ).toEqual(ARRANGER_FILE_CENTRIC_INDEX);
     });
   });
