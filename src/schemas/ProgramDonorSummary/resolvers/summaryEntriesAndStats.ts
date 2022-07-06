@@ -1047,9 +1047,6 @@ const programDonorSummaryEntriesAndStatsResolver: (
         body: esQuery,
         track_total_hits: true,
       })
-      .then((res) => {
-        return res.body as QueryResult;
-      })
       .catch((err) => {
         logger.error('error reading data from Elasticsearch: ', err);
         const defaultResult: QueryResult = {
