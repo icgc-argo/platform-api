@@ -24,13 +24,21 @@ import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMidd
 import { hasSufficientProgramMembershipAccess } from 'routes/utils/accessValidations';
 import { getEsFileDocumentByObjectId, toSongEntity } from '../utils';
 
-const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler => {
+const createEntitiesIdHandler = ({
+  esClient,
+}: {
+  esClient: Client;
+}): Handler => {
   return async (req: AuthenticatedRequest, res, next) => {
-    const file = await getEsFileDocumentByObjectId(esClient)(req.params.fileObjectId);
+    const file = await getEsFileDocumentByObjectId(esClient)(
+      req.params.fileObjectId,
+    );
     if (!file) {
       res
         .status(404)
-        .send(`No file found with the provided ObjectId: ${req.params.fileObjectId}`)
+        .send(
+          `No file found with the provided ObjectId: ${req.params.fileObjectId}`,
+        )
         .end();
       return;
     }
@@ -42,10 +50,7 @@ const createEntitiesIdHandler = ({ esClient }: { esClient: Client }): Handler =>
       res.status(200).send(toSongEntity(file as EsFileCentricDocument));
     } else {
       // token is valid but permissions are not sufficient
-      res
-        .status(403)
-        .send('Not authorized to access the requested data')
-        .end();
+      res.status(403).send('Not authorized to access the requested data').end();
     }
   };
 };

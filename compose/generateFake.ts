@@ -11,8 +11,8 @@ const studyToLoadFromRdpc = 'TEST-CA';
 const releaseStates = ['RESTRICTED', 'QUEUED', 'PUBLIC'];
 const embargoStages = ['PROGRAM_ONLY', 'MEMBER_ACCESS', 'ASSOCIATE_ACCESS']; // Note: No PUBLIC here because we only put PUBLIC when release_state == PUBLIC
 const gender = ['Male', 'Female'];
-const donorIds = range(0, 100).map(num => `fake_donor_${num}`);
-const submitterDonorIds = range(0, 100).map(num => `fake_donor_${num}`);
+const donorIds = range(0, 100).map((num) => `fake_donor_${num}`);
+const submitterDonorIds = range(0, 100).map((num) => `fake_donor_${num}`);
 const primarySites = ['brain', 'liver', 'lung', 'pancreas', 'skin'];
 
 const args = process.argv.slice(2);
@@ -39,18 +39,23 @@ const args = process.argv.slice(2);
       }),
       method: 'POST',
     })
-      .then(res => res.json())
-      .then(({ data }: { data: { analyses: Array<{ files: Array<{ objectId: string }> }> } }) =>
-        data.analyses
-          .map(({ files }) => files)
-          .flatMap(x => x)
-          .map(({ objectId }) => objectId),
+      .then((res) => res.json())
+      .then(
+        ({
+          data,
+        }: {
+          data: { analyses: Array<{ files: Array<{ objectId: string }> }> };
+        }) =>
+          data.analyses
+            .map(({ files }) => files)
+            .flatMap((x) => x)
+            .map(({ objectId }) => objectId),
       ));
   const usedIds: { [k: string]: true } = {};
   const data = range(parseInt(args[0]) || 1000).map((i, index) => {
     const studyId = sample(studyIds);
     const useDataFromRdpc = studyId === studyToLoadFromRdpc;
-    const nextIdCandidate = fileIdsFromRdpc.filter(id => !usedIds[id])[0];
+    const nextIdCandidate = fileIdsFromRdpc.filter((id) => !usedIds[id])[0];
     if (useDataFromRdpc) {
       usedIds[nextIdCandidate] = true;
     }
@@ -121,7 +126,7 @@ const args = process.argv.slice(2);
     './compose/file_centric/sample_file_centric.json',
     JSON.stringify(data, null, 2),
     null,
-    err => {
+    (err) => {
       if (err) {
         console.log('error writing file: ', err);
       } else {
