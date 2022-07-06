@@ -143,6 +143,6 @@ export default async (esClient: Client) => {
     }
   };
   logger.info('initializing arranger metadata');
-  // @ts-expect-error - node-retry options type not working
+
   return retry(initMetadata, { retries: 10 });
 };
