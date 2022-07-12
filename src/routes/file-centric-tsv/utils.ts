@@ -17,19 +17,18 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import logger from 'utils/logger';
 import { Client } from '@elastic/elasticsearch';
+import logger from 'utils/logger';
 
 // @ts-ignore
 import { buildQuery } from '@arranger/middleware/dist';
 import {
-  DEFAULT_TSV_STREAM_CHUNK_SIZE,
   ARRANGER_FILE_CENTRIC_INDEX,
+  DEFAULT_TSV_STREAM_CHUNK_SIZE,
 } from 'config';
 import esb from 'elastic-builder';
+import { getNestedFields } from 'services/elasticsearch';
 import { TsvFileSchema } from './types';
-import { Response } from 'express';
-import { EsIndexMapping, getNestedFields } from 'services/elasticsearch';
 
 export const parseFilterString = (filterString: string): {} => {
   try {
@@ -45,7 +44,7 @@ export const createFilterToEsQueryConverter = async (
   esClient: Client,
   index: string,
 ) => {
-  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({
+  const { body } = await esClient.indices.getMapping({
     index,
   });
   const [indexMapping] = Object.values(body);
@@ -58,9 +57,7 @@ export const createFilterToEsQueryConverter = async (
           nestedFields: nestedFields,
         })
       : undefined;
-    const {
-      body: { valid },
-    }: { body: { valid: boolean } } = await esClient.indices.validateQuery({
+    const { valid } = await esClient.indices.validateQuery({
       index,
       body: {
         query: esQuery,
@@ -77,7 +74,7 @@ export const createFilterToEsQueryConverter = async (
   }) as FilterStringParser;
 };
 
-export const createEsDocumentStream = async function* <DocumentType>(configs: {
+export const createEsDocumentStream = async function*<DocumentType>(configs: {
   esClient: Client;
   shouldContinue: () => boolean;
   sortField: string;
@@ -115,9 +112,7 @@ export const createEsDocumentStream = async function* <DocumentType>(configs: {
     );
     if (hits.hits.length) {
       currentPage++;
-      yield hits.hits.map(
-        ({ _source }: { _source: DocumentType }) => _source,
-      ) as DocumentType[];
+      yield hits.hits.map(({ _source }) => _source) as DocumentType[];
     } else {
       completed = true;
     }

@@ -272,6 +272,74 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.filesToQcCount]: number;
 };
 
+export type EsHits = Array<{
+  _source: ElasticsearchDonorDocument;
+}>;
+
+export type FilterAggregationResult = { doc_count: number };
+export type NumericAggregationResult = { value: number };
+export type DateAggregationResult = { value: Date };
+
+export type AggregationRes = {
+  fullyReleasedDonorsCount: FilterAggregationResult;
+  partiallyReleasedDonorsCount: FilterAggregationResult;
+  noReleaseDonorsCount: FilterAggregationResult;
+  donorsProcessingMolecularDataCount: FilterAggregationResult;
+  donorsWithReleasedFilesCount: FilterAggregationResult;
+  donorsWithMatchedTNPair: FilterAggregationResult;
+  donorsInvalidWithCurrentDictionary: FilterAggregationResult;
+  donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
+
+  completeCoreCompletion: FilterAggregationResult;
+  incompleteCoreCompletion: FilterAggregationResult;
+  noCoreCompletion: FilterAggregationResult;
+
+  rnaRegisteredSamples: FilterAggregationResult;
+  noRnaRegisteredSamples: FilterAggregationResult;
+
+  rnaSubmittedRawReads: FilterAggregationResult;
+  noRnaSubmittedRawReads: FilterAggregationResult;
+
+  rnaCompletedAlignment: FilterAggregationResult;
+  rnaInProgressAlignment: FilterAggregationResult;
+  rnaFailedAlignment: FilterAggregationResult;
+  rnaNoAlignment: FilterAggregationResult;
+
+  validSamplePairs: FilterAggregationResult;
+  invalidSamplePairs: FilterAggregationResult;
+
+  validRawReads: FilterAggregationResult;
+  invalidRawReads: FilterAggregationResult;
+
+  completedAlignment: FilterAggregationResult;
+  inProgressAlignment: FilterAggregationResult;
+  failedAlignment: FilterAggregationResult;
+  noAlignment: FilterAggregationResult;
+
+  completedSanger: FilterAggregationResult;
+  inProgressSanger: FilterAggregationResult;
+  failedSanger: FilterAggregationResult;
+  noSanger: FilterAggregationResult;
+
+  completedMutect: FilterAggregationResult;
+  inProgressMutect: FilterAggregationResult;
+  failedMutect: FilterAggregationResult;
+  noMutect: FilterAggregationResult;
+
+  completedOpenAccess: FilterAggregationResult;
+  inProgressOpenAccess: FilterAggregationResult;
+  failedOpenAccess: FilterAggregationResult;
+  noOpenAccess: FilterAggregationResult;
+
+  completedWorkflowRuns: FilterAggregationResult;
+  inProgressWorkflowRuns: FilterAggregationResult;
+  failedWorkflowRuns: FilterAggregationResult;
+
+  allFilesCount: NumericAggregationResult;
+  filesToQcCount: NumericAggregationResult;
+  lastUpdate?: DateAggregationResult;
+};
+
 export enum coreDataPercentAggregationValue {
   INCOMPLETE = 'INCOMPLETE',
   COMPLETE = 'COMPLETE',

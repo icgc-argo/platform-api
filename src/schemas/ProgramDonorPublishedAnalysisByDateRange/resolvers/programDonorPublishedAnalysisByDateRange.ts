@@ -112,25 +112,36 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
       .size(0)
       .query(
         esb
-          .dateRangeAggregation(donorField, donorField)
-          .format(ELASTICSEARCH_DATE_TIME_FORMAT)
-          .ranges(bucketDates.map(bucketDate => ({ to: bucketDate }))),
-      ),
-    )
-    .toJSON() as ESBQuery;
+          .boolQuery()
+          .filter(esb.termQuery('programId', programShortName))
+          .should(
+            donorFields.map((donorField: DonorFields) =>
+              esb.existsQuery(donorField),
+            ),
+          )
+          .minimumShouldMatch(1),
+      )
+      .aggs(
+        donorFields.map((donorField: DonorFields) =>
+          esb
+            .dateRangeAggregation(donorField, donorField)
+            .format(ELASTICSEARCH_DATE_TIME_FORMAT)
+            .ranges(bucketDates.map((bucketDate) => ({ to: bucketDate }))),
+        ),
+      );
 
-  const esAggs: EsAggs = await esClient
-    .search(
-      {
-        query: getQuery(esQuery),
-        index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-      },
-      { meta: true },
-    )
-    .then(res => res.body.aggregations)
-    .catch(err => {
-      throw new ApolloError(err);
-    });
+    const esAggs: EsAggs = await esClient
+      .search(
+        {
+          query: getQuery(esQuery),
+          index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
+        },
+        { meta: true },
+      )
+      .then((res) => res.body.aggregations as EsAggs)
+      .catch((err: string) => {
+        throw new ApolloError(err);
+      });
 
     return Object.keys(esAggs).map((key: DonorFields) => ({
       title: key,

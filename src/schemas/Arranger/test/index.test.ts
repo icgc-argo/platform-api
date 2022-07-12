@@ -31,7 +31,7 @@ import metadata from 'resources/arranger_es_metadata.json';
 import _ from 'lodash';
 
 describe('Arranger schema', () => {
-  const mockMapping = {
+  const mockIndex = {
     aliases: {
       file_centric: {},
     },
@@ -40,12 +40,12 @@ describe('Arranger schema', () => {
       date_detection: false,
       properties: {
         study_id: {
-          type: 'keyword',
+          type: 'keyword' as 'keyword',
         },
         file: {
           properties: {
             file_id: {
-              type: 'keyword',
+              type: 'keyword' as 'keyword',
             },
           },
         },
@@ -69,7 +69,8 @@ describe('Arranger schema', () => {
     });
     esClient.indices.create({
       index: 'test',
-      body: mockMapping,
+      mappings: mockIndex.mappings,
+      aliases: mockIndex.aliases,
     });
   }, 120000);
   afterAll(async (done) => {
@@ -81,30 +82,24 @@ describe('Arranger schema', () => {
     it('indices must exist after run', async () => {
       await initArrangerMetadata(esClient);
       expect(
-        (
-          await esClient.indices.exists({
-            index: ARRANGER_PROJECT_METADATA_INDEX,
-          })
-        ).body,
+        await esClient.indices.exists({
+          index: ARRANGER_PROJECT_METADATA_INDEX,
+        }),
       ).toBe(true);
       expect(
-        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
-          .body,
+        await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }),
       ).toBe(true);
     });
 
     it('must handle another run without failing', async () => {
       expect(initArrangerMetadata(esClient)).resolves.toBeDefined();
       expect(
-        (
-          await esClient.indices.exists({
-            index: ARRANGER_PROJECT_METADATA_INDEX,
-          })
-        ).body,
+        await esClient.indices.exists({
+          index: ARRANGER_PROJECT_METADATA_INDEX,
+        }),
       ).toBe(true);
       expect(
-        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
-          .body,
+        await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }),
       ).toBe(true);
     });
 
@@ -163,7 +158,7 @@ describe('Arranger schema', () => {
             index: ARRANGER_PROJECT_METADATA_INDEX,
             id: harmonizedFileCentricConfig.name,
           })
-        )._source.index,
+        )._index,
       ).toEqual(ARRANGER_FILE_CENTRIC_INDEX);
     });
   });

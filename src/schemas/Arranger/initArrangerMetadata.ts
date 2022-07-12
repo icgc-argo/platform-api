@@ -27,11 +27,10 @@ import metadata from 'resources/arranger_es_metadata.json';
 export const ARRANGER_PROJECT_METADATA_INDEX = `arranger-projects-${ARRANGER_PROJECT_ID}`;
 export const ARRANGER_PROJECTS_INDEX = `arranger-projects`;
 
-export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric =
-  {
-    ...metadata.projectIndexConfigs.file_centric,
-    index: ARRANGER_FILE_CENTRIC_INDEX,
-  };
+export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric = {
+  ...metadata.projectIndexConfigs.file_centric,
+  index: ARRANGER_FILE_CENTRIC_INDEX,
+};
 
 type EsConfig = {
   id: string;
@@ -68,7 +67,7 @@ export default async (esClient: Client) => {
         ),
       esClient.indices
         .exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
-        .then(async ({ body: indexExists = false }) =>
+        .then(async (indexExists: false) =>
           indexExists
             ? await esClient
                 .update({ ...projectMetadataEsConfig, body: esUpdateBody })
@@ -125,13 +124,18 @@ export default async (esClient: Client) => {
     type TProjectManifest = typeof projectManifest;
     type TFileCentric = typeof metadata.projectIndexConfigs.file_centric;
 
+    const p1 = esClient
+      .get(projectsEsConfig)
+      .then((response) => response._source) as Promise<TProjectManifest>;
+
+    const p2 = esClient
+      .get(projectMetadataEsConfig)
+      .then((response) => response._source) as Promise<TFileCentric>;
+
     const [projectManifestInEs, fileCentricArrangerSetting]: [
       TProjectManifest,
       TFileCentric,
-    ] = await Promise.all<TProjectManifest, TFileCentric>([
-      esClient.get(projectsEsConfig).then(response => response._source),
-      esClient.get(projectMetadataEsConfig).then(response => response._source),
-    ]);
+    ] = await Promise.all([p1, p2]);
 
     if (
       isEqual(projectManifestInEs, projectManifest) &&
@@ -145,5 +149,5 @@ export default async (esClient: Client) => {
   };
   logger.info('initializing arranger metadata');
 
-  return retry(initMetadata, { retries: 10 });
+  return retry(initMetadata);
 };

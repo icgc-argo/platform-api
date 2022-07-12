@@ -32,6 +32,7 @@ import {
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 import { ESBQuery, getQuery } from 'utils/elasticQueryUtils';
+import { SearchResponse } from '@elastic/elasticsearch/lib/api/types';
 
 export type EntitiesPageResponseBody = {
   content: Array<Partial<SongEntity>>;
@@ -131,10 +132,11 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
     res: Response<EntitiesPageResponseBody>,
   ) => {
     const serializedUserScopes = req.auth.serializedScopes;
-    const programMembershipAccessLevel =
-      egoTokenUtils.getProgramMembershipAccessLevel({
+    const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel(
+      {
         permissions: serializedUserScopes,
-      });
+      },
+    );
 
     const parsedRequestQuery = {
       page: Number(req.query.page || 0),
@@ -143,7 +145,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       fields: req.query.fields
         ? (req.query.fields as string)
             .split(',')
-            .map((str) => str.trim())
+            .map(str => str.trim())
             .filter(_.identity)
         : [],
       fileName: req.query.fileName || undefined,
@@ -203,7 +205,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       )
       .toJSON() as ESBQuery;
 
-    const esSearchResponse: { body: EsHits<EsFileCentricDocument> } = await esClient.search(
+    const esSearchResponse: {
+      body: SearchResponse<EsFileCentricDocument>;
+    } = await esClient.search(
       {
         index: ARRANGER_FILE_CENTRIC_INDEX,
         query: getQuery(query),
@@ -213,14 +217,15 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)
-      .map((esFile) => {
+      .map(esFile => {
+        if (!esFile) return {};
         const index = getIndexFile(esFile) as SongEntity;
         const file = toSongEntity(esFile);
 
         return !!index ? [index, file] : file;
       })
       .flat() // Flatten to separate out the index files, if found
-      .map((file) =>
+      .map(file =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
               Object.entries(file).filter(([key]) =>
@@ -229,6 +234,11 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
             ) as Partial<SongEntity>)
           : file,
       );
+
+    const totalHitsVal =
+      typeof esSearchResponse.body.hits.total === 'number'
+        ? esSearchResponse.body.hits.total
+        : esSearchResponse.body.hits.total!.value;
 
     /**@todo: get Rob to take a look through this */
     const responseBody: EntitiesPageResponseBody = {
@@ -249,7 +259,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       first: parsedRequestQuery.page === 0,
       last: data.length < parsedRequestQuery.size,
       size: data.length,
-      totalElements: esSearchResponse.body.hits.total.value,
+      totalElements: totalHitsVal,
       numberOfElements: data.length,
       sort: {
         sorted: false,
@@ -257,8 +267,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
         empty: true,
       },
       number: data.length,
-      totalPages:
-        esSearchResponse.body.hits.total.value / parsedRequestQuery.size,
+      totalPages: totalHitsVal / parsedRequestQuery.size,
     };
 
     res.send(responseBody);

@@ -44,7 +44,7 @@ const asyncExec = promisify(exec);
 describe('Arranger metadata access control', () => {
   let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
 
-  const mockMapping = {
+  const mockIndex = {
     aliases: {
       file_centric: {},
     },
@@ -53,12 +53,12 @@ describe('Arranger metadata access control', () => {
       date_detection: false,
       properties: {
         study_id: {
-          type: 'keyword',
+          type: 'keyword' as 'keyword',
         },
         file: {
           properties: {
             file_id: {
-              type: 'keyword',
+              type: 'keyword' as 'keyword',
             },
           },
         },
@@ -82,7 +82,8 @@ describe('Arranger metadata access control', () => {
     });
     esClient.indices.create({
       index: 'test',
-      body: mockMapping,
+      aliases: mockIndex.aliases,
+      mappings: mockIndex.mappings,
     });
 
     const { stdout, stderr } = await asyncExec(
@@ -92,15 +93,18 @@ describe('Arranger metadata access control', () => {
       throw stderr;
     }
     console.log('embargoStageEsInit stdout: ', stdout);
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
       }, 30000);
     });
-    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
-      acc[doc.object_id] = doc;
-      return acc;
-    }, {} as typeof allIndexedDocuments);
+    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
+      (acc, doc) => {
+        acc[doc.object_id] = doc;
+        return acc;
+      },
+      {} as typeof allIndexedDocuments,
+    );
   });
   afterAll(async () => {
     await esContainer.stop();

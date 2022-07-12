@@ -31,6 +31,7 @@ import {
 import { EsHits } from 'services/elasticsearch';
 import { reduce } from 'axax/es5/reduce';
 import _ from 'lodash';
+import { ESBQuery, getQuery } from 'utils/elasticQueryUtils';
 
 chai.use(chaiHttp);
 
@@ -79,14 +80,20 @@ const esDocumentStream = async function* ({ esClient }: { esClient: Client }) {
   const pageSize = 1000;
   cycle: while (true) {
     const pageData = await esClient
-      .search({
-        index: 'file_centric',
-        body: esb
-          .requestBodySearch()
-          .sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
-          .from(currentIndex)
-          .size(pageSize),
-      })
+      .search(
+        {
+          index: 'file_centric',
+          query: getQuery(
+            esb
+              .requestBodySearch()
+              .sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
+              .from(currentIndex)
+              .size(pageSize)
+              .toJSON() as ESBQuery,
+          ),
+        },
+        { meta: true },
+      )
       .then((r) => r.body as EsHits<EsFileCentricDocument>);
     if (pageData.hits.hits.length > 0) {
       yield pageData.hits.hits.map((h) => h._source);
