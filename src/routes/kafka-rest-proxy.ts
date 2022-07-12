@@ -79,7 +79,8 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
       },
       body: kafkaRestProxyBody,
     })
-      .then((response) => {
+      .then(response => {
+        if (!response.body) throw 'response body is undefined';
         res.contentType('application/vnd.kafka.v2+json');
         res.status(response.status);
         response.body.pipe(res);

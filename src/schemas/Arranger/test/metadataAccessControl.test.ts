@@ -92,18 +92,15 @@ describe('Arranger metadata access control', () => {
       throw stderr;
     }
     console.log('embargoStageEsInit stdout: ', stdout);
-    await new Promise((resolve) => {
+    await new Promise<void>(resolve => {
       setTimeout(() => {
         resolve();
       }, 30000);
     });
-    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
-      (acc, doc) => {
-        acc[doc.object_id] = doc;
-        return acc;
-      },
-      {} as typeof allIndexedDocuments,
-    );
+    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+      acc[doc.object_id] = doc;
+      return acc;
+    }, {} as typeof allIndexedDocuments);
   });
   afterAll(async () => {
     await esContainer.stop();

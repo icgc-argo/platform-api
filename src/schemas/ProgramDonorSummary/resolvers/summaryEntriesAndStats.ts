@@ -986,6 +986,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
         donorsWithReleasedFilesCount: FilterAggregationResult;
         donorsWithMatchedTNPair: FilterAggregationResult;
         donorsInvalidWithCurrentDictionary: FilterAggregationResult;
+        donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
 
         completeCoreCompletion: FilterAggregationResult;
         incompleteCoreCompletion: FilterAggregationResult;
@@ -1045,11 +1046,11 @@ const programDonorSummaryEntriesAndStatsResolver: (
         track_total_hits: true,
       })
       .then((res) => {
-        return res.body;
+        return res.body as QueryResult;
       })
       .catch((err) => {
         logger.error('error reading data from Elasticsearch: ', err);
-        return {
+        const defaultResult: QueryResult = {
           hits: {
             total: { value: 0, relation: '' },
             hits: [],
@@ -1062,6 +1063,7 @@ const programDonorSummaryEntriesAndStatsResolver: (
             donorsWithReleasedFilesCount: { doc_count: 0 },
             donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
             donorsInvalidWithCurrentDictionary: { doc_count: 0 },
+            donorsWithMatchedTNPair: { doc_count: 0 },
 
             completeCoreCompletion: { doc_count: 0 },
             incompleteCoreCompletion: { doc_count: 0 },
@@ -1112,6 +1114,8 @@ const programDonorSummaryEntriesAndStatsResolver: (
             filesToQcCount: { value: 0 },
           },
         };
+
+        return defaultResult;
       });
 
     return {

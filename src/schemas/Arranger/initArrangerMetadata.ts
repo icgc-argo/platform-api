@@ -27,11 +27,10 @@ import metadata from 'resources/arranger_es_metadata.json';
 export const ARRANGER_PROJECT_METADATA_INDEX = `arranger-projects-${ARRANGER_PROJECT_ID}`;
 export const ARRANGER_PROJECTS_INDEX = `arranger-projects`;
 
-export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric =
-  {
-    ...metadata.projectIndexConfigs.file_centric,
-    index: ARRANGER_FILE_CENTRIC_INDEX,
-  };
+export const harmonizedFileCentricConfig: typeof metadata.projectIndexConfigs.file_centric = {
+  ...metadata.projectIndexConfigs.file_centric,
+  index: ARRANGER_FILE_CENTRIC_INDEX,
+};
 
 type EsConfig = {
   id: string;
@@ -143,5 +142,6 @@ export default async (esClient: Client) => {
     }
   };
   logger.info('initializing arranger metadata');
-  return retry(initMetadata, { retries: 10 });
+
+  return retry(initMetadata);
 };
