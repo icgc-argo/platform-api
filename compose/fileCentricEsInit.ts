@@ -26,7 +26,7 @@ import indexData from './file_centric/sample_file_centric.json';
   const ELASTICSEARCH_HOST = 'http://localhost:9200';
   const esClient = new Client({
     node: ELASTICSEARCH_HOST,
-    ssl: {
+    tls: {
       rejectUnauthorized: false,
     },
   });
@@ -46,16 +46,22 @@ import indexData from './file_centric/sample_file_centric.json';
     });
   } catch (err) {
     console.log(`could not delete index ${TEST_INDEX}: `, err);
-    if ((await esClient.indices.exists({ index: TEST_INDEX })).body) {
+    if (await esClient.indices.exists({ index: TEST_INDEX })) {
       throw err;
     }
   }
 
   console.log(`creating index ${TEST_INDEX}`);
 
+  const aliases = {};
+  const mappings = {};
+  const settings = {};
+
   await esClient.indices.create({
     index: TEST_INDEX,
-    body: indexSettings,
+    aliases,
+    mappings,
+    settings,
   });
 
   console.log('index created');
