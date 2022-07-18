@@ -49,7 +49,9 @@ export type DonorFields =
   | 'mutectFirstPublishedDate'
   | 'rawReadsFirstPublishedDate'
   | 'sangerVcsFirstPublishedDate'
-  | 'openAccessFirstPublishedDate';
+  | 'openAccessFirstPublishedDate'
+  | 'rnaRawReadsFirstPublishedDate'
+  | 'rnaAlignmentFirstPublishedDate';
 
 export type EsAggs = {
   [key in DonorFields]: EsAggsBuckets;
