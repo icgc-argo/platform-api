@@ -14,7 +14,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "brain" } },
-    "file": { "file_id": "FI_Fake_0", "size": 0, "md5sum": "fakeMd5_0", "name": "fake_file_0.gz" },
+    "file": {
+      "file_id": "FI_Fake_0",
+      "size": 0,
+      "md5sum": "fakeMd5_0",
+      "name": "fake_file_0.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_37",
       "submitter_donor_id": "fake_donor_73",
@@ -61,7 +66,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "skin" } },
-    "file": { "file_id": "FI_Fake_1", "size": 0, "md5sum": "fakeMd5_1", "name": "fake_file_1.gz" },
+    "file": {
+      "file_id": "FI_Fake_1",
+      "size": 0,
+      "md5sum": "fakeMd5_1",
+      "name": "fake_file_1.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_12",
       "submitter_donor_id": "fake_donor_8",
@@ -108,7 +118,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "pancreas" } },
-    "file": { "file_id": "FI_Fake_2", "size": 0, "md5sum": "fakeMd5_2", "name": "fake_file_2.gz" },
+    "file": {
+      "file_id": "FI_Fake_2",
+      "size": 0,
+      "md5sum": "fakeMd5_2",
+      "name": "fake_file_2.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_74",
       "submitter_donor_id": "fake_donor_25",
@@ -155,7 +170,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "lung" } },
-    "file": { "file_id": "FI_Fake_3", "size": 0, "md5sum": "fakeMd5_3", "name": "fake_file_3.gz" },
+    "file": {
+      "file_id": "FI_Fake_3",
+      "size": 0,
+      "md5sum": "fakeMd5_3",
+      "name": "fake_file_3.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_80",
       "submitter_donor_id": "fake_donor_64",
@@ -202,7 +222,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "skin" } },
-    "file": { "file_id": "FI_Fake_4", "size": 0, "md5sum": "fakeMd5_4", "name": "fake_file_4.gz" },
+    "file": {
+      "file_id": "FI_Fake_4",
+      "size": 0,
+      "md5sum": "fakeMd5_4",
+      "name": "fake_file_4.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_98",
       "submitter_donor_id": "fake_donor_51",
@@ -249,7 +274,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "lung" } },
-    "file": { "file_id": "FI_Fake_5", "size": 0, "md5sum": "fakeMd5_5", "name": "fake_file_5.gz" },
+    "file": {
+      "file_id": "FI_Fake_5",
+      "size": 0,
+      "md5sum": "fakeMd5_5",
+      "name": "fake_file_5.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_12",
       "submitter_donor_id": "fake_donor_14",
@@ -296,7 +326,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "lung" } },
-    "file": { "file_id": "FI_Fake_6", "size": 0, "md5sum": "fakeMd5_6", "name": "fake_file_6.gz" },
+    "file": {
+      "file_id": "FI_Fake_6",
+      "size": 0,
+      "md5sum": "fakeMd5_6",
+      "name": "fake_file_6.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_30",
       "submitter_donor_id": "fake_donor_92",
@@ -343,7 +378,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "pancreas" } },
-    "file": { "file_id": "FI_Fake_7", "size": 0, "md5sum": "fakeMd5_7", "name": "fake_file_7.gz" },
+    "file": {
+      "file_id": "FI_Fake_7",
+      "size": 0,
+      "md5sum": "fakeMd5_7",
+      "name": "fake_file_7.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_44",
       "submitter_donor_id": "fake_donor_4",
@@ -390,7 +430,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "skin" } },
-    "file": { "file_id": "FI_Fake_8", "size": 0, "md5sum": "fakeMd5_8", "name": "fake_file_8.gz" },
+    "file": {
+      "file_id": "FI_Fake_8",
+      "size": 0,
+      "md5sum": "fakeMd5_8",
+      "name": "fake_file_8.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_89",
       "submitter_donor_id": "fake_donor_39",
@@ -416,7 +461,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "a15cf550-cffd-58e0-93ba-b7b23486fca8",
@@ -433,7 +482,12 @@
       "experiment": { "platform": "ILLUMINA", "library_strategy": "WGS" }
     },
     "clinical": { "donor": { "primary_site": "liver" } },
-    "file": { "file_id": "FI_Fake_9", "size": 0, "md5sum": "fakeMd5_9", "name": "fake_file_9.gz" },
+    "file": {
+      "file_id": "FI_Fake_9",
+      "size": 0,
+      "md5sum": "fakeMd5_9",
+      "name": "fake_file_9.gz"
+    },
     "donors": {
       "donor_id": "fake_donor_13",
       "submitter_donor_id": "fake_donor_2",
@@ -459,7 +513,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "82232d81-7960-5eca-8b3c-1cf4d403b128",
@@ -767,7 +825,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "83055287-b278-54b1-b55a-5fe12021942c",
@@ -1179,7 +1241,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "664646a5-f7aa-5873-bae0-513b33d3078c",
@@ -1279,7 +1345,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "90e3aecf-95a8-508e-a4a5-7a904dda99e2",
@@ -1795,7 +1865,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "48ba16f0-b5e6-5e79-99e6-d63c27e6d71f",
@@ -1895,7 +1969,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "16bb4dec-7f06-592c-a00e-862aa2463ad0",
@@ -1943,7 +2021,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "500ca0f2-db2a-5915-b4ac-cd80f5e9ce62",
@@ -2303,7 +2385,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "9ff5bced-e452-58d2-8502-d27f78170343",
@@ -2403,7 +2489,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "b23bc96b-f419-5504-8dd2-a267e776e93e",
@@ -2815,7 +2905,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "10daf24a-334c-54bb-a52f-137958c54857",
@@ -3279,7 +3373,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "78415afa-9d46-501d-bf15-c334fb5a4ac6",
@@ -3483,7 +3581,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "89536626-5698-56a9-98dd-152a24936510",
@@ -3583,7 +3685,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "fc208d1c-5a2f-560d-a216-adb491e7ffda",
@@ -3787,7 +3893,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "e73bb311-4f1b-517e-8413-cb74215663e1",
@@ -4043,7 +4153,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "92cfeec7-07c4-5775-b6a6-642fc171a569",
@@ -4351,7 +4465,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "3a6f0313-c383-5dcc-b337-c26b321b36a1",
@@ -4503,7 +4621,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "b16e83bc-b37d-584a-af94-a567adf2fa45",
@@ -5019,7 +5141,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "6654c159-d960-572b-a887-644796e0b809",
@@ -5171,7 +5297,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "5b5fbeb1-6c73-5c33-bd7d-6a3702326be3",
@@ -5739,7 +5869,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "7d2bb3b8-0c6c-5718-8289-1052e2aeb67d",
@@ -5943,7 +6077,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "ea5e9c6e-8711-5ee4-b370-486692337294",
@@ -6095,7 +6233,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "99a91eaf-847b-52af-921d-57fa6995edf3",
@@ -6455,7 +6597,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "7a41c079-73c6-5d6f-a8df-0008e16c42b8",
@@ -7335,7 +7481,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "ec50b61e-b882-55bd-bd58-416e9bdcf352",
@@ -7591,7 +7741,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "84eca700-23c5-5b00-8bc1-ffe29975bd57",
@@ -7847,7 +8001,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "8e364316-7279-55f1-8c2a-d204b20b4218",
@@ -7895,7 +8053,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "f94784d6-5941-5692-8824-83355cbf307f",
@@ -8203,7 +8365,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "41e290e5-da8a-5600-aa94-9621b4a00d2c",
@@ -8303,7 +8469,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "659e9264-d774-503b-a0ad-43b047376bc7",
@@ -8403,7 +8573,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "b4040a94-1be3-51d5-b97e-7618db9684b3",
@@ -8607,7 +8781,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "eadca586-cd99-5663-967e-171a0023e68c",
@@ -8707,7 +8885,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "2157b3fb-cb71-5255-8ca0-09384b58af2a",
@@ -8755,7 +8937,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "4c7b63f1-3b79-5ed2-abbb-f1f925c02d91",
@@ -9011,7 +9197,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "f52d148c-ab1e-5818-8cc7-3bfaed81071e",
@@ -9059,7 +9249,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "4ac71b1e-f486-57cd-a82a-86b1b1a2f264",
@@ -9419,7 +9613,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "dd98dfa3-1691-585f-88cb-29ca695804c5",
@@ -10143,7 +10341,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "3af8539c-72d7-5e85-8b65-f37054195b5e",
@@ -10243,7 +10445,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "6ba10bba-6462-5b83-a7e2-7ed5f1203bb6",
@@ -10499,7 +10705,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "33911f35-b602-5824-ad2d-dc2202cf69c4",
@@ -10651,7 +10861,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "099f9e5a-a220-5e4d-8c02-a8ad54bed6d8",
@@ -10959,7 +11173,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "f90b9f0a-dc9e-5231-b5a5-d74192caeec6",
@@ -11475,7 +11693,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "eaa2174b-0bfd-5ef9-841c-42fb83fea540",
@@ -11939,7 +12161,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "450c2370-298b-535f-b5ad-c10880268575",
@@ -12195,7 +12421,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "a245b73d-d546-5900-a69b-adb64253b970",
@@ -12555,7 +12785,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "427352b1-dc72-5bd2-853b-df81657ecf51",
@@ -12707,7 +12941,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "2dbd07be-61c3-5d91-a45d-fbaf0f9a365c",
@@ -12807,7 +13045,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "6362ae2a-4ccb-574d-9688-69d3f4654d57",
@@ -13011,7 +13253,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "0b2aa4dd-7ed0-5ed6-b609-759732ae8ad6",
@@ -13215,7 +13461,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "70401d42-32ff-575b-8f3b-b985b5f34b0c",
@@ -13315,7 +13565,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "86aeec6e-d7a6-5994-9d41-6888e50d08bb",
@@ -14559,7 +14813,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "0f4840c5-6741-5105-af67-c99a25e53efc",
@@ -14659,7 +14917,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "e1184e40-a080-576c-b962-cea2f71406d4",
@@ -14707,7 +14969,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "377661d5-54f3-5120-bb93-a6a549600007",
@@ -14755,7 +15021,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "9ff8a032-cd8d-5fd2-82f6-e0a32bb43874",
@@ -15011,7 +15281,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "4a08f864-2e0a-5e36-9bb5-0713190aad2e",
@@ -15215,7 +15489,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "acb21631-63ab-5e29-bb32-66ea479eddbf",
@@ -15263,7 +15541,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "5c314937-00c7-57d1-9ba0-79c3b995956b",
@@ -15311,7 +15593,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "23773185-5921-5233-97db-fb181a3cd180",
@@ -15931,7 +16217,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "550d8c99-d82c-51e5-89c1-6b7e9cb57692",
@@ -16395,7 +16685,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "f028eda4-e7eb-5886-9467-e13e311c82bc",
@@ -16859,7 +17153,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "56b7fda3-dcdb-59f4-b412-3614b62eb2ef",
@@ -17219,7 +17517,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "6b087b3a-2dcb-50ad-9a6f-1507c4dd6ea9",
@@ -17319,7 +17621,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "c6740b64-3bcc-5371-b0ff-b5b81a4cfcf3",
@@ -17367,7 +17673,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "f8210351-cbe9-50c4-a57d-48a30735d3b8",
@@ -17415,7 +17725,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "d9c35c1f-eaf5-531f-8b95-8ef47fc47ab6",
@@ -17827,7 +18141,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "f1a816a5-89a0-54a6-a7dc-5c4a61df1d6a",
@@ -18603,7 +18921,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "e9c67824-d656-5b5d-99ee-043a23d386df",
@@ -19067,7 +19389,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "5742c2cb-02a9-562f-9e82-5c25b8f98db2",
@@ -19115,7 +19441,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "b9df014a-efa2-5bfe-9bcb-04d2d7a209af",
@@ -19891,7 +20221,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "634ad7e5-5613-5a3c-8630-3543782cd5a1",
@@ -20511,7 +20845,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "f57bac1b-04e5-55b6-9ae1-aa70857eb878",
@@ -20871,7 +21209,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "f4cd16a3-cceb-5a19-ad89-d5b1e19e5da1",
@@ -20919,7 +21261,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "682f1044-5820-53d2-9458-617d2de05c4b",
@@ -20967,7 +21313,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "c9594fce-ba86-5c5a-9ae6-4bdaed915f4d",
@@ -21067,7 +21417,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "d424ea1e-e965-5ac3-82ca-d99059262ef4",
@@ -21167,7 +21521,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "6682fe6c-0471-58a7-8643-6fa5f6218564",
@@ -21527,7 +21885,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "e4732661-0162-5ec2-b18c-6665a8238961",
@@ -21679,7 +22041,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "094f95c0-4173-5bca-afc1-1a5bb5fb5225",
@@ -22195,7 +22561,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "15743ff7-1b84-5c20-9e3f-d3708aa17299",
@@ -22451,7 +22821,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "504c482d-18a7-5c6f-a7b5-567ac7a6e2ca",
@@ -22551,7 +22925,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "fa5263f6-befc-5906-b623-60cbe7b4f95c",
@@ -22755,7 +23133,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "5ac3da4a-316a-5820-8877-bbb769d447ec",
@@ -23167,7 +23549,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "48e71f49-f360-5748-9d8b-2d3582ad1c96",
@@ -23319,7 +23705,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "0bf21767-34e9-579d-a470-847552f89306",
@@ -23523,7 +23913,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "b877cc19-1a4d-5611-942e-99dd73e02aff",
@@ -24871,7 +25265,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "5a569cdd-cfe3-5e0a-8cc1-0afd809505f6",
@@ -25335,7 +25733,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "6c9f8f52-e0ce-506e-a20a-daefe89798dc",
@@ -25435,7 +25837,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "9d6f35d8-dcd8-5f5f-8c0b-79c78177c17a",
@@ -26263,7 +26669,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "1310dc92-3072-59df-87ea-594c7752be30",
@@ -26363,7 +26773,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "29f8914b-2e87-5535-a16a-1d40c552a530",
@@ -26411,7 +26825,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "beb53b99-3aa0-57fe-a597-cb7fa4f15fd6",
@@ -26927,7 +27345,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "54e48f09-8890-5e3c-ab4e-2b6d9b4a2964",
@@ -26975,7 +27397,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "a16abe17-4967-53d4-bedc-d653da3fb5de",
@@ -27647,7 +28073,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "7faebcae-df88-5534-b829-a35bdbcbd9eb",
@@ -27695,7 +28125,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "149055e0-067f-5947-a078-8eded0a75059",
@@ -28211,7 +28645,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "74c73537-3925-5b13-988f-b5485439bca7",
@@ -28311,7 +28749,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "8ac3b373-9fc9-52db-89f9-aa5df005a687",
@@ -28515,7 +28957,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "178f5434-c582-5e50-923f-6cc5f845e07e",
@@ -28667,7 +29113,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "1fbbbeef-aa63-5109-8487-6eec15147bf9",
@@ -28767,7 +29217,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "04d32c97-9475-59e8-8772-b7e502e17aa6",
@@ -30115,7 +30569,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "39c85612-4b8a-56cd-b511-b70e82b8aa66",
@@ -30371,7 +30829,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "042f4f1d-4033-5fd6-bf71-8fb08e46a385",
@@ -30731,7 +31193,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "6545eafa-f76e-5e67-b830-03ad15e1faba",
@@ -31195,7 +31661,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "f3aeca52-68e8-5f28-b66e-074aef7e715e",
@@ -31243,7 +31713,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "29776329-af30-54e8-be55-7cd73d6c6365",
@@ -31447,7 +31921,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "351a4b3e-3020-5997-96b4-b59e12071539",
@@ -31495,7 +31973,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "00afba2a-6583-53fb-8390-3083e088a6c6",
@@ -31543,7 +32025,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "671c2110-66c1-5357-b066-bf0c1011793b",
@@ -31747,7 +32233,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "5dd78955-24d2-5dd6-b451-6e7312cef2fc",
@@ -31795,7 +32285,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "b9f800a7-c05b-5c61-bb06-6ff73fe0cdcf",
@@ -31947,7 +32441,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "bf26970b-dad8-5e2c-961f-53bdf64f68e2",
@@ -32723,7 +33221,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "4bae8f33-766f-5d14-88eb-011e59ba671e",
@@ -32823,7 +33325,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "edf1ef8b-e885-5ce7-8af8-c7fcdc2b428b",
@@ -33183,7 +33689,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "ff2590cf-33cf-53fd-acd2-58146799d3ef",
@@ -33283,7 +33793,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "ec81cb13-fcb7-5cce-b15a-d360d15e2d65",
@@ -33539,7 +34053,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "52eb743e-6a83-5401-b295-342ac545286e",
@@ -33639,7 +34157,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "c7130e51-315b-5738-9077-fd4aa3a1f539",
@@ -33999,7 +34521,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "dcb099e1-caa2-5895-913d-38cd5a2c0f15",
@@ -34359,7 +34885,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "3e967f37-fa98-5112-a090-10ecf24ef490",
@@ -34719,7 +35249,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "cece08d0-6257-5d97-9ffa-7acbd9a5608b",
@@ -34819,7 +35353,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "8acac2c3-511c-506d-a4e2-fb64018aa3a7",
@@ -35283,7 +35821,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "a2607bd4-94f9-5219-81d5-3643854a7850",
@@ -35539,7 +36081,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "f39aed45-c762-58e3-bfa8-c444a591b27b",
@@ -35899,7 +36445,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "3b9bf023-ea67-5435-8f81-38a0d5191e4c",
@@ -36415,7 +36965,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "a775106a-b153-5987-a0a7-09565c7c7788",
@@ -37243,7 +37797,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "aa20b7fa-5273-59b5-959f-1d6d919d9c24",
@@ -37551,7 +38109,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "fd166268-6f53-532c-b260-f5e4c8ed0f8f",
@@ -37599,7 +38161,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "9d2354c8-99f2-5443-ab6f-65aabf217792",
@@ -38479,7 +39045,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "4636ee26-9762-5605-b1d3-da9434ec3fa3",
@@ -38735,7 +39305,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "63b7f636-d03b-5e0c-b179-3af5a13078ab",
@@ -39407,7 +39981,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "ff7672e1-99c7-587c-b2c9-d86bdeab9b2f",
@@ -39507,7 +40085,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "7ea62f56-d1c4-5cf6-b925-2466ac16ddf0",
@@ -39711,7 +40293,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "cac44587-b9ec-5706-bb9b-fcfcc1f46417",
@@ -40019,7 +40605,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "835b08ae-f683-55c3-93c4-37d9ce2acac3",
@@ -40067,7 +40657,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "22b1c5d6-77ab-5512-806b-d0bdd2f9b26e",
@@ -40167,7 +40761,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "7eac4f76-d94e-541f-8fed-56f1d0630571",
@@ -40579,7 +41177,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "fcc300a5-a087-53ef-a2cf-c065cb409e62",
@@ -40679,7 +41281,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "e7f43dda-f535-5d92-90aa-4b1dccc02c46",
@@ -40987,7 +41593,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "32696170-b1b2-577c-a11d-d4f2c5a75a00",
@@ -41347,7 +41957,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "ea6f6431-17d8-532c-828f-a2f3d542184f",
@@ -41551,7 +42165,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "57bb5dc2-c909-57f8-a5e5-135d4e740b02",
@@ -41703,7 +42321,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "eaf15ebe-dff5-596b-95d2-f62d90bb5b77",
@@ -42011,7 +42633,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "016e0b49-d1f2-538c-9317-4b6a1fc5e655",
@@ -42215,7 +42841,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "c2922def-2df5-57d7-bd89-04b8e69b5f6b",
@@ -42263,7 +42893,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "1a6455dd-5921-51e5-a68b-c000a30dfc34",
@@ -42623,7 +43257,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "aa27ab11-f7a0-5df6-8b14-0d3ef3adb75a",
@@ -43139,7 +43777,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "e0a71979-1a60-5c1f-b338-a08a8d5c83cc",
@@ -43863,7 +44505,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "b3aa5d59-a8d8-5842-a50c-318ffcaa82ef",
@@ -44171,7 +44817,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "be40bea6-10a1-5907-a4f0-01a5f5ec8e58",
@@ -45519,7 +46169,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "482b1fa2-116a-5fd7-9ce2-306e53817181",
@@ -45723,7 +46377,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "ce2a5a3d-01a3-5d57-bc60-300dbd673be5",
@@ -45979,7 +46637,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "1cd1e710-fff6-5358-a1cb-97e672ffcc92",
@@ -46131,7 +46793,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "7f4d61b1-b03c-58e8-968d-ebb5a1a5c110",
@@ -46699,7 +47365,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "783bd2db-d263-591f-a7a9-688e6859d9d5",
@@ -46747,7 +47417,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "6bf2d637-a249-5abd-9627-d3c19d8b8979",
@@ -47523,7 +48197,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "8c353166-b8ae-51fd-98a5-5a0ab3c78d7c",
@@ -48247,7 +48925,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "7e2ee52d-7863-5351-823b-bb515a00d0f3",
@@ -48347,7 +49029,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "8b988d14-0a1d-5c20-b2fb-0fe94526ae11",
@@ -48447,7 +49133,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "OCCAMS-GB" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "OCCAMS-GB"
+    }
   },
   {
     "object_id": "b3d167cb-434c-5adb-8343-f1d517c054f6",
@@ -48703,7 +49393,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "f011969d-fe08-5612-b2dc-8ec43070d50f",
@@ -49271,7 +49965,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "79d6206f-24f2-5465-b9a4-673eee699505",
@@ -49371,7 +50069,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "5bfdd098-210a-5951-ac24-fb11f920c709",
@@ -49575,7 +50277,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "e19b6ae1-159c-5b6d-a1be-33f7d31de438",
@@ -49623,7 +50329,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "DASH-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "DASH-CA"
+    }
   },
   {
     "object_id": "7e1bf2e5-296a-5727-a34b-7a46e50e1e47",
@@ -50139,7 +50849,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "TEST-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "TEST-CA"
+    }
   },
   {
     "object_id": "d9ce984f-74e7-5a7b-8be8-cc69d87b8f8d",
@@ -50863,7 +51577,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "12100623-83c1-56c1-a9b2-6ce599ef2d07",
@@ -51015,7 +51733,11 @@
       "country": "Canada",
       "url": "https://score.rdpc-dev.cancercollaboratory.org"
     },
-    "meta": { "embargo_stage": "PUBLIC", "release_stage": "PUBLIC", "study_id": "PACA-CA" }
+    "meta": {
+      "embargo_stage": "PUBLIC",
+      "release_stage": "PUBLIC",
+      "study_id": "PACA-CA"
+    }
   },
   {
     "object_id": "8bc12128-ec67-54dc-9a52-495a76ab064b",

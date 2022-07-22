@@ -22,7 +22,10 @@ import { Client } from '@elastic/elasticsearch';
 
 // @ts-ignore
 import { buildQuery } from '@arranger/middleware/dist';
-import { DEFAULT_TSV_STREAM_CHUNK_SIZE, ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import {
+  DEFAULT_TSV_STREAM_CHUNK_SIZE,
+  ARRANGER_FILE_CENTRIC_INDEX,
+} from 'config';
 import esb from 'elastic-builder';
 import { TsvFileSchema } from './types';
 import { Response } from 'express';
@@ -38,8 +41,13 @@ export const parseFilterString = (filterString: string): {} => {
 };
 
 export type FilterStringParser = (filterStr: {}) => Promise<{}>;
-export const createFilterToEsQueryConverter = async (esClient: Client, index: string) => {
-  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({ index });
+export const createFilterToEsQueryConverter = async (
+  esClient: Client,
+  index: string,
+) => {
+  const { body }: { body: EsIndexMapping } = await esClient.indices.getMapping({
+    index,
+  });
   const [indexMapping] = Object.values(body);
   const nestedFields = getNestedFields(indexMapping.mappings);
 
@@ -60,16 +68,16 @@ export const createFilterToEsQueryConverter = async (esClient: Client, index: st
     });
     if (!valid) {
       throw new Error(
-        `invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${JSON.stringify(
-          filter,
-        )}`,
+        `invalid Elasticsearch query ${JSON.stringify(
+          esQuery,
+        )} generated from ${JSON.stringify(filter)}`,
       );
     }
     return esQuery;
   }) as FilterStringParser;
 };
 
-export const createEsDocumentStream = async function*<DocumentType>(configs: {
+export const createEsDocumentStream = async function* <DocumentType>(configs: {
   esClient: Client;
   shouldContinue: () => boolean;
   sortField: string;
@@ -104,7 +112,9 @@ export const createEsDocumentStream = async function*<DocumentType>(configs: {
     });
     if (hits.hits.length) {
       currentPage++;
-      yield hits.hits.map(({ _source }: { _source: DocumentType }) => _source) as DocumentType[];
+      yield hits.hits.map(
+        ({ _source }: { _source: DocumentType }) => _source,
+      ) as DocumentType[];
     } else {
       completed = true;
     }
@@ -128,12 +138,16 @@ export const writeTsvStreamToWritableTarget = async <Document>(
   for await (const chunk of stream) {
     writableTarget.write(
       chunk
-        .map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
+        .map((fileObj): string =>
+          tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'),
+        )
         .join('\n'),
     );
     writableTarget.write('\n');
     documentCount += chunk.length;
     chunkCount++;
   }
-  logger.info(`streamed ${documentCount} documents to tsv over ${chunkCount} chunks`);
+  logger.info(
+    `streamed ${documentCount} documents to tsv over ${chunkCount} chunks`,
+  );
 };

@@ -30,11 +30,16 @@ const getRegistrationData = async (programShortName, Authorization) => {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const uploadRegistrationData = async (programShortName, filename, fileStream, Authorization) => {
+const uploadRegistrationData = async (
+  programShortName,
+  filename,
+  fileStream,
+  Authorization,
+) => {
   const formData = new FormData();
 
   // Need to buffer whole file from stream to ensure it all gets added to form data.
@@ -52,11 +57,15 @@ const uploadRegistrationData = async (programShortName, filename, fileStream, Au
     body: formData,
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const clearRegistrationData = async (programShortName, registrationId, Authorization) => {
+const clearRegistrationData = async (
+  programShortName,
+  registrationId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration/${registrationId}`,
     {
@@ -65,11 +74,15 @@ const clearRegistrationData = async (programShortName, registrationId, Authoriza
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => true);
+    .then((response) => true);
   return response;
 };
 
-const commitRegistrationData = async (programShortName, registrationId, Authorization) => {
+const commitRegistrationData = async (
+  programShortName,
+  registrationId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration/${registrationId}/commit`,
     {
@@ -78,7 +91,7 @@ const commitRegistrationData = async (programShortName, registrationId, Authoriz
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
@@ -91,7 +104,7 @@ const getClinicalSubmissionTypesList = async () => {
     method: 'get',
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
@@ -104,7 +117,7 @@ const getClinicalSubmissionSchemaVersion = async () => {
     method: 'get',
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   console.log(response.version);
   return response.version;
 };
@@ -118,7 +131,7 @@ const getClinicalSubmissionSystemDisabled = async () => {
     method: 'get',
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
@@ -129,7 +142,7 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
 
   return response;
 };
@@ -145,7 +158,7 @@ const getClinicalData = async (variables, Authorization) => {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
@@ -156,11 +169,15 @@ const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
     headers: { Authorization },
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const uploadClinicalSubmissionData = async (programShortName, filesMap, Authorization) => {
+const uploadClinicalSubmissionData = async (
+  programShortName,
+  filesMap,
+  Authorization,
+) => {
   const formData = new FormData();
   for (var filename in filesMap) {
     const fileBuffer = await new Response(filesMap[filename]).buffer();
@@ -175,7 +192,7 @@ const uploadClinicalSubmissionData = async (programShortName, filesMap, Authoriz
     body: formData,
   })
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
@@ -193,11 +210,15 @@ const clearClinicalSubmissionData = async (
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const validateClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+const validateClinicalSubmissionData = async (
+  programShortName,
+  versionId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/validate/${versionId}`,
     {
@@ -206,11 +227,15 @@ const validateClinicalSubmissionData = async (programShortName, versionId, Autho
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const commitClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+const commitClinicalSubmissionData = async (
+  programShortName,
+  versionId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/commit/${versionId}`,
     {
@@ -219,11 +244,15 @@ const commitClinicalSubmissionData = async (programShortName, versionId, Authori
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const reopenClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+const reopenClinicalSubmissionData = async (
+  programShortName,
+  versionId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/reopen/${versionId}`,
     {
@@ -232,11 +261,15 @@ const reopenClinicalSubmissionData = async (programShortName, versionId, Authori
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response.json());
+    .then((response) => response.json());
   return response;
 };
 
-const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
+const approveClinicalSubmissionData = async (
+  programShortName,
+  versionId,
+  Authorization,
+) => {
   const response = await fetch(
     `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
     {
@@ -245,7 +278,7 @@ const approveClinicalSubmissionData = async (programShortName, versionId, Author
     },
   )
     .then(restErrorResponseHandler)
-    .then(response => response);
+    .then((response) => response);
   return true;
 };
 

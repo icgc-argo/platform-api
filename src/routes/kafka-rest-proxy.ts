@@ -80,12 +80,13 @@ const createKafkaRouter = (egoClient: EgoClient): Router => {
       body: kafkaRestProxyBody,
     })
       .then(response => {
+        if (!response.body) throw 'response body is undefined';
         res.contentType('application/vnd.kafka.v2+json');
         res.status(response.status);
         response.body.pipe(res);
         return;
       })
-      .catch(e => {
+      .catch((e) => {
         logger.error('failed to send message to kafka proxy' + e);
         res.status(500).send(e);
         return;

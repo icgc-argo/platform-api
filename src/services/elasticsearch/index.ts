@@ -20,7 +20,10 @@
 import { Client } from '@elastic/elasticsearch';
 import flatMap from 'lodash/flatMap';
 import logger from 'utils/logger';
-import { ELASTICSEARCH_CLIENT_TRUST_SSL_CERT, ELASTICSEARCH_HOST } from 'config';
+import {
+  ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
+  ELASTICSEARCH_HOST,
+} from 'config';
 
 import {
   EsScalarFieldMapping,
@@ -37,34 +40,53 @@ export {
   EsIndexMapping,
 } from './types';
 
-export const isObjectFieldMapping = (obj: object): obj is EsObjectFieldMapping =>
+export const isObjectFieldMapping = (
+  obj: object,
+): obj is EsObjectFieldMapping =>
   Object.keys(obj).includes('properties') && !Object.keys(obj).includes('type');
 
-export const isScalarFieldMapping = (obj: object): obj is EsScalarFieldMapping =>
+export const isScalarFieldMapping = (
+  obj: object,
+): obj is EsScalarFieldMapping =>
   // @ts-ignore This is doing run-time type check so it's ok
   Object.keys(obj).includes('type') && obj.type !== 'nested';
 
-export const isNestedFieldMapping = (obj: object): obj is EsNestedFieldMapping =>
+export const isNestedFieldMapping = (
+  obj: object,
+): obj is EsNestedFieldMapping =>
   // @ts-ignore This is doing run-time type check so it's ok
   Object.keys(obj).includes('type') && obj.type === 'nested';
 
-export const getNestedFields = (fieldMapping: EsFieldMapping, parentField?: string): string[] => {
+export const getNestedFields = (
+  fieldMapping: EsFieldMapping,
+  parentField?: string,
+): string[] => {
   /**
    * @TODO maybe tail-call optimize this function
    */
-  if (isNestedFieldMapping(fieldMapping) || isObjectFieldMapping(fieldMapping)) {
+  if (
+    isNestedFieldMapping(fieldMapping) ||
+    isObjectFieldMapping(fieldMapping)
+  ) {
     const { properties } = fieldMapping;
     const currentFields = Object.keys(properties);
     const nestedOrObjectFieldKey = currentFields.filter(
-      field => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
+      (field) =>
+        isNestedFieldMapping(properties[field]) ||
+        isObjectFieldMapping(properties[field]),
     );
-    const nestedFieldKey = nestedOrObjectFieldKey.filter(field =>
+    const nestedFieldKey = nestedOrObjectFieldKey.filter((field) =>
       isNestedFieldMapping(properties[field]),
     );
     return flatMap([
-      ...(parentField ? nestedFieldKey.map(field => `${parentField}.${field}`) : nestedFieldKey),
-      ...nestedOrObjectFieldKey.map(field =>
-        getNestedFields(properties[field], parentField ? `${parentField}.${field}` : field),
+      ...(parentField
+        ? nestedFieldKey.map((field) => `${parentField}.${field}`)
+        : nestedFieldKey),
+      ...nestedOrObjectFieldKey.map((field) =>
+        getNestedFields(
+          properties[field],
+          parentField ? `${parentField}.${field}` : field,
+        ),
       ),
     ]);
   } else {
@@ -104,7 +126,9 @@ export const createEsClient = async ({
     logger.error(`esClient failed to connect to cluster`);
     throw err;
   }
-  logger.info(`successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`);
+  logger.info(
+    `successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`,
+  );
   return esClient;
 };
 

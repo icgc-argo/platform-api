@@ -45,13 +45,17 @@ type DataCenterError = {
 };
 
 async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
-  const url_getById = urljoin(DATA_CENTER_REGISTRY_API_ROOT, 'data-centers', code);
+  const url_getById = urljoin(
+    DATA_CENTER_REGISTRY_API_ROOT,
+    'data-centers',
+    code,
+  );
   const dataCenter = await fetch(url_getById, {
     method: 'get',
   })
     .then(async (response: Response) => (await response.json()) as DataCenter)
     .catch(async (response: Response) => {
-      const responseJson = await response.json();
+      const responseJson = (await response.json()) as { message: string };
       logger.error(
         `Failed to fetch data center from registry for repository code: ${code}. Error ${response.status}: ${responseJson.message}`,
       );
@@ -60,7 +64,9 @@ async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
   return dataCenter;
 }
 
-export async function getDataCenter(code: string): Promise<DataCenter | undefined> {
+export async function getDataCenter(
+  code: string,
+): Promise<DataCenter | undefined> {
   const fromCache = dataCenterCache.get(code) as DataCenter;
   if (fromCache) {
     return fromCache;

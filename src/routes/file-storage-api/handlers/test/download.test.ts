@@ -87,11 +87,13 @@ describe('storage-api/download', () => {
     esClient = await createEsClient({
       node: esHost,
     });
-    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
+    const { stdout, stderr } = await asyncExec(
+      `ES_HOST=${esHost} npm run embargoStageEsInit`,
+    );
     if (stderr.length) {
       throw stderr;
     }
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(() => {
         resolve(true);
       }, 1000);
@@ -121,19 +123,29 @@ describe('storage-api/download', () => {
   }, 120000);
 
   describe('/download endpoint', () => {
-    const fetchDownload = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
+    const fetchDownload = ({
+      apiKey,
+      objectId,
+    }: {
+      apiKey?: MockApiKey;
+      objectId: string;
+    }) => {
       const requestPromise = chai.request(app).get(`/download/${objectId}`);
-      return (apiKey
-        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
-        : requestPromise
-      ).then(response => {
+      return (
+        apiKey
+          ? requestPromise.set(
+              'authorization',
+              `Bearer ${MOCK_API_KEYS[apiKey]}`,
+            )
+          : requestPromise
+      ).then((response) => {
         if (response.body !== 'ok') {
           throw response.error;
         }
         return response.body as 'ok';
       });
     };
-    const downloadableStream = async function*({
+    const downloadableStream = async function* ({
       apiKey,
       objectIds,
     }: {
@@ -142,14 +154,16 @@ describe('storage-api/download', () => {
     }) {
       for await (const chunk of _.chunk(objectIds, 5)) {
         const data = await Promise.all(
-          chunk.map(objectId => fetchDownload({ apiKey, objectId }).catch(err => null)),
+          chunk.map((objectId) =>
+            fetchDownload({ apiKey, objectId }).catch((err) => null),
+          ),
         );
-        yield data.filter(entry => !!entry) as ('ok' | null)[];
+        yield data.filter((entry) => !!entry) as ('ok' | null)[];
       }
     };
     const reduceToList = (stream: ReturnType<typeof downloadableStream>) =>
       reduce<('ok' | null)[], ('ok' | null)[]>((acc, r) => {
-        r.forEach(entity => acc.push(entity));
+        r.forEach((entity) => acc.push(entity));
         return acc;
       }, [])(stream);
 
@@ -157,39 +171,39 @@ describe('storage-api/download', () => {
       it('allows downloading publicly released file with open access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(
-            doc =>
+            (doc) =>
               doc.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC &&
               doc.file_access === FILE_ACCESS.OPEN,
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
           }),
         );
-        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+        expect(downloadResults.every((result) => result === 'ok')).toBe(true);
       });
       it('does not allow download of files that are not publicly released', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
-          .filter(doc => doc.embargo_stage !== FILE_EMBARGO_STAGE.PUBLIC)
-          .map(doc => doc.object_id);
+          .filter((doc) => doc.embargo_stage !== FILE_EMBARGO_STAGE.PUBLIC)
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
           }),
         );
-        expect(downloadResults.every(result => result === null)).toBe(true);
+        expect(downloadResults.every((result) => result === null)).toBe(true);
       });
       it('does not allow download of files that have controlled access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
-          .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
-          .map(doc => doc.object_id);
+          .filter((doc) => doc.file_access === FILE_ACCESS.CONTROLLED)
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
           }),
         );
-        expect(downloadResults.every(result => result === null)).toBe(true);
+        expect(downloadResults.every((result) => result === null)).toBe(true);
       });
       it('throws the right error for publicly released controlled files', async () => {
         let error = null;
@@ -209,42 +223,42 @@ describe('storage-api/download', () => {
       it('allows downloading publicly released file with open access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
           .filter(
-            doc =>
+            (doc) =>
               doc.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC &&
               doc.file_access === FILE_ACCESS.OPEN,
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
             apiKey: MOCK_API_KEYS.PUBLIC,
           }),
         );
-        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+        expect(downloadResults.every((result) => result === 'ok')).toBe(true);
       });
       it('does not allow download of files that are not publicly released', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
-          .filter(doc => doc.embargo_stage !== FILE_EMBARGO_STAGE.PUBLIC)
-          .map(doc => doc.object_id);
+          .filter((doc) => doc.embargo_stage !== FILE_EMBARGO_STAGE.PUBLIC)
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
             apiKey: MOCK_API_KEYS.PUBLIC,
           }),
         );
-        expect(downloadResults.every(result => result === null)).toBe(true);
+        expect(downloadResults.every((result) => result === null)).toBe(true);
       });
       it('does not allow download of files that have controlled access', async () => {
         const expectedRetrieableIds = Object.values(allIndexedDocuments)
-          .filter(doc => doc.file_access === FILE_ACCESS.CONTROLLED)
-          .map(doc => doc.object_id);
+          .filter((doc) => doc.file_access === FILE_ACCESS.CONTROLLED)
+          .map((doc) => doc.object_id);
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
             apiKey: MOCK_API_KEYS.PUBLIC,
           }),
         );
-        expect(downloadResults.every(result => result === null)).toBe(true);
+        expect(downloadResults.every((result) => result === null)).toBe(true);
       });
       it('throws the right error for publicly released controlled files', async () => {
         let error = null;
@@ -263,14 +277,16 @@ describe('storage-api/download', () => {
 
     describe('for dcc users', () => {
       it('allows downloading everything', async () => {
-        const expectedRetrieableIds = Object.values(allIndexedDocuments).map(doc => doc.object_id);
+        const expectedRetrieableIds = Object.values(allIndexedDocuments).map(
+          (doc) => doc.object_id,
+        );
         const downloadResults = await reduceToList(
           downloadableStream({
             objectIds: expectedRetrieableIds,
             apiKey: MOCK_API_KEYS.DCC,
           }),
         );
-        expect(downloadResults.every(result => result === 'ok')).toBe(true);
+        expect(downloadResults.every((result) => result === 'ok')).toBe(true);
       });
     });
 
@@ -279,7 +295,7 @@ describe('storage-api/download', () => {
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
           .filter(
-            obj =>
+            (obj) =>
               [
                 FILE_EMBARGO_STAGE.FULL_PROGRAMS,
                 FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
@@ -288,7 +304,7 @@ describe('storage-api/download', () => {
               (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM),
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
       it('returns all the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToList(
@@ -297,7 +313,9 @@ describe('storage-api/download', () => {
             objectIds: Object.keys(expectedRetrievableIds),
           }),
         );
-        expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
+        expect(
+          allEntitiesRetrievable.every((response) => response === 'ok'),
+        ).toBe(true);
       });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
@@ -305,11 +323,13 @@ describe('storage-api/download', () => {
           downloadableStream({
             apiKey: MOCK_API_KEYS.FULL_PROGRAM_MEMBER,
             objectIds: Object.keys(allIndexedDocuments).filter(
-              id => !expectedRetrievableIds.includes(id),
+              (id) => !expectedRetrievableIds.includes(id),
             ),
           }),
         );
-        expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
+        expect(
+          allEntitiesRetrievable.every((response) => response === null),
+        ).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
@@ -332,16 +352,17 @@ describe('storage-api/download', () => {
       const getExpectedRetrievableIds = () =>
         Object.values(allIndexedDocuments)
           .filter(
-            obj =>
-              [FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS, FILE_EMBARGO_STAGE.PUBLIC].includes(
-                obj.embargo_stage,
-              ) ||
+            (obj) =>
+              [
+                FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+                FILE_EMBARGO_STAGE.PUBLIC,
+              ].includes(obj.embargo_stage) ||
               (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM) ||
               (obj.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
                 obj.study_id === TEST_PROGRAM),
           )
-          .map(doc => doc.object_id);
+          .map((doc) => doc.object_id);
       it('returns all the file the user can access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
         const allEntitiesRetrievable = await reduceToList(
@@ -350,7 +371,9 @@ describe('storage-api/download', () => {
             objectIds: Object.keys(expectedRetrievableIds),
           }),
         );
-        expect(allEntitiesRetrievable.every(response => response === 'ok')).toBe(true);
+        expect(
+          allEntitiesRetrievable.every((response) => response === 'ok'),
+        ).toBe(true);
       });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
@@ -358,11 +381,13 @@ describe('storage-api/download', () => {
           downloadableStream({
             apiKey: MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER,
             objectIds: Object.keys(allIndexedDocuments).filter(
-              id => !expectedRetrievableIds.includes(id),
+              (id) => !expectedRetrievableIds.includes(id),
             ),
           }),
         );
-        expect(allEntitiesRetrievable.every(response => response === null)).toBe(true);
+        expect(
+          allEntitiesRetrievable.every((response) => response === null),
+        ).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {

@@ -17,12 +17,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import winston, { createLogger, LoggerOptions, transports, format } from 'winston';
+import winston, {
+  createLogger,
+  LoggerOptions,
+  transports,
+  format,
+} from 'winston';
 
 const { combine, timestamp, colorize, prettyPrint, json, printf } = format;
 
 export const loggerConfig = {
-  format: combine(timestamp(), printf(info => `${info.timestamp} ${info.level}: ${info.message}`)),
+  format: combine(
+    timestamp(),
+    printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+  ),
   transports: [
     new transports.Console({
       level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',

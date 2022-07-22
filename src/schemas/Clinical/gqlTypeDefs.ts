@@ -129,7 +129,8 @@ export default gql`
     donorId: String!
   }
 
-  type ClinicalRegistrationError implements ClinicalEntityError @cost(complexity: 5) {
+  type ClinicalRegistrationError implements ClinicalEntityError
+    @cost(complexity: 5) {
     type: String!
     message: String!
     row: Int!
@@ -140,7 +141,8 @@ export default gql`
     specimenId: String
   }
 
-  type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
+  type ClinicalSubmissionDataError implements ClinicalEntityError
+    @cost(complexity: 5) {
     type: String!
     message: String!
     row: Int!
@@ -149,7 +151,8 @@ export default gql`
     donorId: String!
   }
 
-  type ClinicalSubmissionSchemaError implements ClinicalEntityError @cost(complexity: 10) {
+  type ClinicalSubmissionSchemaError implements ClinicalEntityError
+    @cost(complexity: 10) {
     type: String!
     message: String!
     row: Int!
@@ -276,12 +279,18 @@ export default gql`
     """
     Retrieve all stored Clinical Entity and Donor Completion data for a program
     """
-    clinicalData(programShortName: String!, filters: ClinicalInput!): ClinicalData!
+    clinicalData(
+      programShortName: String!
+      filters: ClinicalInput!
+    ): ClinicalData!
 
     """
     Retrieve all stored Clinical Migration Errors for a program
     """
-    clinicalErrors(programShortName: String!, filters: ClinicalInput!): ClinicalData!
+    clinicalErrors(
+      programShortName: String!
+      filters: ClinicalInput!
+    ): ClinicalData!
   }
 
   type Mutation {
@@ -296,15 +305,19 @@ export default gql`
     """
     Remove the Clinical Registration data currently uploaded and not committed
     """
-    clearClinicalRegistration(shortName: String!, registrationId: String!): Boolean!
-      @cost(complexity: 10)
+    clearClinicalRegistration(
+      shortName: String!
+      registrationId: String!
+    ): Boolean! @cost(complexity: 10)
 
     """
     Complete registration of the currently uploaded Clinical Registration data
     On Success, returns a list of the new sample IDs that were committed
     """
-    commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
-      @cost(complexity: 20)
+    commitClinicalRegistration(
+      shortName: String!
+      registrationId: String!
+    ): [String]! @cost(complexity: 20)
 
     """
     Upload Clinical Submission files
@@ -337,19 +350,25 @@ export default gql`
     returning submission data with updated state
     - If there is NO update: merges clinical data to system, returning an empty submission
     """
-    commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
-      @cost(complexity: 30)
+    commitClinicalSubmission(
+      programShortName: String!
+      version: String!
+    ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
     Available for DCC members to reopen a clinical submission
     """
-    reopenClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
-      @cost(complexity: 30)
+    reopenClinicalSubmission(
+      programShortName: String!
+      version: String!
+    ): ClinicalSubmissionData! @cost(complexity: 30)
 
     """
     Available for DCC members to approve a clinical submission
     """
-    approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
-      @cost(complexity: 30)
+    approveClinicalSubmission(
+      programShortName: String!
+      version: String!
+    ): Boolean! @cost(complexity: 30)
   }
 `;

@@ -60,7 +60,11 @@ export default async (esClient: Client) => {
       esClient.indices
         .create({ index: ARRANGER_PROJECTS_INDEX })
         .then(() => logger.info(`created ES index ${ARRANGER_PROJECTS_INDEX}`))
-        .catch(err => logger.warn(`failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`)),
+        .catch((err) =>
+          logger.warn(
+            `failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`,
+          ),
+        ),
       esClient.indices
         .exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
         .then(async ({ body: indexExists = false }) =>
@@ -68,23 +72,29 @@ export default async (esClient: Client) => {
             ? await esClient
                 .update({ ...projectMetadataEsConfig, body: esUpdateBody })
                 .then(() =>
-                  logger.info(`updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`),
+                  logger.info(
+                    `updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`,
+                  ),
                 )
-                .catch(err =>
+                .catch((err) =>
                   logger.warn(
                     `failed to update ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
                   ),
                 )
             : await esClient.indices
                 .create({ index: ARRANGER_PROJECT_METADATA_INDEX })
-                .then(() => logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`))
-                .catch(err =>
+                .then(() =>
+                  logger.info(
+                    `created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`,
+                  ),
+                )
+                .catch((err) =>
                   logger.warn(
                     `failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
                   ),
                 ),
         )
-        .catch(err =>
+        .catch((err) =>
           logger.warn(
             `failed to check if ES index ${ARRANGER_PROJECT_METADATA_INDEX} exists: ${err}`,
           ),
@@ -106,15 +116,19 @@ export default async (esClient: Client) => {
       ]);
     } catch (err) {
       // we'll validate the data and only kill the app if the data doesn't match
-      logger.warn(`failed to index metadata, will now check ES to confirm data: ${err}`);
+      logger.warn(
+        `failed to index metadata, will now check ES to confirm data: ${err}`,
+      );
     }
 
     const [projectManifestInEs, fileCentricArrangerSetting]: [
       typeof projectManifest,
       typeof metadata.projectIndexConfigs.file_centric,
     ] = await Promise.all([
-      esClient.get(projectsEsConfig).then(response => response.body._source),
-      esClient.get(projectMetadataEsConfig).then(response => response.body._source),
+      esClient.get(projectsEsConfig).then((response) => response.body._source),
+      esClient
+        .get(projectMetadataEsConfig)
+        .then((response) => response.body._source),
     ]);
 
     if (
@@ -128,5 +142,6 @@ export default async (esClient: Client) => {
     }
   };
   logger.info('initializing arranger metadata');
-  return retry(initMetadata, { retries: 10 });
+
+  return retry(initMetadata);
 };

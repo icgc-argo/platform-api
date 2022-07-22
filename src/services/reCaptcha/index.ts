@@ -1,24 +1,28 @@
 /*
  * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
  *
- * This program and the accompanying materials are made available under the terms of 
- * the GNU Affero General Public License v3.0. You should have received a copy of the 
+ * This program and the accompanying materials are made available under the terms of
+ * the GNU Affero General Public License v3.0. You should have received a copy of the
  * GNU Affero General Public License along with this program.
  *  If not, see <http://www.gnu.org/licenses/>.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY                           
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES                          
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT                           
- * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,                                
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED                          
- * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;                               
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER                              
- * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN                         
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+ * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 import fetch from 'node-fetch';
-import { USE_VAULT, RECAPTCHA_SECRET_KEY, RECAPTCHA_VAULT_SECRET_PATH } from 'config';
+import {
+  USE_VAULT,
+  RECAPTCHA_SECRET_KEY,
+  RECAPTCHA_VAULT_SECRET_PATH,
+} from 'config';
 import { loadVaultSecret } from 'services/vault';
 import logger from 'utils/logger';
 
@@ -40,10 +44,14 @@ type ReCaptchaVaultSecret = {
   secret_key: string;
 };
 export type ReCaptchaClient = {
-  verifyUserResponse: (response: string) => Promise<ReCaptchaVerificationResult>;
+  verifyUserResponse: (
+    response: string,
+  ) => Promise<ReCaptchaVerificationResult>;
 };
 
-const isReCaptchaSecretData = (data: { [k: string]: unknown }): data is ReCaptchaVaultSecret => {
+const isReCaptchaSecretData = (data: {
+  [k: string]: unknown;
+}): data is ReCaptchaVaultSecret => {
   return typeof data['secret_key'] === 'string';
 };
 
@@ -63,20 +71,23 @@ const getReCaptchaSecret = async () => {
 };
 
 const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
-  logger.debug('in create Recaptcha client')
+  logger.debug('in create Recaptcha client');
   let reCaptchaSecretKey = await getReCaptchaSecret();
-  const verifyUserResponse = async (response: string): Promise<ReCaptchaVerificationResult> =>
+  const verifyUserResponse = async (
+    response: string,
+  ): Promise<ReCaptchaVerificationResult> =>
     fetch(
       `https://www.google.com/recaptcha/api/siteverify?secret=${reCaptchaSecretKey}&response=${response}`,
       {
         method: 'POST',
       },
-    ).then(res => res.json());
+    ).then(res => res.json()) as Promise<ReCaptchaVerificationResult>;
 
   logger.info('verifying reCaptcha secret');
   const testVerificationResponse = await verifyUserResponse('');
   const verificationErrorCodes =
-    testVerificationResponse['error-codes'] || ([] as ReCaptchaVerificationErrorCode[]);
+    testVerificationResponse['error-codes'] ||
+    ([] as ReCaptchaVerificationErrorCode[]);
   if (
     verificationErrorCodes.includes('invalid-input-secret') ||
     verificationErrorCodes.includes('missing-input-secret')
@@ -92,11 +103,12 @@ const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
   };
 };
 
-export const createStubReCaptchaClient = async() => Promise.resolve({
-  verifyUserResponse: (): Promise<ReCaptchaVerificationResult> => {
-    return Promise.resolve({
-      success: true
-    });
-  }
-});
+export const createStubReCaptchaClient = async () =>
+  Promise.resolve({
+    verifyUserResponse: (): Promise<ReCaptchaVerificationResult> => {
+      return Promise.resolve({
+        success: true,
+      });
+    },
+  });
 export default createReCaptchaClient;

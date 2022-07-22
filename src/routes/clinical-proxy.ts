@@ -41,7 +41,10 @@ router.use(
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
       const exclude = req.query.excludeSampleRegistration === 'true';
-      return urlJoin('/dictionary/template/all', `?excludeSampleRegistration=${exclude}`);
+      return urlJoin(
+        '/dictionary/template/all',
+        `?excludeSampleRegistration=${exclude}`,
+      );
     },
     onError: handleError,
     changeOrigin: true,
@@ -50,7 +53,9 @@ router.use(
       if (exclude && exclude !== 'true' && exclude !== 'false') {
         res
           .status(400)
-          .send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
+          .send(
+            `The accepted values of excludeSampleRegistration are 'true' or 'false'.`,
+          );
       }
     },
   }),

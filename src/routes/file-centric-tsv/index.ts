@@ -20,7 +20,10 @@
 import express, { Response, RequestHandler, Request } from 'express';
 import { Client } from '@elastic/elasticsearch';
 import { EgoClient } from 'services/ego';
-import { ARRANGER_FILE_CENTRIC_INDEX, FEATURE_METADATA_ACCESS_CONTROL } from 'config';
+import {
+  ARRANGER_FILE_CENTRIC_INDEX,
+  FEATURE_METADATA_ACCESS_CONTROL,
+} from 'config';
 import { get } from 'lodash';
 import fileSize from 'filesize';
 import logger from 'utils/logger';
@@ -79,14 +82,18 @@ const createDownloadHandler = ({
       throw err;
     }
 
-    const jwtData = req.auth.authenticated ? egoTokenUtils.decodeToken(req.auth.egoJwt) : null;
+    const jwtData = req.auth.authenticated
+      ? egoTokenUtils.decodeToken(req.auth.egoJwt)
+      : null;
 
     let esQuery: object;
     try {
       let requestFilter = filterStr ? JSON.parse(filterStr) : undefined;
       if (FEATURE_METADATA_ACCESS_CONTROL) {
         const authFilter = getAccessControlFilter(jwtData);
-        requestFilter = filterStr ? combineSqonFilters([requestFilter, authFilter]) : authFilter;
+        requestFilter = filterStr
+          ? combineSqonFilters([requestFilter, authFilter])
+          : authFilter;
       }
       esQuery = await convertFilterToEsQuery(requestFilter);
     } catch (err) {
@@ -108,7 +115,9 @@ const createDownloadHandler = ({
           header,
           getter: (source: EsFileDocument) => {
             const getSource = get(source, getter);
-            return specialColumnHeaders.fileSize.includes(header) ? fileSize(getSource) : getSource;
+            return specialColumnHeaders.fileSize.includes(header)
+              ? fileSize(getSource)
+              : getSource;
           },
         }),
       );
@@ -128,7 +137,10 @@ const createDownloadHandler = ({
   };
 };
 
-const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient) => {
+const createFileCentricTsvRouter = async (
+  esClient: Client,
+  egoClient: EgoClient,
+) => {
   /**
    * All this stuff gets initialized once at application start-up
    */
@@ -146,7 +158,8 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
+      defaultFileName: (req) =>
+        `file-table.${format(Date.now(), 'yyyyMMdd')}.tsv`,
     }),
   );
   router.use(
@@ -154,7 +167,8 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
+      defaultFileName: (req) =>
+        `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
       tsvSchema: scoreManifestTsvSchema,
     }),
   );
@@ -164,7 +178,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
     createDownloadHandler({
       esClient,
       convertFilterToEsQuery,
-      defaultFileName: req => 'demo',
+      defaultFileName: (req) => 'demo',
       tsvSchema: demoTsvSchema,
     }),
   );
