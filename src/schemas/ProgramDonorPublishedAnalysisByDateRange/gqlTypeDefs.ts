@@ -66,6 +66,14 @@ export default gql`
     Timestamp of when this donor first had Open Access data published
     """
     openAccessFirstPublishedDate
+    """
+    Timestamp of when this donor first had RNA raw reads data published
+    """
+    rnaRawReadsFirstPublishedDate
+    """
+    Timestamp of when this donor first had RNA alignment data published
+    """
+    rnaAlignmentFirstPublishedDate
   }
 
   type Query {
