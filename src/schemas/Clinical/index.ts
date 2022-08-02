@@ -199,6 +199,7 @@ type EntityDataRecord = { [k: string]: any };
 type ClinicalEntityData = {
   programShortName: string;
   clinicalEntities: ClinicalEntityRecord[];
+  clinicalErrors?: ClinicalErrors;
 };
 
 type ClinicalResponseData = {
@@ -448,10 +449,31 @@ const resolvers = {
       const response: ClinicalResponseData =
         await clinicalService.getClinicalData(args, Authorization);
 
-      return convertClinicalDataToGql({
+      let donorIds: string[] = [];
+
+      const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql({
         programShortName: args.programShortName,
         clinicalEntities: response.clinicalEntities,
       });
+
+      formattedEntityData.clinicalEntities.forEach(
+        (entity: ClinicalEntityRecord) =>
+          entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+            const donor = displayRecord.find(({ name }) => name === 'donor_id');
+            if (donor && donor.value) donorIds.push(donor.value);
+          }),
+      );
+
+      const errorResponse: ClinicalErrors =
+        await clinicalService.getClinicalErrors(
+          args.programShortName,
+          donorIds,
+          Authorization,
+        );
+
+      formattedEntityData.clinicalErrors = errorResponse;
+
+      return formattedEntityData;
     },
     clinicalSubmissions: async (
       obj: unknown,
@@ -663,31 +685,32 @@ const resolvers = {
       return response ? true : false;
     },
   },
-  ClinicalData: {
-    clinicalErrors: async (
-      parent: ClinicalEntityData,
-      args: ClinicalVariables,
-      context: GlobalGqlContext,
-    ) => {
-      const { Authorization } = context;
-      let donorIds: string[] = [];
+  // ClinicalData: {
+  //   clinicalErrors: async (
+  //     parent: ClinicalEntityData,
+  //     args: ClinicalVariables,
+  //     context: GlobalGqlContext,
+  //   ) => {
+  //     const { Authorization } = context;
+  //     let donorIds: string[] = [];
 
-      parent.clinicalEntities.forEach((entity) =>
-        entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
-          const donor = displayRecord.find(({ name }) => name === 'donor_id');
-          if (donor && donor.value) donorIds.push(donor.value);
-        }),
-      );
+  //     parent.clinicalEntities.forEach((entity) =>
+  //       entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+  //         const donor = displayRecord.find(({ name }) => name === 'donor_id');
+  //         if (donor && donor.value) donorIds.push(donor.value);
+  //       }),
+  //     );
 
-      const response = await clinicalService.getClinicalErrors(
-        parent.programShortName,
-        donorIds,
-        Authorization,
-      );
-
-      return response;
-    },
-  },
+  //     const response: ClinicalErrors[] =
+  //       await clinicalService.getClinicalErrors(
+  //         parent.programShortName,
+  //         donorIds,
+  //         Authorization,
+  //       );
+  //     console.log('error response', response);
+  //     return response;
+  //   },
+  // },
 };
 
 export default makeExecutableSchema({
