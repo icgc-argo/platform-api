@@ -685,32 +685,6 @@ const resolvers = {
       return response ? true : false;
     },
   },
-  // ClinicalData: {
-  //   clinicalErrors: async (
-  //     parent: ClinicalEntityData,
-  //     args: ClinicalVariables,
-  //     context: GlobalGqlContext,
-  //   ) => {
-  //     const { Authorization } = context;
-  //     let donorIds: string[] = [];
-
-  //     parent.clinicalEntities.forEach((entity) =>
-  //       entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
-  //         const donor = displayRecord.find(({ name }) => name === 'donor_id');
-  //         if (donor && donor.value) donorIds.push(donor.value);
-  //       }),
-  //     );
-
-  //     const response: ClinicalErrors[] =
-  //       await clinicalService.getClinicalErrors(
-  //         parent.programShortName,
-  //         donorIds,
-  //         Authorization,
-  //       );
-  //     console.log('error response', response);
-  //     return response;
-  //   },
-  // },
 };
 
 export default makeExecutableSchema({
