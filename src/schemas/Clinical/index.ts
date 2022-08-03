@@ -280,12 +280,47 @@ const convertClinicalDataToGql = (
   programShortName: string,
   clinicalEntities: ClinicalEntityRecord[],
   clinicalErrors: ClinicalErrors,
-  errorIds: string[],
+  errorIds: number[],
 ) => {
-  const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map(
+  const clinicalDisplayData = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
+      const { entityName } = entity;
       const records: EntityDisplayRecord[][] = [];
-      entity.records.forEach((record: EntityDataRecord) => {
+
+      // Prioritizes Data w/ Errors Related to Current Entity
+      const getSortVal = (dataRecord: EntityDataRecord) => {
+        let value = 0;
+        if (
+          dataRecord['donor_id'] &&
+          errorIds.includes(dataRecord['donor_id'])
+        ) {
+          const currentError = clinicalErrors.find(
+            (error) => error.donorId === dataRecord['donor_id'],
+          );
+          const isCurrentTab =
+            currentError &&
+            currentError.errors.filter(
+              (error: ClinicalErrorRecord) => error.entityName === entityName,
+            ).length > 0;
+
+          if (isCurrentTab) value = 1;
+        }
+        return value;
+      };
+
+      const sortedRecords = entity.records.sort(
+        (prev: EntityDataRecord, next: EntityDataRecord) => {
+          let sortVal = 0;
+          const prevSortVal = getSortVal(prev);
+          const nextSortVal = getSortVal(next);
+
+          sortVal = sortVal - prevSortVal + nextSortVal;
+
+          return sortVal;
+        },
+      );
+
+      sortedRecords.forEach((record: EntityDataRecord) => {
         const displayRecords: EntityDisplayRecord[] = [];
         for (const [name, value] of Object.entries(record))
           if (name) displayRecords.push({ name, value });
@@ -475,9 +510,9 @@ const resolvers = {
           Authorization,
         );
 
-      const errorIds: any[] = errorResponse.map((error) =>
-        error.donorId ? error.donorId : null,
-      );
+      const errorIds: number[] = errorResponse
+        .map((error) => (error.donorId ? error.donorId : 0))
+        .filter((id) => id);
 
       const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql(
         programShortName,
