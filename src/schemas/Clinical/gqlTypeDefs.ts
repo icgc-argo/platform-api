@@ -219,14 +219,14 @@ export default gql`
   Specific Entity Completion Values
   """
   type CoreCompletionFields {
-    donor: Int!
-    specimens: Int!
-    primaryDiagnosis: Int!
-    followUps: Int!
-    treatments: Int!
-    familyHistory: Int
-    tumourSpecimens: Int
-    normalSpecimens: Int
+    donor: Float!
+    specimens: Float!
+    primaryDiagnosis: Float!
+    followUps: Float!
+    treatments: Float!
+    familyHistory: Float
+    tumourSpecimens: Float
+    normalSpecimens: Float
   }
 
   """

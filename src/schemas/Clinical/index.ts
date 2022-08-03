@@ -271,7 +271,7 @@ type CoreCompletionFields = {
   primaryDiagnosis: number;
   followUps: number;
   treatments: number;
-  familyHistory: number;
+  familyHistory?: number;
   tumourSpecimens?: number;
   normalSpecimens?: number;
 };
@@ -284,12 +284,14 @@ const convertClinicalDataToGql = (
 ) => {
   const clinicalDisplayData = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
-      const { entityName } = entity;
+      const { entityName, completionStats } = entity;
+      const sortyByCompletion = completionStats && completionStats.length > 0;
       const records: EntityDisplayRecord[][] = [];
 
-      // Prioritizes Data w/ Errors Related to Current Entity
-      const getSortVal = (dataRecord: EntityDataRecord) => {
-        let value = 0;
+      const getErrorSortVal = (dataRecord: EntityDataRecord) => {
+        // Prioritizes Data w/ Errors Related to Current Entity
+        let sortValue = 0;
+
         if (
           dataRecord['donor_id'] &&
           errorIds.includes(dataRecord['donor_id'])
@@ -303,18 +305,40 @@ const convertClinicalDataToGql = (
               (error: ClinicalErrorRecord) => error.entityName === entityName,
             ).length > 0;
 
-          if (isCurrentTab) value = 1;
+          if (isCurrentTab) sortValue = 1;
         }
-        return value;
+        return sortValue;
       };
 
+      const getCompletionSortVal = (current: EntityDataRecord) =>
+        (sortyByCompletion &&
+          completionStats.find(
+            (record) =>
+              record.donorId && record.donorId === current['donor_id'],
+          )?.coreCompletionPercentage) ||
+        0;
+
       const sortedRecords = entity.records.sort(
+        // Sort Clinically Incomplete donors to top
         (prev: EntityDataRecord, next: EntityDataRecord) => {
           let sortVal = 0;
-          const prevSortVal = getSortVal(prev);
-          const nextSortVal = getSortVal(next);
+          if (sortyByCompletion) {
+            const completionPrev = getCompletionSortVal(prev);
+            const completionNext = getCompletionSortVal(next);
+            const completionSort =
+              completionPrev === completionNext
+                ? 0
+                : completionPrev > completionNext
+                ? 1
+                : -1;
 
-          sortVal = sortVal - prevSortVal + nextSortVal;
+            sortVal = completionSort;
+          }
+
+          const prevErrorSortVal = getErrorSortVal(prev);
+          const nextErrorSortVal = getErrorSortVal(next);
+
+          sortVal = sortVal - prevErrorSortVal + nextErrorSortVal;
 
           return sortVal;
         },
