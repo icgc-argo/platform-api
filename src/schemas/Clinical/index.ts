@@ -193,20 +193,48 @@ const convertClinicalSubmissionDataToGql = (
   };
 };
 
+// GQL Formatting
 type EntityDisplayRecord = { name: string; value: string };
-type EntityDataRecord = { [k: string]: any };
 
+// Generic Record
+type EntityDataRecord = { [k: string]: any; donor_id?: number };
+
+// FE Query Response Payload
 type ClinicalEntityData = {
   programShortName: string;
   clinicalEntities: ClinicalEntityRecord[];
   clinicalErrors?: ClinicalErrors;
 };
 
+// Response from Sevice
 type ClinicalResponseData = {
-  programShortName: string;
-  clinicalEntities: EntityDataRecord[];
+  clinicalEntities: ClinicalEntityRecord[];
 };
 
+type ClinicalErrors = {
+  donorId: number;
+  submitterDonorId: string;
+  errors: ClinicalErrorRecord[];
+}[];
+
+// Entity Data
+interface ClinicalEntityRecord {
+  entityName: string;
+  totalDocs: number;
+  records: EntityDisplayRecord[][] | EntityDataRecord[];
+  entityFields: string[];
+  completionStats?: CompletionStats[];
+}
+
+type ClinicalErrorRecord = {
+  entityName: string;
+  errorType: string;
+  fieldName: string;
+  index: number;
+  message: string;
+};
+
+// Query Arguments
 type ClinicalVariables = {
   programShortName: string;
   filters: {
@@ -248,32 +276,12 @@ type CoreCompletionFields = {
   normalSpecimens?: number;
 };
 
-interface ClinicalEntityRecord {
-  entityName: string;
-  totalDocs: number;
-  records: EntityDisplayRecord[][] | EntityDataRecord[];
-  entityFields: string[];
-  completionStats?: CompletionStats[];
-}
-
-type ClinicalErrors = {
-  donorId: number;
-  submitterDonorId: string;
-  errors: ClinicalErrorRecord[];
-}[];
-
-type ClinicalErrorRecord = {
-  entityName: string;
-  errorType: string;
-  fieldName: string;
-  index: number;
-  message: string;
-};
-
-const convertClinicalDataToGql = ({
-  programShortName,
-  clinicalEntities,
-}: ClinicalResponseData) => {
+const convertClinicalDataToGql = (
+  programShortName: string,
+  clinicalEntities: ClinicalEntityRecord[],
+  clinicalErrors: ClinicalErrors,
+  errorIds: string[],
+) => {
   const clinicalDisplayData: ClinicalEntityRecord[] = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
       const records: EntityDisplayRecord[][] = [];
@@ -296,6 +304,7 @@ const convertClinicalDataToGql = ({
   const clinicalData = {
     programShortName,
     clinicalEntities: clinicalDisplayData,
+    clinicalErrors,
   };
 
   return clinicalData;
@@ -446,32 +455,36 @@ const resolvers = {
       context: GlobalGqlContext,
     ) => {
       const { Authorization } = context;
-      const response: ClinicalResponseData =
+      const { programShortName } = args;
+      const { clinicalEntities }: ClinicalResponseData =
         await clinicalService.getClinicalData(args, Authorization);
 
-      let donorIds: string[] = [];
-
-      const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql({
-        programShortName: args.programShortName,
-        clinicalEntities: response.clinicalEntities,
-      });
-
-      formattedEntityData.clinicalEntities.forEach(
-        (entity: ClinicalEntityRecord) =>
-          entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
-            const donor = displayRecord.find(({ name }) => name === 'donor_id');
-            if (donor && donor.value) donorIds.push(donor.value);
-          }),
-      );
+      const donorIds = clinicalEntities
+        .map((entity: ClinicalEntityRecord) => {
+          return entity.records.map((record: EntityDataRecord) =>
+            record['donor_id'] ? record['donor_id'] : null,
+          );
+        })
+        .filter((elem) => elem)
+        .flat();
 
       const errorResponse: ClinicalErrors =
         await clinicalService.getClinicalErrors(
-          args.programShortName,
+          programShortName,
           donorIds,
           Authorization,
         );
 
-      formattedEntityData.clinicalErrors = errorResponse;
+      const errorIds: any[] = errorResponse.map((error) =>
+        error.donorId ? error.donorId : null,
+      );
+
+      const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql(
+        programShortName,
+        clinicalEntities,
+        errorResponse,
+        errorIds,
+      );
 
       return formattedEntityData;
     },
