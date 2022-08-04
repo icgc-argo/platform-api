@@ -285,7 +285,6 @@ const convertClinicalDataToGql = (
   const clinicalDisplayData = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
       const { entityName, completionStats } = entity;
-      const sortyByCompletion = completionStats && completionStats.length > 0;
       const records: EntityDisplayRecord[][] = [];
 
       const getErrorSortVal = (dataRecord: EntityDataRecord) => {
@@ -310,34 +309,12 @@ const convertClinicalDataToGql = (
         return sortValue;
       };
 
-      const getCompletionSortVal = (current: EntityDataRecord) =>
-        (sortyByCompletion &&
-          completionStats.find(
-            (record) =>
-              record.donorId && record.donorId === current['donor_id'],
-          )?.coreCompletionPercentage) ||
-        0;
-
       const sortedRecords = entity.records.sort(
-        // Sort Clinically Incomplete donors to top
         (prev: EntityDataRecord, next: EntityDataRecord) => {
           let sortVal = 0;
-          if (sortyByCompletion) {
-            const completionPrev = getCompletionSortVal(prev);
-            const completionNext = getCompletionSortVal(next);
-            const completionSort =
-              completionPrev === completionNext
-                ? 0
-                : completionPrev > completionNext
-                ? 1
-                : -1;
-
-            sortVal = completionSort;
-          }
 
           const prevErrorSortVal = getErrorSortVal(prev);
           const nextErrorSortVal = getErrorSortVal(next);
-
           sortVal = sortVal - prevErrorSortVal + nextErrorSortVal;
 
           return sortVal;
