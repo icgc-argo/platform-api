@@ -284,7 +284,7 @@ const convertClinicalDataToGql = (
 ) => {
   const clinicalDisplayData = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
-      const { entityName, completionStats } = entity;
+      const { entityName } = entity;
       const records: EntityDisplayRecord[][] = [];
 
       const getErrorSortVal = (dataRecord: EntityDataRecord) => {
