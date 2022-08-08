@@ -265,8 +265,9 @@ type ClinicalErrorRecord = {
   entityName: string;
   errorType: string;
   fieldName: string;
-  index: number;
   message: string;
+  index: number;
+  info: { value: string[] };
 };
 
 const convertClinicalDataToGql = ({
@@ -679,11 +680,12 @@ const resolvers = {
         }),
       );
 
-      const response = await clinicalService.getClinicalErrors(
-        parent.programShortName,
-        donorIds,
-        Authorization,
-      );
+      const response: ClinicalErrors[] =
+        await clinicalService.getClinicalErrors(
+          parent.programShortName,
+          donorIds,
+          Authorization,
+        );
 
       return response;
     },
