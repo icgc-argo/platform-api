@@ -252,6 +252,7 @@ export default gql`
 
   type ClinicalErrorInfo {
     value: [String]
+    message: String
   }
 
   type Query {
