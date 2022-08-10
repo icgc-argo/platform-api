@@ -279,49 +279,12 @@ type CoreCompletionFields = {
 const convertClinicalDataToGql = (
   programShortName: string,
   clinicalEntities: ClinicalEntityRecord[],
-  clinicalErrors: ClinicalErrors,
-  errorIds: number[],
 ) => {
   const clinicalDisplayData = clinicalEntities.map(
     (entity: ClinicalEntityRecord) => {
-      const { entityName } = entity;
       const records: EntityDisplayRecord[][] = [];
 
-      const getErrorSortVal = (dataRecord: EntityDataRecord) => {
-        // Prioritizes Data w/ Errors Related to Current Entity
-        let sortValue = 0;
-
-        if (
-          dataRecord['donor_id'] &&
-          errorIds.includes(dataRecord['donor_id'])
-        ) {
-          const currentError = clinicalErrors.find(
-            (error) => error.donorId === dataRecord['donor_id'],
-          );
-          const isCurrentTab =
-            currentError &&
-            currentError.errors.filter(
-              (error: ClinicalErrorRecord) => error.entityName === entityName,
-            ).length > 0;
-
-          if (isCurrentTab) sortValue = 1;
-        }
-        return sortValue;
-      };
-
-      const sortedRecords = entity.records.sort(
-        (prev: EntityDataRecord, next: EntityDataRecord) => {
-          let sortVal = 0;
-
-          const prevErrorSortVal = getErrorSortVal(prev);
-          const nextErrorSortVal = getErrorSortVal(next);
-          sortVal = sortVal - prevErrorSortVal + nextErrorSortVal;
-
-          return sortVal;
-        },
-      );
-
-      sortedRecords.forEach((record: EntityDataRecord) => {
+      entity.records.forEach((record: EntityDataRecord) => {
         const displayRecords: EntityDisplayRecord[] = [];
         for (const [name, value] of Object.entries(record))
           if (name) displayRecords.push({ name, value });
@@ -340,7 +303,6 @@ const convertClinicalDataToGql = (
   const clinicalData = {
     programShortName,
     clinicalEntities: clinicalDisplayData,
-    clinicalErrors,
   };
 
   return clinicalData;
@@ -495,31 +457,9 @@ const resolvers = {
       const { clinicalEntities }: ClinicalResponseData =
         await clinicalService.getClinicalData(args, Authorization);
 
-      const donorIds = clinicalEntities
-        .map((entity: ClinicalEntityRecord) => {
-          return entity.records.map((record: EntityDataRecord) =>
-            record['donor_id'] ? record['donor_id'] : null,
-          );
-        })
-        .filter((elem) => elem)
-        .flat();
-
-      const errorResponse: ClinicalErrors =
-        await clinicalService.getClinicalErrors(
-          programShortName,
-          donorIds,
-          Authorization,
-        );
-
-      const errorIds: number[] = errorResponse
-        .map((error) => (error.donorId ? error.donorId : 0))
-        .filter((id) => id);
-
       const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql(
         programShortName,
         clinicalEntities,
-        errorResponse,
-        errorIds,
       );
 
       return formattedEntityData;
@@ -732,6 +672,33 @@ const resolvers = {
         Authorization,
       );
       return response ? true : false;
+    },
+  },
+  ClinicalData: {
+    clinicalErrors: async (
+      parent: ClinicalEntityData,
+      args: ClinicalVariables,
+      context: GlobalGqlContext,
+    ) => {
+      const { Authorization } = context;
+      const { programShortName } = parent;
+      let donorIds: string[] = [];
+
+      parent.clinicalEntities.forEach((entity) =>
+        entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
+          const donor = displayRecord.find(({ name }) => name === 'donor_id');
+          if (donor && donor.value) donorIds.push(donor.value);
+        }),
+      );
+
+      const errorResponse: ClinicalErrors =
+        await clinicalService.getClinicalErrors(
+          programShortName,
+          donorIds,
+          Authorization,
+        );
+
+      return errorResponse;
     },
   },
 };
