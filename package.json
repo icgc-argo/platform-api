@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "3.34.0",
+  "version": "3.34.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@arranger/server": "^2.18.0",
+    "@arranger/server": "^2.18.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.18.6",
     "@babel/plugin-proposal-optional-chaining": "^7.18.6",
     "@babel/register": "^7.18.6",
