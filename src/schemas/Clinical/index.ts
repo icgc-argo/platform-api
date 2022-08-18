@@ -281,7 +281,7 @@ type ClinicalErrorRecord = {
   fieldName: string;
   message: string;
   index: number;
-  info: { value: string[] };
+  info: { value: string[]; message?: string };
 };
 
 const convertClinicalDataToGql = (
