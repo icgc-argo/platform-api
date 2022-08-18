@@ -174,8 +174,7 @@ const convertClinicalSubmissionDataToGql = (
     updatedBy: submission.updatedBy || null,
     updatedAt: submission.updatedAt ? new Date(submission.updatedAt) : null,
     clinicalEntities: async () => {
-      const clinicalSubmissionTypeList =
-        await clinicalService.getClinicalSubmissionTypesList();
+      const clinicalSubmissionTypeList = await clinicalService.getClinicalSubmissionTypesList();
       const filledClinicalEntities = clinicalSubmissionTypeList.map(
         (clinicalType) => ({
           clinicalType,
@@ -361,18 +360,27 @@ const convertClinicalSubmissionEntityToGql = (
       );
     },
     dataErrors: () =>
-      get(entity, 'dataErrors', [] as typeof entity.dataErrors).map(
-        (error: ErrorData) => convertClinicalSubmissionDataErrorToGql(error),
+      get(
+        entity,
+        'dataErrors',
+        [] as typeof entity.dataErrors,
+      ).map((error: ErrorData) =>
+        convertClinicalSubmissionDataErrorToGql(error),
       ),
     dataWarnings: () =>
-      get(entity, 'dataWarnings', [] as typeof entity.dataWarnings).map(
-        (warning: ErrorData) =>
-          convertClinicalSubmissionDataErrorToGql(warning),
+      get(
+        entity,
+        'dataWarnings',
+        [] as typeof entity.dataWarnings,
+      ).map((warning: ErrorData) =>
+        convertClinicalSubmissionDataErrorToGql(warning),
       ),
     dataUpdates: () =>
-      get(entity, 'dataUpdates', [] as typeof entity.dataUpdates).map(
-        (update) => convertClinicalSubmissionUpdateToGql(update),
-      ),
+      get(
+        entity,
+        'dataUpdates',
+        [] as typeof entity.dataUpdates,
+      ).map((update) => convertClinicalSubmissionUpdateToGql(update)),
     createdAt: entity.createdAt ? new Date(entity.createdAt) : null,
   };
 };
@@ -463,8 +471,12 @@ const resolvers = {
     ) => {
       const { Authorization } = context;
       const { programShortName } = args;
-      const { clinicalEntities }: ClinicalResponseData =
-        await clinicalService.getClinicalData(args, Authorization);
+      const {
+        clinicalEntities,
+      }: ClinicalResponseData = await clinicalService.getClinicalData(
+        args,
+        Authorization,
+      );
 
       const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql(
         programShortName,
@@ -700,12 +712,11 @@ const resolvers = {
         }),
       );
 
-      const errorResponse: ClinicalErrors[] =
-        await clinicalService.getClinicalErrors(
-          programShortName,
-          donorIds,
-          Authorization,
-        );
+      const errorResponse: ClinicalErrors = await clinicalService.getClinicalErrors(
+        programShortName,
+        donorIds,
+        Authorization,
+      );
 
       return errorResponse;
     },
