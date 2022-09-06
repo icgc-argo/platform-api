@@ -245,9 +245,14 @@ export default gql`
     errorType: String
     fieldName: String
     index: Int
-    info: ClinicalRecordField
+    info: ClinicalErrorInfo
     message: String
     entityName: String
+  }
+
+  type ClinicalErrorInfo {
+    value: [String]
+    message: String
   }
 
   type Query {
