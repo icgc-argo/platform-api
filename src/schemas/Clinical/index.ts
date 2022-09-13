@@ -232,7 +232,7 @@ type ClinicalVariables = {
     entityTypes: string[];
     page: number;
     pageSize: number;
-    donorIds: string[];
+    donorIds: number[];
     submitterDonorIds: string[];
     completionState: string;
     sort: string;

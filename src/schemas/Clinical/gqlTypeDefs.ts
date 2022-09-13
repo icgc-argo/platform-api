@@ -178,7 +178,7 @@ export default gql`
     pageSize: Int!
     sort: String
     entityTypes: [String]
-    donorIds: [String]
+    donorIds: [Int]
     submitterDonorIds: [String]
     completionState: String
   }
