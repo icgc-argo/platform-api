@@ -162,6 +162,21 @@ const getClinicalData = async (variables, Authorization) => {
   return response;
 };
 
+const getClinicalSearchResults = async (variables, Authorization) => {
+  const { programShortName, filters } = variables;
+
+  const query = new URLSearchParams(filters).toString();
+
+  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-search-results?${query}`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then((response) => response.json());
+  return response;
+};
+
 const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
   const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-errors?donorIds=${donorIds}`;
   const response = await fetch(url, {
@@ -292,6 +307,7 @@ export default {
   getClinicalSubmissionSystemDisabled,
   getClinicalSubmissionData,
   getClinicalData,
+  getClinicalSearchResults,
   getClinicalErrors,
   uploadClinicalSubmissionData,
   clearClinicalSubmissionData,

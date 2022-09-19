@@ -488,6 +488,27 @@ const resolvers = {
 
       return formattedEntityData;
     },
+    clinicalSearchResults: async (
+      obj: unknown,
+      args: ClinicalVariables,
+      context: GlobalGqlContext,
+    ) => {
+      const { Authorization } = context;
+      const { programShortName } = args;
+      const {
+        clinicalEntities,
+      }: ClinicalResponseData = await clinicalService.getClinicalSearchResults(
+        args,
+        Authorization,
+      );
+
+      const formattedEntityData: ClinicalEntityData = convertClinicalDataToGql(
+        programShortName,
+        clinicalEntities,
+      );
+
+      return formattedEntityData;
+    },
     clinicalSubmissions: async (
       obj: unknown,
       args: { programShortName: string },

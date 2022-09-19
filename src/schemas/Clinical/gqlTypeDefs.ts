@@ -282,6 +282,14 @@ export default gql`
     clinicalSubmissionSystemDisabled: Boolean!
 
     """
+    Retrieve DonorIds + Submitter Donor Ids for given Clinical Entity and Program
+    """
+    clinicalSearchResults(
+      programShortName: String!
+      filters: ClinicalInput!
+    ): ClinicalData!
+
+    """
     Retrieve all stored Clinical Entity and Donor Completion data for a program
     """
     clinicalData(
