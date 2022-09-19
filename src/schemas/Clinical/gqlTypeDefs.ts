@@ -194,6 +194,22 @@ export default gql`
   }
 
   """
+  Clinical Data DonorId Search Query Response
+  """
+  type ClinicalSearchData {
+    programShortName: String!
+    searchResults: [ClinicalSearchResults]!
+  }
+
+  """
+  Clinical Data DonorId Search Result Record
+  """
+  type ClinicalSearchResults {
+    donorId: Int!
+    submitterDonorId: String
+  }
+
+  """
   Submitted Program Clinical Data arranged by Entity type
   """
   type ClinicalDataEntities {
@@ -287,7 +303,7 @@ export default gql`
     clinicalSearchResults(
       programShortName: String!
       filters: ClinicalInput!
-    ): ClinicalData!
+    ): ClinicalSearchData!
 
     """
     Retrieve all stored Clinical Entity and Donor Completion data for a program
