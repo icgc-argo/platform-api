@@ -199,6 +199,7 @@ export default gql`
   type ClinicalSearchData {
     programShortName: String!
     searchResults: [ClinicalSearchResults]!
+    totalResults: Int!
   }
 
   """

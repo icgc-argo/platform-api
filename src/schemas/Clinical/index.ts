@@ -209,6 +209,7 @@ type ClinicalEntityData = {
 type ClinicalSearchData = {
   programShortName: string;
   searchResults: ClinicalEntityRecord[];
+  totalResults: number;
 };
 
 // Response from Sevice
@@ -506,7 +507,7 @@ const resolvers = {
         Authorization,
       );
 
-      return { searchResults, programShortName };
+      return { ...searchResults, programShortName };
     },
     clinicalSubmissions: async (
       obj: unknown,
