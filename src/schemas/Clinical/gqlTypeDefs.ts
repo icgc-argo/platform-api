@@ -194,6 +194,23 @@ export default gql`
   }
 
   """
+  Clinical Data DonorId Search Query Response
+  """
+  type ClinicalSearchData {
+    programShortName: String!
+    searchResults: [ClinicalSearchResults]!
+    totalResults: Int!
+  }
+
+  """
+  Clinical Data DonorId Search Result Record
+  """
+  type ClinicalSearchResults {
+    donorId: Int!
+    submitterDonorId: String
+  }
+
+  """
   Submitted Program Clinical Data arranged by Entity type
   """
   type ClinicalDataEntities {
@@ -280,6 +297,14 @@ export default gql`
     Retrieve current Clinical Submission disabled state for both sample_registration and clinical entity files
     """
     clinicalSubmissionSystemDisabled: Boolean!
+
+    """
+    Retrieve DonorIds + Submitter Donor Ids for given Clinical Entity and Program
+    """
+    clinicalSearchResults(
+      programShortName: String!
+      filters: ClinicalInput!
+    ): ClinicalSearchData!
 
     """
     Retrieve all stored Clinical Entity and Donor Completion data for a program

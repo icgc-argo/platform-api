@@ -102,4 +102,21 @@ router.use(
   }),
 );
 
+router.use(
+  '/program/:programId/clinical-search-results',
+  createProxyMiddleware({
+    target: CLINICAL_SERVICE_ROOT,
+    pathRewrite: (pathName: string, req: Request) => {
+      const programId = req.params.programId;
+      return urlJoin(
+        '/clinical/program/',
+        programId,
+        '/clinical-search-results',
+      );
+    },
+    onError: handleError,
+    changeOrigin: true,
+  }),
+);
+
 export default router;

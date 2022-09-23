@@ -19,6 +19,7 @@
 
 import fetch, { Response } from 'node-fetch';
 import FormData from 'form-data';
+import urlJoin from 'url-join';
 
 import { CLINICAL_SERVICE_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
@@ -152,7 +153,35 @@ const getClinicalData = async (variables, Authorization) => {
 
   const query = new URLSearchParams(filters).toString();
 
-  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-data?${query}`;
+  const url = urlJoin(
+    CLINICAL_SERVICE_ROOT,
+    `/clinical/program/`,
+    programShortName,
+    `/clinical-data?${query}`,
+  );
+
+  const response = await fetch(url, {
+    method: 'get',
+    headers: { Authorization },
+  })
+    .then(restErrorResponseHandler)
+    .then((response) => response.json());
+
+  return response;
+};
+
+const getClinicalSearchResults = async (variables, Authorization) => {
+  const { programShortName, filters } = variables;
+
+  const query = new URLSearchParams(filters).toString();
+
+  const url = urlJoin(
+    CLINICAL_SERVICE_ROOT,
+    `/clinical/program/`,
+    programShortName,
+    `/clinical-search-results?${query}`,
+  );
+
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
@@ -163,7 +192,13 @@ const getClinicalData = async (variables, Authorization) => {
 };
 
 const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
-  const url = `${CLINICAL_SERVICE_ROOT}/clinical/program/${programShortName}/clinical-errors?donorIds=${donorIds}`;
+  const url = urlJoin(
+    CLINICAL_SERVICE_ROOT,
+    `/clinical/program/`,
+    programShortName,
+    `/clinical-errors?donorIds=${donorIds}`,
+  );
+
   const response = await fetch(url, {
     method: 'get',
     headers: { Authorization },
@@ -292,6 +327,7 @@ export default {
   getClinicalSubmissionSystemDisabled,
   getClinicalSubmissionData,
   getClinicalData,
+  getClinicalSearchResults,
   getClinicalErrors,
   uploadClinicalSubmissionData,
   clearClinicalSubmissionData,

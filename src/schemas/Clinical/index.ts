@@ -205,6 +205,13 @@ type ClinicalEntityData = {
   clinicalErrors?: ClinicalErrors;
 };
 
+// FE Search Query Response Payload
+type ClinicalSearchData = {
+  programShortName: string;
+  searchResults: ClinicalEntityRecord[];
+  totalResults: number;
+};
+
 // Response from Sevice
 type ClinicalResponseData = {
   clinicalEntities: ClinicalEntityRecord[];
@@ -487,6 +494,20 @@ const resolvers = {
       );
 
       return formattedEntityData;
+    },
+    clinicalSearchResults: async (
+      obj: unknown,
+      args: ClinicalVariables,
+      context: GlobalGqlContext,
+    ) => {
+      const { Authorization } = context;
+      const { programShortName } = args;
+      const searchResults: ClinicalSearchData = await clinicalService.getClinicalSearchResults(
+        args,
+        Authorization,
+      );
+
+      return { ...searchResults, programShortName };
     },
     clinicalSubmissions: async (
       obj: unknown,
