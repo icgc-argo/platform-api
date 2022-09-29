@@ -119,4 +119,17 @@ router.use(
   }),
 );
 
+router.use(
+  '/program/:programId/clinical-data-tsv',
+  createProxyMiddleware({
+    target: CLINICAL_SERVICE_ROOT,
+    pathRewrite: (pathName: string, req: Request) => {
+      const programId = req.params.programId;
+      return urlJoin('/clinical/program/', programId, '/tsv-export');
+    },
+    onError: handleError,
+    changeOrigin: true,
+  }),
+);
+
 export default router;
