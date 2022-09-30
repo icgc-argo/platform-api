@@ -125,7 +125,13 @@ router.use(
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
       const programId = req.params.programId;
-      return urlJoin('/clinical/program/', programId, '/tsv-export');
+      return urlJoin(
+        '/clinical/program/',
+        programId,
+        '/clinical-tsv',
+        `?donorIds=${req.query.donorIds}`,
+        `&submitterDonorIds=${req.query.submitterDonorIds}`,
+      );
     },
     onError: handleError,
     changeOrigin: true,
