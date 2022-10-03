@@ -132,6 +132,9 @@ router.use(
         `?donorIds=${req.query.donorIds}`,
         `&submitterDonorIds=${req.query.submitterDonorIds}`,
         req.query.entityTypes ? `&entityTypes=${req.query.entityTypes}` : '',
+        req.query.completionState
+          ? `&completionState=${req.query.completionState}`
+          : '',
       );
     },
     onError: handleError,
