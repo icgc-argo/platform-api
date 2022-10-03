@@ -130,7 +130,9 @@ router.use(
         programId,
         '/clinical-tsv',
         `?donorIds=${req.query.donorIds}`,
-        `&submitterDonorIds=${req.query.submitterDonorIds}`,
+        req.query.submitterDonorIds
+          ? `&submitterDonorIds=${req.query.submitterDonorIds}`
+          : '',
         req.query.entityTypes ? `&entityTypes=${req.query.entityTypes}` : '',
         req.query.completionState
           ? `&completionState=${req.query.completionState}`
