@@ -131,7 +131,7 @@ router.use(
         '/clinical-tsv',
         `?donorIds=${req.query.donorIds}`,
         `&submitterDonorIds=${req.query.submitterDonorIds}`,
-        `&entityTypes=${req.query.entityTypes}`,
+        req.query.entityTypes ? `&entityTypes=${req.query.entityTypes}` : '',
       );
     },
     onError: handleError,
