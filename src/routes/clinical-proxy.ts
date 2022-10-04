@@ -125,18 +125,15 @@ router.use(
     target: CLINICAL_SERVICE_ROOT,
     pathRewrite: (pathName: string, req: Request) => {
       const programId = req.params.programId;
+      const queryParams = Object.entries(req.query)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+
       return urlJoin(
         '/clinical/program/',
         programId,
         '/clinical-tsv',
-        `?donorIds=${req.query.donorIds}`,
-        req.query.submitterDonorIds
-          ? `&submitterDonorIds=${req.query.submitterDonorIds}`
-          : '',
-        req.query.entityTypes ? `&entityTypes=${req.query.entityTypes}` : '',
-        req.query.completionState
-          ? `&completionState=${req.query.completionState}`
-          : '',
+        `?${queryParams}`,
       );
     },
     onError: handleError,
