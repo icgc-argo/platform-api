@@ -227,7 +227,7 @@ export default gql`
   type CompletionStats {
     coreCompletion: CoreCompletionFields
     coreCompletionDate: String
-    coreCompletionPercentage: Int
+    coreCompletionPercentage: Float
     overriddenCoreCompletion: [String]
     donorId: Int
   }
