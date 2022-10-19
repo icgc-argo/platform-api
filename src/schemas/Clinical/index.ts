@@ -502,10 +502,10 @@ const resolvers = {
     ) => {
       const { Authorization } = context;
       const { programShortName } = args;
-      const searchResults: ClinicalSearchData = await clinicalService.getClinicalSearchResults(
+      const searchResults: ClinicalSearchData = (await clinicalService.getClinicalSearchResults(
         args,
         Authorization,
-      );
+      )) || { searchResults: [] };
 
       return { ...searchResults, programShortName };
     },

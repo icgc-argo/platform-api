@@ -119,4 +119,26 @@ router.use(
   }),
 );
 
+router.use(
+  '/program/:programId/clinical-data-tsv',
+  createProxyMiddleware({
+    target: CLINICAL_SERVICE_ROOT,
+    pathRewrite: (pathName: string, req: Request) => {
+      const programId = req.params.programId;
+      const queryParams = Object.entries(req.query)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+
+      return urlJoin(
+        '/clinical/program/',
+        programId,
+        '/clinical-tsv',
+        `?${queryParams}`,
+      );
+    },
+    onError: handleError,
+    changeOrigin: true,
+  }),
+);
+
 export default router;

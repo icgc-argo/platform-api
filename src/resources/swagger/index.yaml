@@ -100,6 +100,55 @@ paths:
                 type: object
         '500':
           description: Internal server error
+  '/clinical/program/{programId}/clinical-search-results':
+    parameters:
+      - name: programId
+        description: the short name of the program
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Clinical Proxies
+      security:
+        - bearerAuth: []
+      summary: Query donor IDs and submitter IDs matching a query on clinical service
+      description: 'Query Donor IDs + Submitter IDs matching a filter from clinical service'
+      responses:
+        '200':
+          description: 'Returns donorId[] & submitterDonorId[]'
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error
+  '/clinical/program/{programId}/clinical-data-tsv':
+    parameters:
+      - name: programId
+        description: the short name of the program
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Clinical Proxies
+      security:
+        - bearerAuth: []
+      summary: Download a zip file with tsv files for filtered clinical data in program
+      description: 'Download a zip file with tsv files for filtered clinical data in program'
+      responses:
+        '200':
+          description: 'A zip file with all program submitted data'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '500':
+          description: Internal server error
   '/clinical/template/all':
     get:
       tags:
