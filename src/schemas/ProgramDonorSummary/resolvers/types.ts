@@ -115,6 +115,10 @@ export type ProgramDonorSummaryStats = {
 
   coreCompletion: CoreCompletionStatusCount;
 
+  dnaTNRegisteredStatus: TumorNormalStatusCount;
+
+  dnaTNMatchedPairStatus: TumorNormalStatusCount;
+
   rnaSampleStatus: DataSubmissionStatus;
 
   rnaRawReadStatus: DataSubmissionStatus;
@@ -139,6 +143,12 @@ export type ProgramDonorSummaryStats = {
 type CoreCompletionStatusCount = {
   completed: number;
   incomplete: number;
+  noData: number;
+};
+
+type TumorNormalStatusCount = {
+  tumorAndNormal: number;
+  tumorOrNormal: number;
   noData: number;
 };
 
