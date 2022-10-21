@@ -609,8 +609,10 @@ const programDonorSummaryEntriesAndStatsResolver: (
            ]),
         ),
         filterAggregation('dnaOneOfTNRegistered' as AggregationName).filter(
+          // looking for tumor OR normal
+          // one or the other, not both, not neither
           esb.boolQuery()
-            .should([
+          .mustNot([esb.boolQuery().must([
              esb
                 .rangeQuery()
                 .field(EsDonorDocumentField.registeredNormalSamples)
@@ -619,17 +621,15 @@ const programDonorSummaryEntriesAndStatsResolver: (
                 .rangeQuery()
                 .field(EsDonorDocumentField.registeredTumourSamples)
                 .gte(1),
-            ])
-            .mustNot([
-            esb
+          ]),
+          esb.boolQuery().must([esb
                 .rangeQuery()
                 .field(EsDonorDocumentField.registeredNormalSamples)
-                .gte(1),
+                .lte(0),
               esb
                 .rangeQuery()
                 .field(EsDonorDocumentField.registeredTumourSamples)
-                .gte(1),
-          ]),
+                .lte(0)])])
         ),
         filterAggregation('noDnaTNRegistered' as AggregationName).filter(
           esb.boolQuery()
@@ -1307,8 +1307,8 @@ const programDonorSummaryEntriesAndStatsResolver: (
         },
 
         dnaTNMatchedPairStatus: {
-          tumorAndNormal: result.aggregations.dnaTNMatchedPairsSubmitted.doc_count,
-          tumorOrNormal: result.aggregations.noDnaTNMatchedPairsSubmitted.doc_count,
+          tumorNormalMatchedPair: result.aggregations.dnaTNMatchedPairsSubmitted.doc_count,
+          tumorNormalNoMatchedPair: result.aggregations.noDnaTNMatchedPairsSubmitted.doc_count,
           noData: result.aggregations.noDnaTNMatchedPairsData.doc_count,
         },
 

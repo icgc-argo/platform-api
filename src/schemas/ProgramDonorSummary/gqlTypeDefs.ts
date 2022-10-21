@@ -199,6 +199,12 @@ export default gql`
     noData: Int!
   }
 
+  type TumorNormalMatchedPairStatusCount {
+    tumorNormalMatchedPair: Int!
+    tumorNormalNoMatchedPair: Int!
+    noData: Int!
+  }
+
   """
   Includes status summary of clinical and molecular data processing for the given donor
   """
@@ -415,7 +421,7 @@ export default gql`
     """
     Number of donors that have tumor & normal matched pairs submitted
     """
-    dnaTNMatchedPairStatus: TumorNormalStatusCount!
+    dnaTNMatchedPairStatus: TumorNormalMatchedPairStatusCount!
     """
     Number of donors that have submitted RNA samples
     """
