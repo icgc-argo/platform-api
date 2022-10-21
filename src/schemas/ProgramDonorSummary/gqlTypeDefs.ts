@@ -193,6 +193,18 @@ export default gql`
     noData: Int!
   }
 
+  type TumorNormalStatusCount {
+    tumorAndNormal: Int!
+    tumorOrNormal: Int!
+    noData: Int!
+  }
+
+  type TumorNormalMatchedPairStatusCount {
+    tumorNormalMatchedPair: Int!
+    tumorNormalNoMatchedPair: Int!
+    noData: Int!
+  }
+
   """
   Includes status summary of clinical and molecular data processing for the given donor
   """
@@ -218,6 +230,7 @@ export default gql`
     """
     releaseStatus: DonorMolecularDataReleaseStatus!
     """
+
     """
     submitterDonorId: String!
     """
@@ -400,6 +413,15 @@ export default gql`
     Number of donors that are clinically completed/incomplete/no core fields
     """
     coreCompletion: CoreCompletionStatusCount!
+
+    """
+    Number of donors that have tumor and normal data registered
+    """
+    dnaTNRegisteredStatus: TumorNormalStatusCount!
+    """
+    Number of donors that have tumor & normal matched pairs submitted
+    """
+    dnaTNMatchedPairStatus: TumorNormalMatchedPairStatusCount!
     """
     Number of donors that have submitted RNA samples
     """
