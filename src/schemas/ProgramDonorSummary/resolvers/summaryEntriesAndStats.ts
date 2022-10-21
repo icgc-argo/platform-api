@@ -595,12 +595,86 @@ const programDonorSummaryEntriesAndStatsResolver: (
             .gt(0)
             .lt(1),
         ),
-        // filterAggregation('dnaTNRegistered' as AggregationName)
-        // filterAggregation('dnaOneOfTNRegistered' as AggregationName)
-        // filterAggregation('noDnaTNRegistered' as AggregationName)
-        // filterAggregation('dnaTNMatchedPairsSubmitted' as AggregationName)
-        // filterAggregation('noDnaTNMatchedPairsSubmitted' as AggregationName)
-        // filterAggregation('noDnaTNMatchedPairsData' as AggregationName)
+        filterAggregation('dnaTNRegistered' as AggregationName).filter(
+          esb.boolQuery()
+            .must([
+             esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .gte(1),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .gte(1),
+           ]),
+        ),
+        filterAggregation('dnaOneOfTNRegistered' as AggregationName).filter(
+          esb.boolQuery()
+            .should([
+             esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .gte(1),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .gte(1),
+            ])
+            .mustNot([
+            esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .gte(1),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .gte(1),
+          ]),
+        ),
+        filterAggregation('noDnaTNRegistered' as AggregationName).filter(
+          esb.boolQuery()
+            .must([
+            esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .lte(0),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .lte(0),
+          ]),
+        ),
+        filterAggregation('dnaTNMatchedPairsSubmitted' as AggregationName).filter(
+          esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1)
+        ),
+        filterAggregation('noDnaTNMatchedPairsSubmitted' as AggregationName).filter(
+          esb.boolQuery()
+            .must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0)])
+            .should([
+             esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .gte(1),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .gte(1),
+           ]),
+        ),
+        filterAggregation('noDnaTNMatchedPairsData' as AggregationName).filter(
+          esb.boolQuery()
+            .must([
+              esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredNormalSamples)
+                .lte(0),
+              esb
+                .rangeQuery()
+                .field(EsDonorDocumentField.registeredTumourSamples)
+                .lte(0),
+           ]),
+        ),
         filterAggregation('noCoreCompletion' as AggregationName).filter(
           esb
             .termQuery()
