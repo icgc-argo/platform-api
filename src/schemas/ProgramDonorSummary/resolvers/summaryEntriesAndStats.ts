@@ -517,18 +517,20 @@ const programDonorSummaryEntriesAndStatsResolver: (
       field === EsDonorDocumentField.validWithCurrentDictionary &&
       filter.values.length > 0
     ) {
-      const selection = filter.values[0] === 'VALID' ? true : false;
-
-      queries.push(
-        esb
-          .boolQuery()
-          .must(
-            esb.termsQuery(
-              EsDonorDocumentField.validWithCurrentDictionary,
-              selection,
-            ),
-          ),
-      );
+      for (const value of filter.values) {
+        if (value === 'VALID' || value === 'INVALID') {
+          queries.push(
+            esb
+              .boolQuery()
+              .must(
+                esb.termsQuery(
+                  EsDonorDocumentField.validWithCurrentDictionary,
+                  value === 'VALID' ? true : false,
+                ),
+              ),
+          );
+        }
+      }
     }
   });
 
@@ -1072,10 +1074,10 @@ const programDonorSummaryEntriesAndStatsResolver: (
       lastUpdate?: DateAggregationResult;
     };
   };
-  // ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX
+
   const result: QueryResult = await esClient
     .search({
-      index: 'donor_centric_program_testca_re_129',
+      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
       body: esQuery,
       track_total_hits: true,
     })
