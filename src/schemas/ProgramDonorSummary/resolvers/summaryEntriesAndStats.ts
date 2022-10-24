@@ -1300,13 +1300,13 @@ const programDonorSummaryEntriesAndStatsResolver: (
           noData: result.aggregations.noCoreCompletion.doc_count,
         },
 
-        dnaTNRegisteredStatus: {
+        dnaTNRegisteredStatusCount: {
           tumorAndNormal: result.aggregations.dnaTNRegistered.doc_count,
           tumorOrNormal: result.aggregations.dnaOneOfTNRegistered.doc_count,
           noData: result.aggregations.noDnaTNRegistered.doc_count,
         },
 
-        dnaTNMatchedPairStatus: {
+        dnaTNMatchedPairStatusCount: {
           tumorNormalMatchedPair: result.aggregations.dnaTNMatchedPairsSubmitted.doc_count,
           tumorNormalNoMatchedPair: result.aggregations.noDnaTNMatchedPairsSubmitted.doc_count,
           noData: result.aggregations.noDnaTNMatchedPairsData.doc_count,

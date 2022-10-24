@@ -417,11 +417,11 @@ export default gql`
     """
     Number of donors that have tumor and normal data registered
     """
-    dnaTNRegisteredStatus: TumorNormalStatusCount!
+    dnaTNRegisteredStatusCount: TumorNormalStatusCount!
     """
     Number of donors that have tumor & normal matched pairs submitted
     """
-    dnaTNMatchedPairStatus: TumorNormalMatchedPairStatusCount!
+    dnaTNMatchedPairStatusCount: TumorNormalMatchedPairStatusCount!
     """
     Number of donors that have submitted RNA samples
     """
