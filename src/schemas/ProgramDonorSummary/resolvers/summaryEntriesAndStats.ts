@@ -512,6 +512,26 @@ const programDonorSummaryEntriesAndStatsResolver: (
       const alignmentStatusQuery = esb.boolQuery().should(shouldQueries);
       queries.push(alignmentStatusQuery);
     }
+
+    if (
+      field === EsDonorDocumentField.validWithCurrentDictionary &&
+      filter.values.length > 0
+    ) {
+      for (const value of filter.values) {
+        if (value === 'VALID' || value === 'INVALID') {
+          queries.push(
+            esb
+              .boolQuery()
+              .must(
+                esb.termsQuery(
+                  EsDonorDocumentField.validWithCurrentDictionary,
+                  value === 'VALID' ? true : false,
+                ),
+              ),
+          );
+        }
+      }
+    }
   });
 
   type AggregationName =
