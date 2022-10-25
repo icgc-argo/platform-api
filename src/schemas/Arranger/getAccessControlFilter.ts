@@ -68,12 +68,11 @@ const getAccessControlFilter = (
   const userPrograms: string[] = userJwtData
     ? uniq(egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope))
     : [];
-  const programMembershipAccessLevel: UserProgramMembershipAccessLevel =
-    userJwtData
-      ? egoTokenUtils.getProgramMembershipAccessLevel({
-          permissions: userJwtData.context.scope,
-        })
-      : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
+  const programMembershipAccessLevel: UserProgramMembershipAccessLevel = userJwtData
+    ? egoTokenUtils.getProgramMembershipAccessLevel({
+        permissions: userJwtData.context.scope,
+      })
+    : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
   /* common filters */
   const isFromOtherPrograms = not([
     match(FILE_STUDY_FILTER_FIELD, userPrograms),

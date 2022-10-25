@@ -199,7 +199,7 @@ describe('createEsDocumentStream', () => {
 
   describe('writeTsvStreamToWritableTarget', () => {
     it('must generate a proper tsv', async () => {
-      const stream = (async function* () {
+      const stream = (async function*() {
         for (const entry of testData) {
           yield [entry];
         }

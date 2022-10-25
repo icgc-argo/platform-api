@@ -38,7 +38,7 @@ class UnauthorizedError extends ApolloError {
 }
 
 export const resolveWithProgramAuth = <
-  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>,
+  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>
 >(
   resolver: ResolverType,
   gqlResolverArguments: [
@@ -83,9 +83,10 @@ export const resolveWithProgramAuth = <
 
 const createResolvers = async (
   esClient: Client,
-): Promise<
-  IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>
-> => {
+): Promise<IResolvers<
+  ProgramDonorSummaryStatsGqlResponse,
+  GlobalGqlContext
+>> => {
   return {
     Query: {
       programDonorSummary: (...resolverArguments) =>

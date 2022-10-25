@@ -76,7 +76,7 @@ describe('storage-api/entities/{id}', () => {
     if (stderr.length) {
       throw stderr;
     }
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
       }, 1000);
@@ -92,10 +92,13 @@ describe('storage-api/entities/{id}', () => {
         },
       }),
     );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
-      acc[doc.object_id] = doc;
-      return acc;
-    }, {} as typeof allIndexedDocuments);
+    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
+      (acc, doc) => {
+        acc[doc.object_id] = doc;
+        return acc;
+      },
+      {} as typeof allIndexedDocuments,
+    );
   }, 120000);
 
   afterAll(async () => {
@@ -111,13 +114,9 @@ describe('storage-api/entities/{id}', () => {
       objectId: string;
     }) => {
       const requestPromise = chai.request(app).get(`/entities/${objectId}`);
-      return (
-        apiKey
-          ? requestPromise.set(
-              'authorization',
-              `Bearer ${MOCK_API_KEYS[apiKey]}`,
-            )
-          : requestPromise
+      return (apiKey
+        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+        : requestPromise
       ).then((response) => {
         if (!response.body.id) {
           throw response.error;
@@ -125,7 +124,7 @@ describe('storage-api/entities/{id}', () => {
         return response.body as SongEntity;
       });
     };
-    const retrievableObjectStream = async function* ({
+    const retrievableObjectStream = async function*({
       apiKey,
       objectIds,
     }: {

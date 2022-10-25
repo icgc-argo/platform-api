@@ -81,7 +81,7 @@ const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
       {
         method: 'POST',
       },
-    ).then(res => res.json()) as Promise<ReCaptchaVerificationResult>;
+    ).then((res) => res.json()) as Promise<ReCaptchaVerificationResult>;
 
   logger.info('verifying reCaptcha secret');
   const testVerificationResponse = await verifyUserResponse('');

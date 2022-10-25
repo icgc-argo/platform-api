@@ -261,10 +261,9 @@ export const createJiraClient = async (): Promise<JiraClient> => {
           const errorData = (await response.json()) as ErrorBody;
 
           try {
-            const isAlreadyCustomer =
-              errorData.i18nErrorMessage.parameters.includes(
-                EMAIL_ALREADY_EXISTS_MESSAGE,
-              );
+            const isAlreadyCustomer = errorData.i18nErrorMessage.parameters.includes(
+              EMAIL_ALREADY_EXISTS_MESSAGE,
+            );
             if (isAlreadyCustomer) {
               return await getAccountId(email);
             } else {

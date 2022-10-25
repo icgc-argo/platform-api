@@ -131,13 +131,9 @@ describe('storage-api/download', () => {
       objectId: string;
     }) => {
       const requestPromise = chai.request(app).get(`/download/${objectId}`);
-      return (
-        apiKey
-          ? requestPromise.set(
-              'authorization',
-              `Bearer ${MOCK_API_KEYS[apiKey]}`,
-            )
-          : requestPromise
+      return (apiKey
+        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+        : requestPromise
       ).then((response) => {
         if (response.body !== 'ok') {
           throw response.error;
@@ -145,7 +141,7 @@ describe('storage-api/download', () => {
         return response.body as 'ok';
       });
     };
-    const downloadableStream = async function* ({
+    const downloadableStream = async function*({
       apiKey,
       objectIds,
     }: {

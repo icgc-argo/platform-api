@@ -191,9 +191,8 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     const remainingResponse = await fetch(
       urlJoin(
         EGO_API_KEY_ENDPOINT,
-        `?user_id=${userId}&limit=${
-          totalCount - remainingPageIndex
-        }&offset=${remainingPageIndex}`,
+        `?user_id=${userId}&limit=${totalCount -
+          remainingPageIndex}&offset=${remainingPageIndex}`,
       ),
       {
         headers: { Authorization },
@@ -318,7 +317,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
         accept: 'application/json',
         Authorization: `Basic ${appCredentialBase64}`,
       },
-    }).then(res => res.json() as Promise<APIKeyResp>);
+    }).then((res) => res.json() as Promise<APIKeyResp>);
 
   const toTimestamp = (str: string) =>
     Math.round(new Date(str).getTime() / 1000);
@@ -327,7 +326,9 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
   };
 
-  const isAuthError = (resp: EgoAccessToken | EgoAccessTokenError): resp is EgoAccessTokenError =>
+  const isAuthError = (
+    resp: EgoAccessToken | EgoAccessTokenError,
+  ): resp is EgoAccessTokenError =>
     (resp as EgoAccessTokenError).error !== undefined;
 
   const getApplicationJwt = async (
@@ -345,7 +346,9 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     });
     const authResponse: any = await response.json();
     if (isAuthError(authResponse) && authResponse.error) {
-      throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
+      throw new Error(
+        `Failed to authorize application: ${authResponse.error_description}`,
+      );
     }
     return (authResponse as EgoAccessToken).access_token;
   };

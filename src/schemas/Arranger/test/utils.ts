@@ -79,7 +79,7 @@ const createArrangerApi = async ({
   return graphqlClient;
 };
 
-export const fileDocumentStream = async function* ({
+export const fileDocumentStream = async function*({
   esClient,
   apiKey,
   clientSideFilters,

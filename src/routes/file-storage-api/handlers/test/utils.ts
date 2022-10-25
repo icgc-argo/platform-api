@@ -34,7 +34,7 @@ import _ from 'lodash';
 
 chai.use(chaiHttp);
 
-export const entitiesStream = async function* ({
+export const entitiesStream = async function*({
   app,
   apiKey,
 }: {
@@ -74,7 +74,7 @@ export const reduceToEntityList = (stream: ReturnType<typeof entitiesStream>) =>
     [],
   )(stream);
 
-const esDocumentStream = async function* ({ esClient }: { esClient: Client }) {
+const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
   let currentIndex = 0;
   const pageSize = 1000;
   cycle: while (true) {
@@ -106,8 +106,7 @@ export const getAllIndexedDocuments = (esClient: Client) =>
 export const MOCK_API_KEYS = {
   PUBLIC: 'PUBLIC' as 'PUBLIC',
   FULL_PROGRAM_MEMBER: 'FULL_PROGRAM_MEMBER' as 'FULL_PROGRAM_MEMBER',
-  ASSOCIATE_PROGRAM_MEMBER:
-    'ASSOCIATE_PROGRAM_MEMBER' as 'ASSOCIATE_PROGRAM_MEMBER',
+  ASSOCIATE_PROGRAM_MEMBER: 'ASSOCIATE_PROGRAM_MEMBER' as 'ASSOCIATE_PROGRAM_MEMBER',
   DCC: 'DCC' as 'DCC',
 };
 export type MockApiKey = keyof typeof MOCK_API_KEYS;

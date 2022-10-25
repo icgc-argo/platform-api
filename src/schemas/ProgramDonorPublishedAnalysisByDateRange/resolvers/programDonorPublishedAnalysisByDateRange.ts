@@ -45,107 +45,109 @@ const programDonorPublishedAnalysisByDateRangeResolver: (
     dateRangeTo: string;
     donorFields: DonorFields[];
   }
-> =
-  (esClient) =>
-  async (source, args, context): Promise<ProgramDonorGqlResponse[]> => {
-    const {
+> = (esClient) => async (
+  source,
+  args,
+  context,
+): Promise<ProgramDonorGqlResponse[]> => {
+  const {
+    bucketCount,
+    dateRangeTo,
+    dateRangeFrom,
+    donorFields,
+    programShortName,
+  } = args;
+
+  if (bucketCount < 1) {
+    throw new UserInputError(`bucketCount must be at least 1`, {
       bucketCount,
-      dateRangeTo,
+    });
+  }
+
+  const areDatesValid =
+    validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
+  if (!areDatesValid) {
+    throw new UserInputError(`Dates must be in ISO format`, {
       dateRangeFrom,
-      donorFields,
-      programShortName,
-    } = args;
+      dateRangeTo,
+    });
+  }
 
-    if (bucketCount < 1) {
-      throw new UserInputError(`bucketCount must be at least 1`, {
-        bucketCount,
-      });
-    }
+  const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
+  const isoDateRangeTo = convertStringToISODate(dateRangeTo);
 
-    const areDatesValid =
-      validateISODate(dateRangeFrom) && validateISODate(dateRangeTo);
-    if (!areDatesValid) {
-      throw new UserInputError(`Dates must be in ISO format`, {
+  const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
+  if (daysInRange < 1) {
+    throw new UserInputError(
+      `dateRangeFrom must be a date before dateRangeTo`,
+      {
         dateRangeFrom,
         dateRangeTo,
-      });
-    }
+      },
+    );
+  }
 
-    const isoDateRangeFrom = convertStringToISODate(dateRangeFrom);
-    const isoDateRangeTo = convertStringToISODate(dateRangeTo);
+  if (daysInRange < bucketCount) {
+    throw new UserInputError(
+      `Days in range must be greater than or equal to bucket count`,
+      {
+        bucketCount,
+        dateRangeFrom,
+        dateRangeTo,
+        daysInRange,
+      },
+    );
+  }
 
-    const daysInRange = differenceInDays(isoDateRangeTo, isoDateRangeFrom);
-    if (daysInRange < 1) {
-      throw new UserInputError(
-        `dateRangeFrom must be a date before dateRangeTo`,
-        {
-          dateRangeFrom,
-          dateRangeTo,
-        },
-      );
-    }
+  const bucketDates = [...Array(bucketCount).keys()]
+    .sort((a, b) => b - a)
+    .map((bucketIndex: number) =>
+      subDate(isoDateRangeTo, {
+        days: Math.floor((daysInRange / bucketCount) * bucketIndex),
+      }),
+    )
+    .map((bucketDate: Date) => formatISO(bucketDate));
 
-    if (daysInRange < bucketCount) {
-      throw new UserInputError(
-        `Days in range must be greater than or equal to bucket count`,
-        {
-          bucketCount,
-          dateRangeFrom,
-          dateRangeTo,
-          daysInRange,
-        },
-      );
-    }
-
-    const bucketDates = [...Array(bucketCount).keys()]
-      .sort((a, b) => b - a)
-      .map((bucketIndex: number) =>
-        subDate(isoDateRangeTo, {
-          days: Math.floor((daysInRange / bucketCount) * bucketIndex),
-        }),
-      )
-      .map((bucketDate: Date) => formatISO(bucketDate));
-
-    const esQuery = esb
-      .requestBodySearch()
-      .size(0)
-      .query(
+  const esQuery = esb
+    .requestBodySearch()
+    .size(0)
+    .query(
+      esb
+        .boolQuery()
+        .filter(esb.termQuery('programId', programShortName))
+        .should(
+          donorFields.map((donorField: DonorFields) =>
+            esb.existsQuery(donorField),
+          ),
+        )
+        .minimumShouldMatch(1),
+    )
+    .aggs(
+      donorFields.map((donorField: DonorFields) =>
         esb
-          .boolQuery()
-          .filter(esb.termQuery('programId', programShortName))
-          .should(
-            donorFields.map((donorField: DonorFields) =>
-              esb.existsQuery(donorField),
-            ),
-          )
-          .minimumShouldMatch(1),
-      )
-      .aggs(
-        donorFields.map((donorField: DonorFields) =>
-          esb
-            .dateRangeAggregation(donorField, donorField)
-            .format(ELASTICSEARCH_DATE_TIME_FORMAT)
-            .ranges(bucketDates.map((bucketDate) => ({ to: bucketDate }))),
-        ),
-      );
+          .dateRangeAggregation(donorField, donorField)
+          .format(ELASTICSEARCH_DATE_TIME_FORMAT)
+          .ranges(bucketDates.map((bucketDate) => ({ to: bucketDate }))),
+      ),
+    );
 
-    const esAggs: EsAggs = await esClient
-      .search({
-        body: esQuery,
-        index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
-      })
-      .then((res) => res.body.aggregations)
-      .catch((err) => {
-        throw new ApolloError(err);
-      });
+  const esAggs: EsAggs = await esClient
+    .search({
+      body: esQuery,
+      index: ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX,
+    })
+    .then((res) => res.body.aggregations)
+    .catch((err) => {
+      throw new ApolloError(err);
+    });
 
-    return Object.keys(esAggs).map((key: DonorFields) => ({
-      title: key,
-      buckets: esAggs[key].buckets.map((bucket) => ({
-        date: bucket.to_as_string,
-        donors: bucket.doc_count,
-      })),
-    }));
-  };
+  return Object.keys(esAggs).map((key: DonorFields) => ({
+    title: key,
+    buckets: esAggs[key].buckets.map((bucket) => ({
+      date: bucket.to_as_string,
+      donors: bucket.doc_count,
+    })),
+  }));
+};
 
 export default programDonorPublishedAnalysisByDateRangeResolver;

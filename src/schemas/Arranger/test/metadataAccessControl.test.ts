@@ -92,15 +92,18 @@ describe('Arranger metadata access control', () => {
       throw stderr;
     }
     console.log('embargoStageEsInit stdout: ', stdout);
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
       }, 30000);
     });
-    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
-      acc[doc.object_id] = doc;
-      return acc;
-    }, {} as typeof allIndexedDocuments);
+    allIndexedDocuments = (await getAllIndexedDocuments(esClient)).reduce(
+      (acc, doc) => {
+        acc[doc.object_id] = doc;
+        return acc;
+      },
+      {} as typeof allIndexedDocuments,
+    );
   });
   afterAll(async () => {
     await esContainer.stop();
@@ -179,9 +182,9 @@ describe('Arranger metadata access control', () => {
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           doc.meta.study_id === TEST_PROGRAM,
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );
@@ -217,9 +220,9 @@ describe('Arranger metadata access control', () => {
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );
@@ -304,9 +307,9 @@ describe('Arranger metadata access control', () => {
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );
@@ -347,9 +350,9 @@ describe('Arranger metadata access control', () => {
           doc.meta.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some((scope) => scope.includes(doc.meta.study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );

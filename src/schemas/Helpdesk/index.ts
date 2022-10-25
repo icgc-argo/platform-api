@@ -64,35 +64,35 @@ const REQUEST_TYPE_MAPPER: CategoryMapper = {
   OTHER: '91',
 };
 
-const resolveWithReCaptcha =
-  (
-    resolverFn: GraphQLFieldResolver<unknown, unknown>,
-    reCaptchaClient: ReCaptchaClient,
-  ) =>
-  async (
-    ...resolverArgs: [
-      unknown,
-      { reCaptchaResponse: string },
-      GlobalGqlContext,
-      GraphQLResolveInfo,
-    ]
-  ) => {
-    const { reCaptchaResponse } = resolverArgs[1];
-    const { success, 'error-codes': errorCodes } =
-      await reCaptchaClient.verifyUserResponse(reCaptchaResponse);
-    if (success) {
-      return resolverFn(...resolverArgs);
+const resolveWithReCaptcha = (
+  resolverFn: GraphQLFieldResolver<unknown, unknown>,
+  reCaptchaClient: ReCaptchaClient,
+) => async (
+  ...resolverArgs: [
+    unknown,
+    { reCaptchaResponse: string },
+    GlobalGqlContext,
+    GraphQLResolveInfo,
+  ]
+) => {
+  const { reCaptchaResponse } = resolverArgs[1];
+  const {
+    success,
+    'error-codes': errorCodes,
+  } = await reCaptchaClient.verifyUserResponse(reCaptchaResponse);
+  if (success) {
+    return resolverFn(...resolverArgs);
+  } else {
+    if (
+      errorCodes?.includes('invalid-input-response') ||
+      errorCodes?.includes('missing-input-response')
+    ) {
+      throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
     } else {
-      if (
-        errorCodes?.includes('invalid-input-response') ||
-        errorCodes?.includes('missing-input-response')
-      ) {
-        throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
-      } else {
-        throw new ApolloError(`failed to verify reCaptcha response`);
-      }
+      throw new ApolloError(`failed to verify reCaptcha response`);
     }
-  };
+  }
+};
 
 const createResolvers = (
   jiraClient: JiraClient,
@@ -109,8 +109,7 @@ const createResolvers = (
     }
   > = async (obj, args, context) => {
     const { messageCategory, emailAddress, requestText, displayName } = args;
-    const messageCategoryKey =
-      messageCategory as keyof typeof JiraTicketCategory;
+    const messageCategoryKey = messageCategory as keyof typeof JiraTicketCategory;
     const serviceRequestResponse = await jiraClient.createServiceRequest(
       emailAddress,
       REQUEST_TYPE_MAPPER[messageCategoryKey],

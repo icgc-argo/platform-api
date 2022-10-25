@@ -76,7 +76,7 @@ describe('storage-api/entities', () => {
     if (stderr.length) {
       throw stderr;
     }
-    await new Promise<void>(resolve => {
+    await new Promise<void>((resolve) => {
       setTimeout(() => {
         resolve();
       }, 1000);
@@ -92,10 +92,13 @@ describe('storage-api/entities', () => {
         },
       }),
     );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
-      acc[doc.object_id] = doc;
-      return acc;
-    }, {} as typeof allIndexedDocuments);
+    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
+      (acc, doc) => {
+        acc[doc.object_id] = doc;
+        return acc;
+      },
+      {} as typeof allIndexedDocuments,
+    );
   }, 120000);
 
   afterAll(async () => {
@@ -171,9 +174,9 @@ describe('storage-api/entities', () => {
           embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some((scope) => scope.includes(study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );
@@ -208,9 +211,9 @@ describe('storage-api/entities', () => {
           embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
           userScopes.some((scope) => scope.includes(study_id)),
       ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => validators.some((validate) => validate(doc)),
-      );
+      const allDocumentsThatQualify = Object.values(
+        allIndexedDocuments,
+      ).filter((doc) => validators.some((validate) => validate(doc)));
       expect(equivalentIndexedDocuments.length).toBe(
         allDocumentsThatQualify.length,
       );

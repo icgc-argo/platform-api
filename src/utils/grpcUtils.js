@@ -45,14 +45,16 @@ export const getAuthMeta = (jwt) => {
   return meta;
 };
 
-export const defaultPromiseCallback =
-  (resolve, reject, serviceName) => (err, response) => {
-    if (err) {
-      logger.error(`GRPC error - ${serviceName}: ${err}`);
-      reject(err);
-    }
-    resolve(response);
-  };
+export const defaultPromiseCallback = (resolve, reject, serviceName) => (
+  err,
+  response,
+) => {
+  if (err) {
+    logger.error(`GRPC error - ${serviceName}: ${err}`);
+    reject(err);
+  }
+  resolve(response);
+};
 
 export const getGrpcMethodsNames = (grpcService) =>
   Object.getOwnPropertyNames(grpcService.__proto__).filter(
@@ -80,26 +82,29 @@ export const withRetries = (
     }),
     {},
   );
-  const methodWithRetry =
-    (methodName, originalMethod) => (payload, metadata, cb) => {
-      const operation = retry.operation(retryConfig);
-      operation.attempt((currentAttempt) => {
-        originalMethod(payload, metadata, (err, response) => {
-          if (
-            err &&
-            err.code === STREAM_REMOVED_CODE &&
-            err.details === STREAM_REMOVED_DETAILS &&
-            operation.retry(err)
-          ) {
-            logger.warn(
-              `grpc method ${methodName} failed with errorCode ${err.code}. Full error: ${err}. Retrying after ${currentAttempt} attempt(s).`,
-            );
-            return;
-          }
-          cb(err, response);
-        });
+  const methodWithRetry = (methodName, originalMethod) => (
+    payload,
+    metadata,
+    cb,
+  ) => {
+    const operation = retry.operation(retryConfig);
+    operation.attempt((currentAttempt) => {
+      originalMethod(payload, metadata, (err, response) => {
+        if (
+          err &&
+          err.code === STREAM_REMOVED_CODE &&
+          err.details === STREAM_REMOVED_DETAILS &&
+          operation.retry(err)
+        ) {
+          logger.warn(
+            `grpc method ${methodName} failed with errorCode ${err.code}. Full error: ${err}. Retrying after ${currentAttempt} attempt(s).`,
+          );
+          return;
+        }
+        cb(err, response);
       });
-    };
+    });
+  };
   return new Proxy(grpcClient, {
     get: (client, methodName) => {
       const originalValue = client[methodName];

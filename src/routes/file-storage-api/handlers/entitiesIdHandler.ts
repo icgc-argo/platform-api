@@ -50,7 +50,10 @@ const createEntitiesIdHandler = ({
       res.status(200).send(toSongEntity(file as EsFileCentricDocument));
     } else {
       // token is valid but permissions are not sufficient
-      res.status(403).send('Not authorized to access the requested data').end();
+      res
+        .status(403)
+        .send('Not authorized to access the requested data')
+        .end();
     }
   };
 };

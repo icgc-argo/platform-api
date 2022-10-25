@@ -130,10 +130,11 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
     res: Response<EntitiesPageResponseBody>,
   ) => {
     const serializedUserScopes = req.auth.serializedScopes;
-    const programMembershipAccessLevel =
-      egoTokenUtils.getProgramMembershipAccessLevel({
+    const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel(
+      {
         permissions: serializedUserScopes,
-      });
+      },
+    );
 
     const parsedRequestQuery = {
       page: Number(req.query.page || 0),
@@ -201,11 +202,12 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           ]),
       );
 
-    const esSearchResponse: { body: EsHits<EsFileCentricDocument> } =
-      await esClient.search({
-        index: ARRANGER_FILE_CENTRIC_INDEX,
-        body: query,
-      });
+    const esSearchResponse: {
+      body: EsHits<EsFileCentricDocument>;
+    } = await esClient.search({
+      index: ARRANGER_FILE_CENTRIC_INDEX,
+      body: query,
+    });
 
     const data: Partial<SongEntity>[] = esSearchResponse.body.hits.hits
       .map(({ _source }) => _source)

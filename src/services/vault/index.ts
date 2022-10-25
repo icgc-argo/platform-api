@@ -52,11 +52,11 @@ export const createVaultClient = memoize(
   },
 );
 
-export const loadVaultSecret =
-  (vaultClient: ReturnType<typeof createVaultClient> = createVaultClient()) =>
-  async (path: string) => {
-    const result = await (await vaultClient).read(path);
-    const secretData = result.data as { [k: string]: any };
-    logger.info(`Loaded Vault secret at ${path}: ${Object.keys(secretData)}`);
-    return secretData;
-  };
+export const loadVaultSecret = (
+  vaultClient: ReturnType<typeof createVaultClient> = createVaultClient(),
+) => async (path: string) => {
+  const result = await (await vaultClient).read(path);
+  const secretData = result.data as { [k: string]: any };
+  logger.info(`Loaded Vault secret at ${path}: ${Object.keys(secretData)}`);
+  return secretData;
+};

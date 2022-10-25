@@ -64,12 +64,10 @@ const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
       return;
     }
 
-    res
-      .status(200)
-      .json({
-        message: 'Initiated sync for donor submission aggregation index.',
-        programId,
-      });
+    res.status(200).json({
+      message: 'Initiated sync for donor submission aggregation index.',
+      programId,
+    });
     return;
   });
 
