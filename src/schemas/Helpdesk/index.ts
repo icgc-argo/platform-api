@@ -64,40 +64,30 @@ const REQUEST_TYPE_MAPPER: CategoryMapper = {
   OTHER: '91',
 };
 
-const resolveWithReCaptcha = (
-  resolverFn: GraphQLFieldResolver<unknown, unknown>,
-  reCaptchaClient: ReCaptchaClient,
-) => async (
-  ...resolverArgs: [
-    unknown,
-    { reCaptchaResponse: string },
-    GlobalGqlContext,
-    GraphQLResolveInfo,
-  ]
-) => {
-  const { reCaptchaResponse } = resolverArgs[1];
-  const {
-    success,
-    'error-codes': errorCodes,
-  } = await reCaptchaClient.verifyUserResponse(reCaptchaResponse);
-  if (success) {
-    return resolverFn(...resolverArgs);
-  } else {
-    if (
-      errorCodes?.includes('invalid-input-response') ||
-      errorCodes?.includes('missing-input-response')
-    ) {
-      throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
+const resolveWithReCaptcha =
+  (resolverFn: GraphQLFieldResolver<unknown, unknown>, reCaptchaClient: ReCaptchaClient) =>
+  async (
+    ...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]
+  ) => {
+    const { reCaptchaResponse } = resolverArgs[1];
+    const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(
+      reCaptchaResponse,
+    );
+    if (success) {
+      return resolverFn(...resolverArgs);
     } else {
-      throw new ApolloError(`failed to verify reCaptcha response`);
+      if (
+        errorCodes?.includes('invalid-input-response') ||
+        errorCodes?.includes('missing-input-response')
+      ) {
+        throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
+      } else {
+        throw new ApolloError(`failed to verify reCaptcha response`);
+      }
     }
-  }
-};
+  };
 
-const createResolvers = (
-  jiraClient: JiraClient,
-  reCaptchaClient: ReCaptchaClient,
-) => {
+const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClient) => {
   const jiraTicketCreationResolver: GraphQLFieldResolver<
     unknown,
     GlobalGqlContext,

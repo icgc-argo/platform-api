@@ -17,10 +17,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  hasSufficientDacoAccess,
-  hasSufficientProgramMembershipAccess,
-} from './accessValidations';
+import { hasSufficientDacoAccess, hasSufficientProgramMembershipAccess } from './accessValidations';
 import {
   EsFileCentricDocument,
   FILE_ACCESS,

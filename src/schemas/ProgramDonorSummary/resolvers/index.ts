@@ -23,10 +23,7 @@ import programDonorSummaryEntriesAndStatsResolver from './summaryEntriesAndStats
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
-import {
-  BaseQueryArguments,
-  ProgramDonorSummaryStatsGqlResponse,
-} from './types';
+import { BaseQueryArguments, ProgramDonorSummaryStatsGqlResponse } from './types';
 import { Client } from '@elastic/elasticsearch';
 class UnauthorizedError extends ApolloError {
   constructor(message: string) {
@@ -38,24 +35,14 @@ class UnauthorizedError extends ApolloError {
 }
 
 export const resolveWithProgramAuth = <
-  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>
+  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>,
 >(
   resolver: ResolverType,
-  gqlResolverArguments: [
-    unknown,
-    BaseQueryArguments,
-    GlobalGqlContext,
-    unknown,
-  ],
+  gqlResolverArguments: [unknown, BaseQueryArguments, GlobalGqlContext, unknown],
 ): ResolverType => {
   const [_, args, context] = gqlResolverArguments;
   const { egoToken } = context;
-  const {
-    getPermissionsFromToken,
-    isValidJwt,
-    canReadProgramData,
-    canReadProgram,
-  } = egoTokenUtils;
+  const { getPermissionsFromToken, isValidJwt, canReadProgramData, canReadProgram } = egoTokenUtils;
 
   if (egoToken) {
     const permissions = getPermissionsFromToken(egoToken);
@@ -83,17 +70,12 @@ export const resolveWithProgramAuth = <
 
 const createResolvers = async (
   esClient: Client,
-): Promise<IResolvers<
-  ProgramDonorSummaryStatsGqlResponse,
-  GlobalGqlContext
->> => {
+): Promise<IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>> => {
   return {
     Query: {
       programDonorSummary: (...resolverArguments) =>
         resolveWithProgramAuth(
-          programDonorSummaryEntriesAndStatsResolver(esClient)(
-            ...resolverArguments,
-          ),
+          programDonorSummaryEntriesAndStatsResolver(esClient)(...resolverArguments),
           resolverArguments,
         ),
     },

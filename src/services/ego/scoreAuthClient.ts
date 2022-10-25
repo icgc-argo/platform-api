@@ -23,14 +23,10 @@ export const createScoreAuthClient = async (egoClient: EgoClient) => {
   const vaultSecretLoader = await loadVaultSecret();
 
   const scoreProxyAppCredentials = USE_VAULT
-    ? ((await vaultSecretLoader(EGO_VAULT_SCORE_PROXY_SECRET_PATH).catch(
-        (err: any) => {
-          logger.error(
-            `could not read Vault secret at path ${EGO_VAULT_SCORE_PROXY_SECRET_PATH}`,
-          );
-          throw err; //fail fast
-        },
-      )) as EgoApplicationCredential)
+    ? ((await vaultSecretLoader(EGO_VAULT_SCORE_PROXY_SECRET_PATH).catch((err: any) => {
+        logger.error(`could not read Vault secret at path ${EGO_VAULT_SCORE_PROXY_SECRET_PATH}`);
+        throw err; //fail fast
+      })) as EgoApplicationCredential)
     : ({
         clientId: EGO_SCORE_PROXY_CLIENT_ID,
         clientSecret: EGO_SCORE_PROXY_CLIENT_SECRET,
@@ -44,9 +40,7 @@ export const createScoreAuthClient = async (egoClient: EgoClient) => {
     if (latestJwt && egoTokenUtils.isValidJwt(latestJwt)) {
       return latestJwt;
     }
-    logger.debug(
-      `Score Proxy JWT is no longer valid, fetching new token from ego...`,
-    );
+    logger.debug(`Score Proxy JWT is no longer valid, fetching new token from ego...`);
     return await egoClient.getApplicationJwt(scoreProxyAppCredentials);
   };
 

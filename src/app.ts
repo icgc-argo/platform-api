@@ -77,15 +77,11 @@ const init = async () => {
   const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
     ? ((await Promise.all([
         vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
-          logger.error(
-            `could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`,
-          );
+          logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
           throw err; //fail fast
         }),
         vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
-          logger.error(
-            `could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`,
-          );
+          logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
           throw err; //fail fastw
         }),
       ])) as [EgoApplicationCredential, EsSecret])
@@ -116,9 +112,7 @@ const init = async () => {
     ProgramDashboardSummarySchema(esClient),
     ProgramDonorPublishedAnalysisByDateRangeSchema(esClient),
     createHelpdeskSchema(),
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED
-      ? [getArrangerGqlSchema(esClient)]
-      : []),
+    ...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
   ]);
 
   const server = new ArgoApolloServer({
@@ -126,11 +120,7 @@ const init = async () => {
     schema: mergeSchemas({
       schemas,
     }),
-    context: ({
-      req,
-    }: {
-      req: Request;
-    }): GlobalGqlContext & ArrangerGqlContext => {
+    context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
       const authHeader = req.headers.authorization;
       let userJwtData: EgoJwtData | null = null;
       try {
@@ -144,8 +134,7 @@ const init = async () => {
       return {
         isUserRequest: true,
         egoToken: (authHeader || '').split('Bearer ').join(''),
-        Authorization:
-          `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
+        Authorization: `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
         dataLoaders: {},
         userJwtData,
         es: esClient, // for arranger only
@@ -178,10 +167,7 @@ const init = async () => {
   // Routers
   app.use('/kafka', createKafkaRouter(egoClient));
   app.use('/clinical', clinicalProxyRoute);
-  app.use(
-    '/file-centric-tsv',
-    await createFileCentricTsvRoute(esClient, egoClient),
-  );
+  app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
   app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
   if (FEATURE_STORAGE_API_ENABLED) {
@@ -200,12 +186,8 @@ const init = async () => {
 
   app.listen(PORT, () => {
     // @ts-ignore ApolloServer type is missing graphqlPath for some reason
-    logger.info(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`,
-    );
-    logger.info(
-      `🚀 Rest API doc available at http://localhost:${PORT}/api-docs`,
-    );
+    logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+    logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
   });
 };
 

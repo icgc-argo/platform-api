@@ -4,16 +4,13 @@ import yaml from 'yamljs';
 import path from 'path';
 import { FEATURE_STORAGE_API_ENABLED } from 'config';
 
-const DONOR_AGGREGATOR_API_PATH =
-  '../resources/swagger/donor-aggregator-api.yaml';
+const DONOR_AGGREGATOR_API_PATH = '../resources/swagger/donor-aggregator-api.yaml';
 const FILE_STORAGE_API_PATH = '../resources/swagger/file-storage-api.yaml';
 
 export default () => {
   const router = express.Router();
 
-  const mainDoc = yaml.load(
-    path.join(__dirname, '../resources/swagger/index.yaml'),
-  );
+  const mainDoc = yaml.load(path.join(__dirname, '../resources/swagger/index.yaml'));
 
   // List of partial swagger YAML files to include in docs
   const partialDocPaths = [DONOR_AGGREGATOR_API_PATH];
@@ -41,8 +38,8 @@ export default () => {
   );
 
   // Sort the tag orders alphabetically
-  mergedDoc.tags = mergedDoc.tags.sort(
-    (a: { name: string }, b: { name: string }) => (a.name > b.name ? 1 : -1),
+  mergedDoc.tags = mergedDoc.tags.sort((a: { name: string }, b: { name: string }) =>
+    a.name > b.name ? 1 : -1,
   );
 
   router.use('/', swaggerUi.serve, swaggerUi.setup(mergedDoc));

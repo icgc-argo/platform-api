@@ -61,9 +61,7 @@ export default async (esClient: Client) => {
         .create({ index: ARRANGER_PROJECTS_INDEX })
         .then(() => logger.info(`created ES index ${ARRANGER_PROJECTS_INDEX}`))
         .catch((err) =>
-          logger.warn(
-            `failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`,
-          ),
+          logger.warn(`failed to create ES index ${ARRANGER_PROJECTS_INDEX}: ${err}`),
         ),
       esClient.indices
         .exists({ index: ARRANGER_PROJECT_METADATA_INDEX })
@@ -72,9 +70,7 @@ export default async (esClient: Client) => {
             ? await esClient
                 .update({ ...projectMetadataEsConfig, body: esUpdateBody })
                 .then(() =>
-                  logger.info(
-                    `updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`,
-                  ),
+                  logger.info(`updated ES index settings ${ARRANGER_PROJECT_METADATA_INDEX}`),
                 )
                 .catch((err) =>
                   logger.warn(
@@ -83,11 +79,7 @@ export default async (esClient: Client) => {
                 )
             : await esClient.indices
                 .create({ index: ARRANGER_PROJECT_METADATA_INDEX })
-                .then(() =>
-                  logger.info(
-                    `created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`,
-                  ),
-                )
+                .then(() => logger.info(`created ES index ${ARRANGER_PROJECT_METADATA_INDEX}`))
                 .catch((err) =>
                   logger.warn(
                     `failed to create ES index ${ARRANGER_PROJECT_METADATA_INDEX}: ${err}`,
@@ -116,9 +108,7 @@ export default async (esClient: Client) => {
       ]);
     } catch (err) {
       // we'll validate the data and only kill the app if the data doesn't match
-      logger.warn(
-        `failed to index metadata, will now check ES to confirm data: ${err}`,
-      );
+      logger.warn(`failed to index metadata, will now check ES to confirm data: ${err}`);
     }
 
     const [projectManifestInEs, fileCentricArrangerSetting]: [
@@ -126,9 +116,7 @@ export default async (esClient: Client) => {
       typeof metadata.projectIndexConfigs.file_centric,
     ] = await Promise.all([
       esClient.get(projectsEsConfig).then((response) => response.body._source),
-      esClient
-        .get(projectMetadataEsConfig)
-        .then((response) => response.body._source),
+      esClient.get(projectMetadataEsConfig).then((response) => response.body._source),
     ]);
 
     if (

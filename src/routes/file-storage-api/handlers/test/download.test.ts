@@ -87,9 +87,7 @@ describe('storage-api/download', () => {
     esClient = await createEsClient({
       node: esHost,
     });
-    const { stdout, stderr } = await asyncExec(
-      `ES_HOST=${esHost} npm run embargoStageEsInit`,
-    );
+    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
     if (stderr.length) {
       throw stderr;
     }
@@ -109,13 +107,10 @@ describe('storage-api/download', () => {
         },
       }),
     );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce(
-      (acc, doc) => {
-        acc[doc.object_id] = doc;
-        return acc;
-      },
-      {} as typeof allIndexedDocuments,
-    );
+    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+      acc[doc.object_id] = doc;
+      return acc;
+    }, {} as typeof allIndexedDocuments);
   }, 180000);
 
   afterAll(async () => {
@@ -123,17 +118,12 @@ describe('storage-api/download', () => {
   }, 120000);
 
   describe('/download endpoint', () => {
-    const fetchDownload = ({
-      apiKey,
-      objectId,
-    }: {
-      apiKey?: MockApiKey;
-      objectId: string;
-    }) => {
+    const fetchDownload = ({ apiKey, objectId }: { apiKey?: MockApiKey; objectId: string }) => {
       const requestPromise = chai.request(app).get(`/download/${objectId}`);
-      return (apiKey
-        ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
-        : requestPromise
+      return (
+        apiKey
+          ? requestPromise.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+          : requestPromise
       ).then((response) => {
         if (response.body !== 'ok') {
           throw response.error;
@@ -141,7 +131,7 @@ describe('storage-api/download', () => {
         return response.body as 'ok';
       });
     };
-    const downloadableStream = async function*({
+    const downloadableStream = async function* ({
       apiKey,
       objectIds,
     }: {
@@ -150,9 +140,7 @@ describe('storage-api/download', () => {
     }) {
       for await (const chunk of _.chunk(objectIds, 5)) {
         const data = await Promise.all(
-          chunk.map((objectId) =>
-            fetchDownload({ apiKey, objectId }).catch((err) => null),
-          ),
+          chunk.map((objectId) => fetchDownload({ apiKey, objectId }).catch((err) => null)),
         );
         yield data.filter((entry) => !!entry) as ('ok' | null)[];
       }
@@ -309,9 +297,7 @@ describe('storage-api/download', () => {
             objectIds: Object.keys(expectedRetrievableIds),
           }),
         );
-        expect(
-          allEntitiesRetrievable.every((response) => response === 'ok'),
-        ).toBe(true);
+        expect(allEntitiesRetrievable.every((response) => response === 'ok')).toBe(true);
       });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
@@ -323,9 +309,7 @@ describe('storage-api/download', () => {
             ),
           }),
         );
-        expect(
-          allEntitiesRetrievable.every((response) => response === null),
-        ).toBe(true);
+        expect(allEntitiesRetrievable.every((response) => response === null)).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {
@@ -349,10 +333,9 @@ describe('storage-api/download', () => {
         Object.values(allIndexedDocuments)
           .filter(
             (obj) =>
-              [
-                FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
-                FILE_EMBARGO_STAGE.PUBLIC,
-              ].includes(obj.embargo_stage) ||
+              [FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS, FILE_EMBARGO_STAGE.PUBLIC].includes(
+                obj.embargo_stage,
+              ) ||
               (obj.embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
                 obj.study_id === TEST_PROGRAM) ||
               (obj.embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
@@ -367,9 +350,7 @@ describe('storage-api/download', () => {
             objectIds: Object.keys(expectedRetrievableIds),
           }),
         );
-        expect(
-          allEntitiesRetrievable.every((response) => response === 'ok'),
-        ).toBe(true);
+        expect(allEntitiesRetrievable.every((response) => response === 'ok')).toBe(true);
       });
       it('does not return the files users cannot access', async () => {
         const expectedRetrievableIds = getExpectedRetrievableIds();
@@ -381,9 +362,7 @@ describe('storage-api/download', () => {
             ),
           }),
         );
-        expect(
-          allEntitiesRetrievable.every((response) => response === null),
-        ).toBe(true);
+        expect(allEntitiesRetrievable.every((response) => response === null)).toBe(true);
       });
 
       it('throws the right error when user access an unreleased file from another program', async () => {

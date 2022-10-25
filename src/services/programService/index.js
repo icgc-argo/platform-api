@@ -27,12 +27,7 @@ import * as loader from '@grpc/proto-loader';
 import protoPath from '@icgc-argo/program-service-proto';
 
 import { PROGRAM_SERVICE_ROOT } from '../../config';
-import {
-  getAuthMeta,
-  wrapValue,
-  withRetries,
-  defaultPromiseCallback,
-} from '../../utils/grpcUtils';
+import { getAuthMeta, wrapValue, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import retry from 'retry';
 
 const packageDefinition = loader.loadSync(protoPath, {
@@ -59,11 +54,7 @@ const GRPC_CONFIG = {
 const programServiceRegex = RegExp(/:443$/);
 const programService = withRetries(
   programServiceRegex.test(PROGRAM_SERVICE_ROOT)
-    ? new proto.ProgramService(
-        PROGRAM_SERVICE_ROOT,
-        grpc.credentials.createSsl(),
-        GRPC_CONFIG,
-      )
+    ? new proto.ProgramService(PROGRAM_SERVICE_ROOT, grpc.credentials.createSsl(), GRPC_CONFIG)
     : new proto.ProgramService(
         PROGRAM_SERVICE_ROOT,
         grpc.credentials.createInsecure(),
@@ -89,11 +80,7 @@ const getJoinProgramInvite = async (id, jwt = null) => {
     programService.getJoinProgramInvite(
       { invite_id: wrapValue(id) },
       getAuthMeta(jwt),
-      defaultPromiseCallback(
-        resolve,
-        reject,
-        'ProgramService.getJoinProgramInvite',
-      ),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.getJoinProgramInvite'),
     );
   });
 };
@@ -144,11 +131,7 @@ const listPrimarySites = async (jwt = null) => {
     programService.listPrimarySites(
       {},
       getAuthMeta(jwt),
-      defaultPromiseCallback(
-        resolve,
-        reject,
-        'ProgramService.listPrimarySites',
-      ),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listPrimarySites'),
     );
   });
 };
@@ -168,11 +151,7 @@ const listInstitutions = async (jwt = null) => {
     programService.listInstitutions(
       {},
       getAuthMeta(jwt),
-      defaultPromiseCallback(
-        resolve,
-        reject,
-        'ProgramService.listInstitutions',
-      ),
+      defaultPromiseCallback(resolve, reject, 'ProgramService.listInstitutions'),
     );
   });
 };

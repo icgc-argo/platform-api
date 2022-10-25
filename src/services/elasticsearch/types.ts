@@ -15,10 +15,7 @@ export type EsObjectFieldMapping = {
   };
 };
 
-export type EsFieldMapping =
-  | EsScalarFieldMapping
-  | EsNestedFieldMapping
-  | EsObjectFieldMapping;
+export type EsFieldMapping = EsScalarFieldMapping | EsNestedFieldMapping | EsObjectFieldMapping;
 
 export type EsIndexMapping = {
   [k: string]: {

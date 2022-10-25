@@ -23,17 +23,8 @@
  */
 import grpc, { ChannelCredentials } from 'grpc';
 import * as loader from '@grpc/proto-loader';
-import {
-  EGO_ROOT_GRPC,
-  EGO_ROOT_REST,
-  APP_DIR,
-  EGO_DACO_POLICY_NAME,
-} from '../../config';
-import {
-  getAuthMeta,
-  withRetries,
-  defaultPromiseCallback,
-} from '../../utils/grpcUtils';
+import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR, EGO_DACO_POLICY_NAME } from '../../config';
+import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
 import fetch from 'node-fetch';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 import logger from '../../utils/logger';
@@ -110,10 +101,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     overture: {
       ego: {
         grpc: {
-          UserService: new (
-            grpc_root: string,
-            credentials: ChannelCredentials,
-          ) => any;
+          UserService: new (grpc_root: string, credentials: ChannelCredentials) => any;
         };
       };
     };
@@ -128,10 +116,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
   let dacoIdsCalled = new Date();
   const dacoGroupIdExpiry = 86400000; // 24hours
 
-  const getUser = async (
-    id: string,
-    jwt: string | null = null,
-  ): Promise<EgoGrpcUser> => {
+  const getUser = async (id: string, jwt: string | null = null): Promise<EgoGrpcUser> => {
     return await new Promise((resolve, reject) => {
       userService.getUser(
         { id },
@@ -177,12 +162,9 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       count: number;
       resultSet: EgoAccessKeyObj[];
     };
-    const firstResponse = await fetch(
-      urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`),
-      {
-        headers: { Authorization },
-      },
-    )
+    const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
+      headers: { Authorization },
+    })
       .then(restErrorResponseHandler)
       .then((response) => response.json() as EgoApiKeyResponse);
     const totalCount = firstResponse.count;
@@ -191,8 +173,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     const remainingResponse = await fetch(
       urlJoin(
         EGO_API_KEY_ENDPOINT,
-        `?user_id=${userId}&limit=${totalCount -
-          remainingPageIndex}&offset=${remainingPageIndex}`,
+        `?user_id=${userId}&limit=${totalCount - remainingPageIndex}&offset=${remainingPageIndex}`,
       ),
       {
         headers: { Authorization },
@@ -203,9 +184,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 
     const remainingResults = remainingResponse.resultSet;
 
-    return [...firstResults, ...remainingResults].filter(
-      ({ isRevoked }) => !isRevoked,
-    );
+    return [...firstResults, ...remainingResults].filter(({ isRevoked }) => !isRevoked);
   };
 
   const generateEgoAccessKey = async (
@@ -247,10 +226,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     const accessKeys = keys.map((k) => k.name);
     const ps = await Promise.all(
       accessKeys.map(async (key) => {
-        const url = urlJoin(
-          EGO_API_KEY_ENDPOINT,
-          `?apiKey=${encodeURIComponent(key)}`,
-        );
+        const url = urlJoin(EGO_API_KEY_ENDPOINT, `?apiKey=${encodeURIComponent(key)}`);
         return fetch(url, {
           method: 'delete',
           headers: { Authorization },
@@ -267,8 +243,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 
   // check for new group id over 24hours otherwise use memo func
   const getDacoIds = (userId: string, Authorization: string) => {
-    const checkIdExpiry =
-      Number(new Date()) - Number(dacoIdsCalled) >= dacoGroupIdExpiry;
+    const checkIdExpiry = Number(new Date()) - Number(dacoIdsCalled) >= dacoGroupIdExpiry;
     if (!memoizedGetDacoIds || checkIdExpiry) {
       memoizedGetDacoIds = getMemoizedDacoIds();
       dacoIdsCalled = new Date();
@@ -319,16 +294,13 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
       },
     }).then((res) => res.json() as Promise<APIKeyResp>);
 
-  const toTimestamp = (str: string) =>
-    Math.round(new Date(str).getTime() / 1000);
+  const toTimestamp = (str: string) => Math.round(new Date(str).getTime() / 1000);
 
   const getTimeToExpiry = (accessKeyObj: EgoAccessKeyObj): number => {
     return toTimestamp(accessKeyObj.expiryDate) - Math.round(Date.now() / 1000);
   };
 
-  const isAuthError = (
-    resp: EgoAccessToken | EgoAccessTokenError,
-  ): resp is EgoAccessTokenError =>
+  const isAuthError = (resp: EgoAccessToken | EgoAccessTokenError): resp is EgoAccessTokenError =>
     (resp as EgoAccessTokenError).error !== undefined;
 
   const getApplicationJwt = async (
@@ -346,9 +318,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
     });
     const authResponse: any = await response.json();
     if (isAuthError(authResponse) && authResponse.error) {
-      throw new Error(
-        `Failed to authorize application: ${authResponse.error_description}`,
-      );
+      throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
     }
     return (authResponse as EgoAccessToken).access_token;
   };

@@ -37,17 +37,14 @@ const manifestFileFields: TsvFileSchema<EsFileDocument> = [
   },
   {
     header: 'donor_id',
-    getter: (fileObj) =>
-      fileObj.donors.map(({ donor_id }) => donor_id).join('|'),
+    getter: (fileObj) => fileObj.donors.map(({ donor_id }) => donor_id).join('|'),
   },
   {
     header: 'sample_id(s)',
     getter: (fileObj) =>
       flatMap(
         fileObj.donors.map(({ specimens }) =>
-          specimens.map(({ samples }) =>
-            samples.map(({ sample_id }) => sample_id),
-          ),
+          specimens.map(({ samples }) => samples.map(({ sample_id }) => sample_id)),
         ),
       ).join('|'),
   },

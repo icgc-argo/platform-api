@@ -74,8 +74,7 @@ export const hasSufficientProgramMembershipAccess = (config: {
           programId,
         }) ||
         accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
-        accessLevel ===
-          UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
+        accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
       );
     }
 
@@ -90,9 +89,7 @@ export const hasSufficientDacoAccess = (config: {
   scopes: PermissionScopeObj[];
   file: EsFileCentricDocument;
 }): boolean => {
-  const dacoScopes = config.scopes.filter(
-    ({ policy }) => policy === EGO_DACO_POLICY_NAME,
-  );
+  const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
   const userHasDacoAccess =
     dacoScopes.length > 0 &&
     dacoScopes.some((scope) => scope.permission === PERMISSIONS.READ) &&

@@ -230,7 +230,6 @@ export default gql`
     """
     releaseStatus: DonorMolecularDataReleaseStatus!
     """
-
     """
     submitterDonorId: String!
     """

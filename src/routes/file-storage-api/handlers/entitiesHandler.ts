@@ -77,22 +77,16 @@ const FILE_EMBARGO_FILTER_FIELD = FILE_METADATA_FIELDS['embargo_stage'];
 const emptyFilter = () => esb.boolQuery();
 
 const getAccessControlFilter = (
-  programMembershipAccessLevel: ReturnType<
-    typeof egoTokenUtils.getProgramMembershipAccessLevel
-  >,
+  programMembershipAccessLevel: ReturnType<typeof egoTokenUtils.getProgramMembershipAccessLevel>,
   userPrograms: string[],
 ): esb.Query => {
   /* Logical operator shorthands */
-  const all = (conditions: esb.Query[]): esb.BoolQuery =>
-    esb.boolQuery().must(conditions);
-  const not = (conditions: esb.Query[]): esb.BoolQuery =>
-    esb.boolQuery().mustNot(conditions);
+  const all = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().must(conditions);
+  const not = (conditions: esb.Query[]): esb.BoolQuery => esb.boolQuery().mustNot(conditions);
   /*******************************/
 
   /* common filters */
-  const isFromOtherPrograms = not([
-    esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms),
-  ]);
+  const isFromOtherPrograms = not([esb.termsQuery(FILE_METADATA_FIELDS['study_id'], userPrograms)]);
   const isUnReleasedFromOtherPrograms = all([
     isFromOtherPrograms,
     esb.termsQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.OWN_PROGRAM),
@@ -109,32 +103,21 @@ const getAccessControlFilter = (
       not([
         all([
           isFromOtherPrograms,
-          esb.termQuery(
-            FILE_EMBARGO_FILTER_FIELD,
-            FILE_EMBARGO_STAGE.FULL_PROGRAMS,
-          ),
+          esb.termQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.FULL_PROGRAMS),
         ]),
       ]),
     ]),
-    PUBLIC_MEMBER: esb.termsQuery(
-      FILE_EMBARGO_FILTER_FIELD,
-      FILE_EMBARGO_STAGE.PUBLIC,
-    ),
+    PUBLIC_MEMBER: esb.termsQuery(FILE_EMBARGO_FILTER_FIELD, FILE_EMBARGO_STAGE.PUBLIC),
   };
   return userPermissionToQueryMap[programMembershipAccessLevel];
 };
 
 const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
-  return async (
-    req: AuthenticatedRequest,
-    res: Response<EntitiesPageResponseBody>,
-  ) => {
+  return async (req: AuthenticatedRequest, res: Response<EntitiesPageResponseBody>) => {
     const serializedUserScopes = req.auth.serializedScopes;
-    const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel(
-      {
-        permissions: serializedUserScopes,
-      },
-    );
+    const programMembershipAccessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
+      permissions: serializedUserScopes,
+    });
 
     const parsedRequestQuery = {
       page: Number(req.query.page || 0),
@@ -152,10 +135,9 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       projectCode: req.query.projectCode || undefined,
     };
 
-    const accessControlFilter = getAccessControlFilter(
-      programMembershipAccessLevel,
-      [...egoTokenUtils.getReadableProgramDataNames(serializedUserScopes)],
-    );
+    const accessControlFilter = getAccessControlFilter(programMembershipAccessLevel, [
+      ...egoTokenUtils.getReadableProgramDataNames(serializedUserScopes),
+    ]);
 
     const query = esb
       .requestBodySearch()
@@ -169,10 +151,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
           // the solution is likely in the types being applied to the Request object, such that it doesnt know if the query params are string or parsed into arrays
           .must([
             parsedRequestQuery.id
-              ? esb.termsQuery(
-                  FILE_METADATA_FIELDS['object_id'],
-                  parsedRequestQuery.id as string,
-                )
+              ? esb.termsQuery(FILE_METADATA_FIELDS['object_id'], parsedRequestQuery.id as string)
               : emptyFilter(),
             parsedRequestQuery.fileName
               ? esb.termsQuery(
@@ -221,9 +200,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
       .map((file) =>
         parsedRequestQuery.fields.length
           ? (Object.fromEntries(
-              Object.entries(file).filter(([key]) =>
-                parsedRequestQuery.fields.includes(key),
-              ),
+              Object.entries(file).filter(([key]) => parsedRequestQuery.fields.includes(key)),
             ) as Partial<SongEntity>)
           : file,
       );
@@ -255,8 +232,7 @@ const createEntitiesHandler = ({ esClient }: { esClient: Client }): Handler => {
         empty: true,
       },
       number: data.length,
-      totalPages:
-        esSearchResponse.body.hits.total.value / parsedRequestQuery.size,
+      totalPages: esSearchResponse.body.hits.total.value / parsedRequestQuery.size,
     };
 
     res.send(responseBody);

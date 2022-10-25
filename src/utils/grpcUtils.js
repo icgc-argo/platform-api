@@ -45,10 +45,7 @@ export const getAuthMeta = (jwt) => {
   return meta;
 };
 
-export const defaultPromiseCallback = (resolve, reject, serviceName) => (
-  err,
-  response,
-) => {
+export const defaultPromiseCallback = (resolve, reject, serviceName) => (err, response) => {
   if (err) {
     logger.error(`GRPC error - ${serviceName}: ${err}`);
     reject(err);
@@ -82,11 +79,7 @@ export const withRetries = (
     }),
     {},
   );
-  const methodWithRetry = (methodName, originalMethod) => (
-    payload,
-    metadata,
-    cb,
-  ) => {
+  const methodWithRetry = (methodName, originalMethod) => (payload, metadata, cb) => {
     const operation = retry.operation(retryConfig);
     operation.attempt((currentAttempt) => {
       originalMethod(payload, metadata, (err, response) => {

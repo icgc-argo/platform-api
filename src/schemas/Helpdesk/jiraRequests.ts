@@ -37,9 +37,7 @@ type JiraCredentials = {
 };
 
 const isCredentials = (data: { [k: string]: any }): data is JiraCredentials => {
-  return (
-    typeof data['email'] === 'string' && typeof data['password'] === 'string'
-  );
+  return typeof data['email'] === 'string' && typeof data['password'] === 'string';
 };
 
 /**
@@ -50,9 +48,7 @@ const getJiraBasicAuth = async (): Promise<string> => {
   let basicAuthString: string;
 
   if (USE_VAULT) {
-    const secretData = await loadVaultSecret()(
-      JIRA_ADMIN_VAULT_CREDENTIALS_PATH,
-    ).catch((err) => {
+    const secretData = await loadVaultSecret()(JIRA_ADMIN_VAULT_CREDENTIALS_PATH).catch((err) => {
       logger.error(
         `could not read Jira Credentials secret at path ${JIRA_ADMIN_VAULT_CREDENTIALS_PATH}`,
       );
@@ -61,17 +57,13 @@ const getJiraBasicAuth = async (): Promise<string> => {
     if (isCredentials(secretData)) {
       basicAuthString = `${secretData.email}:${secretData.password}`;
     } else {
-      throw new Error(
-        `vault secret at ${JIRA_ADMIN_VAULT_CREDENTIALS_PATH} could not be read`,
-      );
+      throw new Error(`vault secret at ${JIRA_ADMIN_VAULT_CREDENTIALS_PATH} could not be read`);
     }
   } else {
     basicAuthString = `${JIRA_ADMIN_EMAIL}:${JIRA_ADMIN_PASS}`;
   }
 
-  const encodedAuthString = `Basic ${Buffer.from(basicAuthString).toString(
-    'base64',
-  )}`;
+  const encodedAuthString = `Basic ${Buffer.from(basicAuthString).toString('base64')}`;
 
   // to ensure user credentials work, test a simple request and process the response
   try {
@@ -93,9 +85,7 @@ const getJiraBasicAuth = async (): Promise<string> => {
     logger.error(`failed to make a request to JIRA using the authentication`);
     throw err;
   }
-  logger.info(
-    `successfully obtained and tested credentials for JIRA Service Desk API `,
-  );
+  logger.info(`successfully obtained and tested credentials for JIRA Service Desk API `);
 
   return encodedAuthString;
 };
@@ -130,8 +120,7 @@ export const createJiraClient = async (): Promise<JiraClient> => {
     };
   };
 
-  const EMAIL_ALREADY_EXISTS_MESSAGE =
-    'email : An account already exists for this email';
+  const EMAIL_ALREADY_EXISTS_MESSAGE = 'email : An account already exists for this email';
 
   /**
    * Adds a customer to an organization for future reference.
@@ -214,10 +203,7 @@ export const createJiraClient = async (): Promise<JiraClient> => {
         serviceDeskId: JIRA_SERVICEDESK_ID,
         requestTypeId: requestTypeId,
         requestFieldValues: {
-          summary: `${summaryPrependText}: ${summaryText.replace(
-            /(\r\n|\n|\r)/gm,
-            '',
-          )}`,
+          summary: `${summaryPrependText}: ${summaryText.replace(/(\r\n|\n|\r)/gm, '')}`,
           description: requestText,
         },
       };
@@ -267,15 +253,11 @@ export const createJiraClient = async (): Promise<JiraClient> => {
             if (isAlreadyCustomer) {
               return await getAccountId(email);
             } else {
-              logger.error(
-                'An unexpected error occured during the client creation process.',
-              );
+              logger.error('An unexpected error occured during the client creation process.');
               return await restErrorResponseHandler(response);
             }
           } catch {
-            logger.error(
-              'An Error Occured, and the error body couldnt be correctly parsed.',
-            );
+            logger.error('An Error Occured, and the error body couldnt be correctly parsed.');
             return await restErrorResponseHandler(response);
           }
         } else if (response.ok) {

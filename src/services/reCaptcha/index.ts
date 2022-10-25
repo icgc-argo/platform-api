@@ -18,11 +18,7 @@
  */
 
 import fetch from 'node-fetch';
-import {
-  USE_VAULT,
-  RECAPTCHA_SECRET_KEY,
-  RECAPTCHA_VAULT_SECRET_PATH,
-} from 'config';
+import { USE_VAULT, RECAPTCHA_SECRET_KEY, RECAPTCHA_VAULT_SECRET_PATH } from 'config';
 import { loadVaultSecret } from 'services/vault';
 import logger from 'utils/logger';
 
@@ -44,14 +40,10 @@ type ReCaptchaVaultSecret = {
   secret_key: string;
 };
 export type ReCaptchaClient = {
-  verifyUserResponse: (
-    response: string,
-  ) => Promise<ReCaptchaVerificationResult>;
+  verifyUserResponse: (response: string) => Promise<ReCaptchaVerificationResult>;
 };
 
-const isReCaptchaSecretData = (data: {
-  [k: string]: unknown;
-}): data is ReCaptchaVaultSecret => {
+const isReCaptchaSecretData = (data: { [k: string]: unknown }): data is ReCaptchaVaultSecret => {
   return typeof data['secret_key'] === 'string';
 };
 
@@ -73,9 +65,7 @@ const getReCaptchaSecret = async () => {
 const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
   logger.debug('in create Recaptcha client');
   let reCaptchaSecretKey = await getReCaptchaSecret();
-  const verifyUserResponse = async (
-    response: string,
-  ): Promise<ReCaptchaVerificationResult> =>
+  const verifyUserResponse = async (response: string): Promise<ReCaptchaVerificationResult> =>
     fetch(
       `https://www.google.com/recaptcha/api/siteverify?secret=${reCaptchaSecretKey}&response=${response}`,
       {
@@ -86,8 +76,7 @@ const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
   logger.info('verifying reCaptcha secret');
   const testVerificationResponse = await verifyUserResponse('');
   const verificationErrorCodes =
-    testVerificationResponse['error-codes'] ||
-    ([] as ReCaptchaVerificationErrorCode[]);
+    testVerificationResponse['error-codes'] || ([] as ReCaptchaVerificationErrorCode[]);
   if (
     verificationErrorCodes.includes('invalid-input-secret') ||
     verificationErrorCodes.includes('missing-input-secret')

@@ -34,7 +34,7 @@ import _ from 'lodash';
 
 chai.use(chaiHttp);
 
-export const entitiesStream = async function*({
+export const entitiesStream = async function* ({
   app,
   apiKey,
 }: {
@@ -64,17 +64,14 @@ export const entitiesStream = async function*({
 };
 
 export const reduceToEntityList = (stream: ReturnType<typeof entitiesStream>) =>
-  reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>(
-    (acc, r) => {
-      r.content.forEach((e) => {
-        acc.push(e);
-      });
-      return acc;
-    },
-    [],
-  )(stream);
+  reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>((acc, r) => {
+    r.content.forEach((e) => {
+      acc.push(e);
+    });
+    return acc;
+  }, [])(stream);
 
-const esDocumentStream = async function*({ esClient }: { esClient: Client }) {
+const esDocumentStream = async function* ({ esClient }: { esClient: Client }) {
   let currentIndex = 0;
   const pageSize = 1000;
   cycle: while (true) {
@@ -115,10 +112,7 @@ export const MOCK_API_KEY_SCOPES: {
   [k in MockApiKey]: string[];
 } = {
   PUBLIC: [],
-  FULL_PROGRAM_MEMBER: [
-    'PROGRAMMEMBERSHIP-FULL.READ',
-    `PROGRAMDATA-${TEST_PROGRAM}.READ`,
-  ],
+  FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ', `PROGRAMDATA-${TEST_PROGRAM}.READ`],
   ASSOCIATE_PROGRAM_MEMBER: [
     'PROGRAMMEMBERSHIP-ASSOCIATE.READ',
     `PROGRAMDATA-${TEST_PROGRAM}.READ`,
@@ -142,9 +136,7 @@ export const createMockEgoClient = (): Partial<EgoClient> => {
         scope: MOCK_API_KEY_SCOPES[apiKey],
         user_id: 'yup',
       }),
-    getApplicationJwt: async (
-      applicationCredentials: EgoApplicationCredential,
-    ) => {
+    getApplicationJwt: async (applicationCredentials: EgoApplicationCredential) => {
       return 'mock jwt string';
     },
   };

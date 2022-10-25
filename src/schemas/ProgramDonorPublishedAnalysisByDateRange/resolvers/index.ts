@@ -30,9 +30,7 @@ const createResolvers = async (
     Query: {
       programDonorPublishedAnalysisByDateRange: (...resolverArguments) =>
         resolveWithProgramAuth(
-          programDonorPublishedAnalysisByDateRangeResolver(esClient)(
-            ...resolverArguments,
-          ),
+          programDonorPublishedAnalysisByDateRangeResolver(esClient)(...resolverArguments),
           resolverArguments,
         ),
     },

@@ -61,9 +61,7 @@ describe('Arranger schema', () => {
       .withEnv('discovery.type', 'single-node')
       .withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
       .start();
-    esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(
-      9200,
-    )}`;
+    esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`;
     esClient = await createEsClient({
       node: esHost,
     });
@@ -87,10 +85,7 @@ describe('Arranger schema', () => {
           })
         ).body,
       ).toBe(true);
-      expect(
-        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
-          .body,
-      ).toBe(true);
+      expect((await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX })).body).toBe(true);
     });
 
     it('must handle another run without failing', async () => {
@@ -102,10 +97,7 @@ describe('Arranger schema', () => {
           })
         ).body,
       ).toBe(true);
-      expect(
-        (await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX }))
-          .body,
-      ).toBe(true);
+      expect((await esClient.indices.exists({ index: ARRANGER_PROJECTS_INDEX })).body).toBe(true);
     });
 
     it('must index data properly', async () => {
@@ -172,9 +164,9 @@ describe('Arranger schema', () => {
     it('generates arranger schema with "file" type', async () => {
       try {
         const arrangerSchema = await getArrangerGqlSchema(esClient);
-        expect(
-          arrangerSchema.getType(harmonizedFileCentricConfig.name)?.toString(),
-        ).toBe(harmonizedFileCentricConfig.name);
+        expect(arrangerSchema.getType(harmonizedFileCentricConfig.name)?.toString()).toBe(
+          harmonizedFileCentricConfig.name,
+        );
       } catch (err) {
         throw err;
       }

@@ -18,10 +18,7 @@
  */
 
 import 'babel-polyfill';
-import {
-  FILE_METADATA_FIELDS,
-  FILE_EMBARGO_STAGE,
-} from 'utils/commonTypes/EsFileCentricDocument';
+import { FILE_METADATA_FIELDS, FILE_EMBARGO_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
@@ -62,9 +59,7 @@ const match = (
 });
 /*******************************/
 
-const getAccessControlFilter = (
-  userJwtData: EgoJwtData | null,
-): ArrangerFilter => {
+const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter => {
   const userPrograms: string[] = userJwtData
     ? uniq(egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope))
     : [];
@@ -74,19 +69,13 @@ const getAccessControlFilter = (
       })
     : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
   /* common filters */
-  const isFromOtherPrograms = not([
-    match(FILE_STUDY_FILTER_FIELD, userPrograms),
-  ]);
-  const isProgramOnly = match(FILE_EMBARGO_FILTER_FIELD, [
-    FILE_EMBARGO_STAGE.OWN_PROGRAM,
-  ]);
+  const isFromOtherPrograms = not([match(FILE_STUDY_FILTER_FIELD, userPrograms)]);
+  const isProgramOnly = match(FILE_EMBARGO_FILTER_FIELD, [FILE_EMBARGO_STAGE.OWN_PROGRAM]);
   const isProgramOrFullMember = match(FILE_EMBARGO_FILTER_FIELD, [
     FILE_EMBARGO_STAGE.OWN_PROGRAM,
     FILE_EMBARGO_STAGE.FULL_PROGRAMS,
   ]);
-  const isPublicRelease = match(FILE_EMBARGO_FILTER_FIELD, [
-    FILE_EMBARGO_STAGE.PUBLIC,
-  ]);
+  const isPublicRelease = match(FILE_EMBARGO_FILTER_FIELD, [FILE_EMBARGO_STAGE.PUBLIC]);
   /******************/
 
   const userPermissionToQueryMap: {
@@ -94,9 +83,7 @@ const getAccessControlFilter = (
   } = {
     DCC_MEMBER: emptyFilter(),
     FULL_PROGRAM_MEMBER: not([all([isFromOtherPrograms, isProgramOnly])]),
-    ASSOCIATE_PROGRAM_MEMBER: not([
-      all([isFromOtherPrograms, isProgramOrFullMember]),
-    ]),
+    ASSOCIATE_PROGRAM_MEMBER: not([all([isFromOtherPrograms, isProgramOrFullMember])]),
     PUBLIC_MEMBER: all([isPublicRelease]),
   };
   const output = userPermissionToQueryMap[programMembershipAccessLevel];

@@ -75,10 +75,7 @@ const getSystemAlerts = () => {
     result = alertsValidated.valid.map((alert: SystemAlert) =>
       Object.keys(alert)
         .filter((key) => allowedFields.includes(key))
-        .reduce(
-          (acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }),
-          {} as SystemAlert,
-        ),
+        .reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
     );
 
     alertsValidated.invalid.forEach((alert: any) => {

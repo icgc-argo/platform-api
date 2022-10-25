@@ -251,9 +251,7 @@ export type ElasticsearchDonorDocument = {
   [EsDonorDocumentField.alignmentsRunning]: number;
   [EsDonorDocumentField.createdAt]: string;
   [EsDonorDocumentField.donorId]: string;
-  [EsDonorDocumentField.processingStatus]:
-    | DonorMolecularDataProcessingStatus
-    | '';
+  [EsDonorDocumentField.processingStatus]: DonorMolecularDataProcessingStatus | '';
   [EsDonorDocumentField.programId]: string;
 
   [EsDonorDocumentField.rnaRegisteredNormalSamples]: number;

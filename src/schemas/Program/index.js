@@ -187,8 +187,7 @@ const typeDefs = gql`
     Update Program
     Returns shortName of the program if succesfully updated
     """
-    updateProgram(shortName: String!, updates: UpdateProgramInput!): String
-      @cost(complexity: 20)
+    updateProgram(shortName: String!, updates: UpdateProgramInput!): String @cost(complexity: 20)
 
     """
     Invite a user to join a program
@@ -206,26 +205,21 @@ const typeDefs = gql`
     Update a user's role in a prgoram
     Returns the user data
     """
-    updateUser(
-      userEmail: String!
-      programShortName: String!
-      userRole: UserRole!
-    ): Boolean @cost(complexity: 10)
+    updateUser(userEmail: String!, programShortName: String!, userRole: UserRole!): Boolean
+      @cost(complexity: 10)
 
     """
     Remove a user from a program
     Returns message from server
     """
-    removeUser(userEmail: String!, programShortName: String!): String
-      @cost(complexity: 10)
+    removeUser(userEmail: String!, programShortName: String!): String @cost(complexity: 10)
   }
 `;
 
 /* =========
     Convert GRPC Response to GQL output
  * ========= */
-const getIsoDate = (time) =>
-  time ? new Date(parseInt(time) * 1000).toISOString() : null;
+const getIsoDate = (time) => (time ? new Date(parseInt(time) * 1000).toISOString() : null);
 
 const convertGrpcProgramToGql = (programDetails) => ({
   name: get(programDetails, 'program.name.value'),
@@ -306,13 +300,8 @@ const resolvers = {
   Program: {
     users: async (program, args, context, info) => {
       const { egoToken } = context;
-      const response = await programService.listUsers(
-        program.shortName,
-        egoToken,
-      );
-      const users = response
-        ? get(response, 'userDetails', []).map(convertGrpcUserToGql)
-        : null;
+      const response = await programService.listUsers(program.shortName, egoToken);
+      const users = response ? get(response, 'userDetails', []).map(convertGrpcUserToGql) : null;
       return users;
     },
   },
@@ -328,10 +317,7 @@ const resolvers = {
     },
     joinProgramInvite: async (obj, args, context, info) => {
       const { egoToken } = context;
-      const response = await programService.getJoinProgramInvite(
-        args.id,
-        egoToken,
-      );
+      const response = await programService.getJoinProgramInvite(args.id, egoToken);
       const joinProgramDetails = get(response, 'invitation');
       return response ? grpcToGql(joinProgramDetails) : null;
     },
@@ -349,10 +335,7 @@ const resolvers = {
       };
 
       try {
-        const createResponse = await programService.createProgram(
-          program,
-          egoToken,
-        );
+        const createResponse = await programService.createProgram(program, egoToken);
         return resolveSingleProgram(egoToken, program.shortName);
       } catch (err) {
         const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
@@ -371,21 +354,14 @@ const resolvers = {
       const shortName = get(args, 'shortName', {});
 
       // // Update program takes the complete program object future state
-      const currentPorgramResponse = await programService.getProgram(
-        shortName,
-        egoToken,
-      );
+      const currentPorgramResponse = await programService.getProgram(shortName, egoToken);
       const currentProgramDetails = convertGrpcProgramToGql(
         get(currentPorgramResponse, 'program', {}),
       );
 
       const combinedUpdates = { ...currentProgramDetails, ...updates };
 
-      const response = await programService.updateProgram(
-        shortName,
-        combinedUpdates,
-        egoToken,
-      );
+      const response = await programService.updateProgram(shortName, combinedUpdates, egoToken);
       return response === null ? null : get(args, 'shortName');
     },
 
@@ -399,10 +375,7 @@ const resolvers = {
     joinProgram: async (obj, args, context, info) => {
       const { egoToken } = context;
       const joinProgramInput = get(args, 'join', {});
-      const response = await programService.joinProgram(
-        joinProgramInput,
-        egoToken,
-      );
+      const response = await programService.joinProgram(joinProgramInput, egoToken);
       return convertGrpcUserToGql(get(response, 'user'));
     },
 
@@ -411,12 +384,7 @@ const resolvers = {
       const shortName = get(args, 'programShortName');
       const role = get(args, 'userRole');
       const userEmail = get(args, 'userEmail');
-      const response = await programService.updateUser(
-        userEmail,
-        shortName,
-        role,
-        egoToken,
-      );
+      const response = await programService.updateUser(userEmail, shortName, role, egoToken);
       return true;
     },
 
@@ -424,11 +392,7 @@ const resolvers = {
       const { egoToken } = context;
       const shortName = get(args, 'programShortName');
       const email = get(args, 'userEmail');
-      const response = await programService.removeUser(
-        email,
-        shortName,
-        egoToken,
-      );
+      const response = await programService.removeUser(email, shortName, egoToken);
       return get(response, 'message.value', '');
     },
   },

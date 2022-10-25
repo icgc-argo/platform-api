@@ -45,11 +45,7 @@ type DataCenterError = {
 };
 
 async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
-  const url_getById = urljoin(
-    DATA_CENTER_REGISTRY_API_ROOT,
-    'data-centers',
-    code,
-  );
+  const url_getById = urljoin(DATA_CENTER_REGISTRY_API_ROOT, 'data-centers', code);
   const dataCenter = await fetch(url_getById, {
     method: 'get',
   })
@@ -64,9 +60,7 @@ async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
   return dataCenter;
 }
 
-export async function getDataCenter(
-  code: string,
-): Promise<DataCenter | undefined> {
+export async function getDataCenter(code: string): Promise<DataCenter | undefined> {
   const fromCache = dataCenterCache.get(code) as DataCenter;
   if (fromCache) {
     return fromCache;

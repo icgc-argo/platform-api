@@ -81,9 +81,7 @@ const extractUserScopes = async (config: {
 };
 
 type AuthenticationMiddleware = (config: { egoClient: EgoClient }) => Handler;
-const authenticatedRequestMiddleware: AuthenticationMiddleware = ({
-  egoClient,
-}) => {
+const authenticatedRequestMiddleware: AuthenticationMiddleware = ({ egoClient }) => {
   return async (req: Request, res, next) => {
     const { authorization } = req.headers;
     const authParams = await extractUserScopes({
