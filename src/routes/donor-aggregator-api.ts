@@ -26,50 +26,50 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import getAuthorizedClient from 'services/donorAggregator';
 
 import authenticatedRequestMiddleware, {
-  AuthenticatedRequest,
+	AuthenticatedRequest,
 } from 'routes/middleware/authenticatedRequestMiddleware';
 
 const createDonorAggregatorRouter = (egoClient: EgoClient): Router => {
-  const router = express.Router();
+	const router = express.Router();
 
-  router.use(json());
-  router.use(authenticatedRequestMiddleware({ egoClient }));
+	router.use(json());
+	router.use(authenticatedRequestMiddleware({ egoClient }));
 
-  router.post('/sync', async (req: AuthenticatedRequest, res) => {
-    // Ensure Authenticated and DCC Admin
-    const { authenticated, serializedScopes, egoJwt } = req.auth;
+	router.post('/sync', async (req: AuthenticatedRequest, res) => {
+		// Ensure Authenticated and DCC Admin
+		const { authenticated, serializedScopes, egoJwt } = req.auth;
 
-    if (!authenticated) {
-      res.status(401).json({ error: 'invalid auth token' });
-      return;
-    }
+		if (!authenticated) {
+			res.status(401).json({ error: 'invalid auth token' });
+			return;
+		}
 
-    if (!egoTokenUtils.isDccMember(serializedScopes)) {
-      res.status(403).json({ error: 'not authorized' });
-      return;
-    }
+		if (!egoTokenUtils.isDccMember(serializedScopes)) {
+			res.status(403).json({ error: 'not authorized' });
+			return;
+		}
 
-    // Send request to Donor Aggregator
-    const programId = req.body.programId;
-    try {
-      logger.info(`Initiating Donor Submission Aggregator SYNC request for ${programId}.`);
-      await getAuthorizedClient(egoJwt).syncDonorAggregationIndex(programId);
-    } catch (error) {
-      logger.error(
-        `Error requesting SYNC from Donor Submission Aggregator (${programId}): ${error}`,
-      );
-      res.status(500).json({ error: error.message });
-      return;
-    }
+		// Send request to Donor Aggregator
+		const programId = req.body.programId;
+		try {
+			logger.info(`Initiating Donor Submission Aggregator SYNC request for ${programId}.`);
+			await getAuthorizedClient(egoJwt).syncDonorAggregationIndex(programId);
+		} catch (error) {
+			logger.error(
+				`Error requesting SYNC from Donor Submission Aggregator (${programId}): ${error}`,
+			);
+			res.status(500).json({ error: error.message });
+			return;
+		}
 
-    res.status(200).json({
-      message: 'Initiated sync for donor submission aggregation index.',
-      programId,
-    });
-    return;
-  });
+		res.status(200).json({
+			message: 'Initiated sync for donor submission aggregation index.',
+			programId,
+		});
+		return;
+	});
 
-  return router;
+	return router;
 };
 
 export default createDonorAggregatorRouter;

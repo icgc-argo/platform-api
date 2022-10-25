@@ -28,51 +28,51 @@ import logger from 'utils/logger';
 const dataCenterCache = new NodeCache({ stdTTL: 60 * 60 * 6 });
 
 export type DataCenter = {
-  centerId: string;
-  country: string;
-  name: string;
-  organization: string;
-  contactEmail: string;
-  storageType: string;
-  scoreUrl: string;
-  songUrl: string;
-  type: string;
+	centerId: string;
+	country: string;
+	name: string;
+	organization: string;
+	contactEmail: string;
+	storageType: string;
+	scoreUrl: string;
+	songUrl: string;
+	type: string;
 };
 
 type DataCenterError = {
-  error: string;
-  message: string;
+	error: string;
+	message: string;
 };
 
 async function fetchDataCenter(code: string): Promise<DataCenter | undefined> {
-  const url_getById = urljoin(DATA_CENTER_REGISTRY_API_ROOT, 'data-centers', code);
-  const dataCenter = await fetch(url_getById, {
-    method: 'get',
-  })
-    .then(async (response: Response) => (await response.json()) as DataCenter)
-    .catch(async (response: Response) => {
-      const responseJson = (await response.json()) as { message: string };
-      logger.error(
-        `Failed to fetch data center from registry for repository code: ${code}. Error ${response.status}: ${responseJson.message}`,
-      );
-      return undefined;
-    });
-  return dataCenter;
+	const url_getById = urljoin(DATA_CENTER_REGISTRY_API_ROOT, 'data-centers', code);
+	const dataCenter = await fetch(url_getById, {
+		method: 'get',
+	})
+		.then(async (response: Response) => (await response.json()) as DataCenter)
+		.catch(async (response: Response) => {
+			const responseJson = (await response.json()) as { message: string };
+			logger.error(
+				`Failed to fetch data center from registry for repository code: ${code}. Error ${response.status}: ${responseJson.message}`,
+			);
+			return undefined;
+		});
+	return dataCenter;
 }
 
 export async function getDataCenter(code: string): Promise<DataCenter | undefined> {
-  const fromCache = dataCenterCache.get(code) as DataCenter;
-  if (fromCache) {
-    return fromCache;
-  }
+	const fromCache = dataCenterCache.get(code) as DataCenter;
+	if (fromCache) {
+		return fromCache;
+	}
 
-  // Not in cache, fetch from registry
-  const fromRegistry = await fetchDataCenter(code);
-  if (!fromRegistry) {
-    // Could not find code in registry
-    return undefined;
-  }
-  // Cache response for future reference
-  dataCenterCache.set(code, fromRegistry);
-  return fromRegistry;
+	// Not in cache, fetch from registry
+	const fromRegistry = await fetchDataCenter(code);
+	if (!fromRegistry) {
+		// Could not find code in registry
+		return undefined;
+	}
+	// Cache response for future reference
+	dataCenterCache.set(code, fromRegistry);
+	return fromRegistry;
 }

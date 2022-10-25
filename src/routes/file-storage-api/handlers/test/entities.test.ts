@@ -30,20 +30,20 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { reduce } from 'axax/es5/reduce';
 import {
-  createMockEgoClient,
-  entitiesStream,
-  getAllIndexedDocuments,
-  MockApiKey,
-  MOCK_API_KEYS,
-  MOCK_API_KEY_SCOPES,
-  reduceToEntityList,
-  TEST_PROGRAM,
+	createMockEgoClient,
+	entitiesStream,
+	getAllIndexedDocuments,
+	MockApiKey,
+	MOCK_API_KEYS,
+	MOCK_API_KEY_SCOPES,
+	reduceToEntityList,
+	TEST_PROGRAM,
 } from './utils';
 import _ from 'lodash';
 import {
-  EsFileCentricDocument,
-  FILE_ACCESS,
-  FILE_EMBARGO_STAGE,
+	EsFileCentricDocument,
+	FILE_ACCESS,
+	FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { SongEntity } from 'routes/file-storage-api/utils';
 
@@ -52,151 +52,151 @@ const asyncExec = promisify(exec);
 chai.use(chaiHttp);
 
 describe('storage-api/entities', () => {
-  let esContainer: StartedTestContainer;
-  let esClient: Client;
-  const app = express();
-  const mockEgoClient = createMockEgoClient() as EgoClient;
-  let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
+	let esContainer: StartedTestContainer;
+	let esClient: Client;
+	const app = express();
+	const mockEgoClient = createMockEgoClient() as EgoClient;
+	let allIndexedDocuments: { [objectId: string]: EsFileCentricDocument } = {};
 
-  beforeAll(async () => {
-    esContainer = await new GenericContainer('elasticsearch', '7.5.0')
-      .withExposedPorts(9200)
-      .withEnv('discovery.type', 'single-node')
-      .withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
-      .start();
-    const esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(
-      9200,
-    )}`;
-    esClient = await createEsClient({
-      node: esHost,
-    });
-    const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
-    if (stderr.length) {
-      throw stderr;
-    }
-    await new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-    app.use(
-      '/',
-      await createFileStorageApi({
-        egoClient: mockEgoClient,
-        rootPath: '/',
-        esClient,
-        downloadProxyMiddlewareFactory: () => (req, res, next) => {
-          res.send('ok');
-        },
-      }),
-    );
-    allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
-      acc[doc.object_id] = doc;
-      return acc;
-    }, {} as typeof allIndexedDocuments);
-  }, 120000);
+	beforeAll(async () => {
+		esContainer = await new GenericContainer('elasticsearch', '7.5.0')
+			.withExposedPorts(9200)
+			.withEnv('discovery.type', 'single-node')
+			.withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
+			.start();
+		const esHost = `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(
+			9200,
+		)}`;
+		esClient = await createEsClient({
+			node: esHost,
+		});
+		const { stdout, stderr } = await asyncExec(`ES_HOST=${esHost} npm run embargoStageEsInit`);
+		if (stderr.length) {
+			throw stderr;
+		}
+		await new Promise<void>((resolve) => {
+			setTimeout(() => {
+				resolve();
+			}, 1000);
+		});
+		app.use(
+			'/',
+			await createFileStorageApi({
+				egoClient: mockEgoClient,
+				rootPath: '/',
+				esClient,
+				downloadProxyMiddlewareFactory: () => (req, res, next) => {
+					res.send('ok');
+				},
+			}),
+		);
+		allIndexedDocuments = _(await getAllIndexedDocuments(esClient)).reduce((acc, doc) => {
+			acc[doc.object_id] = doc;
+			return acc;
+		}, {} as typeof allIndexedDocuments);
+	}, 120000);
 
-  afterAll(async () => {
-    await esContainer.stop();
-  }, 120000);
+	afterAll(async () => {
+		await esContainer.stop();
+	}, 120000);
 
-  describe('/entities endpoint', () => {
-    it('returns unique entities', async () => {
-      const responseStream = entitiesStream({
-        app,
-        apiKey: MOCK_API_KEYS.PUBLIC,
-      });
-      const allRetrievedEntities = await reduceToEntityList(responseStream);
-      expect(
-        _(allRetrievedEntities)
-          .uniqBy((e) => e.id)
-          .size(),
-      ).toBe(allRetrievedEntities.length);
-    });
+	describe('/entities endpoint', () => {
+		it('returns unique entities', async () => {
+			const responseStream = entitiesStream({
+				app,
+				apiKey: MOCK_API_KEYS.PUBLIC,
+			});
+			const allRetrievedEntities = await reduceToEntityList(responseStream);
+			expect(
+				_(allRetrievedEntities)
+					.uniqBy((e) => e.id)
+					.size(),
+			).toBe(allRetrievedEntities.length);
+		});
 
-    it('returns and all the right data for public users', async () => {
-      const responseStream = entitiesStream({
-        app,
-        apiKey: MOCK_API_KEYS.PUBLIC,
-      });
-      const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map((e) => e.id);
-      const equivalentIndexedDocuments = allEntityIdsFromApi.map(
-        (id) => allIndexedDocuments[id || ''],
-      );
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
-        (doc) => doc.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
-      );
-      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
-        true,
-      );
-      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
-        true,
-      );
-    });
+		it('returns and all the right data for public users', async () => {
+			const responseStream = entitiesStream({
+				app,
+				apiKey: MOCK_API_KEYS.PUBLIC,
+			});
+			const allEntityIdsFromApi = (await reduceToEntityList(responseStream)).map((e) => e.id);
+			const equivalentIndexedDocuments = allEntityIdsFromApi.map(
+				(id) => allIndexedDocuments[id || ''],
+			);
+			const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter(
+				(doc) => doc.embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+			);
+			expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
+			expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
+				true,
+			);
+			expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
+				true,
+			);
+		});
 
-    it('returns all data for DCC', async () => {
-      const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.DCC });
-      const allRetrievedEntities = await reduceToEntityList(responseStream);
-      expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
-    });
+		it('returns all data for DCC', async () => {
+			const responseStream = entitiesStream({ app, apiKey: MOCK_API_KEYS.DCC });
+			const allRetrievedEntities = await reduceToEntityList(responseStream);
+			expect(allRetrievedEntities.length).toBe(Object.entries(allIndexedDocuments).length);
+		});
 
-    it('returns and all the right data for program members', async () => {
-      const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
-      const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-      const responseStream = entitiesStream({ app, apiKey: apiKey });
-      const allRetrievedEntities = await reduceToEntityList(responseStream);
-      const equivalentIndexedDocuments = allRetrievedEntities.map(
-        (retrievedObject) => allIndexedDocuments[retrievedObject.id || ''],
-      );
-      const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
-        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
-        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS,
-        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
-        ({ study_id, embargo_stage }) =>
-          embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
-          userScopes.some((scope) => scope.includes(study_id)),
-      ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
-        validators.some((validate) => validate(doc)),
-      );
-      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
-        true,
-      );
-      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
-        true,
-      );
-    });
+		it('returns and all the right data for program members', async () => {
+			const apiKey = MOCK_API_KEYS.FULL_PROGRAM_MEMBER;
+			const userScopes = MOCK_API_KEY_SCOPES[apiKey];
+			const responseStream = entitiesStream({ app, apiKey: apiKey });
+			const allRetrievedEntities = await reduceToEntityList(responseStream);
+			const equivalentIndexedDocuments = allRetrievedEntities.map(
+				(retrievedObject) => allIndexedDocuments[retrievedObject.id || ''],
+			);
+			const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
+				({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+				({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS,
+				({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+				({ study_id, embargo_stage }) =>
+					embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
+					userScopes.some((scope) => scope.includes(study_id)),
+			];
+			const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+				validators.some((validate) => validate(doc)),
+			);
+			expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
+			expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
+				true,
+			);
+			expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
+				true,
+			);
+		});
 
-    it('returns and all the right data for associate program members', async () => {
-      const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
-      const userScopes = MOCK_API_KEY_SCOPES[apiKey];
-      const responseStream = entitiesStream({ app, apiKey: apiKey });
-      const allRetrievedEntities = await reduceToEntityList(responseStream);
-      const equivalentIndexedDocuments = allRetrievedEntities.map(
-        (retrievedObject) => allIndexedDocuments[retrievedObject.id || ''],
-      );
-      const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
-        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
-        ({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
-        ({ study_id, embargo_stage }) =>
-          embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
-          userScopes.some((scope) => scope.includes(study_id)),
-        ({ study_id, embargo_stage }) =>
-          embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
-          userScopes.some((scope) => scope.includes(study_id)),
-      ];
-      const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
-        validators.some((validate) => validate(doc)),
-      );
-      expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
-      expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
-        true,
-      );
-      expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
-        true,
-      );
-    });
-  });
+		it('returns and all the right data for associate program members', async () => {
+			const apiKey = MOCK_API_KEYS.ASSOCIATE_PROGRAM_MEMBER;
+			const userScopes = MOCK_API_KEY_SCOPES[apiKey];
+			const responseStream = entitiesStream({ app, apiKey: apiKey });
+			const allRetrievedEntities = await reduceToEntityList(responseStream);
+			const equivalentIndexedDocuments = allRetrievedEntities.map(
+				(retrievedObject) => allIndexedDocuments[retrievedObject.id || ''],
+			);
+			const validators: ((doc: EsFileCentricDocument) => boolean)[] = [
+				({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.PUBLIC,
+				({ embargo_stage }) => embargo_stage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS,
+				({ study_id, embargo_stage }) =>
+					embargo_stage === FILE_EMBARGO_STAGE.FULL_PROGRAMS &&
+					userScopes.some((scope) => scope.includes(study_id)),
+				({ study_id, embargo_stage }) =>
+					embargo_stage === FILE_EMBARGO_STAGE.OWN_PROGRAM &&
+					userScopes.some((scope) => scope.includes(study_id)),
+			];
+			const allDocumentsThatQualify = Object.values(allIndexedDocuments).filter((doc) =>
+				validators.some((validate) => validate(doc)),
+			);
+			expect(equivalentIndexedDocuments.length).toBe(allDocumentsThatQualify.length);
+			expect(equivalentIndexedDocuments.every((doc) => allDocumentsThatQualify.includes(doc))).toBe(
+				true,
+			);
+			expect(allDocumentsThatQualify.every((doc) => equivalentIndexedDocuments.includes(doc))).toBe(
+				true,
+			);
+		});
+	});
 });

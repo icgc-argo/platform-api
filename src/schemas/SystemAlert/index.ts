@@ -37,11 +37,11 @@ const { SystemAlertTI } = createCheckers(systemAlertTI);
 // the build will continue, and valid system alerts will still be served.
 
 interface SystemAlert {
-  dismissable: boolean;
-  id: string;
-  level: 'error' | 'info' | 'warning';
-  message?: string;
-  title: string;
+	dismissable: boolean;
+	id: string;
+	level: 'error' | 'info' | 'warning';
+	message?: string;
+	title: string;
 }
 
 type AllowedFields = keyof SystemAlert;
@@ -51,42 +51,42 @@ type AllowedFields = keyof SystemAlert;
 const allowedFields = ['dismissable', 'id', 'level', 'message', 'title'];
 
 const logError = (message: string, name: string) => {
-  logger.error(`📜 System Alert - ${name} - ${message}`);
+	logger.error(`📜 System Alert - ${name} - ${message}`);
 };
 
 const getSystemAlerts = () => {
-  let result: SystemAlert[] = [];
+	let result: SystemAlert[] = [];
 
-  try {
-    const alertsStr = process.env.SYSTEM_ALERTS || '';
+	try {
+		const alertsStr = process.env.SYSTEM_ALERTS || '';
 
-    const alertsParsed = [].concat(JSON.parse(alertsStr));
+		const alertsParsed = [].concat(JSON.parse(alertsStr));
 
-    const alertsValidated = alertsParsed.reduce(
-      (acc, curr) => ({
-        ...acc,
-        ...(SystemAlertTI.test(curr)
-          ? { valid: [...acc.valid, curr] }
-          : { invalid: [...acc.invalid, curr] }),
-      }),
-      { valid: [], invalid: [] },
-    );
+		const alertsValidated = alertsParsed.reduce(
+			(acc, curr) => ({
+				...acc,
+				...(SystemAlertTI.test(curr)
+					? { valid: [...acc.valid, curr] }
+					: { invalid: [...acc.invalid, curr] }),
+			}),
+			{ valid: [], invalid: [] },
+		);
 
-    result = alertsValidated.valid.map((alert: SystemAlert) =>
-      Object.keys(alert)
-        .filter((key) => allowedFields.includes(key))
-        .reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
-    );
+		result = alertsValidated.valid.map((alert: SystemAlert) =>
+			Object.keys(alert)
+				.filter((key) => allowedFields.includes(key))
+				.reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
+		);
 
-    alertsValidated.invalid.forEach((alert: any) => {
-      // check() will throw errors on invalid system alerts.
-      SystemAlertTI.check(alert);
-    });
-  } catch (e) {
-    logError(e.message, e.name);
-  } finally {
-    return result;
-  }
+		alertsValidated.invalid.forEach((alert: any) => {
+			// check() will throw errors on invalid system alerts.
+			SystemAlertTI.check(alert);
+		});
+	} catch (e) {
+		logError(e.message, e.name);
+	} finally {
+		return result;
+	}
 };
 
 const alertsArray = getSystemAlerts();
@@ -94,25 +94,25 @@ const alertsArray = getSystemAlerts();
 logger.info(`📜 System Alerts: ${JSON.stringify({ alertsArray })}`);
 
 const typeDefs = gql`
-  type SystemAlert {
-    dismissable: Boolean!
-    id: ID!
-    level: String!
-    message: String
-    title: String!
-  }
-  type Query {
-    systemAlerts: [SystemAlert]
-  }
+	type SystemAlert {
+		dismissable: Boolean!
+		id: ID!
+		level: String!
+		message: String
+		title: String!
+	}
+	type Query {
+		systemAlerts: [SystemAlert]
+	}
 `;
 
 const resolvers = {
-  Query: {
-    systemAlerts: () => alertsArray,
-  },
+	Query: {
+		systemAlerts: () => alertsArray,
+	},
 };
 
 export default makeExecutableSchema({
-  typeDefs,
-  resolvers,
+	typeDefs,
+	resolvers,
 });

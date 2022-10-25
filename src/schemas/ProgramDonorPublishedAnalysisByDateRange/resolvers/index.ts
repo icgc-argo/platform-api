@@ -24,17 +24,17 @@ import { resolveWithProgramAuth } from '../../ProgramDonorSummary/resolvers';
 import programDonorPublishedAnalysisByDateRangeResolver from './programDonorPublishedAnalysisByDateRange';
 
 const createResolvers = async (
-  esClient: Client,
+	esClient: Client,
 ): Promise<IResolvers<unknown, GlobalGqlContext>> => {
-  return {
-    Query: {
-      programDonorPublishedAnalysisByDateRange: (...resolverArguments) =>
-        resolveWithProgramAuth(
-          programDonorPublishedAnalysisByDateRangeResolver(esClient)(...resolverArguments),
-          resolverArguments,
-        ),
-    },
-  };
+	return {
+		Query: {
+			programDonorPublishedAnalysisByDateRange: (...resolverArguments) =>
+				resolveWithProgramAuth(
+					programDonorPublishedAnalysisByDateRangeResolver(esClient)(...resolverArguments),
+					resolverArguments,
+				),
+		},
+	};
 };
 
 export default createResolvers;

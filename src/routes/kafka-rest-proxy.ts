@@ -25,76 +25,76 @@ import { json } from 'body-parser';
 import express, { Router } from 'express';
 import { EgoClient } from 'services/ego';
 import authenticatedRequestMiddleware, {
-  AuthenticatedRequest,
+	AuthenticatedRequest,
 } from 'routes/middleware/authenticatedRequestMiddleware';
 import egoTokenUtils from 'utils/egoTokenUtils';
 
 const createKafkaRouter = (egoClient: EgoClient): Router => {
-  const router = express.Router();
-  const apiRoot = KAFKA_REST_PROXY_ROOT;
+	const router = express.Router();
+	const apiRoot = KAFKA_REST_PROXY_ROOT;
 
-  // fetch needs to use the json body parser
-  // Kafka can accept message up to max 1mb in size, and there are examples of song sending messages larger than the default 100kb limit
-  router.use(json({ limit: '1mb' }));
+	// fetch needs to use the json body parser
+	// Kafka can accept message up to max 1mb in size, and there are examples of song sending messages larger than the default 100kb limit
+	router.use(json({ limit: '1mb' }));
 
-  router.use(authenticatedRequestMiddleware({ egoClient }));
+	router.use(authenticatedRequestMiddleware({ egoClient }));
 
-  router.post('/:topic', async (req: AuthenticatedRequest, res) => {
-    const {
-      auth: { authenticated, serializedScopes, egoJwt },
-      params: { topic },
-    } = req;
+	router.post('/:topic', async (req: AuthenticatedRequest, res) => {
+		const {
+			auth: { authenticated, serializedScopes, egoJwt },
+			params: { topic },
+		} = req;
 
-    // Require auth
-    if (!authenticated) {
-      res.status(401).json({ error: 'invalid auth token' });
-      return;
-    }
+		// Require auth
+		if (!authenticated) {
+			res.status(401).json({ error: 'invalid auth token' });
+			return;
+		}
 
-    // Require kafka topic writing permisison
-    const hasPermission = egoTokenUtils.canWriteKafkaTopic({
-      permissions: serializedScopes,
-      topic,
-    });
-    if (!hasPermission) {
-      res.status(403).json({ error: 'not authorized' });
-      return;
-    }
+		// Require kafka topic writing permisison
+		const hasPermission = egoTokenUtils.canWriteKafkaTopic({
+			permissions: serializedScopes,
+			topic,
+		});
+		if (!hasPermission) {
+			res.status(403).json({ error: 'not authorized' });
+			return;
+		}
 
-    const url = urlJoin(apiRoot, 'topics', topic);
-    const msg = req.body;
-    logger.debug(`received message in kafka proxy ${JSON.stringify(msg)}`);
-    const kafkaRestProxyBody = JSON.stringify({
-      records: [
-        {
-          value: msg,
-        },
-      ],
-    });
-    await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/vnd.kafka.json.v2+json',
-        Accept: 'application/vnd.kafka.v2+json',
-      },
-      body: kafkaRestProxyBody,
-    })
-      .then((response) => {
-        if (!response.body) throw 'response body is undefined';
-        res.contentType('application/vnd.kafka.v2+json');
-        res.status(response.status);
-        response.body.pipe(res);
-        return;
-      })
-      .catch((e) => {
-        logger.error('failed to send message to kafka proxy' + e);
-        res.status(500).send(e);
-        return;
-      });
-    return;
-  });
+		const url = urlJoin(apiRoot, 'topics', topic);
+		const msg = req.body;
+		logger.debug(`received message in kafka proxy ${JSON.stringify(msg)}`);
+		const kafkaRestProxyBody = JSON.stringify({
+			records: [
+				{
+					value: msg,
+				},
+			],
+		});
+		await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/vnd.kafka.json.v2+json',
+				Accept: 'application/vnd.kafka.v2+json',
+			},
+			body: kafkaRestProxyBody,
+		})
+			.then((response) => {
+				if (!response.body) throw 'response body is undefined';
+				res.contentType('application/vnd.kafka.v2+json');
+				res.status(response.status);
+				response.body.pipe(res);
+				return;
+			})
+			.catch((e) => {
+				logger.error('failed to send message to kafka proxy' + e);
+				res.status(500).send(e);
+				return;
+			});
+		return;
+	});
 
-  return router;
+	return router;
 };
 
 export default createKafkaRouter;

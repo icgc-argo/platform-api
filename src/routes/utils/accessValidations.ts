@@ -19,83 +19,83 @@
 
 import egoTokenUtils from 'utils/egoTokenUtils';
 import {
-  EsFileCentricDocument,
-  FILE_ACCESS,
-  FILE_EMBARGO_STAGE,
+	EsFileCentricDocument,
+	FILE_ACCESS,
+	FILE_EMBARGO_STAGE,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import {
-  PERMISSIONS,
-  PermissionScopeObj,
-  UserProgramMembershipAccessLevel,
+	PERMISSIONS,
+	PermissionScopeObj,
+	UserProgramMembershipAccessLevel,
 } from '@icgc-argo/ego-token-utils';
 import { EGO_DACO_POLICY_NAME } from 'config';
 
 export const hasSufficientProgramMembershipAccess = (config: {
-  scopes: PermissionScopeObj[];
-  file?: EsFileCentricDocument;
+	scopes: PermissionScopeObj[];
+	file?: EsFileCentricDocument;
 }): boolean => {
-  if (config.file) {
-    const { scopes, file } = config;
-    const embargoStage = file.meta.embargo_stage;
+	if (config.file) {
+		const { scopes, file } = config;
+		const embargoStage = file.meta.embargo_stage;
 
-    const serializedScopes = scopes.map(egoTokenUtils.serializeScope);
-    const accessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
-      permissions: serializedScopes,
-    });
+		const serializedScopes = scopes.map(egoTokenUtils.serializeScope);
+		const accessLevel = egoTokenUtils.getProgramMembershipAccessLevel({
+			permissions: serializedScopes,
+		});
 
-    const programId = file.meta.study_id;
+		const programId = file.meta.study_id;
 
-    if (embargoStage === FILE_EMBARGO_STAGE.OWN_PROGRAM) {
-      return (
-        accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({
-          permissions: serializedScopes,
-          programId,
-        })
-      );
-    }
+		if (embargoStage === FILE_EMBARGO_STAGE.OWN_PROGRAM) {
+			return (
+				accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
+				egoTokenUtils.canReadProgramData({
+					permissions: serializedScopes,
+					programId,
+				})
+			);
+		}
 
-    if (embargoStage === FILE_EMBARGO_STAGE.FULL_PROGRAMS) {
-      return (
-        accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({
-          permissions: serializedScopes,
-          programId,
-        }) ||
-        accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER
-      );
-    }
+		if (embargoStage === FILE_EMBARGO_STAGE.FULL_PROGRAMS) {
+			return (
+				accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
+				egoTokenUtils.canReadProgramData({
+					permissions: serializedScopes,
+					programId,
+				}) ||
+				accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER
+			);
+		}
 
-    if (embargoStage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS) {
-      return (
-        accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
-        egoTokenUtils.canReadProgramData({
-          permissions: serializedScopes,
-          programId,
-        }) ||
-        accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
-        accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
-      );
-    }
+		if (embargoStage === FILE_EMBARGO_STAGE.ASSOCIATE_PROGRAMS) {
+			return (
+				accessLevel === UserProgramMembershipAccessLevel.DCC_MEMBER ||
+				egoTokenUtils.canReadProgramData({
+					permissions: serializedScopes,
+					programId,
+				}) ||
+				accessLevel === UserProgramMembershipAccessLevel.FULL_PROGRAM_MEMBER ||
+				accessLevel === UserProgramMembershipAccessLevel.ASSOCIATE_PROGRAM_MEMBER
+			);
+		}
 
-    if (embargoStage === FILE_EMBARGO_STAGE.PUBLIC) {
-      return true;
-    }
-  }
-  return false;
+		if (embargoStage === FILE_EMBARGO_STAGE.PUBLIC) {
+			return true;
+		}
+	}
+	return false;
 };
 
 export const hasSufficientDacoAccess = (config: {
-  scopes: PermissionScopeObj[];
-  file: EsFileCentricDocument;
+	scopes: PermissionScopeObj[];
+	file: EsFileCentricDocument;
 }): boolean => {
-  const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
-  const userHasDacoAccess =
-    dacoScopes.length > 0 &&
-    dacoScopes.some((scope) => scope.permission === PERMISSIONS.READ) &&
-    dacoScopes.every((scope) => scope.permission !== PERMISSIONS.DENY);
-  return (
-    config.file.file_access === FILE_ACCESS.OPEN ||
-    (config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)
-  );
+	const dacoScopes = config.scopes.filter(({ policy }) => policy === EGO_DACO_POLICY_NAME);
+	const userHasDacoAccess =
+		dacoScopes.length > 0 &&
+		dacoScopes.some((scope) => scope.permission === PERMISSIONS.READ) &&
+		dacoScopes.every((scope) => scope.permission !== PERMISSIONS.DENY);
+	return (
+		config.file.file_access === FILE_ACCESS.OPEN ||
+		(config.file.file_access === FILE_ACCESS.CONTROLLED && userHasDacoAccess)
+	);
 };

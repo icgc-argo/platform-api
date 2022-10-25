@@ -25,8 +25,8 @@ import { EntitiesPageResponseBody } from '../entitiesHandler';
 import { Client } from '@elastic/elasticsearch';
 import esb from 'elastic-builder';
 import {
-  FILE_METADATA_FIELDS,
-  EsFileCentricDocument,
+	FILE_METADATA_FIELDS,
+	EsFileCentricDocument,
 } from 'utils/commonTypes/EsFileCentricDocument';
 import { EsHits } from 'services/elasticsearch';
 import { reduce } from 'axax/es5/reduce';
@@ -35,110 +35,110 @@ import _ from 'lodash';
 chai.use(chaiHttp);
 
 export const entitiesStream = async function* ({
-  app,
-  apiKey,
+	app,
+	apiKey,
 }: {
-  app: Express;
-  apiKey: MockApiKey;
+	app: Express;
+	apiKey: MockApiKey;
 }) {
-  let currentPage = 0;
-  const pageSize = 1000;
-  cycle: while (true) {
-    const pageData = await chai
-      .request(app)
-      .get(`/entities?page=${currentPage}&size=${pageSize}`)
-      .set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
-      .then((response) => response.body as EntitiesPageResponseBody);
+	let currentPage = 0;
+	const pageSize = 1000;
+	cycle: while (true) {
+		const pageData = await chai
+			.request(app)
+			.get(`/entities?page=${currentPage}&size=${pageSize}`)
+			.set('authorization', `Bearer ${MOCK_API_KEYS[apiKey]}`)
+			.then((response) => response.body as EntitiesPageResponseBody);
 
-    if (!pageData.content) {
-      console.log('no pageData.content: ', pageData);
-      throw new Error('boo');
-    }
-    if (pageData.content.length > 0) {
-      currentPage++;
-      yield pageData;
-    } else {
-      break cycle;
-    }
-  }
+		if (!pageData.content) {
+			console.log('no pageData.content: ', pageData);
+			throw new Error('boo');
+		}
+		if (pageData.content.length > 0) {
+			currentPage++;
+			yield pageData;
+		} else {
+			break cycle;
+		}
+	}
 };
 
 export const reduceToEntityList = (stream: ReturnType<typeof entitiesStream>) =>
-  reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>((acc, r) => {
-    r.content.forEach((e) => {
-      acc.push(e);
-    });
-    return acc;
-  }, [])(stream);
+	reduce<EntitiesPageResponseBody, EntitiesPageResponseBody['content']>((acc, r) => {
+		r.content.forEach((e) => {
+			acc.push(e);
+		});
+		return acc;
+	}, [])(stream);
 
 const esDocumentStream = async function* ({ esClient }: { esClient: Client }) {
-  let currentIndex = 0;
-  const pageSize = 1000;
-  cycle: while (true) {
-    const pageData = await esClient
-      .search({
-        index: 'file_centric',
-        body: esb
-          .requestBodySearch()
-          .sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
-          .from(currentIndex)
-          .size(pageSize),
-      })
-      .then((r) => r.body as EsHits<EsFileCentricDocument>);
-    if (pageData.hits.hits.length > 0) {
-      yield pageData.hits.hits.map((h) => h._source);
-      currentIndex += pageSize;
-    } else {
-      break cycle;
-    }
-  }
+	let currentIndex = 0;
+	const pageSize = 1000;
+	cycle: while (true) {
+		const pageData = await esClient
+			.search({
+				index: 'file_centric',
+				body: esb
+					.requestBodySearch()
+					.sorts([esb.sort(FILE_METADATA_FIELDS['object_id'])])
+					.from(currentIndex)
+					.size(pageSize),
+			})
+			.then((r) => r.body as EsHits<EsFileCentricDocument>);
+		if (pageData.hits.hits.length > 0) {
+			yield pageData.hits.hits.map((h) => h._source);
+			currentIndex += pageSize;
+		} else {
+			break cycle;
+		}
+	}
 };
 
 export const getAllIndexedDocuments = (esClient: Client) =>
-  reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
-    chunk.forEach((doc) => acc.push(doc));
-    return acc;
-  }, [])(esDocumentStream({ esClient }));
+	reduce<EsFileCentricDocument[], EsFileCentricDocument[]>((acc, chunk) => {
+		chunk.forEach((doc) => acc.push(doc));
+		return acc;
+	}, [])(esDocumentStream({ esClient }));
 
 export const MOCK_API_KEYS = {
-  PUBLIC: 'PUBLIC' as 'PUBLIC',
-  FULL_PROGRAM_MEMBER: 'FULL_PROGRAM_MEMBER' as 'FULL_PROGRAM_MEMBER',
-  ASSOCIATE_PROGRAM_MEMBER: 'ASSOCIATE_PROGRAM_MEMBER' as 'ASSOCIATE_PROGRAM_MEMBER',
-  DCC: 'DCC' as 'DCC',
+	PUBLIC: 'PUBLIC' as 'PUBLIC',
+	FULL_PROGRAM_MEMBER: 'FULL_PROGRAM_MEMBER' as 'FULL_PROGRAM_MEMBER',
+	ASSOCIATE_PROGRAM_MEMBER: 'ASSOCIATE_PROGRAM_MEMBER' as 'ASSOCIATE_PROGRAM_MEMBER',
+	DCC: 'DCC' as 'DCC',
 };
 export type MockApiKey = keyof typeof MOCK_API_KEYS;
 export const TEST_PROGRAM = `TEST-CA`;
 export const MOCK_API_KEY_SCOPES: {
-  [k in MockApiKey]: string[];
+	[k in MockApiKey]: string[];
 } = {
-  PUBLIC: [],
-  FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ', `PROGRAMDATA-${TEST_PROGRAM}.READ`],
-  ASSOCIATE_PROGRAM_MEMBER: [
-    'PROGRAMMEMBERSHIP-ASSOCIATE.READ',
-    `PROGRAMDATA-${TEST_PROGRAM}.READ`,
-  ],
-  DCC: [
-    'song.WRITE',
-    'score.WRITE',
-    'PROGRAMSERVICE.WRITE',
-    'FILES-SVC.WRITE',
-    'DICTIONARY.WRITE',
-    'CLINICALSERVICE.WRITE',
-  ],
+	PUBLIC: [],
+	FULL_PROGRAM_MEMBER: ['PROGRAMMEMBERSHIP-FULL.READ', `PROGRAMDATA-${TEST_PROGRAM}.READ`],
+	ASSOCIATE_PROGRAM_MEMBER: [
+		'PROGRAMMEMBERSHIP-ASSOCIATE.READ',
+		`PROGRAMDATA-${TEST_PROGRAM}.READ`,
+	],
+	DCC: [
+		'song.WRITE',
+		'score.WRITE',
+		'PROGRAMSERVICE.WRITE',
+		'FILES-SVC.WRITE',
+		'DICTIONARY.WRITE',
+		'CLINICALSERVICE.WRITE',
+	],
 };
 
 export const createMockEgoClient = (): Partial<EgoClient> => {
-  const mockEgoClient = {
-    checkApiKey: ({ apiKey }: { apiKey: MockApiKey }) =>
-      Promise.resolve({
-        client_id: 'test',
-        exp: Infinity,
-        scope: MOCK_API_KEY_SCOPES[apiKey],
-        user_id: 'yup',
-      }),
-    getApplicationJwt: async (applicationCredentials: EgoApplicationCredential) => {
-      return 'mock jwt string';
-    },
-  };
-  return mockEgoClient;
+	const mockEgoClient = {
+		checkApiKey: ({ apiKey }: { apiKey: MockApiKey }) =>
+			Promise.resolve({
+				client_id: 'test',
+				exp: Infinity,
+				scope: MOCK_API_KEY_SCOPES[apiKey],
+				user_id: 'yup',
+			}),
+		getApplicationJwt: async (applicationCredentials: EgoApplicationCredential) => {
+			return 'mock jwt string';
+		},
+	};
+	return mockEgoClient;
 };
