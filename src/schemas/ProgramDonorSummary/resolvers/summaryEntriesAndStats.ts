@@ -452,6 +452,23 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				const dnaTNMatchedPairQuery = esb.boolQuery().should(shouldQueries);
 				queries.push(dnaTNMatchedPairQuery);
 			}
+
+			if (field === EsDonorDocumentField.validWithCurrentDictionary && filter.values.length > 0) {
+				for (const value of filter.values) {
+					if (value === 'VALID' || value === 'INVALID') {
+						queries.push(
+							esb
+								.boolQuery()
+								.must(
+									esb.termsQuery(
+										EsDonorDocumentField.validWithCurrentDictionary,
+										value === 'VALID' ? true : false,
+									),
+								),
+						);
+					}
+				}
+			}
 		});
 
 		type AggregationName = keyof ProgramDonorSummaryStats | 'donorsInvalidWithCurrentDictionary';
@@ -1091,9 +1108,9 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 					noData: result.aggregations.noOpenAccess.doc_count,
 				},
 
-				lastUpdate: result.aggregations.lastUpdate?.value
-					? new Date(result.aggregations.lastUpdate.value)
-					: undefined,
+				// lastUpdate: result.aggregations.lastUpdate?.value
+				// 	? new Date(result.aggregations.lastUpdate.value)
+				// 	: undefined,
 			},
 		};
 	};
