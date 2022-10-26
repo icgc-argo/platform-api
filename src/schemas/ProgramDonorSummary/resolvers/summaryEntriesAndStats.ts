@@ -38,6 +38,7 @@ import {
 	RnaFilterStatus,
 	tumorNormalStatus,
 	tumorNormalMatchedPairStatus,
+	validWithCurrentDictionaryStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
@@ -454,20 +455,21 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 			}
 
 			if (field === EsDonorDocumentField.validWithCurrentDictionary && filter.values.length > 0) {
+				const shouldQueries = [];
 				for (const value of filter.values) {
 					if (value === 'VALID' || value === 'INVALID') {
-						queries.push(
-							esb
-								.boolQuery()
-								.must(
-									esb.termsQuery(
-										EsDonorDocumentField.validWithCurrentDictionary,
-										value === 'VALID' ? true : false,
-									),
-								),
+						shouldQueries.push(
+							esb.termsQuery(
+								EsDonorDocumentField.validWithCurrentDictionary,
+								value === validWithCurrentDictionaryStatus.VALID,
+							),
 						);
 					}
 				}
+
+				const validWithDictionaryQuery = esb.boolQuery().should(shouldQueries);
+
+				queries.push(validWithDictionaryQuery);
 			}
 		});
 
