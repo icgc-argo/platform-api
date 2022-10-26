@@ -24,7 +24,7 @@ import typeDefs from './gqlTypeDefs';
 import { Client } from '@elastic/elasticsearch';
 
 export default async (esClient: Client) =>
-  makeExecutableSchema({
-    typeDefs,
-    resolvers: await resolvers(esClient),
-  });
+	makeExecutableSchema({
+		typeDefs,
+		resolvers: await resolvers(esClient),
+	});

@@ -20,139 +20,115 @@
 import { Client } from '@elastic/elasticsearch';
 import flatMap from 'lodash/flatMap';
 import logger from 'utils/logger';
-import {
-  ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
-  ELASTICSEARCH_HOST,
-} from 'config';
+import { ELASTICSEARCH_CLIENT_TRUST_SSL_CERT, ELASTICSEARCH_HOST } from 'config';
 
 import {
-  EsScalarFieldMapping,
-  EsNestedFieldMapping,
-  EsObjectFieldMapping,
-  EsFieldMapping,
-  EsIndexMapping,
+	EsScalarFieldMapping,
+	EsNestedFieldMapping,
+	EsObjectFieldMapping,
+	EsFieldMapping,
+	EsIndexMapping,
 } from './types';
 export {
-  EsScalarFieldMapping,
-  EsNestedFieldMapping,
-  EsObjectFieldMapping,
-  EsFieldMapping,
-  EsIndexMapping,
+	EsScalarFieldMapping,
+	EsNestedFieldMapping,
+	EsObjectFieldMapping,
+	EsFieldMapping,
+	EsIndexMapping,
 } from './types';
 
-export const isObjectFieldMapping = (
-  obj: object,
-): obj is EsObjectFieldMapping =>
-  Object.keys(obj).includes('properties') && !Object.keys(obj).includes('type');
+export const isObjectFieldMapping = (obj: object): obj is EsObjectFieldMapping =>
+	Object.keys(obj).includes('properties') && !Object.keys(obj).includes('type');
 
-export const isScalarFieldMapping = (
-  obj: object,
-): obj is EsScalarFieldMapping =>
-  // @ts-ignore This is doing run-time type check so it's ok
-  Object.keys(obj).includes('type') && obj.type !== 'nested';
+export const isScalarFieldMapping = (obj: object): obj is EsScalarFieldMapping =>
+	// @ts-ignore This is doing run-time type check so it's ok
+	Object.keys(obj).includes('type') && obj.type !== 'nested';
 
-export const isNestedFieldMapping = (
-  obj: object,
-): obj is EsNestedFieldMapping =>
-  // @ts-ignore This is doing run-time type check so it's ok
-  Object.keys(obj).includes('type') && obj.type === 'nested';
+export const isNestedFieldMapping = (obj: object): obj is EsNestedFieldMapping =>
+	// @ts-ignore This is doing run-time type check so it's ok
+	Object.keys(obj).includes('type') && obj.type === 'nested';
 
-export const getNestedFields = (
-  fieldMapping: EsFieldMapping,
-  parentField?: string,
-): string[] => {
-  /**
-   * @TODO maybe tail-call optimize this function
-   */
-  if (
-    isNestedFieldMapping(fieldMapping) ||
-    isObjectFieldMapping(fieldMapping)
-  ) {
-    const { properties } = fieldMapping;
-    const currentFields = Object.keys(properties);
-    const nestedOrObjectFieldKey = currentFields.filter(
-      (field) =>
-        isNestedFieldMapping(properties[field]) ||
-        isObjectFieldMapping(properties[field]),
-    );
-    const nestedFieldKey = nestedOrObjectFieldKey.filter((field) =>
-      isNestedFieldMapping(properties[field]),
-    );
-    return flatMap([
-      ...(parentField
-        ? nestedFieldKey.map((field) => `${parentField}.${field}`)
-        : nestedFieldKey),
-      ...nestedOrObjectFieldKey.map((field) =>
-        getNestedFields(
-          properties[field],
-          parentField ? `${parentField}.${field}` : field,
-        ),
-      ),
-    ]);
-  } else {
-    return [];
-  }
+export const getNestedFields = (fieldMapping: EsFieldMapping, parentField?: string): string[] => {
+	/**
+	 * @TODO maybe tail-call optimize this function
+	 */
+	if (isNestedFieldMapping(fieldMapping) || isObjectFieldMapping(fieldMapping)) {
+		const { properties } = fieldMapping;
+		const currentFields = Object.keys(properties);
+		const nestedOrObjectFieldKey = currentFields.filter(
+			(field) => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
+		);
+		const nestedFieldKey = nestedOrObjectFieldKey.filter((field) =>
+			isNestedFieldMapping(properties[field]),
+		);
+		return flatMap([
+			...(parentField ? nestedFieldKey.map((field) => `${parentField}.${field}`) : nestedFieldKey),
+			...nestedOrObjectFieldKey.map((field) =>
+				getNestedFields(properties[field], parentField ? `${parentField}.${field}` : field),
+			),
+		]);
+	} else {
+		return [];
+	}
 };
 
 export type EsSecret = {
-  user: string;
-  pass: string;
+	user: string;
+	pass: string;
 };
 const isEsSecret = (data: { [k: string]: any }): data is EsSecret => {
-  return typeof data['user'] === 'string' && typeof data['pass'] === 'string';
+	return typeof data['user'] === 'string' && typeof data['pass'] === 'string';
 };
 
 export const createEsClient = async ({
-  node = ELASTICSEARCH_HOST,
-  auth,
+	node = ELASTICSEARCH_HOST,
+	auth,
 }: { node?: string; auth?: EsSecret } = {}): Promise<Client> => {
-  let esClient: Client;
-  esClient = new Client({
-    node,
-    ssl: {
-      rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
-    },
-    auth: auth
-      ? {
-          username: auth.user,
-          password: auth.pass,
-        }
-      : undefined,
-  });
-  try {
-    logger.info(`attempting to ping elasticsearch at ${ELASTICSEARCH_HOST}`);
-    await esClient.ping();
-  } catch (err) {
-    logger.error(`esClient failed to connect to cluster`);
-    throw err;
-  }
-  logger.info(
-    `successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`,
-  );
-  return esClient;
+	let esClient: Client;
+	esClient = new Client({
+		node,
+		ssl: {
+			rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
+		},
+		auth: auth
+			? {
+					username: auth.user,
+					password: auth.pass,
+			  }
+			: undefined,
+	});
+	try {
+		logger.info(`attempting to ping elasticsearch at ${ELASTICSEARCH_HOST}`);
+		await esClient.ping();
+	} catch (err) {
+		logger.error(`esClient failed to connect to cluster`);
+		throw err;
+	}
+	logger.info(`successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`);
+	return esClient;
 };
 
 export type EsHits<T = {}> = {
-  took: number;
-  timed_out: boolean;
-  _shards: {
-    total: number;
-    successful: number;
-    skipped: number;
-    failed: number;
-  };
-  hits: {
-    total: {
-      value: number;
-      relation: 'eq' | 'gte';
-    };
-    max_score: number;
-    hits: {
-      _index: string;
-      _type: string;
-      _id: string;
-      _score: number;
-      _source: T;
-    }[];
-  };
+	took: number;
+	timed_out: boolean;
+	_shards: {
+		total: number;
+		successful: number;
+		skipped: number;
+		failed: number;
+	};
+	hits: {
+		total: {
+			value: number;
+			relation: 'eq' | 'gte';
+		};
+		max_score: number;
+		hits: {
+			_index: string;
+			_type: string;
+			_id: string;
+			_score: number;
+			_source: T;
+		}[];
+	};
 };

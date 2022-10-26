@@ -18,17 +18,14 @@
  */
 
 import 'babel-polyfill';
-import {
-  FILE_METADATA_FIELDS,
-  FILE_EMBARGO_STAGE,
-} from 'utils/commonTypes/EsFileCentricDocument';
+import { FILE_METADATA_FIELDS, FILE_EMBARGO_STAGE } from 'utils/commonTypes/EsFileCentricDocument';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { UserProgramMembershipAccessLevel } from '@icgc-argo/ego-token-utils';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 import {
-  ArrangerFilterFieldOperation,
-  ArrangerFilter,
-  ArrangerFilterNode,
+	ArrangerFilterFieldOperation,
+	ArrangerFilter,
+	ArrangerFilterNode,
 } from './arrangerFilterTypes';
 import { uniq } from 'lodash';
 import logger from '../../utils/logger';
@@ -37,72 +34,61 @@ const FILE_EMBARGO_FILTER_FIELD = FILE_METADATA_FIELDS['meta.embargo_stage'];
 const FILE_STUDY_FILTER_FIELD = FILE_METADATA_FIELDS['meta.study_id'];
 
 const emptyFilter = (): ArrangerFilter => ({
-  op: 'and',
-  content: [],
+	op: 'and',
+	content: [],
 });
 
 /* Logical operator shorthands */
 const all = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
-  op: 'and',
-  content: [...conditions],
+	op: 'and',
+	content: [...conditions],
 });
 const not = (conditions: ArrangerFilterNode[]): ArrangerFilter => ({
-  op: 'not',
-  content: [...conditions],
+	op: 'not',
+	content: [...conditions],
 });
 const match = (
-  field: keyof typeof FILE_METADATA_FIELDS,
-  values: string[],
+	field: keyof typeof FILE_METADATA_FIELDS,
+	values: string[],
 ): ArrangerFilterFieldOperation => ({
-  op: 'in',
-  content: {
-    field,
-    value: values,
-  },
+	op: 'in',
+	content: {
+		field,
+		value: values,
+	},
 });
 /*******************************/
 
-const getAccessControlFilter = (
-  userJwtData: EgoJwtData | null,
-): ArrangerFilter => {
-  const userPrograms: string[] = userJwtData
-    ? uniq(egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope))
-    : [];
-  const programMembershipAccessLevel: UserProgramMembershipAccessLevel =
-    userJwtData
-      ? egoTokenUtils.getProgramMembershipAccessLevel({
-          permissions: userJwtData.context.scope,
-        })
-      : UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
-  /* common filters */
-  const isFromOtherPrograms = not([
-    match(FILE_STUDY_FILTER_FIELD, userPrograms),
-  ]);
-  const isProgramOnly = match(FILE_EMBARGO_FILTER_FIELD, [
-    FILE_EMBARGO_STAGE.OWN_PROGRAM,
-  ]);
-  const isProgramOrFullMember = match(FILE_EMBARGO_FILTER_FIELD, [
-    FILE_EMBARGO_STAGE.OWN_PROGRAM,
-    FILE_EMBARGO_STAGE.FULL_PROGRAMS,
-  ]);
-  const isPublicRelease = match(FILE_EMBARGO_FILTER_FIELD, [
-    FILE_EMBARGO_STAGE.PUBLIC,
-  ]);
-  /******************/
+const getAccessControlFilter = (userJwtData: EgoJwtData | null): ArrangerFilter => {
+	const userPrograms: string[] = userJwtData
+		? uniq(egoTokenUtils.getReadableProgramDataNames(userJwtData.context.scope))
+		: [];
+	const programMembershipAccessLevel: UserProgramMembershipAccessLevel = userJwtData
+		? egoTokenUtils.getProgramMembershipAccessLevel({
+				permissions: userJwtData.context.scope,
+		  })
+		: UserProgramMembershipAccessLevel.PUBLIC_MEMBER;
+	/* common filters */
+	const isFromOtherPrograms = not([match(FILE_STUDY_FILTER_FIELD, userPrograms)]);
+	const isProgramOnly = match(FILE_EMBARGO_FILTER_FIELD, [FILE_EMBARGO_STAGE.OWN_PROGRAM]);
+	const isProgramOrFullMember = match(FILE_EMBARGO_FILTER_FIELD, [
+		FILE_EMBARGO_STAGE.OWN_PROGRAM,
+		FILE_EMBARGO_STAGE.FULL_PROGRAMS,
+	]);
+	const isPublicRelease = match(FILE_EMBARGO_FILTER_FIELD, [FILE_EMBARGO_STAGE.PUBLIC]);
+	/******************/
 
-  const userPermissionToQueryMap: {
-    [accessLevel in UserProgramMembershipAccessLevel]: ArrangerFilter;
-  } = {
-    DCC_MEMBER: emptyFilter(),
-    FULL_PROGRAM_MEMBER: not([all([isFromOtherPrograms, isProgramOnly])]),
-    ASSOCIATE_PROGRAM_MEMBER: not([
-      all([isFromOtherPrograms, isProgramOrFullMember]),
-    ]),
-    PUBLIC_MEMBER: all([isPublicRelease]),
-  };
-  const output = userPermissionToQueryMap[programMembershipAccessLevel];
+	const userPermissionToQueryMap: {
+		[accessLevel in UserProgramMembershipAccessLevel]: ArrangerFilter;
+	} = {
+		DCC_MEMBER: emptyFilter(),
+		FULL_PROGRAM_MEMBER: not([all([isFromOtherPrograms, isProgramOnly])]),
+		ASSOCIATE_PROGRAM_MEMBER: not([all([isFromOtherPrograms, isProgramOrFullMember])]),
+		PUBLIC_MEMBER: all([isPublicRelease]),
+	};
+	const output = userPermissionToQueryMap[programMembershipAccessLevel];
 
-  return output;
+	return output;
 };
 
 export default getAccessControlFilter;

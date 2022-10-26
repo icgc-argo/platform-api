@@ -31,114 +31,100 @@ const router = express.Router();
 
 // This is for handling nodejs/system errors (e.g. connection failed)
 const handleError = (err: Error, req: Request, res: Response) => {
-  logger.error('Clinical Router Error - ' + err);
-  return res.status(500).send('Internal Server Error');
+	logger.error('Clinical Router Error - ' + err);
+	return res.status(500).send('Internal Server Error');
 };
 
 router.use(
-  '/template/all',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const exclude = req.query.excludeSampleRegistration === 'true';
-      return urlJoin(
-        '/dictionary/template/all',
-        `?excludeSampleRegistration=${exclude}`,
-      );
-    },
-    onError: handleError,
-    changeOrigin: true,
-    onProxyReq(proxyReq, req, res) {
-      const exclude = req.query.excludeSampleRegistration;
-      if (exclude && exclude !== 'true' && exclude !== 'false') {
-        res
-          .status(400)
-          .send(
-            `The accepted values of excludeSampleRegistration are 'true' or 'false'.`,
-          );
-      }
-    },
-  }),
+	'/template/all',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const exclude = req.query.excludeSampleRegistration === 'true';
+			return urlJoin('/dictionary/template/all', `?excludeSampleRegistration=${exclude}`);
+		},
+		onError: handleError,
+		changeOrigin: true,
+		onProxyReq(proxyReq, req, res) {
+			const exclude = req.query.excludeSampleRegistration;
+			if (exclude && exclude !== 'true' && exclude !== 'false') {
+				res
+					.status(400)
+					.send(`The accepted values of excludeSampleRegistration are 'true' or 'false'.`);
+			}
+		},
+	}),
 );
 
 router.use(
-  '/template/:template',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      // 'all' will retrieve the zip file with all templates excluding sample_registration
-      // for specific templates 'templateName'.tsv or 'templateName' will get the tsv from clinical
-      const name = req.params.template.replace(/.tsv$/, '');
-      return urlJoin('/dictionary/template/', name);
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
+	'/template/:template',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			// 'all' will retrieve the zip file with all templates excluding sample_registration
+			// for specific templates 'templateName'.tsv or 'templateName' will get the tsv from clinical
+			const name = req.params.template.replace(/.tsv$/, '');
+			return urlJoin('/dictionary/template/', name);
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
 );
 
 router.use(
-  '/program/:programId/all-clinical-data',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const programId = req.params.programId;
-      return urlJoin('/clinical/program/', programId, '/tsv-export');
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
+	'/program/:programId/all-clinical-data',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const programId = req.params.programId;
+			return urlJoin('/clinical/program/', programId, '/tsv-export');
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
 );
 
 router.use(
-  '/program/:programId/clinical-data',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const programId = req.params.programId;
-      return urlJoin('/clinical/program/', programId, '/clinical-data');
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
+	'/program/:programId/clinical-data',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const programId = req.params.programId;
+			return urlJoin('/clinical/program/', programId, '/clinical-data');
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
 );
 
 router.use(
-  '/program/:programId/clinical-search-results',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const programId = req.params.programId;
-      return urlJoin(
-        '/clinical/program/',
-        programId,
-        '/clinical-search-results',
-      );
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
+	'/program/:programId/clinical-search-results',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const programId = req.params.programId;
+			return urlJoin('/clinical/program/', programId, '/clinical-search-results');
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
 );
 
 router.use(
-  '/program/:programId/clinical-data-tsv',
-  createProxyMiddleware({
-    target: CLINICAL_SERVICE_ROOT,
-    pathRewrite: (pathName: string, req: Request) => {
-      const programId = req.params.programId;
-      const queryParams = Object.entries(req.query)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('&');
+	'/program/:programId/clinical-data-tsv',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const programId = req.params.programId;
+			const queryParams = Object.entries(req.query)
+				.map(([key, value]) => `${key}=${value}`)
+				.join('&');
 
-      return urlJoin(
-        '/clinical/program/',
-        programId,
-        '/clinical-tsv',
-        `?${queryParams}`,
-      );
-    },
-    onError: handleError,
-    changeOrigin: true,
-  }),
+			return urlJoin('/clinical/program/', programId, '/clinical-tsv', `?${queryParams}`);
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
 );
 
 export default router;

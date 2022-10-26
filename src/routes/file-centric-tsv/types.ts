@@ -20,8 +20,8 @@
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
 export type TsvFileSchema<Source> = Array<{
-  header: string;
-  getter: (source: Source) => string;
+	header: string;
+	getter: (source: Source) => string;
 }>;
 
 export type EsFileDocument = EsFileCentricDocument;
