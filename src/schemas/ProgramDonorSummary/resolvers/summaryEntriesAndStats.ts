@@ -1108,9 +1108,9 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 					noData: result.aggregations.noOpenAccess.doc_count,
 				},
 
-				// lastUpdate: result.aggregations.lastUpdate?.value
-				// 	? new Date(result.aggregations.lastUpdate.value)
-				// 	: undefined,
+				lastUpdate: result.aggregations.lastUpdate?.value
+					? new Date(result.aggregations.lastUpdate.value)
+					: undefined,
 			},
 		};
 	};
