@@ -91,6 +91,22 @@ export default gql`
 		openAccessStatus
 
 		"""
+		use this field to filter donor entries by 3 enum values: TUMOR_AND_NORMAL, TUMOR_OR_NORMAL, NO_DATA.
+		TUMOR_AND_NORMAL = donor has at least 1 registered tumour and 1 normal DNA sample.
+		TUMOR_OR_NORMAL = donor has at least 1 registered tumour or 1 normal DNA sample, but not both.
+		NO_DATA = donor has not registered any tumour or normal DNA samples.
+		"""
+		dnaTNRegistered
+
+		"""
+		use this field to filter donor entries by 4 enum values: TUMOR_NORMAL_MATCHED_PAIR, TUMOR_NORMAL_NO_MATCHED_PAIR, NO_DATA.
+		TUMOR_NORMAL_MATCHED_PAIR = donor has at least 1 tumor/normal matched pair.
+		TUMOR_NORMAL_NO_MATCHED_PAIR = donor has at least 1 registered tumour or 1 normal DNA sample, but no matched pairs.
+		NO_DATA = donor has not registered any tumour or normal DNA samples.
+		"""
+		dnaTNMatchedPair
+
+		"""
 		use this field to filter donor entries by 2 enum values: DATA_SUBMITTED, NO_DATA.
 		DATA_SUBMITTED means the donor has at least 1 registered tumour or 1 normal RNA sample.
 		NO_DATA means the donor has not registered any tumour or normal RNA samples.

@@ -82,6 +82,8 @@ type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry &
 		combinedDonorId: string;
 		coreDataPercentAggregation: string;
 		registeredSamplePairs: string;
+		dnaTNRegistered: string;
+		dnaTNMatchedPair: string;
 		rnaRegisteredSample: string;
 		rnaRawReads: string;
 		rnaAlignmentStatus: string;
@@ -202,6 +204,8 @@ export enum EsDonorDocumentField {
 	combinedDonorId = 'combinedDonorId',
 	coreDataPercentAggregation = 'coreDataPercentAggregation',
 	registeredSamplePairs = 'registeredSamplePairs',
+	dnaTNRegistered = 'dnaTNRegistered',
+	dnaTNMatchedPair = 'dnaTNMatchedPair',
 	rnaRegisteredSample = 'rnaRegisteredSample',
 	rnaRawReads = 'rnaRawReads',
 	rnaAlignmentStatus = 'rnaAlignmentStatus',
@@ -311,5 +315,17 @@ export enum workflowStatus {
 	COMPLETED = 'COMPLETED',
 	FAILED = 'FAILED',
 	IN_PROGRESS = 'IN_PROGRESS',
+	NO_DATA = 'NO_DATA',
+}
+
+export enum tumorNormalStatus {
+	TUMOR_AND_NORMAL = 'TUMOR_AND_NORMAL',
+	TUMOR_OR_NORMAL = 'TUMOR_OR_NORMAL',
+	NO_DATA = 'NO_DATA',
+}
+
+export enum tumorNormalMatchedPairStatus {
+	TUMOR_NORMAL_MATCHED_PAIR = 'TUMOR_NORMAL_MATCHED_PAIR',
+	TUMOR_NORMAL_NO_MATCHED_PAIR = 'TUMOR_NORMAL_NO_MATCHED_PAIR',
 	NO_DATA = 'NO_DATA',
 }
