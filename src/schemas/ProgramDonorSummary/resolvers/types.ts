@@ -21,313 +21,311 @@
  * Types from graphql
  */
 export enum DonorMolecularDataReleaseStatus {
-  FULLY_RELEASED = 'FULLY_RELEASED',
-  PARTIALLY_RELEASED = 'PARTIALLY_RELEASED',
-  NO_RELEASE = 'NO_RELEASE',
+	FULLY_RELEASED = 'FULLY_RELEASED',
+	PARTIALLY_RELEASED = 'PARTIALLY_RELEASED',
+	NO_RELEASE = 'NO_RELEASE',
 }
 
 export enum DonorMolecularDataProcessingStatus {
-  COMPLETE = 'COMPLETE',
-  PROCESSING = 'PROCESSING',
-  REGISTERED = 'REGISTERED',
+	COMPLETE = 'COMPLETE',
+	PROCESSING = 'PROCESSING',
+	REGISTERED = 'REGISTERED',
 }
 
 export type DonorSummary = {
-  entries: DonorSummaryEntry[];
-  stats: ProgramDonorSummaryStats;
+	entries: DonorSummaryEntry[];
+	stats: ProgramDonorSummaryStats;
 };
 
 export type DonorSummaryEntry = {
-  id: string;
-  donorId: string;
-  validWithCurrentDictionary: boolean;
-  releaseStatus: DonorMolecularDataReleaseStatus;
-  submitterDonorId: string;
-  programShortName: string;
-  submittedCoreDataPercent: number;
-  submittedExtendedDataPercent: number;
+	id: string;
+	donorId: string;
+	validWithCurrentDictionary: boolean;
+	releaseStatus: DonorMolecularDataReleaseStatus;
+	submitterDonorId: string;
+	programShortName: string;
+	submittedCoreDataPercent: number;
+	submittedExtendedDataPercent: number;
 
-  rnaRegisteredNormalSamples: number;
-  rnaRegisteredTumourSamples: number;
-  rnaPublishedNormalAnalysis: number;
-  rnaPublishedTumourAnalysis: number;
-  rnaAlignmentsCompleted: number;
-  rnaAlignmentFailed: number;
-  rnaAlignmentsRunning: number;
+	rnaRegisteredNormalSamples: number;
+	rnaRegisteredTumourSamples: number;
+	rnaPublishedNormalAnalysis: number;
+	rnaPublishedTumourAnalysis: number;
+	rnaAlignmentsCompleted: number;
+	rnaAlignmentFailed: number;
+	rnaAlignmentsRunning: number;
 
-  matchedTNPairsDNA: number;
-  registeredNormalSamples: number;
-  registeredTumourSamples: number;
-  publishedNormalAnalysis: number;
-  publishedTumourAnalysis: number;
-  alignmentsCompleted: number;
-  alignmentsRunning: number;
-  alignmentsFailed: number;
-  sangerVcsCompleted: number;
-  sangerVcsRunning: number;
-  sangerVcsFailed: number;
-  mutectCompleted: number;
-  mutectRunning: number;
-  mutectFailed: number;
-  openAccessCompleted: number;
-  openAccessRunning: number;
-  openAccessFailed: number;
-  processingStatus: DonorMolecularDataProcessingStatus;
-  updatedAt: Date;
-  createdAt: Date;
+	matchedTNPairsDNA: number;
+	registeredNormalSamples: number;
+	registeredTumourSamples: number;
+	publishedNormalAnalysis: number;
+	publishedTumourAnalysis: number;
+	alignmentsCompleted: number;
+	alignmentsRunning: number;
+	alignmentsFailed: number;
+	sangerVcsCompleted: number;
+	sangerVcsRunning: number;
+	sangerVcsFailed: number;
+	mutectCompleted: number;
+	mutectRunning: number;
+	mutectFailed: number;
+	openAccessCompleted: number;
+	openAccessRunning: number;
+	openAccessFailed: number;
+	processingStatus: DonorMolecularDataProcessingStatus;
+	updatedAt: Date;
+	createdAt: Date;
 };
 
 type ProgramDonorSummaryEntryField = keyof DonorSummaryEntry &
-  keyof {
-    combinedDonorId: string;
-    coreDataPercentAggregation: string;
-    registeredSamplePairs: string;
-    dnaTNRegistered: string;
-    dnaTNMatchedPair: string;
-    rnaRegisteredSample: string;
-    rnaRawReads: string;
-    rnaAlignmentStatus: string;
-    rawReads: string;
-    alignmentStatus: string;
-    sangerVCStatus: string;
-    mutectStatus: string;
-    openAccessStatus: string;
-  };
+	keyof {
+		combinedDonorId: string;
+		coreDataPercentAggregation: string;
+		registeredSamplePairs: string;
+		dnaTNRegistered: string;
+		dnaTNMatchedPair: string;
+		rnaRegisteredSample: string;
+		rnaRawReads: string;
+		rnaAlignmentStatus: string;
+		rawReads: string;
+		alignmentStatus: string;
+		sangerVCStatus: string;
+		mutectStatus: string;
+		openAccessStatus: string;
+	};
 
 export type ProgramDonorSummaryFilter = {
-  field: ProgramDonorSummaryEntryField;
-  values: string[];
+	field: ProgramDonorSummaryEntryField;
+	values: string[];
 };
 
 export type ProgramDonorSummaryStats = {
-  registeredDonorsCount: number;
-  percentageCoreClinical: number;
-  percentageTumourAndNormal: number;
-  donorsProcessingMolecularDataCount: number;
-  filesToQcCount: number;
-  donorsWithReleasedFilesCount: number;
-  allFilesCount: number;
-  fullyReleasedDonorsCount: number;
-  partiallyReleasedDonorsCount: number;
-  noReleaseDonorsCount: number;
-  donorsInvalidWithCurrentDictionaryCount: number;
-  completedWorkflowRuns: number;
-  inProgressWorkflowRuns: number;
-  failedWorkflowRuns: number;
+	registeredDonorsCount: number;
+	percentageCoreClinical: number;
+	percentageTumourAndNormal: number;
+	donorsProcessingMolecularDataCount: number;
+	filesToQcCount: number;
+	donorsWithReleasedFilesCount: number;
+	allFilesCount: number;
+	fullyReleasedDonorsCount: number;
+	partiallyReleasedDonorsCount: number;
+	noReleaseDonorsCount: number;
+	donorsInvalidWithCurrentDictionaryCount: number;
+	completedWorkflowRuns: number;
+	inProgressWorkflowRuns: number;
+	failedWorkflowRuns: number;
 
-  coreCompletion: CoreCompletionStatusCount;
+	coreCompletion: CoreCompletionStatusCount;
 
-  dnaTNRegisteredStatus: TumorNormalStatusCount;
+	dnaTNRegisteredStatus: TumorNormalStatusCount;
 
-  dnaTNMatchedPairStatus: TumorNormalMatchedPairStatusCount;
+	dnaTNMatchedPairStatus: TumorNormalMatchedPairStatusCount;
 
-  rnaSampleStatus: DataSubmissionStatus;
+	rnaSampleStatus: DataSubmissionStatus;
 
-  rnaRawReadStatus: DataSubmissionStatus;
+	rnaRawReadStatus: DataSubmissionStatus;
 
-  rnaAlignmentStatusCount: WorkflowStatusCount;
+	rnaAlignmentStatusCount: WorkflowStatusCount;
 
-  sampleStatus: SamplePairsStatusCount;
+	sampleStatus: SamplePairsStatusCount;
 
-  rawReadsStatus: SamplePairsStatusCount;
+	rawReadsStatus: SamplePairsStatusCount;
 
-  alignmentStatusCount: WorkflowStatusCount;
+	alignmentStatusCount: WorkflowStatusCount;
 
-  sangerStatusCount: WorkflowStatusCount;
+	sangerStatusCount: WorkflowStatusCount;
 
-  mutectStatusCount: WorkflowStatusCount;
+	mutectStatusCount: WorkflowStatusCount;
 
-  openAccessStatusCount: WorkflowStatusCount;
+	openAccessStatusCount: WorkflowStatusCount;
 
-  lastUpdate?: Date;
+	lastUpdate?: Date;
 };
 
 type CoreCompletionStatusCount = {
-  completed: number;
-  incomplete: number;
-  noData: number;
+	completed: number;
+	incomplete: number;
+	noData: number;
 };
 
 type TumorNormalStatusCount = {
-  tumorAndNormal: number;
-  tumorOrNormal: number;
-  noData: number;
+	tumorAndNormal: number;
+	tumorOrNormal: number;
+	noData: number;
 };
 
 type TumorNormalMatchedPairStatusCount = {
-  tumorNormalMatchedPair: number;
-  tumorNormalNoMatchedPair: number;
-  noData: number;
+	tumorNormalMatchedPair: number;
+	tumorNormalNoMatchedPair: number;
+	noData: number;
 };
 
 type SamplePairsStatusCount = {
-  valid: number;
-  invalid: number;
+	valid: number;
+	invalid: number;
 };
 
 type DataSubmissionStatus = {
-  dataSubmitted: number;
-  noDataSubmitted: number;
+	dataSubmitted: number;
+	noDataSubmitted: number;
 };
 
 type WorkflowStatusCount = {
-  noData: number;
-  completed: number;
-  inProgress: number;
-  failed: number;
+	noData: number;
+	completed: number;
+	inProgress: number;
+	failed: number;
 };
 
 export type ProgramDonorSummaryStatsGqlResponse = ProgramDonorSummaryStats & {
-  id: string;
-  programShortName: string;
+	id: string;
+	programShortName: string;
 };
 
 export type SortOrder = 'asc' | 'desc';
 
 export type DonorSummaryEntrySort = {
-  field: keyof ElasticsearchDonorDocument;
-  order: SortOrder;
+	field: keyof ElasticsearchDonorDocument;
+	order: SortOrder;
 };
 export type BaseQueryArguments = {
-  programShortName: string;
+	programShortName: string;
 };
 
 /**
  * Types from Elasticsearch
  */
 export enum EsDonorDocumentField {
-  alignmentsCompleted = 'alignmentsCompleted',
-  alignmentsFailed = 'alignmentsFailed',
-  alignmentsRunning = 'alignmentsRunning',
-  createdAt = 'createdAt',
-  donorId = 'donorId',
-  combinedDonorId = 'combinedDonorId',
-  coreDataPercentAggregation = 'coreDataPercentAggregation',
-  registeredSamplePairs = 'registeredSamplePairs',
-  dnaTNRegistered = 'dnaTNRegistered',
-  dnaTNMatchedPair = 'dnaTNMatchedPair',
-  rnaRegisteredSample = 'rnaRegisteredSample',
-  rnaRawReads = 'rnaRawReads',
-  rnaAlignmentStatus = 'rnaAlignmentStatus',
-  rawReads = 'rawReads',
-  alignmentStatus = 'alignmentStatus',
-  sangerVCStatus = 'sangerVCStatus',
-  mutectStatus = 'mutectStatus',
-  openAccessStatus = 'openAccessStatus',
-  processingStatus = 'processingStatus',
-  programId = 'programId',
+	alignmentsCompleted = 'alignmentsCompleted',
+	alignmentsFailed = 'alignmentsFailed',
+	alignmentsRunning = 'alignmentsRunning',
+	createdAt = 'createdAt',
+	donorId = 'donorId',
+	combinedDonorId = 'combinedDonorId',
+	coreDataPercentAggregation = 'coreDataPercentAggregation',
+	registeredSamplePairs = 'registeredSamplePairs',
+	dnaTNRegistered = 'dnaTNRegistered',
+	dnaTNMatchedPair = 'dnaTNMatchedPair',
+	rnaRegisteredSample = 'rnaRegisteredSample',
+	rnaRawReads = 'rnaRawReads',
+	rnaAlignmentStatus = 'rnaAlignmentStatus',
+	rawReads = 'rawReads',
+	alignmentStatus = 'alignmentStatus',
+	sangerVCStatus = 'sangerVCStatus',
+	mutectStatus = 'mutectStatus',
+	openAccessStatus = 'openAccessStatus',
+	processingStatus = 'processingStatus',
+	programId = 'programId',
 
-  rnaRegisteredNormalSamples = 'rnaRegisteredNormalSamples',
-  rnaRegisteredTumourSamples = 'rnaRegisteredTumourSamples',
-  rnaPublishedNormalAnalysis = 'rnaPublishedNormalAnalysis',
-  rnaPublishedTumourAnalysis = 'rnaPublishedTumourAnalysis',
-  rnaAlignmentsCompleted = 'rnaAlignmentsCompleted',
-  rnaAlignmentFailed = 'rnaAlignmentFailed',
-  rnaAlignmentsRunning = 'rnaAlignmentsRunning',
+	rnaRegisteredNormalSamples = 'rnaRegisteredNormalSamples',
+	rnaRegisteredTumourSamples = 'rnaRegisteredTumourSamples',
+	rnaPublishedNormalAnalysis = 'rnaPublishedNormalAnalysis',
+	rnaPublishedTumourAnalysis = 'rnaPublishedTumourAnalysis',
+	rnaAlignmentsCompleted = 'rnaAlignmentsCompleted',
+	rnaAlignmentFailed = 'rnaAlignmentFailed',
+	rnaAlignmentsRunning = 'rnaAlignmentsRunning',
 
-  matchedTNPairsDNA = 'matchedTNPairsDNA',
-  publishedNormalAnalysis = 'publishedNormalAnalysis',
-  publishedTumourAnalysis = 'publishedTumourAnalysis',
-  registeredNormalSamples = 'registeredNormalSamples',
-  registeredTumourSamples = 'registeredTumourSamples',
-  releaseStatus = 'releaseStatus',
-  sangerVcsCompleted = 'sangerVcsCompleted',
-  sangerVcsFailed = 'sangerVcsFailed',
-  sangerVcsRunning = 'sangerVcsRunning',
-  mutectCompleted = 'mutectCompleted',
-  mutectRunning = 'mutectRunning',
-  mutectFailed = 'mutectFailed',
-  openAccessCompleted = 'openAccessCompleted',
-  openAccessRunning = 'openAccessRunning',
-  openAccessFailed = 'openAccessFailed',
-  submittedCoreDataPercent = 'submittedCoreDataPercent',
-  submittedExtendedDataPercent = 'submittedExtendedDataPercent',
-  submitterDonorId = 'submitterDonorId',
-  updatedAt = 'updatedAt',
-  validWithCurrentDictionary = 'validWithCurrentDictionary',
-  totalFilesCount = 'totalFilesCount',
-  filesToQcCount = 'filesToQcCount',
+	matchedTNPairsDNA = 'matchedTNPairsDNA',
+	publishedNormalAnalysis = 'publishedNormalAnalysis',
+	publishedTumourAnalysis = 'publishedTumourAnalysis',
+	registeredNormalSamples = 'registeredNormalSamples',
+	registeredTumourSamples = 'registeredTumourSamples',
+	releaseStatus = 'releaseStatus',
+	sangerVcsCompleted = 'sangerVcsCompleted',
+	sangerVcsFailed = 'sangerVcsFailed',
+	sangerVcsRunning = 'sangerVcsRunning',
+	mutectCompleted = 'mutectCompleted',
+	mutectRunning = 'mutectRunning',
+	mutectFailed = 'mutectFailed',
+	openAccessCompleted = 'openAccessCompleted',
+	openAccessRunning = 'openAccessRunning',
+	openAccessFailed = 'openAccessFailed',
+	submittedCoreDataPercent = 'submittedCoreDataPercent',
+	submittedExtendedDataPercent = 'submittedExtendedDataPercent',
+	submitterDonorId = 'submitterDonorId',
+	updatedAt = 'updatedAt',
+	validWithCurrentDictionary = 'validWithCurrentDictionary',
+	totalFilesCount = 'totalFilesCount',
+	filesToQcCount = 'filesToQcCount',
 }
 
 export type ElasticsearchDonorDocument = {
-  [EsDonorDocumentField.alignmentsCompleted]: number;
-  [EsDonorDocumentField.alignmentsFailed]: number;
-  [EsDonorDocumentField.alignmentsRunning]: number;
-  [EsDonorDocumentField.createdAt]: string;
-  [EsDonorDocumentField.donorId]: string;
-  [EsDonorDocumentField.processingStatus]:
-    | DonorMolecularDataProcessingStatus
-    | '';
-  [EsDonorDocumentField.programId]: string;
+	[EsDonorDocumentField.alignmentsCompleted]: number;
+	[EsDonorDocumentField.alignmentsFailed]: number;
+	[EsDonorDocumentField.alignmentsRunning]: number;
+	[EsDonorDocumentField.createdAt]: string;
+	[EsDonorDocumentField.donorId]: string;
+	[EsDonorDocumentField.processingStatus]: DonorMolecularDataProcessingStatus | '';
+	[EsDonorDocumentField.programId]: string;
 
-  [EsDonorDocumentField.rnaRegisteredNormalSamples]: number;
-  [EsDonorDocumentField.rnaRegisteredTumourSamples]: number;
-  [EsDonorDocumentField.rnaPublishedNormalAnalysis]: number;
-  [EsDonorDocumentField.rnaPublishedTumourAnalysis]: number;
-  [EsDonorDocumentField.rnaAlignmentsCompleted]: number;
-  [EsDonorDocumentField.rnaAlignmentsRunning]: number;
-  [EsDonorDocumentField.rnaAlignmentFailed]: number;
+	[EsDonorDocumentField.rnaRegisteredNormalSamples]: number;
+	[EsDonorDocumentField.rnaRegisteredTumourSamples]: number;
+	[EsDonorDocumentField.rnaPublishedNormalAnalysis]: number;
+	[EsDonorDocumentField.rnaPublishedTumourAnalysis]: number;
+	[EsDonorDocumentField.rnaAlignmentsCompleted]: number;
+	[EsDonorDocumentField.rnaAlignmentsRunning]: number;
+	[EsDonorDocumentField.rnaAlignmentFailed]: number;
 
-  [EsDonorDocumentField.matchedTNPairsDNA]: number;
-  [EsDonorDocumentField.publishedNormalAnalysis]: number;
-  [EsDonorDocumentField.publishedTumourAnalysis]: number;
-  [EsDonorDocumentField.registeredNormalSamples]: number;
-  [EsDonorDocumentField.registeredTumourSamples]: number;
-  [EsDonorDocumentField.releaseStatus]: DonorMolecularDataReleaseStatus | '';
-  [EsDonorDocumentField.sangerVcsCompleted]: number;
-  [EsDonorDocumentField.sangerVcsFailed]: number;
-  [EsDonorDocumentField.sangerVcsRunning]: number;
-  [EsDonorDocumentField.mutectCompleted]: number;
-  [EsDonorDocumentField.mutectRunning]: number;
-  [EsDonorDocumentField.mutectFailed]: number;
-  [EsDonorDocumentField.openAccessCompleted]: number;
-  [EsDonorDocumentField.openAccessRunning]: number;
-  [EsDonorDocumentField.openAccessFailed]: number;
-  [EsDonorDocumentField.submittedCoreDataPercent]: number;
-  [EsDonorDocumentField.submittedExtendedDataPercent]: number;
-  [EsDonorDocumentField.submitterDonorId]: string;
-  [EsDonorDocumentField.updatedAt]: string;
-  [EsDonorDocumentField.validWithCurrentDictionary]: boolean;
-  [EsDonorDocumentField.totalFilesCount]: number;
-  [EsDonorDocumentField.filesToQcCount]: number;
+	[EsDonorDocumentField.matchedTNPairsDNA]: number;
+	[EsDonorDocumentField.publishedNormalAnalysis]: number;
+	[EsDonorDocumentField.publishedTumourAnalysis]: number;
+	[EsDonorDocumentField.registeredNormalSamples]: number;
+	[EsDonorDocumentField.registeredTumourSamples]: number;
+	[EsDonorDocumentField.releaseStatus]: DonorMolecularDataReleaseStatus | '';
+	[EsDonorDocumentField.sangerVcsCompleted]: number;
+	[EsDonorDocumentField.sangerVcsFailed]: number;
+	[EsDonorDocumentField.sangerVcsRunning]: number;
+	[EsDonorDocumentField.mutectCompleted]: number;
+	[EsDonorDocumentField.mutectRunning]: number;
+	[EsDonorDocumentField.mutectFailed]: number;
+	[EsDonorDocumentField.openAccessCompleted]: number;
+	[EsDonorDocumentField.openAccessRunning]: number;
+	[EsDonorDocumentField.openAccessFailed]: number;
+	[EsDonorDocumentField.submittedCoreDataPercent]: number;
+	[EsDonorDocumentField.submittedExtendedDataPercent]: number;
+	[EsDonorDocumentField.submitterDonorId]: string;
+	[EsDonorDocumentField.updatedAt]: string;
+	[EsDonorDocumentField.validWithCurrentDictionary]: boolean;
+	[EsDonorDocumentField.totalFilesCount]: number;
+	[EsDonorDocumentField.filesToQcCount]: number;
 };
 
 export enum coreDataPercentAggregationValue {
-  INCOMPLETE = 'INCOMPLETE',
-  COMPLETE = 'COMPLETE',
-  NO_DATA = 'NO_DATA',
+	INCOMPLETE = 'INCOMPLETE',
+	COMPLETE = 'COMPLETE',
+	NO_DATA = 'NO_DATA',
 }
 
 export enum registeredSamplePairsValue {
-  VALID = 'VALID',
-  INVALID = 'INVALID',
+	VALID = 'VALID',
+	INVALID = 'INVALID',
 }
 
 export enum RnaFilterStatus {
-  DATA_SUBMITTED = 'DATA_SUBMITTED',
-  NO_DATA = 'NO_DATA',
+	DATA_SUBMITTED = 'DATA_SUBMITTED',
+	NO_DATA = 'NO_DATA',
 }
 
 export enum rawReadsValue {
-  VALID = 'VALID',
-  INVALID = 'INVALID',
+	VALID = 'VALID',
+	INVALID = 'INVALID',
 }
 
 export enum workflowStatus {
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
-  IN_PROGRESS = 'IN_PROGRESS',
-  NO_DATA = 'NO_DATA',
+	COMPLETED = 'COMPLETED',
+	FAILED = 'FAILED',
+	IN_PROGRESS = 'IN_PROGRESS',
+	NO_DATA = 'NO_DATA',
 }
 
 export enum tumorNormalStatus {
-  TUMOR_AND_NORMAL = 'TUMOR_AND_NORMAL',
-  TUMOR_OR_NORMAL = 'TUMOR_OR_NORMAL',
-  NO_DATA = 'NO_DATA',
+	TUMOR_AND_NORMAL = 'TUMOR_AND_NORMAL',
+	TUMOR_OR_NORMAL = 'TUMOR_OR_NORMAL',
+	NO_DATA = 'NO_DATA',
 }
 
 export enum tumorNormalMatchedPairStatus {
-  TUMOR_NORMAL_MATCHED_PAIR = 'TUMOR_NORMAL_MATCHED_PAIR',
-  TUMOR_NORMAL_NO_MATCHED_PAIR = 'TUMOR_NORMAL_NO_MATCHED_PAIR',
-  NO_DATA = 'NO_DATA',
+	TUMOR_NORMAL_MATCHED_PAIR = 'TUMOR_NORMAL_MATCHED_PAIR',
+	TUMOR_NORMAL_NO_MATCHED_PAIR = 'TUMOR_NORMAL_NO_MATCHED_PAIR',
+	NO_DATA = 'NO_DATA',
 }
