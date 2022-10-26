@@ -22,8 +22,8 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import logger from 'utils/logger';
 import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import {
-  hasSufficientDacoAccess,
-  hasSufficientProgramMembershipAccess,
+	hasSufficientDacoAccess,
+	hasSufficientProgramMembershipAccess,
 } from 'routes/utils/accessValidations';
 import { Client } from '@elastic/elasticsearch';
 import { getEsFileDocumentByObjectId } from '../utils';
@@ -34,175 +34,163 @@ import fetch from 'node-fetch';
 import { get } from 'lodash';
 
 const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
-  pathName.replace(rootPath, '').replace('//', '/');
+	pathName.replace(rootPath, '').replace('//', '/');
 
 const downloadHandler =
-  ({
-    rootPath,
-    esClient,
-    scoreAuthClient,
-    proxyMiddlewareFactory = createProxyMiddleware,
-  }: {
-    rootPath: string;
-    esClient: Client;
-    scoreAuthClient: ScoreAuthClient;
-    proxyMiddlewareFactory: typeof createProxyMiddleware;
-  }): Handler =>
-  async (req: AuthenticatedRequest, res, next) => {
-    const { fileObjectId } = req.params;
-    const esFileObject = await getEsFileDocumentByObjectId(esClient)(
-      fileObjectId,
-    );
+	({
+		rootPath,
+		esClient,
+		scoreAuthClient,
+		proxyMiddlewareFactory = createProxyMiddleware,
+	}: {
+		rootPath: string;
+		esClient: Client;
+		scoreAuthClient: ScoreAuthClient;
+		proxyMiddlewareFactory: typeof createProxyMiddleware;
+	}): Handler =>
+	async (req: AuthenticatedRequest, res, next) => {
+		const { fileObjectId } = req.params;
+		const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
 
-    if (!esFileObject) {
-      return res.status(404).end();
-    }
+		if (!esFileObject) {
+			return res.status(404).end();
+		}
 
-    const isAuthorized =
-      hasSufficientProgramMembershipAccess({
-        scopes: req.auth.scopes,
-        file: esFileObject,
-      }) &&
-      hasSufficientDacoAccess({
-        scopes: req.auth.scopes,
-        file: esFileObject,
-      });
+		const isAuthorized =
+			hasSufficientProgramMembershipAccess({
+				scopes: req.auth.scopes,
+				file: esFileObject,
+			}) &&
+			hasSufficientDacoAccess({
+				scopes: req.auth.scopes,
+				file: esFileObject,
+			});
 
-    if (isAuthorized) {
-      const repositoryCode = esFileObject.repositories[0].code;
-      const dataCenter = await getDataCenter(repositoryCode);
-      const scoreProxyJwt = await scoreAuthClient.getAuth();
+		if (isAuthorized) {
+			const repositoryCode = esFileObject.repositories[0].code;
+			const dataCenter = await getDataCenter(repositoryCode);
+			const scoreProxyJwt = await scoreAuthClient.getAuth();
 
-      if (dataCenter) {
-        const scoreUrl = dataCenter.scoreUrl;
-        const handleRequest = proxyMiddlewareFactory({
-          target: scoreUrl,
-          pathRewrite: normalizePath(rootPath),
-          onError: (err: Error, req: Request, res: Response) => {
-            logger.error('Score Router Error - ' + err);
-            return res.status(500).end();
-          },
-          headers: {
-            Authorization: `Bearer ${scoreProxyJwt}`,
-          },
-          changeOrigin: true,
-        });
-        handleRequest(req, res, next);
-      } else {
-        res.status(500).json({ error: 'File repository unavailable' }).end();
-      }
-    } else {
-      if (req.auth.authenticated) {
-        // token is valid but permissions are not sufficient
-        res
-          .status(403)
-          .send('Not authorized to access the requested data')
-          .end();
-      } else {
-        // token was invalid
-        res.status(401).send('Invalid access token').end();
-      }
-    }
-  };
+			if (dataCenter) {
+				const scoreUrl = dataCenter.scoreUrl;
+				const handleRequest = proxyMiddlewareFactory({
+					target: scoreUrl,
+					pathRewrite: normalizePath(rootPath),
+					onError: (err: Error, req: Request, res: Response) => {
+						logger.error('Score Router Error - ' + err);
+						return res.status(500).end();
+					},
+					headers: {
+						Authorization: `Bearer ${scoreProxyJwt}`,
+					},
+					changeOrigin: true,
+				});
+				handleRequest(req, res, next);
+			} else {
+				res.status(500).json({ error: 'File repository unavailable' }).end();
+			}
+		} else {
+			if (req.auth.authenticated) {
+				// token is valid but permissions are not sufficient
+				res.status(403).send('Not authorized to access the requested data').end();
+			} else {
+				// token was invalid
+				res.status(401).send('Invalid access token').end();
+			}
+		}
+	};
 export const downloadFile =
-  ({
-    esClient,
-    scoreAuthClient,
-  }: {
-    esClient: Client;
-    scoreAuthClient: ScoreAuthClient;
-  }): Handler =>
-  async (req: AuthenticatedRequest, res) => {
-    const { fileObjectId } = req.params;
-    const esFileObject = await getEsFileDocumentByObjectId(esClient)(
-      fileObjectId,
-    );
+	({
+		esClient,
+		scoreAuthClient,
+	}: {
+		esClient: Client;
+		scoreAuthClient: ScoreAuthClient;
+	}): Handler =>
+	async (req: AuthenticatedRequest, res) => {
+		const { fileObjectId } = req.params;
+		const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
 
-    if (!esFileObject) {
-      return res.status(404).end();
-    }
+		if (!esFileObject) {
+			return res.status(404).end();
+		}
 
-    const fileSize = esFileObject.file.size;
+		const fileSize = esFileObject.file.size;
 
-    if (fileSize > MAX_FILE_DOWNLOAD_SIZE) {
-      return res
-        .status(400)
-        .send(
-          'File is too large to download over UI. Please use the SCORE client instead',
-        )
-        .end();
-    }
+		if (fileSize > MAX_FILE_DOWNLOAD_SIZE) {
+			return res
+				.status(400)
+				.send('File is too large to download over UI. Please use the SCORE client instead')
+				.end();
+		}
 
-    // open access files don't require authentication or DACO access
-    const isAuthorized =
-      esFileObject.file_access === 'open' ||
-      (hasSufficientProgramMembershipAccess({
-        scopes: req.auth.scopes,
-        file: esFileObject,
-      }) &&
-        hasSufficientDacoAccess({
-          scopes: req.auth.scopes,
-          file: esFileObject,
-        }));
+		// open access files don't require authentication or DACO access
+		const isAuthorized =
+			esFileObject.file_access === 'open' ||
+			(hasSufficientProgramMembershipAccess({
+				scopes: req.auth.scopes,
+				file: esFileObject,
+			}) &&
+				hasSufficientDacoAccess({
+					scopes: req.auth.scopes,
+					file: esFileObject,
+				}));
 
-    if (isAuthorized) {
-      const repositoryCode = esFileObject.repositories[0].code;
-      const dataCenter = await getDataCenter(repositoryCode);
-      const scoreProxyJwt = await scoreAuthClient.getAuth();
+		if (isAuthorized) {
+			const repositoryCode = esFileObject.repositories[0].code;
+			const dataCenter = await getDataCenter(repositoryCode);
+			const scoreProxyJwt = await scoreAuthClient.getAuth();
 
-      if (dataCenter) {
-        const scoreUrl = `${dataCenter.scoreUrl}/download/${fileObjectId}?offset=0&length=${fileSize}&external=true`;
-        const scoreResponse = await fetch(scoreUrl, {
-          headers: {
-            Authorization: `Bearer ${scoreProxyJwt}`,
-          },
-        })
-          .then((response) => response.json())
-          .catch((err) => {
-            logger.error('Score Router Error - ' + err);
-            return res.status(500).end();
-          });
+			if (dataCenter) {
+				const scoreUrl = `${dataCenter.scoreUrl}/download/${fileObjectId}?offset=0&length=${fileSize}&external=true`;
+				const scoreResponse = await fetch(scoreUrl, {
+					headers: {
+						Authorization: `Bearer ${scoreProxyJwt}`,
+					},
+				})
+					.then((response) => response.json())
+					.catch((err) => {
+						logger.error('Score Router Error - ' + err);
+						return res.status(500).end();
+					});
 
-        const scoreDownloadUrl = get(scoreResponse, 'parts[0].url', undefined);
+				const scoreDownloadUrl = get(scoreResponse, 'parts[0].url', undefined);
 
-        if (!scoreDownloadUrl) {
-          // if we get here, the score response didn't contain a download url
-          return res.status(404).end();
-        }
+				if (!scoreDownloadUrl) {
+					// if we get here, the score response didn't contain a download url
+					return res.status(404).end();
+				}
 
-      // download file from score and return it to the client with the correct filename
-      await fetch(scoreDownloadUrl)
-        .then(response => {
-          if (!response.body) throw 'response body is undefined';
+				// download file from score and return it to the client with the correct filename
+				await fetch(scoreDownloadUrl)
+					.then((response) => {
+						if (!response.body) throw 'response body is undefined';
 
-          res.header('Content-Disposition', `attachment; filename="${esFileObject.file.name}"`);
+						res.header('Content-Disposition', `attachment; filename="${esFileObject.file.name}"`);
 
-            response.body.pipe(res);
+						response.body.pipe(res);
 
-            response.body.on('error', (err) => {
-              logger.error('Error piping file from Score - ' + err);
-              return res.status(500).end();
-            });
-          })
-          .catch((err) => {
-            logger.error('Score Download Error - ' + err);
-            return res.status(500).end();
-          });
-      } else {
-        res.status(500).json({ error: 'File repository unavailable' }).end();
-      }
-    } else {
-      if (req.auth.authenticated) {
-        // token is valid but permissions are not sufficient
-        res
-          .status(403)
-          .send('Not authorized to access the requested data')
-          .end();
-      } else {
-        // token was invalid
-        res.status(401).send('Invalid access token').end();
-      }
-    }
-  };
+						response.body.on('error', (err) => {
+							logger.error('Error piping file from Score - ' + err);
+							return res.status(500).end();
+						});
+					})
+					.catch((err) => {
+						logger.error('Score Download Error - ' + err);
+						return res.status(500).end();
+					});
+			} else {
+				res.status(500).json({ error: 'File repository unavailable' }).end();
+			}
+		} else {
+			if (req.auth.authenticated) {
+				// token is valid but permissions are not sufficient
+				res.status(403).send('Not authorized to access the requested data').end();
+			} else {
+				// token was invalid
+				res.status(401).send('Invalid access token').end();
+			}
+		}
+	};
 
 export default downloadHandler;

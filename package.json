@@ -83,7 +83,7 @@
     "jest": "^25.5.4",
     "nodemon": "^1.19.4",
     "paralleljs": "^1.1.0",
-    "prettier": "1.19.1",
+    "prettier": "^2.7.1",
     "testcontainers": "^2.20.0",
     "ts-interface-builder": "^0.3.3",
     "ts-jest": "^25.5.1",
@@ -96,9 +96,10 @@
     "fsevents": "^1.2.9"
   },
   "prettier": {
-    "printWidth": 80,
+    "printWidth": 100,
     "trailingComma": "all",
     "singleQuote": true,
-    "arrowParens": "always"
+    "arrowParens": "always",
+    "useTabs": true
   }
 }
