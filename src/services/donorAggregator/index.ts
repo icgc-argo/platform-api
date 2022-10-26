@@ -27,36 +27,36 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import { DONOR_AGGREGATOR_API_ROOT } from 'config';
 
 export type DonorAggregatorClient = {
-  syncDonorAggregationIndex: (programId: string) => Promise<void>;
+	syncDonorAggregationIndex: (programId: string) => Promise<void>;
 };
 
 const getAuthorizedClient = (requestEgoJwt: string) => {
-  const isValid = egoTokenUtils.isValidJwt(requestEgoJwt);
-  if (!isValid) {
-    throw new Error('Authentication token is not valid.');
-  }
-  const permissions = egoTokenUtils.getPermissionsFromToken(requestEgoJwt);
-  const authorized = egoTokenUtils.isDccMember(permissions);
-  if (!authorized) {
-    throw new Error('Token does not provide DCC-Admin authorization.');
-  }
-  return donorAggregatorClient();
+	const isValid = egoTokenUtils.isValidJwt(requestEgoJwt);
+	if (!isValid) {
+		throw new Error('Authentication token is not valid.');
+	}
+	const permissions = egoTokenUtils.getPermissionsFromToken(requestEgoJwt);
+	const authorized = egoTokenUtils.isDccMember(permissions);
+	if (!authorized) {
+		throw new Error('Token does not provide DCC-Admin authorization.');
+	}
+	return donorAggregatorClient();
 };
 
 const donorAggregatorClient = (): DonorAggregatorClient => {
-  const SYNC_PROGRAM_URL = urlJoin(DONOR_AGGREGATOR_API_ROOT, 'index/program');
+	const SYNC_PROGRAM_URL = urlJoin(DONOR_AGGREGATOR_API_ROOT, 'index/program');
 
-  const syncDonorAggregationIndex = async (programId: string) => {
-    const url = urlJoin(SYNC_PROGRAM_URL, programId);
-    try {
-      logger.debug(`Sending request to donorAggregator: ${url}`);
-      const response = await fetch(url, { method: 'POST' });
-      return;
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
-  return { syncDonorAggregationIndex };
+	const syncDonorAggregationIndex = async (programId: string) => {
+		const url = urlJoin(SYNC_PROGRAM_URL, programId);
+		try {
+			logger.debug(`Sending request to donorAggregator: ${url}`);
+			const response = await fetch(url, { method: 'POST' });
+			return;
+		} catch (error) {
+			throw new Error(error);
+		}
+	};
+	return { syncDonorAggregationIndex };
 };
 
 export default getAuthorizedClient;

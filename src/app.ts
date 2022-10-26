@@ -29,19 +29,19 @@ import createKafkaRouter from './routes/kafka-rest-proxy';
 import createDonorAggregatorRouter from 'routes/donor-aggregator-api';
 import createFileStorageApi from './routes/file-storage-api';
 import {
-  PORT,
-  NODE_ENV,
-  APP_DIR,
-  ARRANGER_PROJECT_ID,
-  FEATURE_ARRANGER_SCHEMA_ENABLED,
-  FEATURE_STORAGE_API_ENABLED,
-  EGO_VAULT_SECRET_PATH,
-  USE_VAULT,
-  EGO_CLIENT_SECRET,
-  EGO_CLIENT_ID,
-  ELASTICSEARCH_VAULT_SECRET_PATH,
-  ELASTICSEARCH_USERNAME,
-  ELASTICSEARCH_PASSWORD,
+	PORT,
+	NODE_ENV,
+	APP_DIR,
+	ARRANGER_PROJECT_ID,
+	FEATURE_ARRANGER_SCHEMA_ENABLED,
+	FEATURE_STORAGE_API_ENABLED,
+	EGO_VAULT_SECRET_PATH,
+	USE_VAULT,
+	EGO_CLIENT_SECRET,
+	EGO_CLIENT_ID,
+	ELASTICSEARCH_VAULT_SECRET_PATH,
+	ELASTICSEARCH_USERNAME,
+	ELASTICSEARCH_PASSWORD,
 } from './config';
 import systemAlertSchema from './schemas/SystemAlert';
 import clinicalSchema from './schemas/Clinical';
@@ -64,149 +64,131 @@ const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
 
 export type GlobalGqlContext = {
-  isUserRequest: boolean;
-  egoToken: string;
-  Authorization: string;
-  userJwtData: EgoJwtData | null;
-  dataLoaders: {};
+	isUserRequest: boolean;
+	egoToken: string;
+	Authorization: string;
+	userJwtData: EgoJwtData | null;
+	dataLoaders: {};
 };
 
 const init = async () => {
-  const vaultSecretLoader = await loadVaultSecret();
+	const vaultSecretLoader = await loadVaultSecret();
 
-  const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
-    ? ((await Promise.all([
-        vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
-          logger.error(
-            `could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`,
-          );
-          throw err; //fail fast
-        }),
-        vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
-          logger.error(
-            `could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`,
-          );
-          throw err; //fail fastw
-        }),
-      ])) as [EgoApplicationCredential, EsSecret])
-    : ([
-        {
-          clientId: EGO_CLIENT_ID,
-          clientSecret: EGO_CLIENT_SECRET,
-        },
-        {
-          user: ELASTICSEARCH_USERNAME,
-          pass: ELASTICSEARCH_PASSWORD,
-        },
-      ] as [EgoApplicationCredential, EsSecret]);
+	const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
+		? ((await Promise.all([
+				vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
+					logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
+					throw err; //fail fast
+				}),
+				vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
+					logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
+					throw err; //fail fastw
+				}),
+		  ])) as [EgoApplicationCredential, EsSecret])
+		: ([
+				{
+					clientId: EGO_CLIENT_ID,
+					clientSecret: EGO_CLIENT_SECRET,
+				},
+				{
+					user: ELASTICSEARCH_USERNAME,
+					pass: ELASTICSEARCH_PASSWORD,
+				},
+		  ] as [EgoApplicationCredential, EsSecret]);
 
-  const esClient = await createEsClient({
-    auth:
-      elasticsearchCredentials.user && elasticsearchCredentials.pass
-        ? elasticsearchCredentials
-        : undefined,
-  });
-  const egoClient = createEgoClient(egoAppCredentials);
+	const esClient = await createEsClient({
+		auth:
+			elasticsearchCredentials.user && elasticsearchCredentials.pass
+				? elasticsearchCredentials
+				: undefined,
+	});
+	const egoClient = createEgoClient(egoAppCredentials);
 
-  const schemas = await Promise.all([
-    userSchema(egoClient),
-    programSchema,
-    clinicalSchema,
-    systemAlertSchema,
-    ProgramDashboardSummarySchema(esClient),
-    ProgramDonorPublishedAnalysisByDateRangeSchema(esClient),
-    createHelpdeskSchema(),
-    ...(FEATURE_ARRANGER_SCHEMA_ENABLED
-      ? [getArrangerGqlSchema(esClient)]
-      : []),
-  ]);
+	const schemas = await Promise.all([
+		userSchema(egoClient),
+		programSchema,
+		clinicalSchema,
+		systemAlertSchema,
+		ProgramDashboardSummarySchema(esClient),
+		ProgramDonorPublishedAnalysisByDateRangeSchema(esClient),
+		createHelpdeskSchema(),
+		...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
+	]);
 
-  const server = new ArgoApolloServer({
-    // @ts-ignore ApolloServer type is missing this for some reason
-    schema: mergeSchemas({
-      schemas,
-    }),
-    context: ({
-      req,
-    }: {
-      req: Request;
-    }): GlobalGqlContext & ArrangerGqlContext => {
-      const authHeader = req.headers.authorization;
-      let userJwtData: EgoJwtData | null = null;
-      try {
-        if (authHeader) {
-          const jwt = authHeader.replace('Bearer ', '');
-          userJwtData = egoTokenUtils.decodeToken(jwt);
-        }
-      } catch (err) {
-        userJwtData = null;
-      }
-      return {
-        isUserRequest: true,
-        egoToken: (authHeader || '').split('Bearer ').join(''),
-        Authorization:
-          `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
-        dataLoaders: {},
-        userJwtData,
-        es: esClient, // for arranger only
-        projectId: ARRANGER_PROJECT_ID, // for arranger only
-      };
-    },
-    introspection: true,
-    tracing: NODE_ENV !== 'production',
-  });
+	const server = new ArgoApolloServer({
+		// @ts-ignore ApolloServer type is missing this for some reason
+		schema: mergeSchemas({
+			schemas,
+		}),
+		context: ({ req }: { req: Request }): GlobalGqlContext & ArrangerGqlContext => {
+			const authHeader = req.headers.authorization;
+			let userJwtData: EgoJwtData | null = null;
+			try {
+				if (authHeader) {
+					const jwt = authHeader.replace('Bearer ', '');
+					userJwtData = egoTokenUtils.decodeToken(jwt);
+				}
+			} catch (err) {
+				userJwtData = null;
+			}
+			return {
+				isUserRequest: true,
+				egoToken: (authHeader || '').split('Bearer ').join(''),
+				Authorization: `Bearer ${(authHeader || '').replace(/^Bearer[\s]*/, '')}` || '',
+				dataLoaders: {},
+				userJwtData,
+				es: esClient, // for arranger only
+				projectId: ARRANGER_PROJECT_ID, // for arranger only
+			};
+		},
+		introspection: true,
+		tracing: NODE_ENV !== 'production',
+	});
 
-  const app = express();
+	const app = express();
 
-  // Cors Config
-  const corsOptions = {
-    exposedHeaders: ['content-disposition'],
-  };
-  app.use(cors(corsOptions));
+	// Cors Config
+	const corsOptions = {
+		exposedHeaders: ['content-disposition'],
+	};
+	app.use(cors(corsOptions));
 
-  // Request Logging
-  app.use(expressWinston.logger(loggerConfig));
+	// Request Logging
+	app.use(expressWinston.logger(loggerConfig));
 
-  // Attach Arranger
-  server.applyMiddleware({ app, path: '/graphql' });
+	// Attach Arranger
+	server.applyMiddleware({ app, path: '/graphql' });
 
-  // Health Check / Status Endpoint
-  app.get('/status', (req, res) => {
-    res.json(version);
-  });
+	// Health Check / Status Endpoint
+	app.get('/status', (req, res) => {
+		res.json(version);
+	});
 
-  // Routers
-  app.use('/kafka', createKafkaRouter(egoClient));
-  app.use('/clinical', clinicalProxyRoute);
-  app.use(
-    '/file-centric-tsv',
-    await createFileCentricTsvRoute(esClient, egoClient),
-  );
-  app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
+	// Routers
+	app.use('/kafka', createKafkaRouter(egoClient));
+	app.use('/clinical', clinicalProxyRoute);
+	app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
+	app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
-  if (FEATURE_STORAGE_API_ENABLED) {
-    const rdpcRepoProxyPath = '/storage-api';
-    app.use(
-      rdpcRepoProxyPath,
-      await createFileStorageApi({
-        rootPath: rdpcRepoProxyPath,
-        esClient,
-        egoClient,
-      }),
-    );
-  }
+	if (FEATURE_STORAGE_API_ENABLED) {
+		const rdpcRepoProxyPath = '/storage-api';
+		app.use(
+			rdpcRepoProxyPath,
+			await createFileStorageApi({
+				rootPath: rdpcRepoProxyPath,
+				esClient,
+				egoClient,
+			}),
+		);
+	}
 
-  app.use('/api-docs', apiDocRouter());
+	app.use('/api-docs', apiDocRouter());
 
-  app.listen(PORT, () => {
-    // @ts-ignore ApolloServer type is missing graphqlPath for some reason
-    logger.info(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`,
-    );
-    logger.info(
-      `🚀 Rest API doc available at http://localhost:${PORT}/api-docs`,
-    );
-  });
+	app.listen(PORT, () => {
+		// @ts-ignore ApolloServer type is missing graphqlPath for some reason
+		logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+		logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+	});
 };
 
 export default init;

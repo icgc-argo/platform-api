@@ -23,80 +23,63 @@ import programDonorSummaryEntriesAndStatsResolver from './summaryEntriesAndStats
 import { GraphQLFieldResolver } from 'graphql';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import { AuthenticationError, ApolloError } from 'apollo-server-express';
-import {
-  BaseQueryArguments,
-  ProgramDonorSummaryStatsGqlResponse,
-} from './types';
+import { BaseQueryArguments, ProgramDonorSummaryStatsGqlResponse } from './types';
 import { Client } from '@elastic/elasticsearch';
 class UnauthorizedError extends ApolloError {
-  constructor(message: string) {
-    super(message);
-  }
-  extensions = {
-    code: 'UNAUTHORIZED',
-  };
+	constructor(message: string) {
+		super(message);
+	}
+	extensions = {
+		code: 'UNAUTHORIZED',
+	};
 }
 
 export const resolveWithProgramAuth = <
-  ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>,
+	ResolverType = GraphQLFieldResolver<unknown, unknown, unknown>,
 >(
-  resolver: ResolverType,
-  gqlResolverArguments: [
-    unknown,
-    BaseQueryArguments,
-    GlobalGqlContext,
-    unknown,
-  ],
+	resolver: ResolverType,
+	gqlResolverArguments: [unknown, BaseQueryArguments, GlobalGqlContext, unknown],
 ): ResolverType => {
-  const [_, args, context] = gqlResolverArguments;
-  const { egoToken } = context;
-  const {
-    getPermissionsFromToken,
-    isValidJwt,
-    canReadProgramData,
-    canReadProgram,
-  } = egoTokenUtils;
+	const [_, args, context] = gqlResolverArguments;
+	const { egoToken } = context;
+	const { getPermissionsFromToken, isValidJwt, canReadProgramData, canReadProgram } = egoTokenUtils;
 
-  if (egoToken) {
-    const permissions = getPermissionsFromToken(egoToken);
-    const hasPermission =
-      canReadProgram({
-        permissions,
-        programId: args.programShortName,
-      }) ||
-      canReadProgramData({
-        permissions,
-        programId: args.programShortName,
-      });
+	if (egoToken) {
+		const permissions = getPermissionsFromToken(egoToken);
+		const hasPermission =
+			canReadProgram({
+				permissions,
+				programId: args.programShortName,
+			}) ||
+			canReadProgramData({
+				permissions,
+				programId: args.programShortName,
+			});
 
-    const authorized = egoToken && isValidJwt(egoToken) && hasPermission;
+		const authorized = egoToken && isValidJwt(egoToken) && hasPermission;
 
-    if (authorized) {
-      return resolver;
-    } else {
-      throw new UnauthorizedError('unauthorized');
-    }
-  } else {
-    throw new AuthenticationError('you must be logged in to access this data');
-  }
+		if (authorized) {
+			return resolver;
+		} else {
+			throw new UnauthorizedError('unauthorized');
+		}
+	} else {
+		throw new AuthenticationError('you must be logged in to access this data');
+	}
 };
 
 const createResolvers = async (
-  esClient: Client,
-): Promise<
-  IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>
-> => {
-  return {
-    Query: {
-      programDonorSummary: (...resolverArguments) =>
-        resolveWithProgramAuth(
-          programDonorSummaryEntriesAndStatsResolver(esClient)(
-            ...resolverArguments,
-          ),
-          resolverArguments,
-        ),
-    },
-  };
+	esClient: Client,
+): Promise<IResolvers<ProgramDonorSummaryStatsGqlResponse, GlobalGqlContext>> => {
+	return {
+		Query: {
+			programDonorSummary: (...resolverArguments) =>
+				resolveWithProgramAuth(
+					programDonorSummaryEntriesAndStatsResolver(esClient)(...resolverArguments),
+					resolverArguments,
+				),
+		},
+	};
 };
 
 export default createResolvers;

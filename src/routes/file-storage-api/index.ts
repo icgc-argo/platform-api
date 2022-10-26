@@ -30,64 +30,64 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { createScoreAuthClient } from 'services/ego/scoreAuthClient';
 
 export default async ({
-  rootPath,
-  esClient,
-  egoClient,
-  downloadProxyMiddlewareFactory = createProxyMiddleware,
+	rootPath,
+	esClient,
+	egoClient,
+	downloadProxyMiddlewareFactory = createProxyMiddleware,
 }: {
-  rootPath: string;
-  esClient: Client;
-  egoClient: EgoClient;
-  downloadProxyMiddlewareFactory?: typeof createProxyMiddleware;
+	rootPath: string;
+	esClient: Client;
+	egoClient: EgoClient;
+	downloadProxyMiddlewareFactory?: typeof createProxyMiddleware;
 }): Promise<Router> => {
-  const router = express.Router();
+	const router = express.Router();
 
-  const scoreAuthClient = await createScoreAuthClient(egoClient);
+	const scoreAuthClient = await createScoreAuthClient(egoClient);
 
-  /****************************************************************
-   * Score client uses this to validate server availability.
-   * It really doesn't matter what's returned.
-   ****************************************************************/
-  router.get('/download/ping', async (req, res, next) => {
-    res.send(urljoin(ADVERTISED_HOST, rootPath, '/heliograph'));
-  });
-  router.get('/heliograph', (req, res) => {
-    res.send('heliograph');
-  });
-  /****************************************************************/
+	/****************************************************************
+	 * Score client uses this to validate server availability.
+	 * It really doesn't matter what's returned.
+	 ****************************************************************/
+	router.get('/download/ping', async (req, res, next) => {
+		res.send(urljoin(ADVERTISED_HOST, rootPath, '/heliograph'));
+	});
+	router.get('/heliograph', (req, res) => {
+		res.send('heliograph');
+	});
+	/****************************************************************/
 
-  router.get(
-    '/entities',
-    authenticatedRequestMiddleware({ egoClient }),
-    createEntitiesHandler({
-      esClient,
-    }),
-  );
-  router.get(
-    '/entities/:fileObjectId',
-    authenticatedRequestMiddleware({ egoClient }),
-    createEntitiesIdHandler({
-      esClient,
-    }),
-  );
-  router.get(
-    '/download/:fileObjectId',
-    authenticatedRequestMiddleware({ egoClient }),
-    downloadProxy({
-      rootPath,
-      esClient,
-      scoreAuthClient,
-      proxyMiddlewareFactory: downloadProxyMiddlewareFactory,
-    }),
-  );
-  router.get(
-    '/download-file/:fileObjectId',
-    authenticatedRequestMiddleware({ egoClient }),
-    downloadFile({
-      esClient,
-      scoreAuthClient,
-    }),
-  );
+	router.get(
+		'/entities',
+		authenticatedRequestMiddleware({ egoClient }),
+		createEntitiesHandler({
+			esClient,
+		}),
+	);
+	router.get(
+		'/entities/:fileObjectId',
+		authenticatedRequestMiddleware({ egoClient }),
+		createEntitiesIdHandler({
+			esClient,
+		}),
+	);
+	router.get(
+		'/download/:fileObjectId',
+		authenticatedRequestMiddleware({ egoClient }),
+		downloadProxy({
+			rootPath,
+			esClient,
+			scoreAuthClient,
+			proxyMiddlewareFactory: downloadProxyMiddlewareFactory,
+		}),
+	);
+	router.get(
+		'/download-file/:fileObjectId',
+		authenticatedRequestMiddleware({ egoClient }),
+		downloadFile({
+			esClient,
+			scoreAuthClient,
+		}),
+	);
 
-  return router;
+	return router;
 };

@@ -18,10 +18,7 @@
  */
 
 import { createTestClient } from 'apollo-server-testing';
-import {
-  MOCK_API_KEYS,
-  MOCK_API_KEY_SCOPES,
-} from 'routes/file-storage-api/handlers/test/utils';
+import { MOCK_API_KEYS, MOCK_API_KEY_SCOPES } from 'routes/file-storage-api/handlers/test/utils';
 import { reduce } from 'axax/es5/reduce';
 
 import { Request } from 'express';
@@ -33,78 +30,78 @@ import { ArrangerFilter } from '../arrangerFilterTypes';
 // import { EgoJwtData, UserStatus, UserType } from '@icgc-argo/ego-token-utils/dist/common';
 
 type QueryResponse = {
-  file: { hits: { edges: { node: { object_id: string } }[] } };
+	file: { hits: { edges: { node: { object_id: string } }[] } };
 };
 
 const mockJwtData = (apiKey: keyof typeof MOCK_API_KEYS): any => ({
-  aud: [],
-  context: {
-    scope: MOCK_API_KEY_SCOPES[apiKey],
-    user: {
-      createdAt: 0,
-      email: '',
-      firstName: '',
-      lastLogin: 0,
-      lastName: '',
-      preferredLanguage: '',
-      status: 'APPROVED',
-      type: 'USER',
-      providerType: 'GOOGLE',
-      providerSubjectId: '',
-    },
-  },
-  exp: Infinity,
-  iat: 0,
-  iss: '',
-  jti: '',
-  sub: '',
+	aud: [],
+	context: {
+		scope: MOCK_API_KEY_SCOPES[apiKey],
+		user: {
+			createdAt: 0,
+			email: '',
+			firstName: '',
+			lastLogin: 0,
+			lastName: '',
+			preferredLanguage: '',
+			status: 'APPROVED',
+			type: 'USER',
+			providerType: 'GOOGLE',
+			providerSubjectId: '',
+		},
+	},
+	exp: Infinity,
+	iat: 0,
+	iss: '',
+	jti: '',
+	sub: '',
 });
 
 const createArrangerApi = async ({
-  esClient,
-  apiKey,
+	esClient,
+	apiKey,
 }: {
-  apiKey: keyof typeof MOCK_API_KEYS;
-  esClient: Client;
+	apiKey: keyof typeof MOCK_API_KEYS;
+	esClient: Client;
 }) => {
-  const apolloServer = new ApolloServer({
-    schema: await getArrangerGqlSchema(esClient, true),
-    context: ({ req }: { req: Request }): ArrangerGqlContext => ({
-      es: esClient, // for arranger only
-      projectId: ARRANGER_PROJECT_ID, // for arranger only
-      userJwtData: mockJwtData(apiKey),
-    }),
-  });
-  const graphqlClient = createTestClient(apolloServer);
-  return graphqlClient;
+	const apolloServer = new ApolloServer({
+		schema: await getArrangerGqlSchema(esClient, true),
+		context: ({ req }: { req: Request }): ArrangerGqlContext => ({
+			es: esClient, // for arranger only
+			projectId: ARRANGER_PROJECT_ID, // for arranger only
+			userJwtData: mockJwtData(apiKey),
+		}),
+	});
+	const graphqlClient = createTestClient(apolloServer);
+	return graphqlClient;
 };
 
 export const fileDocumentStream = async function* ({
-  esClient,
-  apiKey,
-  clientSideFilters,
+	esClient,
+	apiKey,
+	clientSideFilters,
 }: {
-  apiKey: keyof typeof MOCK_API_KEYS;
-  esClient: Client;
-  clientSideFilters?: ArrangerFilter;
+	apiKey: keyof typeof MOCK_API_KEYS;
+	esClient: Client;
+	clientSideFilters?: ArrangerFilter;
 }) {
-  let offset = 0;
-  const pageSize = 1000;
-  const graphqlClient = await createArrangerApi({
-    esClient,
-    apiKey,
-  });
+	let offset = 0;
+	const pageSize = 1000;
+	const graphqlClient = await createArrangerApi({
+		esClient,
+		apiKey,
+	});
 
-  cycle: while (true) {
-    const queryResponse = await graphqlClient.query<
-      QueryResponse,
-      {
-        offset: number;
-        first: number;
-        filters?: ArrangerFilter;
-      }
-    >({
-      query: `
+	cycle: while (true) {
+		const queryResponse = await graphqlClient.query<
+			QueryResponse,
+			{
+				offset: number;
+				first: number;
+				filters?: ArrangerFilter;
+			}
+		>({
+			query: `
         query($offset: Int, $first: Int, $filters: JSON) {
           file {
             hits (
@@ -122,65 +119,63 @@ export const fileDocumentStream = async function* ({
           }
         }
       `,
-      variables: {
-        offset: offset,
-        first: pageSize,
-        filters: clientSideFilters,
-      },
-    });
+			variables: {
+				offset: offset,
+				first: pageSize,
+				filters: clientSideFilters,
+			},
+		});
 
-    if (!queryResponse.data) {
-      throw new Error(queryResponse.errors?.toString());
-    } else if (queryResponse.data.file.hits.edges.length > 0) {
-      offset += pageSize;
-      yield queryResponse.data;
-    } else {
-      break cycle;
-    }
-  }
+		if (!queryResponse.data) {
+			throw new Error(queryResponse.errors?.toString());
+		} else if (queryResponse.data.file.hits.edges.length > 0) {
+			offset += pageSize;
+			yield queryResponse.data;
+		} else {
+			break cycle;
+		}
+	}
 };
 
-export const reduceToFileHits = (
-  stream: ReturnType<typeof fileDocumentStream>,
-) =>
-  reduce<QueryResponse, QueryResponse['file']['hits']['edges']>((acc, r) => {
-    r.file.hits.edges.forEach((edge) => {
-      acc.push(edge);
-    });
-    return acc;
-  }, [])(stream);
+export const reduceToFileHits = (stream: ReturnType<typeof fileDocumentStream>) =>
+	reduce<QueryResponse, QueryResponse['file']['hits']['edges']>((acc, r) => {
+		r.file.hits.edges.forEach((edge) => {
+			acc.push(edge);
+		});
+		return acc;
+	}, [])(stream);
 
 export const aggregateAllObjectIds = async ({
-  esClient,
-  apiKey,
-  clientSideFilters,
+	esClient,
+	apiKey,
+	clientSideFilters,
 }: {
-  apiKey: keyof typeof MOCK_API_KEYS;
-  esClient: Client;
-  clientSideFilters?: ArrangerFilter;
+	apiKey: keyof typeof MOCK_API_KEYS;
+	esClient: Client;
+	clientSideFilters?: ArrangerFilter;
 }) => {
-  const graphqlClient = await createArrangerApi({
-    esClient,
-    apiKey,
-  });
+	const graphqlClient = await createArrangerApi({
+		esClient,
+		apiKey,
+	});
 
-  const respone = await graphqlClient.query<
-    {
-      file: {
-        aggregations: {
-          object_id: {
-            buckets: {
-              key: string;
-            }[];
-          };
-        };
-      };
-    },
-    {
-      filters?: ArrangerFilter;
-    }
-  >({
-    query: `
+	const respone = await graphqlClient.query<
+		{
+			file: {
+				aggregations: {
+					object_id: {
+						buckets: {
+							key: string;
+						}[];
+					};
+				};
+			};
+		},
+		{
+			filters?: ArrangerFilter;
+		}
+	>({
+		query: `
       query($filters: JSON) {
         file {
           aggregations (filters: $filters, aggregations_filter_themselves: true) {
@@ -193,14 +188,14 @@ export const aggregateAllObjectIds = async ({
         }
       }
     `,
-    variables: {
-      filters: clientSideFilters,
-    },
-  });
+		variables: {
+			filters: clientSideFilters,
+		},
+	});
 
-  if (respone.errors) {
-    throw new Error(respone.errors.toString());
-  }
+	if (respone.errors) {
+		throw new Error(respone.errors.toString());
+	}
 
-  return respone.data;
+	return respone.data;
 };
