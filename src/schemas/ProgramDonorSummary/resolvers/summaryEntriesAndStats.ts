@@ -455,9 +455,12 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 			}
 
 			if (field === EsDonorDocumentField.validWithCurrentDictionary && filter.values.length > 0) {
-				const shouldQueries = [];
+				const shouldQueries: Query[] = [];
 				for (const value of filter.values) {
-					if (value === 'VALID' || value === 'INVALID') {
+					if (
+						value === validWithCurrentDictionaryStatus.VALID ||
+						value === validWithCurrentDictionaryStatus.INVALID
+					) {
 						shouldQueries.push(
 							esb.termsQuery(
 								EsDonorDocumentField.validWithCurrentDictionary,
