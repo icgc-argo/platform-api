@@ -329,3 +329,8 @@ export enum tumorNormalMatchedPairStatus {
 	TUMOR_NORMAL_NO_MATCHED_PAIR = 'TUMOR_NORMAL_NO_MATCHED_PAIR',
 	NO_DATA = 'NO_DATA',
 }
+
+export enum validWithCurrentDictionaryStatus {
+	VALID = 'VALID',
+	INVALID = 'INVALID',
+}
