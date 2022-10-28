@@ -576,8 +576,8 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 						.boolQuery()
 						.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0)])
 						.should([
-							esb.rangeQuery().field(EsDonorDocumentField.registeredNormalSamples).gte(1),
-							esb.rangeQuery().field(EsDonorDocumentField.registeredTumourSamples).gte(1),
+							esb.rangeQuery().field(EsDonorDocumentField.publishedNormalAnalysis).gte(1),
+							esb.rangeQuery().field(EsDonorDocumentField.publishedTumourAnalysis).gte(1),
 						]),
 				),
 				filterAggregation('noDnaTNMatchedPairsData' as AggregationName).filter(
@@ -585,8 +585,8 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 						.boolQuery()
 						.must([
 							esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
-							esb.rangeQuery().field(EsDonorDocumentField.registeredNormalSamples).lte(0),
-							esb.rangeQuery().field(EsDonorDocumentField.registeredTumourSamples).lte(0),
+							esb.rangeQuery().field(EsDonorDocumentField.publishedNormalAnalysis).lte(0),
+							esb.rangeQuery().field(EsDonorDocumentField.publishedTumourAnalysis).lte(0),
 						]),
 				),
 				filterAggregation('noCoreCompletion' as AggregationName).filter(
