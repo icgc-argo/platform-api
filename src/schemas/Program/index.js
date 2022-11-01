@@ -22,14 +22,11 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { get, merge, pickBy } from 'lodash';
 import programService from '../../services/programService';
 import { grpcToGql } from '../../utils/grpcUtils';
-import costDirectiveTypeDef from '../costDirectiveTypeDef';
 import customScalars from '../customScalars';
 import logger from '../../utils/logger';
 import { UserInputError, ApolloError } from 'apollo-server-express';
 
 const typeDefs = gql`
-	${costDirectiveTypeDef}
-
 	scalar DateTime
 
 	enum MembershipType {
@@ -63,7 +60,7 @@ const typeDefs = gql`
 		status: InviteStatus!
 	}
 
-	type Program @cost(complexity: 10) {
+	type Program {
 		shortName: String!
 		description: String
 		name: String
@@ -82,7 +79,7 @@ const typeDefs = gql`
 		users: [ProgramUser]
 	}
 
-	type ProgramUser @cost(complexity: 10) {
+	type ProgramUser {
 		email: String!
 		firstName: String!
 		lastName: String!
@@ -93,11 +90,11 @@ const typeDefs = gql`
 	}
 
 	type ProgramOptions {
-		cancerTypes: [String]! @cost(complexity: 5)
-		primarySites: [String]! @cost(complexity: 5)
-		institutions: [String]! @cost(complexity: 5)
-		regions: [String]! @cost(complexity: 5)
-		countries: [String]! @cost(complexity: 5)
+		cancerTypes: [String]!
+		primarySites: [String]!
+		institutions: [String]!
+		regions: [String]!
+		countries: [String]!
 	}
 
 	input ProgramUserInput {
@@ -181,38 +178,37 @@ const typeDefs = gql`
 		For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
 		Returns Program object details of created program
 		"""
-		createProgram(program: ProgramInput!): Program @cost(complexity: 40)
+		createProgram(program: ProgramInput!): Program
 
 		"""
 		Update Program
 		Returns shortName of the program if succesfully updated
 		"""
-		updateProgram(shortName: String!, updates: UpdateProgramInput!): String @cost(complexity: 20)
+		updateProgram(shortName: String!, updates: UpdateProgramInput!): String
 
 		"""
 		Invite a user to join a program
 		Returns the email of the user if the invite is successfully sent
 		"""
-		inviteUser(invite: InviteUserInput!): String @cost(complexity: 10)
+		inviteUser(invite: InviteUserInput!): String
 
 		"""
 		Join a program by accepting an invitation
 		Returns the user data
 		"""
-		joinProgram(join: JoinProgramInput!): ProgramUser @cost(complexity: 10)
+		joinProgram(join: JoinProgramInput!): ProgramUser
 
 		"""
 		Update a user's role in a prgoram
 		Returns the user data
 		"""
 		updateUser(userEmail: String!, programShortName: String!, userRole: UserRole!): Boolean
-			@cost(complexity: 10)
 
 		"""
 		Remove a user from a program
 		Returns message from server
 		"""
-		removeUser(userEmail: String!, programShortName: String!): String @cost(complexity: 10)
+		removeUser(userEmail: String!, programShortName: String!): String
 	}
 `;
 

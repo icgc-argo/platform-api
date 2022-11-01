@@ -18,10 +18,8 @@
  */
 
 import { gql } from 'apollo-server-express';
-import costDirectiveTypeDef from '../costDirectiveTypeDef';
 
 export default gql`
-	${costDirectiveTypeDef}
 	scalar Upload
 	scalar DateTime
 
@@ -37,7 +35,7 @@ export default gql`
 	It is possible for there to be no available ClinicalRegistrationData for a program,
 	  in this case the object will return with id and creator equal to null, and an empty records list.
 	"""
-	type ClinicalRegistrationData @cost(complexity: 10) {
+	type ClinicalRegistrationData {
 		id: ID
 		programShortName: ID
 		creator: String
@@ -53,7 +51,7 @@ export default gql`
 		alreadyRegistered: ClinicalRegistrationStats!
 	}
 
-	type ClinicalRegistrationStats @cost(complexity: 10) {
+	type ClinicalRegistrationStats {
 		count: Int!
 		rows: [Int]!
 		names: [String]!
@@ -65,14 +63,14 @@ export default gql`
 		rows: [Int]!
 	}
 
-	type ClinicalSubmissionData @cost(complexity: 10) {
+	type ClinicalSubmissionData {
 		id: ID
 		programShortName: ID
 		state: SubmissionState
 		version: String
 		updatedBy: String
 		updatedAt: DateTime
-		clinicalEntities: [ClinicalSubmissionEntity]! @cost(complexity: 20)
+		clinicalEntities: [ClinicalSubmissionEntity]!
 		fileErrors: [ClinicalFileError]
 	}
 
@@ -114,7 +112,7 @@ export default gql`
 	"""
 	All schemas below describe clinical errors
 	"""
-	type ClinicalFileError @cost(complexity: 5) {
+	type ClinicalFileError {
 		message: String!
 		fileNames: [String]!
 		code: String!
@@ -129,7 +127,7 @@ export default gql`
 		donorId: String!
 	}
 
-	type ClinicalRegistrationError implements ClinicalEntityError @cost(complexity: 5) {
+	type ClinicalRegistrationError implements ClinicalEntityError {
 		type: String!
 		message: String!
 		row: Int!
@@ -140,7 +138,7 @@ export default gql`
 		specimenId: String
 	}
 
-	type ClinicalSubmissionDataError implements ClinicalEntityError @cost(complexity: 5) {
+	type ClinicalSubmissionDataError implements ClinicalEntityError {
 		type: String!
 		message: String!
 		row: Int!
@@ -149,7 +147,7 @@ export default gql`
 		donorId: String!
 	}
 
-	type ClinicalSubmissionSchemaError implements ClinicalEntityError @cost(complexity: 10) {
+	type ClinicalSubmissionSchemaError implements ClinicalEntityError {
 		type: String!
 		message: String!
 		row: Int!
@@ -159,7 +157,7 @@ export default gql`
 		clinicalType: String!
 	}
 
-	type ClinicalSubmissionUpdate @cost(complexity: 5) {
+	type ClinicalSubmissionUpdate {
 		row: Int!
 		field: String!
 		newValue: String!
@@ -318,20 +316,18 @@ export default gql`
 		uploadClinicalRegistration(
 			shortName: String!
 			registrationFile: Upload!
-		): ClinicalRegistrationData! @cost(complexity: 30)
+		): ClinicalRegistrationData!
 
 		"""
 		Remove the Clinical Registration data currently uploaded and not committed
 		"""
 		clearClinicalRegistration(shortName: String!, registrationId: String!): Boolean!
-			@cost(complexity: 10)
 
 		"""
 		Complete registration of the currently uploaded Clinical Registration data
 		On Success, returns a list of the new sample IDs that were committed
 		"""
 		commitClinicalRegistration(shortName: String!, registrationId: String!): [String]!
-			@cost(complexity: 20)
 
 		"""
 		Upload Clinical Submission files
@@ -339,7 +335,7 @@ export default gql`
 		uploadClinicalSubmissions(
 			programShortName: String!
 			clinicalFiles: [Upload!]
-		): ClinicalSubmissionData! @cost(complexity: 30)
+		): ClinicalSubmissionData!
 
 		"""
 		Clear Clinical Submission
@@ -349,7 +345,7 @@ export default gql`
 			programShortName: String!
 			version: String!
 			fileType: String
-		): ClinicalSubmissionData! @cost(complexity: 20)
+		): ClinicalSubmissionData!
 
 		"""
 		Validate the uploaded clinical files
@@ -357,7 +353,7 @@ export default gql`
 		validateClinicalSubmissions(
 			programShortName: String!
 			version: String!
-		): ClinicalSubmissionData! @cost(complexity: 30)
+		): ClinicalSubmissionData!
 
 		"""
 		- If there is update: makes a clinical submission ready for approval by a DCC member,
@@ -365,18 +361,15 @@ export default gql`
 		- If there is NO update: merges clinical data to system, returning an empty submission
 		"""
 		commitClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
-			@cost(complexity: 30)
 
 		"""
 		Available for DCC members to reopen a clinical submission
 		"""
 		reopenClinicalSubmission(programShortName: String!, version: String!): ClinicalSubmissionData!
-			@cost(complexity: 30)
 
 		"""
 		Available for DCC members to approve a clinical submission
 		"""
 		approveClinicalSubmission(programShortName: String!, version: String!): Boolean!
-			@cost(complexity: 30)
 	}
 `;
