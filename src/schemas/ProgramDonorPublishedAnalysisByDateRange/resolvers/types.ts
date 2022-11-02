@@ -18,41 +18,41 @@
  */
 
 export type BaseQueryArguments = {
-  programShortName: string;
+	programShortName: string;
 };
 
 export type ResponseBucket = {
-  date: string;
-  donors: number;
+	date: string;
+	donors: number;
 };
 
 export type ProgramDonorGqlResponse = {
-  buckets: ResponseBucket[];
-  title: string;
+	buckets: ResponseBucket[];
+	title: string;
 };
 
 // keys are from elasticsearch
 export type EsAggsBucket = {
-  doc_count: number;
-  key: string;
-  to_as_string: string; // ISO date time
-  to: number;
+	doc_count: number;
+	key: string;
+	to_as_string: string; // ISO date time
+	to: number;
 };
 
 export type EsAggsBuckets = {
-  buckets: EsAggsBucket[];
+	buckets: EsAggsBucket[];
 };
 
 export type DonorFields =
-  | 'alignmentFirstPublishedDate'
-  | 'coreCompletionDate'
-  | 'mutectFirstPublishedDate'
-  | 'rawReadsFirstPublishedDate'
-  | 'sangerVcsFirstPublishedDate'
-  | 'openAccessFirstPublishedDate'
-  | 'rnaRawReadsFirstPublishedDate'
-  | 'rnaAlignmentFirstPublishedDate';
+	| 'alignmentFirstPublishedDate'
+	| 'coreCompletionDate'
+	| 'mutectFirstPublishedDate'
+	| 'rawReadsFirstPublishedDate'
+	| 'sangerVcsFirstPublishedDate'
+	| 'openAccessFirstPublishedDate'
+	| 'rnaRawReadsFirstPublishedDate'
+	| 'rnaAlignmentFirstPublishedDate';
 
 export type EsAggs = {
-  [key in DonorFields]: EsAggsBuckets;
+	[key in DonorFields]: EsAggsBuckets;
 };

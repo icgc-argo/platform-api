@@ -32,46 +32,45 @@ import getAccessControlFilter from './getAccessControlFilter';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 export type ArrangerGqlContext = {
-  es: Client;
-  projectId: string;
-  userJwtData: EgoJwtData | null;
+	es: Client;
+	projectId: string;
+	userJwtData: EgoJwtData | null;
 };
 
 const getArrangerGqlSchema = async (
-  esClient: Client,
-  enableAccessControl = FEATURE_METADATA_ACCESS_CONTROL,
+	esClient: Client,
+	enableAccessControl = FEATURE_METADATA_ACCESS_CONTROL,
 ) => {
-  await initArrangerMetadata(esClient);
+	await initArrangerMetadata(esClient);
 
-  // Create arranger schema
-  const { schema: argoArrangerSchema } = (await createProjectSchema({
-    es: esClient,
-    id: ARRANGER_PROJECT_ID,
-    graphqlOptions: {},
-    enableAdmin: false,
-    getServerSideFilter: enableAccessControl
-      ? ({ userJwtData }: GlobalGqlContext) =>
-          getAccessControlFilter(userJwtData)
-      : undefined,
-  })) as { schema: GraphQLSchema };
+	// Create arranger schema
+	const { schema: argoArrangerSchema } = (await createProjectSchema({
+		es: esClient,
+		id: ARRANGER_PROJECT_ID,
+		graphqlOptions: {},
+		enableAdmin: false,
+		getServerSideFilter: enableAccessControl
+			? ({ userJwtData }: GlobalGqlContext) => getAccessControlFilter(userJwtData)
+			: undefined,
+	})) as { schema: GraphQLSchema };
 
-  // Arranger schema has a recursive field called 'viewer' inside of type 'Root'
-  // there is bug in graphql-tools which is unable to interpret this so 'mergeSchema' doesn't work
-  // this schema transform is a work around for that, which removes the field
-  const transformedSchema = transformSchema(argoArrangerSchema, [
-    removeViewerFieldInRootTypeTransform,
-  ]);
+	// Arranger schema has a recursive field called 'viewer' inside of type 'Root'
+	// there is bug in graphql-tools which is unable to interpret this so 'mergeSchema' doesn't work
+	// this schema transform is a work around for that, which removes the field
+	const transformedSchema = transformSchema(argoArrangerSchema, [
+		removeViewerFieldInRootTypeTransform,
+	]);
 
-  return transformedSchema;
+	return transformedSchema;
 };
 
 // This transform is applied to every root field in a schema
 // it only removes the Query field named viewer
 const removeViewerFieldInRootTypeTransform = new TransformRootFields(
-  (operation: 'Query' | 'Mutation' | 'Subscription', fieldName: String, _) => {
-    if (operation === 'Query' && fieldName === 'viewer') return null; // return null deletes the field
-    return undefined; // return undefined doesn't change field
-  },
+	(operation: 'Query' | 'Mutation' | 'Subscription', fieldName: String, _) => {
+		if (operation === 'Query' && fieldName === 'viewer') return null; // return null deletes the field
+		return undefined; // return undefined doesn't change field
+	},
 );
 
 export default getArrangerGqlSchema;
