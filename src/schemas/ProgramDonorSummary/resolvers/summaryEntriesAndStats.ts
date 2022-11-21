@@ -425,13 +425,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 							break;
 						case tumorNormalMatchedPairStatus.TUMOR_NORMAL_NO_MATCHED_PAIR:
 							shouldQueries.push(
-								esb
-									.boolQuery()
-									.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0)])
-									.should([
-										esb.rangeQuery().field(EsDonorDocumentField.registeredNormalSamples).gte(1),
-										esb.rangeQuery().field(EsDonorDocumentField.registeredTumourSamples).gte(1),
-									]),
+								esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
 							);
 							break;
 						case tumorNormalMatchedPairStatus.NO_DATA:
@@ -440,10 +434,10 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 								esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
 							);
 							mustQueries.push(
-								esb.rangeQuery().field(EsDonorDocumentField.registeredNormalSamples).lte(0),
+								esb.rangeQuery().field(EsDonorDocumentField.publishedNormalAnalysis).lte(0),
 							);
 							mustQueries.push(
-								esb.rangeQuery().field(EsDonorDocumentField.registeredTumourSamples).lte(0),
+								esb.rangeQuery().field(EsDonorDocumentField.publishedTumourAnalysis).lte(0),
 							);
 							const noDataQuery = esb.boolQuery().must(mustQueries);
 							shouldQueries.push(noDataQuery);
