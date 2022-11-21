@@ -572,20 +572,10 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 					esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
 				),
 				filterAggregation('noDnaTNMatchedPairsSubmitted' as AggregationName).filter(
-					// no matched pairs, and at least 1 T or N
+					// no matched pairs. overlaps with "no data"
 					esb
 						.boolQuery()
-						.must([
-							esb
-								.boolQuery()
-								.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0)]),
-							esb
-								.boolQuery()
-								.should([
-									esb.rangeQuery().field(EsDonorDocumentField.publishedNormalAnalysis).gte(1),
-									esb.rangeQuery().field(EsDonorDocumentField.publishedTumourAnalysis).gte(1),
-								]),
-						]),
+						.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0)]),
 				),
 				filterAggregation('noDnaTNMatchedPairsData' as AggregationName).filter(
 					esb
