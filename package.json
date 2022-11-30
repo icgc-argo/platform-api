@@ -80,7 +80,7 @@
 		"chai": "^4.3.6",
 		"chai-http": "^4.3.0",
 		"jest": "^25.5.4",
-		"nodemon": "^1.19.4",
+		"nodemon": "^2.0.20",
 		"paralleljs": "^1.1.0",
 		"prettier": "^2.7.1",
 		"testcontainers": "^2.20.0",
