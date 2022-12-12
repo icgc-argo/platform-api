@@ -114,6 +114,7 @@ export type ProgramDonorSummaryStats = {
 	completedWorkflowRuns: number;
 	inProgressWorkflowRuns: number;
 	failedWorkflowRuns: number;
+	incompleteDNARawReads: number;
 
 	coreCompletion: CoreCompletionStatusCount;
 

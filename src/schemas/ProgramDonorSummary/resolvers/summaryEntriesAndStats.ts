@@ -515,6 +515,33 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 							DonorMolecularDataReleaseStatus.FULLY_RELEASED,
 						]),
 				),
+				filterAggregation('incompleteDNARawReads' as AggregationName).filter(
+					// donor has at least 1 DNA matched pair
+					// AND fewer DNA raw reads than DNA registered samples
+					esb
+						.boolQuery()
+						.must([
+							esb
+								.boolQuery()
+								.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1)]),
+							esb
+								.boolQuery()
+								.should([
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']"),
+									),
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']"),
+									),
+								]),
+						]),
+				),
 				filterAggregation('donorsWithMatchedTNPair' as AggregationName).filter(
 					esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gt(0),
 				),
@@ -812,6 +839,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				donorsWithMatchedTNPair: FilterAggregationResult;
 				donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 				donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
+				incompleteDNARawReads: FilterAggregationResult;
 
 				completeCoreCompletion: FilterAggregationResult;
 				incompleteCoreCompletion: FilterAggregationResult;
@@ -897,6 +925,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 						donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
 						donorsInvalidWithCurrentDictionary: { doc_count: 0 },
 						donorsWithMatchedTNPair: { doc_count: 0 },
+						incompleteDNARawReads: { doc_count: 0 },
 
 						completeCoreCompletion: { doc_count: 0 },
 						incompleteCoreCompletion: { doc_count: 0 },
@@ -1024,6 +1053,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				filesToQcCount: result.aggregations.filesToQcCount.value,
 				donorsInvalidWithCurrentDictionaryCount:
 					result.aggregations.donorsInvalidWithCurrentDictionary.doc_count,
+				incompleteDNARawReads: result.aggregations.incompleteDNARawReads.doc_count,
 
 				completedWorkflowRuns: result.aggregations.completedWorkflowRuns.doc_count,
 				inProgressWorkflowRuns: result.aggregations.inProgressWorkflowRuns.doc_count,
