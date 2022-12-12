@@ -516,8 +516,9 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 						]),
 				),
 				filterAggregation('incompleteDNARawReads' as AggregationName).filter(
-					// donor has at least 1 DNA matched pair
-					// AND fewer DNA raw reads than DNA registered samples
+					// donor has at least 1 DNA matched pair and either
+					// fewer DNA normal raw reads than DNA normal registered samples
+					// or fewer DNA tumour raw reads than DNA tumour registered samples
 					esb
 						.boolQuery()
 						.must([

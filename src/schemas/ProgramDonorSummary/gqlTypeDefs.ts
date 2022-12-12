@@ -500,9 +500,9 @@ export default gql`
 		failedWorkflowRuns: Int!
 
 		"""
-		Number of donors with at least one DNA matched pair,
-		and fewer DNA normal raw reads than DNA normal registered samples,
-		or fewer DNA tumour raw reads than DNA tumour registered samples.
+		Number of donors with at least one DNA matched pair, and either
+		fewer DNA normal raw reads than DNA normal registered samples, or
+		fewer DNA tumour raw reads than DNA tumour registered samples.
 		"""
 		incompleteDNARawReads: Int!
 	}
