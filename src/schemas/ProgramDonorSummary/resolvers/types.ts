@@ -114,7 +114,6 @@ export type ProgramDonorSummaryStats = {
 	completedWorkflowRuns: number;
 	inProgressWorkflowRuns: number;
 	failedWorkflowRuns: number;
-	incompleteDNARawReads: number;
 
 	coreCompletion: CoreCompletionStatusCount;
 
@@ -158,6 +157,7 @@ type TumorNormalStatusCount = {
 type TumorNormalMatchedPairStatusCount = {
 	tumorNormalMatchedPair: number;
 	tumorNormalNoMatchedPair: number;
+	dnaTNMatchedPairsMissingDnaRawReads: number;
 	noData: number;
 };
 

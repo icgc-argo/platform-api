@@ -515,34 +515,6 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 							DonorMolecularDataReleaseStatus.FULLY_RELEASED,
 						]),
 				),
-				filterAggregation('incompleteDNARawReads' as AggregationName).filter(
-					// donor has at least 1 DNA matched pair and either
-					// fewer DNA normal raw reads than DNA normal registered samples
-					// or fewer DNA tumour raw reads than DNA tumour registered samples
-					esb
-						.boolQuery()
-						.must([
-							esb
-								.boolQuery()
-								.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1)]),
-							esb
-								.boolQuery()
-								.should([
-									esb.scriptQuery(
-										esb
-											.script()
-											.lang('painless')
-											.inline("doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']"),
-									),
-									esb.scriptQuery(
-										esb
-											.script()
-											.lang('painless')
-											.inline("doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']"),
-									),
-								]),
-						]),
-				),
 				filterAggregation('donorsWithMatchedTNPair' as AggregationName).filter(
 					esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gt(0),
 				),
@@ -596,6 +568,34 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				filterAggregation('noDnaTNMatchedPairsSubmitted' as AggregationName).filter(
 					// no matched pairs. overlaps with "no data"
 					esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
+				),
+				filterAggregation('dnaTNMatchedPairsMissingDnaRawReads' as AggregationName).filter(
+					// donor has at least 1 DNA matched pair and either
+					// fewer DNA normal raw reads than DNA normal registered samples
+					// or fewer DNA tumour raw reads than DNA tumour registered samples
+					esb
+						.boolQuery()
+						.must([
+							esb
+								.boolQuery()
+								.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1)]),
+							esb
+								.boolQuery()
+								.should([
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']"),
+									),
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']"),
+									),
+								]),
+						]),
 				),
 				filterAggregation('noDnaTNMatchedPairsData' as AggregationName).filter(
 					esb
@@ -840,7 +840,6 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				donorsWithMatchedTNPair: FilterAggregationResult;
 				donorsInvalidWithCurrentDictionary: FilterAggregationResult;
 				donorsWithPublishedNormalAndTumourSamples: FilterAggregationResult;
-				incompleteDNARawReads: FilterAggregationResult;
 
 				completeCoreCompletion: FilterAggregationResult;
 				incompleteCoreCompletion: FilterAggregationResult;
@@ -852,6 +851,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 
 				dnaTNMatchedPairsSubmitted: FilterAggregationResult;
 				noDnaTNMatchedPairsSubmitted: FilterAggregationResult;
+				dnaTNMatchedPairsMissingDnaRawReads: FilterAggregationResult;
 				noDnaTNMatchedPairsData: FilterAggregationResult;
 
 				rnaRegisteredSamples: FilterAggregationResult;
@@ -926,7 +926,6 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 						donorsWithPublishedNormalAndTumourSamples: { doc_count: 0 },
 						donorsInvalidWithCurrentDictionary: { doc_count: 0 },
 						donorsWithMatchedTNPair: { doc_count: 0 },
-						incompleteDNARawReads: { doc_count: 0 },
 
 						completeCoreCompletion: { doc_count: 0 },
 						incompleteCoreCompletion: { doc_count: 0 },
@@ -938,6 +937,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 
 						dnaTNMatchedPairsSubmitted: { doc_count: 0 },
 						noDnaTNMatchedPairsSubmitted: { doc_count: 0 },
+						dnaTNMatchedPairsMissingDnaRawReads: { doc_count: 0 },
 						noDnaTNMatchedPairsData: { doc_count: 0 },
 
 						rnaRegisteredSamples: { doc_count: 0 },
@@ -1054,7 +1054,6 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				filesToQcCount: result.aggregations.filesToQcCount.value,
 				donorsInvalidWithCurrentDictionaryCount:
 					result.aggregations.donorsInvalidWithCurrentDictionary.doc_count,
-				incompleteDNARawReads: result.aggregations.incompleteDNARawReads.doc_count,
 
 				completedWorkflowRuns: result.aggregations.completedWorkflowRuns.doc_count,
 				inProgressWorkflowRuns: result.aggregations.inProgressWorkflowRuns.doc_count,
@@ -1075,6 +1074,8 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				dnaTNMatchedPairStatus: {
 					tumorNormalMatchedPair: result.aggregations.dnaTNMatchedPairsSubmitted.doc_count,
 					tumorNormalNoMatchedPair: result.aggregations.noDnaTNMatchedPairsSubmitted.doc_count,
+					dnaTNMatchedPairsMissingDnaRawReads:
+						result.aggregations.dnaTNMatchedPairsMissingDnaRawReads.doc_count,
 					noData: result.aggregations.noDnaTNMatchedPairsData.doc_count,
 				},
 

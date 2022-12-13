@@ -218,6 +218,7 @@ export default gql`
 	type TumorNormalMatchedPairStatusCount {
 		tumorNormalMatchedPair: Int!
 		tumorNormalNoMatchedPair: Int!
+		dnaTNMatchedPairsMissingDnaRawReads: Int!
 		noData: Int!
 	}
 
@@ -498,13 +499,6 @@ export default gql`
 		Number of donors with workflow runs that have failed
 		"""
 		failedWorkflowRuns: Int!
-
-		"""
-		Number of donors with at least one DNA matched pair, and either
-		fewer DNA normal raw reads than DNA normal registered samples, or
-		fewer DNA tumour raw reads than DNA tumour registered samples.
-		"""
-		incompleteDNARawReads: Int!
 	}
 
 	type Query {
