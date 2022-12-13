@@ -428,6 +428,38 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 								esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
 							);
 							break;
+						case tumorNormalMatchedPairStatus.TUMOR_NORMAL_MATCHED_PAIR_MISSING_RAW_READS:
+							shouldQueries.push(
+								// donor has at least 1 DNA matched pair and either
+								// fewer DNA normal raw reads than DNA normal registered samples
+								// or fewer DNA tumour raw reads than DNA tumour registered samples
+								esb
+									.boolQuery()
+									.must([
+										esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
+										esb
+											.boolQuery()
+											.should([
+												esb.scriptQuery(
+													esb
+														.script()
+														.lang('painless')
+														.inline(
+															"doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']",
+														),
+												),
+												esb.scriptQuery(
+													esb
+														.script()
+														.lang('painless')
+														.inline(
+															"doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']",
+														),
+												),
+											]),
+									]),
+							);
+							break;
 						case tumorNormalMatchedPairStatus.NO_DATA:
 							const mustQueries: Query[] = [];
 							mustQueries.push(
@@ -568,6 +600,32 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				filterAggregation('noDnaTNMatchedPairsSubmitted' as AggregationName).filter(
 					// no matched pairs. overlaps with "no data"
 					esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
+				),
+				filterAggregation('dnaTNMatchedPairsMissingRawReads' as AggregationName).filter(
+					// donor has at least 1 DNA matched pair and either
+					// fewer DNA normal raw reads than DNA normal registered samples
+					// or fewer DNA tumour raw reads than DNA tumour registered samples
+					esb
+						.boolQuery()
+						.must([
+							esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
+							esb
+								.boolQuery()
+								.should([
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']"),
+									),
+									esb.scriptQuery(
+										esb
+											.script()
+											.lang('painless')
+											.inline("doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']"),
+									),
+								]),
+						]),
 				),
 				filterAggregation('noDnaTNMatchedPairsData' as AggregationName).filter(
 					esb
@@ -823,6 +881,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 
 				dnaTNMatchedPairsSubmitted: FilterAggregationResult;
 				noDnaTNMatchedPairsSubmitted: FilterAggregationResult;
+				dnaTNMatchedPairsMissingRawReads: FilterAggregationResult;
 				noDnaTNMatchedPairsData: FilterAggregationResult;
 
 				rnaRegisteredSamples: FilterAggregationResult;
@@ -908,6 +967,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 
 						dnaTNMatchedPairsSubmitted: { doc_count: 0 },
 						noDnaTNMatchedPairsSubmitted: { doc_count: 0 },
+						dnaTNMatchedPairsMissingRawReads: { doc_count: 0 },
 						noDnaTNMatchedPairsData: { doc_count: 0 },
 
 						rnaRegisteredSamples: { doc_count: 0 },
@@ -1044,6 +1104,8 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				dnaTNMatchedPairStatus: {
 					tumorNormalMatchedPair: result.aggregations.dnaTNMatchedPairsSubmitted.doc_count,
 					tumorNormalNoMatchedPair: result.aggregations.noDnaTNMatchedPairsSubmitted.doc_count,
+					tumorNormalMatchedPairMissingRawReads:
+						result.aggregations.dnaTNMatchedPairsMissingRawReads.doc_count,
 					noData: result.aggregations.noDnaTNMatchedPairsData.doc_count,
 				},
 
