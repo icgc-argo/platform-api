@@ -436,11 +436,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 								esb
 									.boolQuery()
 									.must([
-										esb
-											.boolQuery()
-											.must([
-												esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
-											]),
+										esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
 										esb
 											.boolQuery()
 											.should([
@@ -612,9 +608,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 					esb
 						.boolQuery()
 						.must([
-							esb
-								.boolQuery()
-								.must([esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1)]),
+							esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
 							esb
 								.boolQuery()
 								.should([
