@@ -428,6 +428,42 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 								esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).lte(0),
 							);
 							break;
+						case tumorNormalMatchedPairStatus.TUMOR_NORMAL_MATCHED_PAIR_MISSING_DNA_RAW_READS:
+							shouldQueries.push(
+								// donor has at least 1 DNA matched pair and either
+								// fewer DNA normal raw reads than DNA normal registered samples
+								// or fewer DNA tumour raw reads than DNA tumour registered samples
+								esb
+									.boolQuery()
+									.must([
+										esb
+											.boolQuery()
+											.must([
+												esb.rangeQuery().field(EsDonorDocumentField.matchedTNPairsDNA).gte(1),
+											]),
+										esb
+											.boolQuery()
+											.should([
+												esb.scriptQuery(
+													esb
+														.script()
+														.lang('painless')
+														.inline(
+															"doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']",
+														),
+												),
+												esb.scriptQuery(
+													esb
+														.script()
+														.lang('painless')
+														.inline(
+															"doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']",
+														),
+												),
+											]),
+									]),
+							);
+							break;
 						case tumorNormalMatchedPairStatus.NO_DATA:
 							const mustQueries: Query[] = [];
 							mustQueries.push(
