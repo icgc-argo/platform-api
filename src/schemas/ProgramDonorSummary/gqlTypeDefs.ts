@@ -218,6 +218,7 @@ export default gql`
 	type TumorNormalMatchedPairStatusCount {
 		tumorNormalMatchedPair: Int!
 		tumorNormalNoMatchedPair: Int!
+		tumorNormalMatchedPairMissingRawReads: Int!
 		noData: Int!
 	}
 

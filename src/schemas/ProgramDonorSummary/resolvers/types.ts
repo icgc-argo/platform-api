@@ -157,6 +157,7 @@ type TumorNormalStatusCount = {
 type TumorNormalMatchedPairStatusCount = {
 	tumorNormalMatchedPair: number;
 	tumorNormalNoMatchedPair: number;
+	tumorNormalMatchedPairMissingRawReads: number;
 	noData: number;
 };
 
@@ -327,6 +328,7 @@ export enum tumorNormalStatus {
 export enum tumorNormalMatchedPairStatus {
 	TUMOR_NORMAL_MATCHED_PAIR = 'TUMOR_NORMAL_MATCHED_PAIR',
 	TUMOR_NORMAL_NO_MATCHED_PAIR = 'TUMOR_NORMAL_NO_MATCHED_PAIR',
+	TUMOR_NORMAL_MATCHED_PAIR_MISSING_RAW_READS = 'TUMOR_NORMAL_MATCHED_PAIR_MISSING_RAW_READS',
 	NO_DATA = 'NO_DATA',
 }
 
