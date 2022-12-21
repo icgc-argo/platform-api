@@ -33,6 +33,8 @@ export const ELASTICSEARCH_CLIENT_TRUST_SSL_CERT =
 export const ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX =
 	process.env.ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX || 'donor_centric';
 
+export const ENABLE_ELASTICSEARCH_LOGGING = process.env.ENABLE_ELASTICSEARCH_LOGGING === 'true';
+
 // Arranger configs
 export const ARRANGER_FILE_CENTRIC_INDEX =
 	process.env.ARRANGER_FILE_CENTRIC_INDEX || 'file_centric';

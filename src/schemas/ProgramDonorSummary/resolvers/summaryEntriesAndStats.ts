@@ -41,7 +41,7 @@ import {
 	validWithCurrentDictionaryStatus,
 } from './types';
 import { Client } from '@elastic/elasticsearch';
-import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX } from 'config';
+import { ELASTICSEARCH_PROGRAM_DONOR_DASHBOARD_INDEX, ENABLE_ELASTICSEARCH_LOGGING } from 'config';
 import { UserInputError } from 'apollo-server-express';
 import logger from 'utils/logger';
 
@@ -445,7 +445,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 														.script()
 														.lang('painless')
 														.inline(
-															"doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']",
+															"doc['publishedNormalAnalysis'].value < doc['registeredNormalSamples'].value",
 														),
 												),
 												esb.scriptQuery(
@@ -453,7 +453,7 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 														.script()
 														.lang('painless')
 														.inline(
-															"doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']",
+															"doc['publishedTumourAnalysis'].value < doc['registeredTumourSamples'].value",
 														),
 												),
 											]),
@@ -616,13 +616,17 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 										esb
 											.script()
 											.lang('painless')
-											.inline("doc['publishedNormalAnalysis'] < doc['registeredNormalSamples']"),
+											.inline(
+												"doc['publishedNormalAnalysis'].value < doc['registeredNormalSamples'].value",
+											),
 									),
 									esb.scriptQuery(
 										esb
 											.script()
 											.lang('painless')
-											.inline("doc['publishedTumourAnalysis'] < doc['registeredTumourSamples']"),
+											.inline(
+												"doc['publishedTumourAnalysis'].value < doc['registeredTumourSamples'].value",
+											),
 									),
 								]),
 						]),
@@ -930,6 +934,10 @@ const programDonorSummaryEntriesAndStatsResolver: (esClient: Client) => DonorEnt
 				lastUpdate?: DateAggregationResult;
 			};
 		};
+
+		if (ENABLE_ELASTICSEARCH_LOGGING) {
+			logger.info(JSON.stringify(esQuery.toJSON()));
+		}
 
 		const result: QueryResult = await esClient
 			.search({
