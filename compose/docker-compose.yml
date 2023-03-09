@@ -31,18 +31,17 @@ services:
       - 5432:5432
   program-service:
     image: ghcr.io/icgc-argo/program-service:latest
-    restart: always
     depends_on:
       - program-db
     environment:
-      SPRING_PROFILES_ACTIVE: 'auth'
+      # SPRING_PROFILES_ACTIVE: 'auth'
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://program-db:5432/program-db?stringtype=unspecified'
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_FLYWAY_ENABLED: 'true'
       APP_EGO_URL: 'https://ego.dev.argo.cancercollaboratory.org/api'
-      APP_EGO_CLIENT_ID: 'program'
-      APP_EGO_CLIENT_SECRET: 'programsecret'
+      APP_EGO_CLIENT_ID: 'program-service'
+      APP_EGO_CLIENT_SECRET: 'break-please'
       APP_MAIL_ENABLED: 'false'
       APP_DCC_ADMIN_PERMISSION: 'PROGRAMSERVICE.WRITE'
     ports:
