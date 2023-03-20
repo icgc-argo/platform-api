@@ -68,6 +68,7 @@ export const EGO_PUBLIC_KEY =
 
 // External service root
 export const PROGRAM_SERVICE_ROOT = process.env.PROGRAM_SERVICE_ROOT || 'localhost:50052';
+export const PROGRAM_SERVICE_HTTP_ROOT = process.env.PROGRAM_SERVICE_HTTP_ROOT || 'localhost:8083';
 export const CLINICAL_SERVICE_ROOT = process.env.CLINICAL_SERVICE_ROOT || 'http://localhost:3000';
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';
 export const DONOR_AGGREGATOR_API_ROOT =

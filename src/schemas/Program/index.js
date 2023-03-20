@@ -251,7 +251,9 @@ const resolveProgramList = async (egoToken) => {
 
 const resolveSingleProgram = async (egoToken, programShortName) => {
 	const response = await programService.getProgram(programShortName, egoToken);
+
 	const programDetails = get(response, 'program');
+	console.log('full response', programDetails);
 	return response ? convertGrpcProgramToGql(programDetails) : null;
 };
 
@@ -303,6 +305,11 @@ const resolvers = {
 	},
 	Query: {
 		program: async (obj, args, context, info) => {
+			const requestedFields = info.fieldNodes.flatMap((fieldNode) =>
+				fieldNode.selectionSet.selections.map((selection) => selection.name.value),
+			);
+			console.log('request', JSON.stringify({ obj, args, context, info }));
+			console.log('requested fields', requestedFields);
 			const { egoToken } = context;
 			const { shortName } = args;
 			return resolveSingleProgram(egoToken, shortName);
