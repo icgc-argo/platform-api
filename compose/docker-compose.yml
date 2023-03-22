@@ -34,7 +34,7 @@ services:
     depends_on:
       - program-db
     environment:
-      # SPRING_PROFILES_ACTIVE: 'auth'
+      SPRING_PROFILES_ACTIVE: 'auth'
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://program-db:5432/program-db?stringtype=unspecified'
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password

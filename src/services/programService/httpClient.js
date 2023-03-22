@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,28 +22,18 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-import * as grpc from './grpcClient.js';
-import * as http from './httpClient.js';
+const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
+import fetch from 'node-fetch';
+import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
 
-export default {
-	getProgram: grpc.getProgram,
-	listPrograms: grpc.listPrograms,
-	getJoinProgramInvite: grpc.getJoinProgramInvite,
-	listUsers: grpc.listUsers,
-
-	listCancers: grpc.listCancers,
-	listPrimarySites: grpc.listPrimarySites,
-	listRegions: grpc.listRegions,
-	listInstitutions: grpc.listInstitutions,
-	listCountries: grpc.listCountries,
-
-	createProgram: grpc.createProgram,
-	updateProgram: grpc.updateProgram,
-
-	inviteUser: grpc.inviteUser,
-	joinProgram: grpc.joinProgram,
-	updateUser: grpc.updateUser,
-	removeUser: grpc.removeUser,
-
-	getProgramPublicFields: http.getProgramPublicFields,
+const getProgramPublicFields = async (programShortName) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
+	const response = await fetch(url, {
+		method: 'get',
+	})
+		.then(programServicePublicErrorResponseHandler)
+		.then((response) => response.json());
+	return response;
 };
+
+export { getProgramPublicFields };
