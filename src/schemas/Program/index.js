@@ -331,20 +331,6 @@ const resolvers = {
 				: resolveHTTPProgram(shortName);
 		},
 
-		// clinicalRegistration: async (
-		// 	obj: unknown,
-		// 	args: { shortName: string },
-		// 	context: GlobalGqlContext,
-		// ) => {
-		// 	const { Authorization } = context;
-		// 	const { shortName } = args;
-
-		// 	const response = await clinicalService.getRegistrationData(shortName, Authorization);
-		// 	return convertRegistrationDataToGql(shortName, {
-		// 		registration: response,
-		// 	});
-		// }
-
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			return resolveProgramList(egoToken);
