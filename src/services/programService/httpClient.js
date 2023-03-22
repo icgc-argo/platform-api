@@ -24,14 +24,14 @@
 
 const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
 import fetch from 'node-fetch';
-import { restErrorResponseHandler } from '../../utils/restUtils';
+import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
 
 const getProgramPublicFields = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
 	const response = await fetch(url, {
 		method: 'get',
 	})
-		.then(restErrorResponseHandler)
+		.then(programServicePublicErrorResponseHandler)
 		.then((response) => response.json());
 	return response;
 };

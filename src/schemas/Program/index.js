@@ -251,11 +251,22 @@ const resolveProgramList = async (egoToken) => {
 
 const resolveSingleProgram = async (egoToken, programShortName) => {
 	const response = await programService.getProgram(programShortName, egoToken);
-
 	const programDetails = get(response, 'program');
-	console.log('full response', programDetails);
 	return response ? convertGrpcProgramToGql(programDetails) : null;
 };
+
+const resolveHTTPProgram = async (programShortName) => {
+	const response = await programService.getProgramPublicFields(programShortName);
+	return response;
+};
+
+const programServicePrivateFields = [
+	'commitmentDonors',
+	'submittedDonors',
+	'genomicDonors',
+	'membershipType',
+	'users',
+];
 
 const resolvers = {
 	ProgramOptions: {
@@ -308,12 +319,32 @@ const resolvers = {
 			const requestedFields = info.fieldNodes.flatMap((fieldNode) =>
 				fieldNode.selectionSet.selections.map((selection) => selection.name.value),
 			);
-			console.log('request', JSON.stringify({ obj, args, context, info }));
-			console.log('requested fields', requestedFields);
 			const { egoToken } = context;
 			const { shortName } = args;
-			return resolveSingleProgram(egoToken, shortName);
+
+			//create a condition to determine using either public or private endpoint
+			const hasPrivateField = requestedFields.filter((requestedField) =>
+				programServicePrivateFields.indexOf(requestedField) != -1 ? true : false,
+			);
+			return hasPrivateField.length > 0
+				? resolveSingleProgram(egoToken, shortName)
+				: resolveHTTPProgram(shortName);
 		},
+
+		// clinicalRegistration: async (
+		// 	obj: unknown,
+		// 	args: { shortName: string },
+		// 	context: GlobalGqlContext,
+		// ) => {
+		// 	const { Authorization } = context;
+		// 	const { shortName } = args;
+
+		// 	const response = await clinicalService.getRegistrationData(shortName, Authorization);
+		// 	return convertRegistrationDataToGql(shortName, {
+		// 		registration: response,
+		// 	});
+		// }
+
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			return resolveProgramList(egoToken);
