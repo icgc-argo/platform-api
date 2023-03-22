@@ -17,9 +17,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import winston, { createLogger, LoggerOptions, transports, format } from 'winston';
+import { createLogger, transports, format } from 'winston';
 
-const { combine, timestamp, colorize, prettyPrint, json, printf } = format;
+const { combine, timestamp, printf } = format;
+
+const isProd = process.env.NODE_ENV === 'production';
 
 export const loggerConfig = {
 	format: combine(
@@ -28,12 +30,13 @@ export const loggerConfig = {
 	),
 	transports: [
 		new transports.Console({
-			level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+			handleExceptions: true,
+			level: isProd ? 'error' : 'debug',
 		}),
 		new transports.File({ filename: 'debug.log', level: 'debug' }),
 	],
 };
 
-const logger = winston.createLogger(loggerConfig);
+const logger = createLogger(loggerConfig);
 
 export default logger;
