@@ -108,7 +108,6 @@ describe('file-centric-tsv', () => {
 	}, 120000);
 
 	afterAll(async (done) => {
-		console.info('stopping the Elasticsearch container');
 		await esContainer.stop();
 		done();
 	}, 120000);
