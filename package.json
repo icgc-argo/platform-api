@@ -9,7 +9,9 @@
 		"test": "npm run test-base && npm run test-arranger-acl",
 		"dev": "NODE_PATH=./src ts-node-dev ./src/index.ts -p ./tsconfig.json",
 		"build": "rm -rf dist && tsc -p ./tsconfig.build.json && cp -r ./src/resources ./dist",
-		"start::prod": "NODE_PATH=./dist node dist/index.js",
+		"start::prod": "ts-node -T ./src/index.ts",
+		"patchTS": "ts-patch install -s",
+		"prepare": "npm run patchTS",
 		"programDashboardEsInit": "ts-node --project tsconfig.script.json ./compose/programDashboardEsInit.ts",
 		"fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts",
 		"embargoStageEsInit": "ts-node --project tsconfig.script.json ./compose/embargoStageEsInit.ts",
@@ -76,9 +78,16 @@
 		"@types/url-join": "^4.0.1",
 		"@types/uuid": "^8.3.4",
 		"@types/yamljs": "^0.2.31",
+		"@typescript-eslint/eslint-plugin": "^5.56.0",
+		"@typescript-eslint/parser": "^5.56.0",
 		"apollo-server-testing": "^2.25.4",
 		"chai": "^4.3.6",
 		"chai-http": "^4.3.0",
+		"eslint": "^8.36.0",
+		"eslint-config-prettier": "^8.8.0",
+		"eslint-import-resolver-typescript": "^3.5.3",
+		"eslint-plugin-import": "^2.27.5",
+		"eslint-plugin-prettier": "^4.2.1",
 		"jest": "^25.5.4",
 		"nodemon": "^1.19.4",
 		"paralleljs": "^1.1.0",
@@ -88,8 +97,17 @@
 		"ts-jest": "^25.5.1",
 		"ts-node": "^10.8.2",
 		"ts-node-dev": "^2.0.0",
+		"ts-patch": "^2.1.0",
 		"typescript": "^4.7.4",
+		"typescript-transform-paths": "^3.4.6",
 		"uuid": "^8.3.2"
+	},
+	"jest": {
+		"transform": {
+			"^.+\\.[jt]sx?$": [
+				"ts-jest"
+			]
+		}
 	},
 	"optionalDependencies": {
 		"fsevents": "^1.2.9"

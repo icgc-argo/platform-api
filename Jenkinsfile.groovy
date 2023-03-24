@@ -91,7 +91,9 @@ spec:
 
         stage('Deploy to argo-dev') {
             when {
-                branch "develop"
+                anyOf {
+                    branch "develop"
+                }
             }
             steps {
                 container('docker') {
@@ -114,7 +116,9 @@ spec:
 
         stage('Deploy to argo-qa') {
             when {
-                branch "master"
+                anyOf{
+                    branch "master"
+                }
             }
             steps {
                 container('docker') {
