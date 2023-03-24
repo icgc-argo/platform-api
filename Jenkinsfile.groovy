@@ -93,7 +93,6 @@ spec:
             when {
                 anyOf {
                     branch "develop"
-                    branch "test-programs"
                 }
             }
             steps {
