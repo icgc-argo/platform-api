@@ -241,7 +241,6 @@ type CoreCompletionFields = {
 	primaryDiagnosis: number;
 	followUps: number;
 	treatments: number;
-	familyHistory?: number;
 	tumourSpecimens?: number;
 	normalSpecimens?: number;
 };

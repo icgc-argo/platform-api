@@ -236,7 +236,6 @@ export default gql`
 		primaryDiagnosis: Float!
 		followUps: Float!
 		treatments: Float!
-		familyHistory: Float
 		tumourSpecimens: Float
 		normalSpecimens: Float
 	}
