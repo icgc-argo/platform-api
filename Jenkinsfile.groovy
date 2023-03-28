@@ -122,11 +122,11 @@ spec:
             steps {
                 container('node') {
                     withCredentials([
-                        [usernamePassword(
+                        usernamePassword(
                             credentialsId: 'argoGithub',
                             passwordVariable: 'GIT_PASSWORD',
                             usernameVariable: 'GIT_USERNAME'
-                        )],
+                        ),
                         string(
                             credentialsId: 'JenkinsFailuresSlackChannelURL',
                             variable: 'JenkinsTagsSlackChannelURL'
