@@ -63,6 +63,7 @@ spec:
         gitHubImageName = "${gitHubRegistry}/${gitHubRepo}"
         chartsServer = 'https://overture-stack.github.io/charts-server/'
         DEPLOY_TO_DEV = false
+        PUBLISH_IMAGE = false
 
         commit = sh(
             returnStdout: true,
@@ -87,7 +88,7 @@ spec:
         )
         booleanParam(
             name: 'PUBLISH_IMAGE',
-            defaultValue: "${env.PUBLISH_IMAGE ?: env.DEPLOY_TO_DEV}",
+            defaultValue: "${env.PUBLISH_IMAGE ?: params.DEPLOY_TO_DEV}",
             description: 'Publishes an image with {git commit} tag'
         )
     }
@@ -101,6 +102,10 @@ spec:
         stage('Run tests') {
             steps {
                 container('node') {
+                    sh "echo 'env.DEPLOY_TO_DEV ${env.DEPLOY_TO_DEV}'"
+                    sh "echo 'env.PUBLISH_IMAGE ${env.PUBLISH_IMAGE}'"
+                    sh "echo 'params.DEPLOY_TO_DEV ${params.DEPLOY_TO_DEV}'"
+                    sh "echo 'params.PUBLISH_IMAGE ${params.PUBLISH_IMAGE}'"
                     sh 'npm ci'
                     sh 'DEBUG=testcontainers npm run test-base'
                 }
