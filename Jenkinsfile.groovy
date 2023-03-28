@@ -59,9 +59,10 @@ spec:
 
     environment {
         gitHubRegistry = 'ghcr.io'
-        gitHubRepo = 'icgc-argo/platform-gateway'
-        githubImageName = "${gitHubRegistry}/${gitHubRepo}"
+        gitHubRepo = 'icgc-argo/platform-api'
+        gitHubImageName = "${gitHubRegistry}/${gitHubRepo}"
         chartsServer = 'https://overture-stack.github.io/charts-server/'
+        DEPLOY_TO_DEV = false
 
         commit = sh(
             returnStdout: true,
@@ -109,7 +110,7 @@ spec:
         stage('Builds image') {
             steps {
                 container('docker') {
-                    sh "docker build --network=host -f Dockerfile . -t gateway:${commit}"
+                    sh "docker build --network=host -f Dockerfile . -t ${gitHubImageName}:${commit}"
                 }
             }
         }
@@ -135,7 +136,7 @@ spec:
                             // we still want to run the platform deploy even if this fails, hence try-catch
                             try {
                                 sh "git tag ${version}"
-                                sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${githubRepo} --tags"
+                                sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${gitHubRepo} --tags"
                                 sh "curl \
                                 -X POST \
                                 -H 'Content-type: application/json' \
@@ -157,6 +158,7 @@ spec:
             when {
                 anyOf {
                     branch 'develop'
+                    branch 'main'
                     expression { return params.PUBLISH_IMAGE }
                 }
             }
@@ -171,19 +173,19 @@ spec:
 
                         script {
                             if (env.BRANCH_NAME ==~ 'main') { //push edge and commit tags
-                                sh "docker tag gateway:${commit} ${githubImageName}:${version}"
-                                sh "docker push ${githubImageName}:${version}"
+                                sh "docker tag ${gitHubImageName}:${commit} ${gitHubImageName}:${version}"
+                                sh "docker push ${gitHubImageName}:${version}"
 
-                                sh "docker tag gateway:${commit} ${githubImageName}:latest"
-                                sh "docker push ${githubImageName}:latest"
+                                sh "docker tag ${gitHubImageName}:${commit} ${gitHubImageName}:latest"
+                                sh "docker push ${gitHubImageName}:latest"
                             } else { // push commit tag
-                                sh "docker tag gateway:${commit} ${githubImageName}:${commit}"
-                                sh "docker push ${githubImageName}:${commit}"
+                                sh "docker tag ${gitHubImageName}:${commit} ${gitHubImageName}:${commit}"
+                                sh "docker push ${gitHubImageName}:${commit}"
                             }
 
                             if (env.BRANCH_NAME ==~ 'develop') { // push edge tag
-                                sh "docker tag gateway:${commit} ${githubImageName}:edge"
-                                sh "docker push ${githubImageName}:edge"
+                                sh "docker tag ${gitHubImageName}:${commit} ${gitHubImageName}:edge"
+                                sh "docker push ${gitHubImageName}:edge"
                             }
                         }
                     }
@@ -209,7 +211,7 @@ spec:
         stage('Deploy to argo-qa') {
             when {
                 anyOf {
-                    branch 'master'
+                    branch 'main'
                 }
             }
             steps {
