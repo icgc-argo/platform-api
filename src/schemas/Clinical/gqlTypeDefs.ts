@@ -225,6 +225,7 @@ export default gql`
 		coreCompletionPercentage: Float
 		overriddenCoreCompletion: [String]
 		donorId: Int
+		entityData: CompletionEntityData
 	}
 
 	"""
@@ -236,8 +237,23 @@ export default gql`
 		primaryDiagnosis: Float!
 		followUps: Float!
 		treatments: Float!
-		tumourSpecimens: Float
-		normalSpecimens: Float
+	}
+
+	"""
+	Display Data For Core Completion Entities
+	"""
+	type CompletionEntityData {
+		specimens: SpecimenCoreCompletion
+	}
+
+	type SpecimenCoreCompletion {
+		coreCompletionPercentage: Float!
+		normalSpecimensPercentage: Float!
+		tumourSpecimensPercentage: Float!
+		normalRegistrations: Float!
+		normalSubmissions: Float!
+		tumourRegistrations: Float!
+		tumourSubmissions: Float!
 	}
 
 	"""
