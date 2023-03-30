@@ -17,63 +17,85 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createEsClient } from 'services/elasticsearch';
-import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import { Duration, TemporalUnit } from 'node-duration';
 import { Client } from '@elastic/elasticsearch';
-import { EsFileDocument } from './types';
+import esb from 'elastic-builder';
+import { Duration, TemporalUnit } from 'node-duration';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
+
+import { createEsClient } from 'services/elasticsearch';
+
 import {
 	createEsDocumentStream,
 	createFilterToEsQueryConverter,
 	FilterStringParser,
 	writeTsvStreamToWritableTarget,
 } from './utils';
-import esb from 'elastic-builder';
+import { EsFileDocument } from './types';
 
-describe('createEsDocumentStream', () => {
-	const mockMapping = {
-		mappings: {
-			properties: {
-				study_id: {
-					type: 'keyword',
-				},
-				object_id: {
-					type: 'keyword',
-				},
+const mockMapping = {
+	mappings: {
+		properties: {
+			study_id: {
+				type: 'keyword',
+			},
+			object_id: {
+				type: 'keyword',
 			},
 		},
-	};
-	type MockDocument = Partial<EsFileDocument>;
-	const testData: MockDocument[] = [
-		{
-			study_id: 'study_1',
-			object_id: 'object_1',
-		},
-		{
-			study_id: 'study_2',
-			object_id: 'object_2',
-		},
-		{
-			study_id: 'study_3',
-			object_id: 'object_3',
-		},
-	];
-	const testIndex = 'test';
+	},
+};
+
+type MockDocument = Partial<EsFileDocument>;
+const testData: MockDocument[] = [
+	{
+		study_id: 'study_1',
+		object_id: 'object_1',
+	},
+	{
+		study_id: 'study_2',
+		object_id: 'object_2',
+	},
+	{
+		study_id: 'study_3',
+		object_id: 'object_3',
+	},
+];
+
+const testIndex = 'test';
+
+describe('file-centric-tsv', () => {
 	let esContainer: StartedTestContainer;
 	let esClient: Client;
+
+	const cleanup = () =>
+		Promise.all([
+			esClient.indices.delete({
+				index: testIndex,
+			}),
+		]);
+
 	beforeAll(async () => {
 		esContainer = await new GenericContainer('elasticsearch', '7.5.0')
 			.withExposedPorts(9200)
 			.withEnv('discovery.type', 'single-node')
 			.withStartupTimeout(new Duration(120, TemporalUnit.SECONDS))
 			.start();
+
 		esClient = await createEsClient({
 			node: `http://${esContainer.getContainerIpAddress()}:${esContainer.getMappedPort(9200)}`,
 		});
-		esClient.indices.create({
+
+		try {
+			await cleanup();
+		} catch (err) {
+			// do nothing
+		}
+
+		await esClient.indices.create({
 			index: testIndex,
 			body: mockMapping,
 		});
+
 		await Promise.all(
 			testData.map((entry) =>
 				esClient.index({
@@ -84,8 +106,10 @@ describe('createEsDocumentStream', () => {
 			),
 		);
 	}, 120000);
-	afterAll(async () => {
+
+	afterAll(async (done) => {
 		await esContainer.stop();
+		done();
 	}, 120000);
 
 	describe('createEsDocumentStream', () => {

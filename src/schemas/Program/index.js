@@ -17,14 +17,13 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { gql } from 'apollo-server-express';
+import { ApolloError, gql, UserInputError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import { get, merge, pickBy } from 'lodash';
-import programService from '../../services/programService';
-import { grpcToGql } from '../../utils/grpcUtils';
-import customScalars from '../customScalars';
-import logger from '../../utils/logger';
-import { UserInputError, ApolloError } from 'apollo-server-express';
+
+import customScalars from 'schemas/customScalars';
+import programService from 'services/programService';
+import { grpcToGql } from 'utils/grpcUtils';
 
 const typeDefs = gql`
 	scalar DateTime
@@ -255,6 +254,19 @@ const resolveSingleProgram = async (egoToken, programShortName) => {
 	return response ? convertGrpcProgramToGql(programDetails) : null;
 };
 
+const resolveHTTPProgram = async (programShortName) => {
+	const response = await programService.getProgramPublicFields(programShortName);
+	return response;
+};
+
+const programServicePrivateFields = [
+	'commitmentDonors',
+	'submittedDonors',
+	'genomicDonors',
+	'membershipType',
+	'users',
+];
+
 const resolvers = {
 	ProgramOptions: {
 		cancerTypes: async (constants, args, context, info) => {
@@ -303,10 +315,22 @@ const resolvers = {
 	},
 	Query: {
 		program: async (obj, args, context, info) => {
+			const requestedFields = info.fieldNodes.flatMap((fieldNode) =>
+				fieldNode.selectionSet.selections.map((selection) => selection.name.value),
+			);
 			const { egoToken } = context;
 			const { shortName } = args;
-			return resolveSingleProgram(egoToken, shortName);
+
+			//create a condition to determine using either public or private endpoint
+			const hasPrivateField = requestedFields.some((field) =>
+				programServicePrivateFields.includes(field),
+			);
+
+			return hasPrivateField
+				? resolveSingleProgram(egoToken, shortName)
+				: resolveHTTPProgram(shortName);
 		},
+
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			return resolveProgramList(egoToken);

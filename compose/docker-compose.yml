@@ -18,7 +18,38 @@ services:
       - elasticsearch
     ports:
       - 5601:5601
-
+  program-db:
+    image: postgres:9.6
+    environment:
+      PGPORT: 5432
+      POSTGRES_DB: program-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - program_postgresql_data:/programdb
+    ports:
+      - 5432:5432
+  program-service:
+    image: ghcr.io/icgc-argo/program-service:latest
+    depends_on:
+      - program-db
+    environment:
+      SPRING_PROFILES_ACTIVE: 'auth'
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://program-db:5432/program-db?stringtype=unspecified'
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_FLYWAY_ENABLED: 'true'
+      APP_EGO_URL: 'https://ego.dev.argo.cancercollaboratory.org/api'
+      APP_EGO_CLIENT_ID: 'program-service'
+      APP_EGO_CLIENT_SECRET: 'break-please'
+      APP_MAIL_ENABLED: 'false'
+      APP_DCC_ADMIN_PERMISSION: 'PROGRAMSERVICE.WRITE'
+    ports:
+      - 8083:8083
+      - 9082:8082
+      - 50051:50051
 volumes:
+  program_postgresql_data:
+    driver: local
   es_data:
     driver: local

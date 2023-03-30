@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,26 +17,23 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createLogger, transports, format } from 'winston';
+/*
+ * This file dynamically generates a gRPC client from Ego.proto.
+ * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
+ */
 
-const { combine, timestamp, printf } = format;
+const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
+import fetch from 'node-fetch';
+import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
 
-const isProd = process.env.NODE_ENV === 'production';
-
-export const loggerConfig = {
-	format: combine(
-		timestamp(),
-		printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
-	),
-	transports: [
-		new transports.Console({
-			handleExceptions: true,
-			level: isProd ? 'error' : 'debug',
-		}),
-		new transports.File({ filename: 'debug.log', level: 'debug' }),
-	],
+const getProgramPublicFields = async (programShortName) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
+	const response = await fetch(url, {
+		method: 'get',
+	})
+		.then(programServicePublicErrorResponseHandler)
+		.then((response) => response.json());
+	return response;
 };
 
-const logger = createLogger(loggerConfig);
-
-export default logger;
+export { getProgramPublicFields };

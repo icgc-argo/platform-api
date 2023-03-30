@@ -1,19 +1,23 @@
 FROM node:12.13.1-alpine
 
-ENV APP_UID=9999
-ENV APP_GID=9999
-RUN apk --no-cache add shadow
-RUN groupmod -g $APP_GID node 
-RUN usermod -u $APP_UID -g $APP_GID node
-RUN mkdir -p /appDir
-RUN chown -R node /appDir
-USER node
-WORKDIR /appDir
+ARG APP_FOLDER=/appDir
+ENV APP_UID=1000
+ENV APP_GID=1000
+ARG APP_USER=node
+
+RUN apk --no-cache add curl g++ make python3 shadow \
+    && groupmod -g $APP_GID $APP_USER \
+	&& usermod -u $APP_UID -g $APP_GID $APP_USER
+
+WORKDIR $APP_FOLDER
+RUN chown -R $APP_USER $APP_FOLDER
+
+USER $APP_USER
 
 COPY . .
 
 RUN npm ci
-RUN npm run build
+
 EXPOSE 9000
 
 CMD ["npm", "run", "start::prod"]

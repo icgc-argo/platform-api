@@ -233,6 +233,21 @@ type CompletionStats = {
 	coreCompletionPercentage: number;
 	overriddenCoreCompletion: [CoreClinicalEntities];
 	donorId: number;
+	entityData: CompletionEntityData;
+};
+
+type CompletionEntityData = {
+	specimens: SpecimenCoreCompletion;
+};
+
+type SpecimenCoreCompletion = {
+	coreCompletionPercentage: number;
+	normalSpecimensPercentage: number;
+	tumourSpecimensPercentage: number;
+	normalRegistrations: number;
+	normalSubmissions: number;
+	tumourRegistrations: number;
+	tumourSubmissions: number;
 };
 
 type CoreCompletionFields = {
@@ -241,7 +256,6 @@ type CoreCompletionFields = {
 	primaryDiagnosis: number;
 	followUps: number;
 	treatments: number;
-	familyHistory?: number;
 	tumourSpecimens?: number;
 	normalSpecimens?: number;
 };
