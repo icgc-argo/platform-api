@@ -242,6 +242,18 @@ const convertGrpcUserToGql = (userDetails) => ({
 	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
 
+const formatHttpProgram = (program) => ({
+	name: program.name,
+	shortName: program.shortName,
+	description: program.description,
+	website: program.website,
+	institutions: Array(program.programInstitutions[0].name),
+	countries: Array(program.programCountries[0].name),
+	regions: Array(program.processingRegions[0].name),
+	cancerTypes: Array(program.programCancers[0].name),
+	primarySites: Array(program.programCancers[0].name),
+});
+
 const resolveProgramList = async (egoToken) => {
 	const response = await programService.listPrograms(egoToken);
 	const programs = get(response, 'programs', []);
@@ -256,7 +268,7 @@ const resolveSingleProgram = async (egoToken, programShortName) => {
 
 const resolveHTTPProgram = async (programShortName) => {
 	const response = await programService.getProgramPublicFields(programShortName);
-	return response;
+	return response ? formatHttpProgram(response) : null;
 };
 
 const programServicePrivateFields = [
