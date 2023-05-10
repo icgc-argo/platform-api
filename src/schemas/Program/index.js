@@ -247,11 +247,11 @@ const formatHttpProgram = (program) => ({
 	shortName: program.shortName,
 	description: program.description,
 	website: program.website,
-	institutions: Array(program.programInstitutions[0].name),
-	countries: Array(program.programCountries[0].name),
-	regions: Array(program.processingRegions[0].name),
-	cancerTypes: Array(program.programCancers[0].name),
-	primarySites: Array(program.programCancers[0].name),
+	institutions: program.programInstitutions.map((institution) => institution.name),
+	countries: program.programCountries.map((country) => country.name),
+	regions: program.processingRegions.map((region) => region.name),
+	cancerTypes: program.programCancers.map((cancer) => cancer.name),
+	primarySites: program.programPrimarySites.map((primarySite) => primarySite.name),
 });
 
 const resolveProgramList = async (egoToken) => {
