@@ -1,6 +1,6 @@
 {
 	"name": "server",
-	"version": "3.39.0",
+	"version": "3.39.1",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -89,7 +89,7 @@
 		"eslint-plugin-import": "^2.27.5",
 		"eslint-plugin-prettier": "^4.2.1",
 		"jest": "^25.5.4",
-		"nodemon": "^1.19.4",
+		"nodemon": "^2.0.22",
 		"paralleljs": "^1.1.0",
 		"prettier": "^2.7.1",
 		"testcontainers": "^2.20.0",
