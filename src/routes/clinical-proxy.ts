@@ -98,6 +98,19 @@ router.use(
 );
 
 router.use(
+	'/program/:programId/clinical-errors',
+	createProxyMiddleware({
+		target: CLINICAL_SERVICE_ROOT,
+		pathRewrite: (pathName: string, req: Request) => {
+			const programId = req.params.programId;
+			return urlJoin('/clinical/program/', programId, '/clinical-errors');
+		},
+		onError: handleError,
+		changeOrigin: true,
+	}),
+);
+
+router.use(
 	'/program/:programId/clinical-search-results',
 	createProxyMiddleware({
 		target: CLINICAL_SERVICE_ROOT,
