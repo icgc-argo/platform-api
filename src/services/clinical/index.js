@@ -17,12 +17,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import fetch, { Response } from 'node-fetch';
 import FormData from 'form-data';
+import fetch, { Response } from 'node-fetch';
 import urlJoin from 'url-join';
 
 import { CLINICAL_SERVICE_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
+
+import { buildClinicalInputQueryString } from './utils';
 
 const getRegistrationData = async (programShortName, Authorization) => {
 	const url = `${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/registration`;
@@ -66,7 +68,7 @@ const clearRegistrationData = async (programShortName, registrationId, Authoriza
 		},
 	)
 		.then(restErrorResponseHandler)
-		.then((response) => true);
+		.then((_response) => true);
 	return response;
 };
 
@@ -106,7 +108,6 @@ const getClinicalSubmissionSchemaVersion = async () => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
-	console.log(response.version);
 	return response.version;
 };
 
@@ -137,19 +138,25 @@ const getClinicalSubmissionData = async (programShortName, Authorization) => {
 
 const getClinicalData = async (variables, Authorization) => {
 	const { programShortName, filters } = variables;
-
-	const query = new URLSearchParams(filters).toString();
+	const { completionState, entityTypes, donorIds, submitterDonorIds } = filters;
+	const queryString = buildClinicalInputQueryString(filters);
 
 	const url = urlJoin(
 		CLINICAL_SERVICE_ROOT,
 		`/clinical/program/`,
 		programShortName,
-		`/clinical-data?${query}`,
+		`/clinical-data?${queryString}`,
 	);
 
 	const response = await fetch(url, {
-		method: 'get',
-		headers: { Authorization },
+		method: 'post',
+		headers: { Authorization, 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			completionState,
+			entityTypes,
+			donorIds: donorIds?.map((id) => Number(id)).filter((id) => !isNaN(id)) || [],
+			submitterDonorIds,
+		}),
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
@@ -159,36 +166,48 @@ const getClinicalData = async (variables, Authorization) => {
 
 const getClinicalSearchResults = async (variables, Authorization) => {
 	const { programShortName, filters } = variables;
-
-	const query = new URLSearchParams(filters).toString();
+	const { completionState, entityTypes, donorIds, submitterDonorIds } = filters;
+	const queryString = buildClinicalInputQueryString(filters);
 
 	const url = urlJoin(
 		CLINICAL_SERVICE_ROOT,
 		`/clinical/program/`,
 		programShortName,
-		`/clinical-search-results?${query}`,
+		`/clinical-search-results?${queryString}`,
 	);
 
 	const response = await fetch(url, {
-		method: 'get',
+		method: 'post',
 		headers: { Authorization },
+		body: JSON.stringify({
+			completionState,
+			entityTypes,
+			donorIds,
+			submitterDonorIds,
+		}),
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
 	return response;
 };
 
-const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
+const getClinicalErrors = async (programShortName, filters, Authorization) => {
+	const { donorIds } = filters;
+	const queryString = buildClinicalInputQueryString(filters);
+
 	const url = urlJoin(
 		CLINICAL_SERVICE_ROOT,
 		`/clinical/program/`,
 		programShortName,
-		`/clinical-errors?donorIds=${donorIds}`,
+		`/clinical-errors?${queryString}`,
 	);
 
 	const response = await fetch(url, {
-		method: 'get',
+		method: 'post',
 		headers: { Authorization },
+		body: JSON.stringify({
+			donorIds,
+		}),
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
@@ -272,7 +291,7 @@ const reopenClinicalSubmissionData = async (programShortName, versionId, Authori
 };
 
 const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
-	const response = await fetch(
+	await fetch(
 		`${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
 		{
 			method: 'post',
