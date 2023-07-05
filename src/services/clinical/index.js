@@ -161,7 +161,6 @@ const getClinicalData = async (variables, Authorization) => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => {
-			console.log('hello', response);
 			return response;
 		})
 		.then((response) => response.json());
