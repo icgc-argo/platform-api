@@ -17,8 +17,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import fetch, { Response } from 'node-fetch';
 import FormData from 'form-data';
+import fetch, { Response } from 'node-fetch';
 import urlJoin from 'url-join';
 
 import { CLINICAL_SERVICE_ROOT } from '../../config';
@@ -108,7 +108,6 @@ const getClinicalSubmissionSchemaVersion = async () => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
-	console.log(response.version);
 	return response.version;
 };
 
@@ -151,18 +150,15 @@ const getClinicalData = async (variables, Authorization) => {
 
 	const response = await fetch(url, {
 		method: 'post',
-		headers: { Authorization },
-		body: {
+		headers: { Authorization, 'Content-Type': 'application/json' },
+		body: JSON.stringify({
 			completionState,
 			entityTypes,
 			donorIds: donorIds?.map((id) => Number(id)).filter((id) => !isNaN(id)) || [],
 			submitterDonorIds,
-		},
+		}),
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => {
-			return response;
-		})
 		.then((response) => response.json());
 
 	return response;
@@ -183,12 +179,12 @@ const getClinicalSearchResults = async (variables, Authorization) => {
 	const response = await fetch(url, {
 		method: 'post',
 		headers: { Authorization },
-		body: {
+		body: JSON.stringify({
 			completionState,
 			entityTypes,
 			donorIds,
 			submitterDonorIds,
-		},
+		}),
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
@@ -209,9 +205,9 @@ const getClinicalErrors = async (programShortName, filters, Authorization) => {
 	const response = await fetch(url, {
 		method: 'post',
 		headers: { Authorization },
-		body: {
+		body: JSON.stringify({
 			donorIds,
-		},
+		}),
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
@@ -295,7 +291,7 @@ const reopenClinicalSubmissionData = async (programShortName, versionId, Authori
 };
 
 const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
-	const response = await fetch(
+	await fetch(
 		`${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
 		{
 			method: 'post',
