@@ -24,6 +24,7 @@ import urlJoin from 'url-join';
 import { CLINICAL_SERVICE_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
+import { CONTENTTYPE_JSON, HEADER_CONTENTTYPE } from 'constants/http';
 import { buildClinicalInputQueryString } from './utils';
 
 const getRegistrationData = async (programShortName, Authorization) => {
@@ -150,11 +151,11 @@ const getClinicalData = async (variables, Authorization) => {
 
 	const response = await fetch(url, {
 		method: 'post',
-		headers: { Authorization, 'Content-Type': 'application/json' },
+		headers: { Authorization, [HEADER_CONTENTTYPE]: CONTENTTYPE_JSON },
 		body: JSON.stringify({
 			completionState,
 			entityTypes,
-			donorIds: donorIds?.map((id) => Number(id)).filter((id) => !isNaN(id)) || [],
+			donorIds,
 			submitterDonorIds,
 		}),
 	})
@@ -178,7 +179,7 @@ const getClinicalSearchResults = async (variables, Authorization) => {
 
 	const response = await fetch(url, {
 		method: 'post',
-		headers: { Authorization },
+		headers: { Authorization, [HEADER_CONTENTTYPE]: CONTENTTYPE_JSON },
 		body: JSON.stringify({
 			completionState,
 			entityTypes,
@@ -191,23 +192,20 @@ const getClinicalSearchResults = async (variables, Authorization) => {
 	return response;
 };
 
-const getClinicalErrors = async (programShortName, filters, Authorization) => {
-	const { donorIds } = filters;
-	const queryString = buildClinicalInputQueryString(filters);
-
+const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
 	const url = urlJoin(
 		CLINICAL_SERVICE_ROOT,
 		`/clinical/program/`,
 		programShortName,
-		`/clinical-errors?${queryString}`,
+		`/clinical-errors`,
 	);
 
+	const body = Array.isArray(donorIds) ? JSON.stringify({ donorIds }) : undefined;
+	console.log('body', body);
 	const response = await fetch(url, {
 		method: 'post',
-		headers: { Authorization },
-		body: JSON.stringify({
-			donorIds,
-		}),
+		headers: { Authorization, [HEADER_CONTENTTYPE]: CONTENTTYPE_JSON },
+		body,
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
