@@ -155,7 +155,7 @@ const getClinicalData = async (variables, Authorization) => {
 		body: {
 			completionState,
 			entityTypes,
-			donorIds: donorIds?.map((id) => Number(id)) || [],
+			donorIds: donorIds?.map((id) => Number(id)).filter((id) => !isNaN(id)) || [],
 			submitterDonorIds,
 		},
 	})
