@@ -84,13 +84,76 @@ paths:
         required: true
         schema:
           type: string
-    get:
+    post:
       tags:
         - Clinical Proxies
       security:
         - bearerAuth: []
       summary: Query program data from clinical service
       description: 'Query program data by ID from clinical service'
+      requestBody:
+        description: JSON object containing search filters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                completionState:
+                  $ref: '#/components/schemas/CompletionState'
+                  default: 'all'
+                entityTypes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EntityName'
+                  default: []
+                donorIds:
+                  type: array
+                  items:
+                    type: number
+                  default: []
+                submitterDonorIds:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+      responses:
+        '200':
+          description: 'Returns clinicalEntities[], completionStats[] & clinicalErrors[]'
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error
+  '/clinical/program/{programId}/clinical-errors':
+    parameters:
+      - name: programId
+        description: the short name of the program
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Clinical Proxies
+      security:
+        - bearerAuth: []
+      summary: Query program data errors from clinical service
+      description: 'Query program data errors by ID from clinical service'
+      requestBody:
+        description: JSON object containing search filters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                donorIds:
+                  type: array
+                  items:
+                    type: number
+                  default: []
       responses:
         '200':
           description: 'Returns clinicalEntities[], completionStats[] & clinicalErrors[]'
@@ -108,13 +171,41 @@ paths:
         required: true
         schema:
           type: string
-    get:
+    post:
       tags:
         - Clinical Proxies
       security:
         - bearerAuth: []
       summary: Query donor IDs and submitter IDs matching a query on clinical service
       description: 'Query Donor IDs + Submitter IDs matching a filter from clinical service'
+      requestBody:
+        description: JSON object containing search filters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                completionState:
+                  $ref: '#/components/schemas/CompletionState'
+                  default: 'all'
+                entityTypes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EntityName'
+                  default: []
+                donorIds:
+                  description: List of donor IDs or partial IDs to search for. Results will be returned for any partial matches with the input strings.
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                submitterDonorIds:
+                  description: List of submitter donor IDs or partial IDs to search for. Results will be returned for any partial matches with the input strings.
+                  type: array
+                  items:
+                    type: string
+                  default: []
       responses:
         '200':
           description: 'Returns donorId[] & submitterDonorId[]'
@@ -132,13 +223,39 @@ paths:
         required: true
         schema:
           type: string
-    get:
+    post:
       tags:
         - Clinical Proxies
       security:
         - bearerAuth: []
       summary: Download a zip file with tsv files for filtered clinical data in program
       description: 'Download a zip file with tsv files for filtered clinical data in program'
+      requestBody:
+        description: JSON object containing search filters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                completionState:
+                  $ref: '#/components/schemas/CompletionState'
+                  default: 'all'
+                entityTypes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EntityName'
+                  default: []
+                donorIds:
+                  type: array
+                  items:
+                    type: number
+                  default: []
+                submitterDonorIds:
+                  type: array
+                  items:
+                    type: string
+                  default: []
       responses:
         '200':
           description: 'A zip file with all program submitted data'
@@ -243,3 +360,29 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  schemas:
+    CompletionState:
+      type: string
+      enum: [all, invalid, complete, incomplete]
+
+    EntityName:
+      type: string
+      enum:
+        [
+          donor,
+          sampleRegistration,
+          specimens,
+          primaryDiagnoses,
+          familyHistory,
+          treatment,
+          treatments,
+          chemotherapy,
+          immunotherapy,
+          surgery,
+          radiation,
+          followUps,
+          hormoneTherapy,
+          exposure,
+          comorbidity,
+          biomarker,
+        ]

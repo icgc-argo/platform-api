@@ -17,14 +17,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AuthenticationError, UserInputError } from 'apollo-server-express';
+import { AuthenticationError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
+import { FileUpload } from 'graphql-upload';
 import get from 'lodash/get';
 
-import clinicalService from '../../services/clinical';
-import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
-import { FileUpload } from 'graphql-upload';
+import egoTokenUtils from 'utils/egoTokenUtils';
+
+import clinicalService from '../../services/clinical';
+
 import typeDefs from './gqlTypeDefs';
 
 const ARRAY_DELIMETER_CHAR = '|';
@@ -370,7 +372,7 @@ const convertClinicalSubmissionEntityToGql = (clinicalType: string, entity: Subm
 
 const convertClinicalRecordToGql = (index: number | string, record: EntityDataRecord) => {
 	const fields = [];
-	for (var field in record) {
+	for (const field in record) {
 		const value = normalizeValue(record[field]);
 		fields.push({ name: field, value: value });
 	}
@@ -441,7 +443,11 @@ const resolvers = {
 				registration: response,
 			});
 		},
-		clinicalData: async (obj: unknown, args: ClinicalVariables, context: GlobalGqlContext) => {
+		clinicalData: async (
+			obj: unknown,
+			args: ClinicalVariables,
+			context: GlobalGqlContext,
+		): Promise<ClinicalEntityData> => {
 			const { Authorization } = context;
 			const { programShortName } = args;
 			const { clinicalEntities }: ClinicalResponseData = await clinicalService.getClinicalData(
@@ -455,6 +461,23 @@ const resolvers = {
 			);
 
 			return formattedEntityData;
+		},
+		clinicalErrors: async (
+			obj: unknown,
+			args: { programShortName: string; donorIds?: number[] },
+			context: GlobalGqlContext,
+		) => {
+			const { Authorization } = context;
+
+			console.log('clinical errors');
+
+			const errorResponse: ClinicalErrors = await clinicalService.getClinicalErrors(
+				args.programShortName,
+				args.donorIds,
+				Authorization,
+			);
+
+			return errorResponse;
 		},
 		clinicalSearchResults: async (
 			obj: unknown,
@@ -669,23 +692,24 @@ const resolvers = {
 	ClinicalData: {
 		clinicalErrors: async (
 			parent: ClinicalEntityData,
-			args: ClinicalVariables,
+			_: ClinicalVariables,
 			context: GlobalGqlContext,
 		) => {
 			const { Authorization } = context;
-			const { programShortName } = parent;
-			let donorIds: string[] = [];
+			const donorIds: Set<string> = new Set();
 
 			parent.clinicalEntities.forEach((entity) =>
 				entity.records.forEach((displayRecord: EntityDisplayRecord[]) => {
 					const donor = displayRecord.find(({ name }) => name === 'donor_id');
-					if (donor && donor.value) donorIds.push(donor.value);
+					if (donor && donor.value) {
+						donorIds.add(donor.value);
+					}
 				}),
 			);
 
 			const errorResponse: ClinicalErrors = await clinicalService.getClinicalErrors(
-				programShortName,
-				donorIds,
+				parent.programShortName,
+				Array.from(donorIds),
 				Authorization,
 			);
 

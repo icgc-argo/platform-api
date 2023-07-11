@@ -321,7 +321,7 @@ export default gql`
 		"""
 		Retrieve all stored Clinical Migration Errors for a program
 		"""
-		clinicalErrors(programShortName: String!, filters: ClinicalInput!): ClinicalData!
+		clinicalErrors(programShortName: String!, donorIds: [Int]): [ClinicalErrors!]!
 	}
 
 	type Mutation {
