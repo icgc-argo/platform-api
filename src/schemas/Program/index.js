@@ -19,8 +19,7 @@
 
 import { ApolloError, gql, UserInputError } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import { get, merge, pickBy } from 'lodash';
-
+import { get, merge, pickBy, lowerCase } from 'lodash';
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
 import { grpcToGql } from 'utils/grpcUtils';
@@ -161,7 +160,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs
 		"""
-		programs: [Program]
+		programs(region: String!): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -256,8 +255,7 @@ const formatHttpProgram = (program) => ({
 
 const resolveProgramList = async (egoToken) => {
 	const response = await programService.listPrograms(egoToken);
-	const programs = get(response, 'programs', []);
-	return programs.map((program) => convertGrpcProgramToGql(program));
+	return get(response, 'programs', []).map((program) => convertGrpcProgramToGql(program));
 };
 
 const resolveSingleProgram = async (egoToken, programShortName) => {
@@ -278,6 +276,18 @@ const programServicePrivateFields = [
 	'membershipType',
 	'users',
 ];
+
+/**
+ * filters by region
+ */
+const filterByRegion = (programs, region) => {
+	if (!programs) return [];
+
+	return programs.filter((program) => {
+		const programRegion = program.regions[0] || '';
+		return lowerCase(programRegion) === lowerCase(region);
+	});
+};
 
 const resolvers = {
 	ProgramOptions: {
@@ -345,7 +355,12 @@ const resolvers = {
 
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			return resolveProgramList(egoToken);
+			const { region } = args;
+
+			const programList = await resolveProgramList(egoToken);
+			const filteredProgramList = filterByRegion(programList, region);
+
+			return filteredProgramList;
 		},
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
