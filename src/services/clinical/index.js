@@ -201,7 +201,6 @@ const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
 	);
 
 	const body = Array.isArray(donorIds) ? JSON.stringify({ donorIds }) : undefined;
-	console.log('body', body);
 	const response = await fetch(url, {
 		method: 'post',
 		headers: { Authorization, [HEADER_CONTENTTYPE]: CONTENTTYPE_JSON },
