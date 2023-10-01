@@ -24,7 +24,7 @@
 				"exclude": ["**/node_modules/**"]
 			} // absolute paths for .d.ts files
 		],
-		"lib": ["es2019"]
+		"lib": ["ESNext"]
 	},
 	"exclude": ["dist/**/*"],
 	"include": ["src/**/*"],
