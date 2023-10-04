@@ -27,7 +27,8 @@ import * as http from './httpClient.js';
 
 export default {
 	getProgram: grpc.getProgram,
-	listPrograms: grpc.listPrograms,
+	// listPrograms: grpc.listPrograms,
+	listPrograms: http.listPrograms,
 	getJoinProgramInvite: grpc.getJoinProgramInvite,
 	listUsers: grpc.listUsers,
 

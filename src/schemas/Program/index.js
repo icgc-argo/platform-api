@@ -242,22 +242,39 @@ const convertGrpcUserToGql = (userDetails) => ({
 	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
 
-const formatHttpProgram = (program) => ({
+const formatHttpProgram = ({ program }) => ({
 	name: program.name,
 	shortName: program.shortName,
 	description: program.description,
 	website: program.website,
-	institutions: program.programInstitutions.map((institution) => institution.name),
-	countries: program.programCountries.map((country) => country.name),
-	regions: program.processingRegions.map((region) => region.name),
-	cancerTypes: program.programCancers.map((cancer) => cancer.name),
-	primarySites: program.programPrimarySites.map((primarySite) => primarySite.name),
+	institutions: program.programInstitutions?.map((institution) => institution.name) || [],
+	countries: program.programCountries?.map((country) => country.name) || [],
+	regions: program.processingRegions?.map((region) => region.name) || [],
+	cancerTypes: program.programCancers?.map((cancer) => cancer.name) || [],
+	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
 
+// GRPC
+// const resolveProgramList = async (egoToken) => {
+// 	const response = await programService.listPrograms(egoToken);
+// 	const programs = get(response, 'programs', []);
+// 	return programs.map((program) => convertGrpcProgramToGql(program));
+// };
+
+// HTTP
 const resolveProgramList = async (egoToken) => {
 	const response = await programService.listPrograms(egoToken);
-	const programs = get(response, 'programs', []);
-	return programs.map((program) => convertGrpcProgramToGql(program));
+	console.log('response', response.programs);
+	// console.log('first element', formatHttpProgram(response.programs[0]));
+	const programs = response.programs;
+	// console.log('programs', programs, 'program:', programs[0]);
+	console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+	console.log('programs', programs);
+	console.log(
+		'formatHttpProgram',
+		programs.map((program) => formatHttpProgram(program)),
+	);
+	return response ? programs.map((program) => formatHttpProgram(program)) : null;
 };
 
 const resolveSingleProgram = async (egoToken, programShortName) => {
@@ -268,7 +285,7 @@ const resolveSingleProgram = async (egoToken, programShortName) => {
 
 const resolveHTTPProgram = async (programShortName) => {
 	const response = await programService.getProgramPublicFields(programShortName);
-	return response ? formatHttpProgram(response) : null;
+	return response || null;
 };
 
 const programServicePrivateFields = [

@@ -22,18 +22,56 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
 import fetch from 'node-fetch';
+
 import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
 
-const getProgramPublicFields = async (programShortName) => {
+const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
+
+//data formatters
+const formatPublicProgram = (program) => ({
+	name: program.name,
+	shortName: program.shortName,
+	description: program.description,
+	website: program.website,
+	institutions: program.programInstitutions?.map((institution) => institution.name) || [],
+	countries: program.programCountries?.map((country) => country.name) || [],
+	regions: program.processingRegions?.map((region) => region.name) || [],
+	cancerTypes: program.programCancers?.map((cancer) => cancer.name) || [],
+	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
+});
+
+const formatPrivateProgram = (program) => ({});
+
+const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
+//private fields
+export const listPrograms = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(programServicePublicErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data.programs)) {
+				return formatPrivateProgramList(data.programs);
+			} else {
+				console.log('Error: no data is returned from /programs');
+				throw new Error('Unable to retrieve programs data.');
+			}
+		});
+};
+
+// public fields
+export const getProgramPublicFields = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
-	const response = await fetch(url, {
+	return await fetch(url, {
 		method: 'get',
 	})
 		.then(programServicePublicErrorResponseHandler)
-		.then((response) => response.json());
-	return response;
+		.then((response) => response.json())
+		.then(formatPublicProgram);
 };
-
-export { getProgramPublicFields };
