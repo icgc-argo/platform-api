@@ -17,12 +17,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import urlJoin from 'url-join';
-import { CLINICAL_SERVICE_ROOT } from '../config';
-import logger from '../utils/logger';
-import express from 'express';
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import urlJoin from 'url-join';
+
+import { CLINICAL_SERVICE_ROOT } from '../../config';
+import logger from '../../utils/logger';
 
 const router = express.Router();
 // Our specification download service can't use GraphQL because GraphQL specification requires the content-type

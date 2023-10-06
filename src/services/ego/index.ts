@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2023 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -21,16 +21,18 @@
  * This file dynamically generates a gRPC client from Ego.proto.
  * The content of Ego.proto is copied directly from: https://github.com/overture-stack/ego/blob/develop/src/main/proto/Ego.proto
  */
-import grpc, { ChannelCredentials } from 'grpc';
-import * as loader from '@grpc/proto-loader';
-import { EGO_ROOT_GRPC, EGO_ROOT_REST, APP_DIR, EGO_DACO_POLICY_NAME } from '../../config';
-import { getAuthMeta, withRetries, defaultPromiseCallback } from '../../utils/grpcUtils';
-import fetch from 'node-fetch';
-import { restErrorResponseHandler } from '../../utils/restUtils';
-import logger from '../../utils/logger';
-import memoize from 'lodash/memoize';
-import urlJoin from 'url-join';
 import path from 'path';
+
+import * as loader from '@grpc/proto-loader';
+import grpc, { ChannelCredentials } from 'grpc';
+import memoize from 'lodash/memoize';
+import fetch from 'node-fetch';
+import urlJoin from 'url-join';
+
+import { APP_DIR, EGO_DACO_POLICY_NAME, EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
+import { defaultPromiseCallback, getAuthMeta, withRetries } from '../../utils/grpcUtils';
+import logger from '../../utils/logger';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 export type EgoGrpcUser = {
 	id: { value: unknown };
@@ -166,7 +168,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 			headers: { Authorization },
 		})
 			.then(restErrorResponseHandler)
-			.then((response) => response.json() as EgoApiKeyResponse);
+			.then((response) => response.json());
 		const totalCount = firstResponse.count;
 		const firstResults = firstResponse.resultSet;
 		const remainingPageIndex = firstResults.length;
@@ -180,7 +182,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 			},
 		)
 			.then(restErrorResponseHandler)
-			.then((response) => response.json() as EgoApiKeyResponse);
+			.then((response) => response.json());
 
 		const remainingResults = remainingResponse.resultSet;
 
@@ -316,7 +318,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 				'Content-type': 'application/json',
 			},
 		});
-		const authResponse: any = await response.json();
+		const authResponse = await response.json();
 		if (isAuthError(authResponse) && authResponse.error) {
 			throw new Error(`Failed to authorize application: ${authResponse.error_description}`);
 		}

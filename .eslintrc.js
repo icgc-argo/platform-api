@@ -26,6 +26,12 @@ module.exports = {
 			},
 		],
 		'@typescript-eslint/no-explicit-any': 'off',
+		'@typescript-eslint/no-unused-vars': [
+			'warn', // or "error"
+			{
+				argsIgnorePattern: '^_',
+			},
+		],
 		'@typescript-eslint/no-var-requires': 'off',
 		'import/first': ['warn', 'absolute-first'],
 		'import/order': [
@@ -37,6 +43,7 @@ module.exports = {
 			},
 		],
 		'import/newline-after-import': 'warn',
+
 		'prettier/prettier': [
 			'error',
 			{
