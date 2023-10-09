@@ -41,11 +41,14 @@ const formatPublicProgram = (program) => ({
 	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
 
-const formatPrivateProgram = (program) => ({});
+const formatPrivateProgram = (program) => {
+	return program.program;
+};
 
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
+
 //private fields
-export const listPrograms = async (jwt = null) => {
+export const listPrivatePrograms = async (jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
 	return await fetch(url, {
 		method: 'get',
@@ -65,8 +68,28 @@ export const listPrograms = async (jwt = null) => {
 		});
 };
 
+export const getPrivateProgram = async (jwt = null, programShortName) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/${programShortName}`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(programServicePublicErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.program) {
+				return formatPrivateProgram(data.program);
+			} else {
+				console.log('Error: no data is returned from /program/{shortName}');
+				throw new Error('Unable to retrieve program data.');
+			}
+		});
+};
+
 // public fields
-export const getProgramPublicFields = async (programShortName) => {
+export const getPublicProgram = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
 	return await fetch(url, {
 		method: 'get',

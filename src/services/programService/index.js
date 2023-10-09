@@ -26,9 +26,10 @@ import * as grpc from './grpcClient.js';
 import * as http from './httpClient.js';
 
 export default {
-	getProgram: grpc.getProgram,
+	// getProgram: grpc.getProgram,
 	// listPrograms: grpc.listPrograms,
-	listPrograms: http.listPrograms,
+	getPrivateProgram: http.getPrivateProgram,
+	listPrivatePrograms: http.listPrivatePrograms,
 	getJoinProgramInvite: grpc.getJoinProgramInvite,
 	listUsers: grpc.listUsers,
 
@@ -46,5 +47,5 @@ export default {
 	updateUser: grpc.updateUser,
 	removeUser: grpc.removeUser,
 
-	getProgramPublicFields: http.getProgramPublicFields,
+	getPublicProgram: http.getPublicProgram,
 };
