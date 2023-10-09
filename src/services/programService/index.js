@@ -26,8 +26,6 @@ import * as grpc from './grpcClient.js';
 import * as http from './httpClient.js';
 
 export default {
-	// getProgram: grpc.getProgram,
-	// listPrograms: grpc.listPrograms,
 	getPrivateProgram: http.getPrivateProgram,
 	listPrivatePrograms: http.listPrivatePrograms,
 	getJoinProgramInvite: grpc.getJoinProgramInvite,

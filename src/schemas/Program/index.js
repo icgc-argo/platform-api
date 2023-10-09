@@ -215,7 +215,6 @@ const typeDefs = gql`
 HTTP resolvers
  * ========= */
 
-// HTTP
 const resolvePrivateProgramList = async (egoToken) => {
 	const response = await programService.listPrivatePrograms(egoToken);
 	return response || null;
