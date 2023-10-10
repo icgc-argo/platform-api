@@ -23,10 +23,12 @@ import { Response } from 'node-fetch';
 
 import logger from './logger';
 
-const errorResponseHandler = async (response: Response, message: string) => {
+export const restErrorResponseHandler = async (response: Response) => {
 	// Generic handle 5xx errors
 	if (response.status >= 500 && response.status <= 599) {
-		logger.debug(`Server 5xx response: ${message}`);
+		const message = await response.text();
+		const status = response.status;
+		logger.debug(`Server ${status} response: ${message}`);
 		throw new ApolloError(message); // will return Apollo code INTERNAL_SERVER_ERROR
 	}
 
@@ -48,17 +50,4 @@ const errorResponseHandler = async (response: Response, message: string) => {
 		default:
 			return response;
 	}
-};
-
-/*
-convert the REST status codes to GQL errors, or return the response if passing
-*/
-export const restErrorResponseHandler = async (response: Response) => {
-	const responseBody = await response.text();
-	return await errorResponseHandler(response, responseBody);
-};
-
-export const programServicePublicErrorResponseHandler = async (response: Response) => {
-	const responseBody = await get(response, 'statusText');
-	return await errorResponseHandler(response, responseBody);
 };

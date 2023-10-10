@@ -22,16 +22,17 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
 import fetch from 'node-fetch';
-import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
+
+import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 const getProgramPublicFields = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
 	const response = await fetch(url, {
 		method: 'get',
 	})
-		.then(programServicePublicErrorResponseHandler)
+		.then(restErrorResponseHandler)
 		.then((response) => response.json());
 	return response;
 };
