@@ -154,12 +154,12 @@ export const createJiraClient = async (): Promise<JiraClient> => {
 		type ResponseBody = {
 			values: Array<OrganizationCustomer>;
 		};
-		const response = await fetch(url, {
+		const response = (await fetch(url, {
 			method: 'get',
 			headers: requestHeaders,
 		})
 			.then(restErrorResponseHandler)
-			.then((response) => response.json() as ResponseBody);
+			.then((response) => response.json())) as ResponseBody;
 
 		const id = response.values.find(
 			(customer) => customer.emailAddress === emailAddress.toLowerCase(),

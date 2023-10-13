@@ -39,6 +39,7 @@ export const restErrorResponseHandler = async (response: Response) => {
 			throw new AuthenticationError('403: Request forbidden.');
 		case 400:
 		case 404: {
+			const message = await response.text();
 			const defaultMessage = { message };
 			const notFoundData = await response
 				.json()
