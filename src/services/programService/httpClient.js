@@ -47,7 +47,7 @@ const formatPrivateProgram = (program) => {
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
 const formatJoinProgramInvite = (invitation) => {
-	const objTemplate = {
+	const formattedObj = {
 		...invitation,
 		createdAt: new Date(invitation.createdAt),
 		expiresAt: new Date(invitation.expiresAt),
@@ -62,11 +62,11 @@ const formatJoinProgramInvite = (invitation) => {
 		},
 	};
 
-	delete objTemplate.program.programInstitutions;
-	delete objTemplate.program.programCountries;
-	delete objTemplate.program.programCancers;
-	delete objTemplate.program.programPrimarySites;
-	return objTemplate;
+	delete formattedObj.program.programInstitutions;
+	delete formattedObj.program.programCountries;
+	delete formattedObj.program.programCancers;
+	delete formattedObj.program.programPrimarySites;
+	return formattedObj;
 };
 
 //private fields
