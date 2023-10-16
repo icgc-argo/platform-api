@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2023 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,23 +17,25 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Request, Response, Handler } from 'express';
+import { Client } from '@elastic/elasticsearch';
+import { Handler, Request, Response } from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import logger from 'utils/logger';
+import { get } from 'lodash';
+import fetch from 'node-fetch';
+
+import { MAX_FILE_DOWNLOAD_SIZE } from 'config';
 import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import {
 	hasSufficientDacoAccess,
 	hasSufficientProgramMembershipAccess,
 } from 'routes/utils/accessValidations';
-import { Client } from '@elastic/elasticsearch';
-import { getEsFileDocumentByObjectId } from '../utils';
-import { MAX_FILE_DOWNLOAD_SIZE } from 'config';
 import { getDataCenter } from 'services/dataCenterRegistry';
-import { ScoreAuthClient } from 'services/ego/scoreAuthClient';
-import fetch from 'node-fetch';
-import { get } from 'lodash';
+import { EgoAuthClient } from 'services/ego/authClient';
+import logger from 'utils/logger';
 
-const normalizePath = (rootPath: string) => (pathName: string, req: Request) =>
+import { getEsFileDocumentByObjectId } from '../utils';
+
+const normalizePath = (rootPath: string) => (pathName: string) =>
 	pathName.replace(rootPath, '').replace('//', '/');
 
 const downloadHandler =
@@ -45,7 +47,7 @@ const downloadHandler =
 	}: {
 		rootPath: string;
 		esClient: Client;
-		scoreAuthClient: ScoreAuthClient;
+		scoreAuthClient: EgoAuthClient;
 		proxyMiddlewareFactory: typeof createProxyMiddleware;
 	}): Handler =>
 	async (req: AuthenticatedRequest, res, next) => {
@@ -100,13 +102,7 @@ const downloadHandler =
 		}
 	};
 export const downloadFile =
-	({
-		esClient,
-		scoreAuthClient,
-	}: {
-		esClient: Client;
-		scoreAuthClient: ScoreAuthClient;
-	}): Handler =>
+	({ esClient, scoreAuthClient }: { esClient: Client; scoreAuthClient: EgoAuthClient }): Handler =>
 	async (req: AuthenticatedRequest, res) => {
 		const { fileObjectId } = req.params;
 		const esFileObject = await getEsFileDocumentByObjectId(esClient)(fileObjectId);
