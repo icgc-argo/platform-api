@@ -47,6 +47,24 @@ const formatPrivateProgram = (program) => {
 
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
+//format Date string
+// const getIsoDate = (time) => (time ? new Date(time.toISOString() : null);
+
+const formatJoinProgramInvite = (invitation) => ({
+	...invitation,
+	// createdAt: getIsoDate(invitation.createdAt),
+	// expiresAt: getIsoDate(invitation.expiresAt),
+	// acceptedAt: getIsoDate(invitation.acceptedAt),
+	user: { ...invitation.user, role: invitation.user.role.value },
+	program: {
+		...invitation.program,
+		institutions: invitation.program.programInstitutions,
+		countries: invitation.program.programCountries,
+		cancerTypes: invitation.program.programCancers,
+		primarySite: invitation.program.programPrimarySites,
+	},
+});
+
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
@@ -84,6 +102,26 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			} else {
 				console.log('Error: no data is returned from /program/{shortName}');
 				throw new Error('Unable to retrieve program data.');
+			}
+		});
+};
+
+export const getJoinProgramInvite = async (jwt = null, id) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/joinProgramInvite/${id}`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(programServicePublicErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.invitation) {
+				return formatJoinProgramInvite(data.invitation);
+			} else {
+				console.log('Error: no data is returned from /programs/joinProgramInvite/{invite_id}');
+				throw new Error('Unable to retrieve joinProgramInvite data.');
 			}
 		});
 };

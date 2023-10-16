@@ -214,6 +214,33 @@ const typeDefs = gql`
 /* =========
 HTTP resolvers
  * ========= */
+const getIsoDate = (time) => (time ? new Date(parseInt(time) * 1000).toISOString() : null);
+
+const convertGrpcProgramToGql = (programDetails) => ({
+	name: get(programDetails, 'program.name.value'),
+	shortName: get(programDetails, 'program.short_name.value'),
+	description: get(programDetails, 'program.description.value'),
+	commitmentDonors: get(programDetails, 'program.commitment_donors.value'),
+	submittedDonors: get(programDetails, 'program.submitted_donors.value'),
+	genomicDonors: get(programDetails, 'program.genomic_donors.value'),
+	website: get(programDetails, 'program.website.value'),
+	institutions: get(programDetails, 'program.institutions', []),
+	countries: get(programDetails, 'program.countries', []),
+	regions: get(programDetails, 'program.regions', []),
+	cancerTypes: get(programDetails, 'program.cancer_types', []),
+	primarySites: get(programDetails, 'program.primary_sites', []),
+	membershipType: get(programDetails, 'program.membership_type.value'),
+});
+
+const convertGrpcUserToGql = (userDetails) => ({
+	email: get(userDetails, 'user.email.value'),
+	firstName: get(userDetails, 'user.first_name.value'),
+	lastName: get(userDetails, 'user.last_name.value'),
+	role: get(userDetails, 'user.role.value'),
+	isDacoApproved: get(userDetails, 'daco_approved.value'),
+	inviteStatus: get(userDetails, 'status.value'),
+	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
+});
 
 const resolvePrivateProgramList = async (egoToken) => {
 	const response = await programService.listPrivatePrograms(egoToken);
@@ -308,9 +335,10 @@ const resolvers = {
 		},
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const response = await programService.getJoinProgramInvite(args.id, egoToken);
-			const joinProgramDetails = get(response, 'invitation');
-			return response ? grpcToGql(joinProgramDetails) : null;
+			const response = await programService.getJoinProgramInvite(egoToken, args.id);
+			console.log('response', response);
+			console.log('response.createdAt!!!!!!!!!!!', response.createdAt);
+			return response || null;
 		},
 		programOptions: () => ({}),
 	},

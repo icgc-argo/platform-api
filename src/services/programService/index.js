@@ -28,7 +28,7 @@ import * as http from './httpClient.js';
 export default {
 	getPrivateProgram: http.getPrivateProgram,
 	listPrivatePrograms: http.listPrivatePrograms,
-	getJoinProgramInvite: grpc.getJoinProgramInvite,
+	getJoinProgramInvite: http.getJoinProgramInvite,
 	listUsers: grpc.listUsers,
 
 	listCancers: grpc.listCancers,
