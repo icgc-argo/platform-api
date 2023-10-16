@@ -81,11 +81,8 @@ export const listPrivatePrograms = async (jwt = null) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
-			console.log('data!!!!!!', data);
-		})
-		.then((data) => {
-			if (data && Array.isArray(data.programs)) {
-				return formatPrivateProgramList(data.programs);
+			if (data && Array.isArray(data)) {
+				return formatPrivateProgramList(data);
 			} else {
 				console.log('Error: no data is returned from /programs');
 				throw new Error('Unable to retrieve programs data.');
@@ -104,8 +101,8 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
-			if (data.program) {
-				return formatPrivateProgram(data.program);
+			if (data) {
+				return formatPrivateProgram(data);
 			} else {
 				console.log('Error: no data is returned from /program/{shortName}');
 				throw new Error('Unable to retrieve program data.');
