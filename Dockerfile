@@ -1,4 +1,4 @@
-FROM node:12.13.1-alpine
+FROM node:18-alpine
 
 ARG APP_FOLDER=/appDir
 ENV APP_UID=1000
