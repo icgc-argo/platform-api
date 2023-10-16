@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2023 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,15 +17,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Handler, Request } from 'express';
-import egoTokenUtils from 'utils/egoTokenUtils';
-import { EgoClient } from 'services/ego';
 import { PermissionScopeObj } from '@icgc-argo/ego-token-utils';
+import { Handler, Request } from 'express';
+
+import { EgoClient } from 'services/ego';
+import egoTokenUtils from 'utils/egoTokenUtils';
 
 type AuthRequestProperties = {
 	scopes: PermissionScopeObj[];
 	serializedScopes: string[];
 	authenticated: boolean;
+	userId: string;
 	egoJwt: string;
 };
 export type AuthenticatedRequest = Request & { auth: AuthRequestProperties };
@@ -41,6 +43,7 @@ const extractUserScopes = async (config: {
 			scopes: [],
 			serializedScopes: [],
 			authenticated: false,
+			userId: '',
 			egoJwt: token,
 		};
 		try {
@@ -49,12 +52,13 @@ const extractUserScopes = async (config: {
 			if (!valid) {
 				return unauthenticatedResponse;
 			}
-			const scopes = jwtData.context.scope;
+			const serializedScopes = jwtData.context.scope;
 			return {
-				scopes: jwtData.context.scope.map(egoTokenUtils.parseScope),
-				serializedScopes: jwtData.context.scope,
 				authenticated: true,
 				egoJwt: token,
+				scopes: serializedScopes.map(egoTokenUtils.parseScope),
+				serializedScopes,
+				userId: jwtData.sub,
 			};
 		} catch (err) {
 			// The best way to identify if we have an API Key or a JWT is to try to decode it as a JWT and parse it accordingly.
@@ -66,6 +70,7 @@ const extractUserScopes = async (config: {
 					scopes: data.scope.map(egoTokenUtils.parseScope),
 					serializedScopes: data.scope,
 					authenticated: true,
+					userId: data.user_id,
 					egoJwt: token,
 				}))
 				.catch((err) => unauthenticatedResponse);
@@ -75,6 +80,7 @@ const extractUserScopes = async (config: {
 			scopes: [],
 			serializedScopes: [],
 			authenticated: false,
+			userId: '',
 			egoJwt: '',
 		};
 	}

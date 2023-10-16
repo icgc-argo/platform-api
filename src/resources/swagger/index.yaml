@@ -6,7 +6,9 @@ tags:
   - name: Kafka REST Proxy
     description: proxy for Kafka REST
   - name: Clinical Proxies
-    description: Proxies file downloads for Clinical
+    description: Proxies requests for file download to Clinical service
+  - name: Clinical API
+    description: Custom requests for Clinical Data Download
   - name: File Centric TSVs
     description: download file-centric TSV files
 
@@ -51,7 +53,42 @@ paths:
                 type: string
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/all-clinical-data':
+          
+  '/clinical/api/donors/data-for-files':
+    post:
+      tags:
+        - Clinical API
+      security:
+        - bearerAuth: []
+      summary: Download clinical data for a list of files.
+      description: Download clinical data for a list of files.
+      requestBody:
+        description: JSON object containing search filters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fileIds:
+                  description: Array of file IDs. Must have at least one item.
+                  type: array
+                  items:
+                    type: string
+                  example: ['FI123']
+      responses:
+        '200':
+          description: 'A zip file with all program submitted data'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: The error message indicates something wrong with the request
+        '500':
+          description: Internal server error
+  '/clinical/proxy/program/{programId}/all-clinical-data':
     parameters:
       - name: programId
         description: the short name of the program
@@ -76,7 +113,7 @@ paths:
                 format: binary
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/clinical-data':
+  '/clinical/proxy/program/{programId}/clinical-data':
     parameters:
       - name: programId
         description: the short name of the program
@@ -126,7 +163,7 @@ paths:
                 type: object
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/clinical-errors':
+  '/clinical/proxy/program/{programId}/clinical-errors':
     parameters:
       - name: programId
         description: the short name of the program
@@ -163,7 +200,7 @@ paths:
                 type: object
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/clinical-search-results':
+  '/clinical/proxy/program/{programId}/clinical-search-results':
     parameters:
       - name: programId
         description: the short name of the program
@@ -215,7 +252,7 @@ paths:
                 type: object
         '500':
           description: Internal server error
-  '/clinical/program/{programId}/clinical-data-tsv':
+  '/clinical/proxy/program/{programId}/clinical-data-tsv':
     parameters:
       - name: programId
         description: the short name of the program
@@ -266,7 +303,7 @@ paths:
                 format: binary
         '500':
           description: Internal server error
-  '/clinical/template/all':
+  '/clinical/proxy/template/all':
     get:
       tags:
         - Clinical Proxies
@@ -289,7 +326,7 @@ paths:
                 format: binary
         '500':
           description: Internal server error
-  '/clinical/template/{schema}':
+  '/clinical/proxy/template/{schema}':
     parameters:
       - name: schema
         description: name of the schema to download the template file for

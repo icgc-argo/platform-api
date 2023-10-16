@@ -707,13 +707,11 @@ const resolvers = {
 				}),
 			);
 
-			const errorResponse: ClinicalErrors = await clinicalService.getClinicalErrors(
-				parent.programShortName,
-				Array.from(donorIds),
-				Authorization,
-			);
+			const { clinicalErrors }: { clinicalErrors: ClinicalErrors } = await clinicalService
+				.getClinicalErrors(parent.programShortName, Array.from(donorIds), Authorization)
+				.then((clinicalErrors) => clinicalErrors);
 
-			return errorResponse;
+			return clinicalErrors;
 		},
 	},
 };
