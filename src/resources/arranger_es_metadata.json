@@ -277,6 +277,12 @@
 							"show": false,
 							"active": true,
 							"type": "Aggregations"
+						},
+						{
+							"field": "has_clinical_data",
+							"show": false,
+							"active": true,
+							"type": "Aggregations"
 						}
 					]
 				},
@@ -887,6 +893,18 @@
 						"isArray": false,
 						"rangeStep": 1,
 						"type": "keyword",
+						"primaryKey": false
+					},
+					{
+						"unit": null,
+						"displayValues": {},
+						"quickSearchEnabled": false,
+						"field": "has_clinical_data",
+						"displayName": "Has Clinical Data",
+						"active": false,
+						"isArray": false,
+						"rangeStep": 1,
+						"type": "boolean",
 						"primaryKey": false
 					},
 					{

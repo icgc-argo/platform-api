@@ -54,6 +54,12 @@ export const EGO_VAULT_SCORE_PROXY_SECRET_PATH = process.env
 export const EGO_SCORE_PROXY_CLIENT_ID = process.env.EGO_SCORE_PROXY_CLIENT_ID;
 export const EGO_SCORE_PROXY_CLIENT_SECRET = process.env.EGO_SCORE_PROXY_CLIENT_SECRET;
 
+// Ego Credentials for Clinical API
+export const EGO_VAULT_CLINICAL_API_SECRET_PATH = process.env
+	.EGO_VAULT_CLINICAL_API_SECRET_PATH as string;
+export const EGO_CLINICAL_API_CLIENT_ID = process.env.EGO_CLINICAL_API_CLIENT_ID;
+export const EGO_CLINICAL_API_CLIENT_SECRET = process.env.EGO_CLINICAL_API_CLIENT_SECRET;
+
 // Vault
 export const USE_VAULT = process.env.USE_VAULT === 'true';
 export const VAULT_TOKEN = process.env.VAULT_TOKEN as string;

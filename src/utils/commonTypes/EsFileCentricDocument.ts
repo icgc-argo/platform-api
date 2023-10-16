@@ -5,6 +5,7 @@ export type EsFileCentricDocument = {
 	file_type: string;
 	embargo_stage: FILE_EMBARGO_STAGE;
 	release_state: FILE_RELEASE_STATE;
+	has_clinical_data?: boolean;
 	program_access_date: string;
 	data_type: string;
 	data_category: string;
