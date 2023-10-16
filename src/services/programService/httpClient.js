@@ -24,9 +24,8 @@
 
 import fetch from 'node-fetch';
 
-import { programServicePublicErrorResponseHandler } from '../../utils/restUtils';
-
-const { PROGRAM_SERVICE_HTTP_ROOT } = require('config');
+import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
+import { restErrorResponseHandler } from '../../utils/restUtils';
 
 //data formatters
 const formatPublicProgram = (program) => ({
@@ -71,7 +70,7 @@ export const listPrivatePrograms = async (jwt = null) => {
 			Authorization: `Bearer ${jwt}`,
 		},
 	})
-		.then(programServicePublicErrorResponseHandler)
+		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
 			if (data && Array.isArray(data.programs)) {
@@ -91,7 +90,7 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			Authorization: `Bearer ${jwt}`,
 		},
 	})
-		.then(programServicePublicErrorResponseHandler)
+		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.program) {
@@ -111,7 +110,7 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 			Authorization: `Bearer ${jwt}`,
 		},
 	})
-		.then(programServicePublicErrorResponseHandler)
+		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
 			if (data.invitation) {
@@ -129,7 +128,7 @@ export const getPublicProgram = async (programShortName) => {
 	return await fetch(url, {
 		method: 'get',
 	})
-		.then(programServicePublicErrorResponseHandler)
+		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then(formatPublicProgram);
 };
