@@ -336,8 +336,6 @@ const resolvers = {
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.getJoinProgramInvite(egoToken, args.id);
-			console.log('response', response);
-			console.log('response.createdAt!!!!!!!!!!!', response.createdAt);
 			return response || null;
 		},
 		programOptions: () => ({}),

@@ -47,14 +47,11 @@ const formatPrivateProgram = (program) => {
 
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
-//format Date string
-// const getIsoDate = (time) => (time ? new Date(time.toISOString() : null);
-
 const formatJoinProgramInvite = (invitation) => ({
 	...invitation,
-	// createdAt: getIsoDate(invitation.createdAt),
-	// expiresAt: getIsoDate(invitation.expiresAt),
-	// acceptedAt: getIsoDate(invitation.acceptedAt),
+	createdAt: new Date(invitation.createdAt),
+	expiresAt: new Date(invitation.expiresAt),
+	acceptedAt: new Date(invitation.acceptedAt),
 	user: { ...invitation.user, role: invitation.user.role.value },
 	program: {
 		...invitation.program,
