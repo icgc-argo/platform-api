@@ -247,11 +247,11 @@ const formatHttpProgram = (program) => ({
 	shortName: program.shortName,
 	description: program.description,
 	website: program.website,
-	institutions: program.programInstitutions.map((institution) => institution.name),
-	countries: program.programCountries.map((country) => country.name),
-	regions: program.processingRegions.map((region) => region.name),
-	cancerTypes: program.programCancers.map((cancer) => cancer.name),
-	primarySites: program.programPrimarySites.map((primarySite) => primarySite.name),
+	institutions: program.programInstitutions?.map((institution) => institution.name) || [],
+	countries: program.programCountries?.map((country) => country.name) || [],
+	regions: program.processingRegions?.map((region) => region.name) || [],
+	cancerTypes: program.programCancers?.map((cancer) => cancer.name) || [],
+	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
 
 const resolveProgramList = async (egoToken) => {
