@@ -46,20 +46,28 @@ const formatPrivateProgram = (program) => {
 
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
-const formatJoinProgramInvite = (invitation) => ({
-	...invitation,
-	createdAt: new Date(invitation.createdAt),
-	expiresAt: new Date(invitation.expiresAt),
-	acceptedAt: new Date(invitation.acceptedAt),
-	user: { ...invitation.user, role: invitation.user.role.value },
-	program: {
-		...invitation.program,
-		institutions: invitation.program.programInstitutions,
-		countries: invitation.program.programCountries,
-		cancerTypes: invitation.program.programCancers,
-		primarySite: invitation.program.programPrimarySites,
-	},
-});
+const formatJoinProgramInvite = (invitation) => {
+	const objTemplate = {
+		...invitation,
+		createdAt: new Date(invitation.createdAt),
+		expiresAt: new Date(invitation.expiresAt),
+		acceptedAt: new Date(invitation.acceptedAt),
+		user: { ...invitation.user, role: invitation.user.role.value },
+		program: {
+			...invitation.program,
+			institutions: invitation.program.programInstitutions,
+			countries: invitation.program.programCountries,
+			cancerTypes: invitation.program.programCancers,
+			primarySite: invitation.program.programPrimarySites,
+		},
+	};
+
+	delete objTemplate.program.programInstitutions;
+	delete objTemplate.program.programCountries;
+	delete objTemplate.program.programCancers;
+	delete objTemplate.program.programPrimarySites;
+	return objTemplate;
+};
 
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
@@ -72,6 +80,9 @@ export const listPrivatePrograms = async (jwt = null) => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
+		.then((data) => {
+			console.log('data!!!!!!', data);
+		})
 		.then((data) => {
 			if (data && Array.isArray(data.programs)) {
 				return formatPrivateProgramList(data.programs);
