@@ -306,9 +306,8 @@ const resolvers = {
 	Program: {
 		users: async (program, args, context, info) => {
 			const { egoToken } = context;
-			const response = await programService.listUsers(program.shortName, egoToken);
-			const users = response ? get(response, 'userDetails', []).map(convertGrpcUserToGql) : null;
-			return users;
+			const response = await programService.listUsers(egoToken, program.shortName);
+			return response || null;
 		},
 	},
 	Query: {

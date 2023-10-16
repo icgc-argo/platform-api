@@ -29,7 +29,7 @@ export default {
 	getPrivateProgram: http.getPrivateProgram,
 	listPrivatePrograms: http.listPrivatePrograms,
 	getJoinProgramInvite: http.getJoinProgramInvite,
-	listUsers: grpc.listUsers,
+	listUsers: http.listUsers,
 
 	listCancers: grpc.listCancers,
 	listPrimarySites: grpc.listPrimarySites,

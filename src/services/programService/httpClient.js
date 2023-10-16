@@ -69,6 +69,17 @@ const formatJoinProgramInvite = (invitation) => {
 	return formattedObj;
 };
 
+const formatUsersList = (users) =>
+	users.map((user) => ({
+		email: user.user?.email,
+		firstName: user.user.first_name,
+		lastName: user.user.last_name,
+		role: user.user.role.value,
+		isDacoApproved: user.dacoApproved,
+		inviteStatus: user.status?.value,
+		inviteAcceptedAt: new Date(user.acceptedAt),
+	}));
+
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
@@ -104,7 +115,7 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			if (data) {
 				return formatPrivateProgram(data);
 			} else {
-				console.log('Error: no data is returned from /program/{shortName}');
+				console.log('Error: no data is returned from /programs/{shortName}');
 				throw new Error('Unable to retrieve program data.');
 			}
 		});
@@ -126,6 +137,26 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 			} else {
 				console.log('Error: no data is returned from /programs/joinProgramInvite/{invite_id}');
 				throw new Error('Unable to retrieve joinProgramInvite data.');
+			}
+		});
+};
+
+export const listUsers = async (jwt = null, programShortName) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users/${programShortName}`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatUsersList(data);
+			} else {
+				console.log('Error: no data is returned from /programs/users/{shortName}');
+				throw new Error('Unable to retrieve users data.');
 			}
 		});
 };
