@@ -17,48 +17,50 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import express, { Request } from 'express';
-import cors from 'cors';
-import { mergeSchemas } from 'graphql-tools';
-import expressWinston from 'express-winston';
-import userSchema from './schemas/User';
-import programSchema from './schemas/Program';
 import path from 'path';
-import clinicalProxyRoute from './routes/clinical-proxy';
-import createKafkaRouter from './routes/kafka-rest-proxy';
+
+import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
+import cors from 'cors';
+import express, { Request } from 'express';
+import expressWinston from 'express-winston';
+import { mergeSchemas } from 'graphql-tools';
+
+import apiDocRouter from 'routes/api-docs';
 import createDonorAggregatorRouter from 'routes/donor-aggregator-api';
-import createFileStorageApi from './routes/file-storage-api';
+import createFileCentricTsvRoute from 'routes/file-centric-tsv';
+import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
+import createEgoClient, { EgoApplicationCredential } from 'services/ego';
+import { createEsClient, EsSecret } from 'services/elasticsearch';
+import { loadVaultSecret } from 'services/vault';
+import ArgoApolloServer from 'utils/ArgoApolloServer';
+import egoTokenUtils from 'utils/egoTokenUtils';
+
 import {
-	PORT,
-	NODE_ENV,
 	APP_DIR,
 	ARRANGER_PROJECT_ID,
+	EGO_CLIENT_ID,
+	EGO_CLIENT_SECRET,
+	EGO_VAULT_SECRET_PATH,
+	ELASTICSEARCH_PASSWORD,
+	ELASTICSEARCH_USERNAME,
+	ELASTICSEARCH_VAULT_SECRET_PATH,
 	FEATURE_ARRANGER_SCHEMA_ENABLED,
 	FEATURE_STORAGE_API_ENABLED,
-	EGO_VAULT_SECRET_PATH,
+	NODE_ENV,
+	PORT,
 	USE_VAULT,
-	EGO_CLIENT_SECRET,
-	EGO_CLIENT_ID,
-	ELASTICSEARCH_VAULT_SECRET_PATH,
-	ELASTICSEARCH_USERNAME,
-	ELASTICSEARCH_PASSWORD,
 } from './config';
-import systemAlertSchema from './schemas/SystemAlert';
+import createClinicalRouter from './routes/clinical';
+import createFileStorageApi from './routes/file-storage-api';
+import createKafkaRouter from './routes/kafka-rest-proxy';
 import clinicalSchema from './schemas/Clinical';
 import createHelpdeskSchema from './schemas/Helpdesk';
-
-import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
+import programSchema from './schemas/Program';
 import ProgramDonorPublishedAnalysisByDateRangeSchema from './schemas/ProgramDonorPublishedAnalysisByDateRange';
+import ProgramDashboardSummarySchema from './schemas/ProgramDonorSummary';
+import systemAlertSchema from './schemas/SystemAlert';
+import userSchema from './schemas/User';
 import logger, { loggerConfig } from './utils/logger';
-import getArrangerGqlSchema, { ArrangerGqlContext } from 'schemas/Arranger';
-import { createEsClient, EsSecret } from 'services/elasticsearch';
-import createFileCentricTsvRoute from 'routes/file-centric-tsv';
-import ArgoApolloServer from 'utils/ArgoApolloServer';
-import apiDocRouter from 'routes/api-docs';
-import createEgoClient, { EgoApplicationCredential } from 'services/ego';
-import { loadVaultSecret } from 'services/vault';
-import egoTokenUtils from 'utils/egoTokenUtils';
-import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 
 const config = require(path.join(APP_DIR, '../package.json'));
 const { version } = config;
@@ -68,7 +70,7 @@ export type GlobalGqlContext = {
 	egoToken: string;
 	Authorization: string;
 	userJwtData: EgoJwtData | null;
-	dataLoaders: {};
+	dataLoaders: object;
 };
 
 const init = async () => {
@@ -166,7 +168,7 @@ const init = async () => {
 
 	// Routers
 	app.use('/kafka', createKafkaRouter(egoClient));
-	app.use('/clinical', clinicalProxyRoute);
+	app.use('/clinical', await createClinicalRouter(esClient, egoClient));
 	app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
 	app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
