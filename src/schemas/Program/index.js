@@ -270,37 +270,27 @@ const resolvers = {
 		cancerTypes: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listCancers(egoToken);
-			return get(response, 'cancers', [])
-				.map((cancerType) => cancerType.name.value)
-				.sort();
+			return response || null;
 		},
 		primarySites: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listPrimarySites(egoToken);
-			return get(response, 'primary_sites', [])
-				.map((site) => site.name.value)
-				.sort();
+			return response || null;
 		},
 		institutions: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listInstitutions(egoToken);
-			return get(response, 'institutions', [])
-				.map((institution) => institution.name.value)
-				.sort();
+			return response || null;
 		},
 		regions: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listRegions(egoToken);
-			return get(response, 'regions', [])
-				.map((region) => region.name.value)
-				.sort();
+			return response || null;
 		},
 		countries: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listCountries(egoToken);
-			return get(response, 'countries', [])
-				.map((country) => country.name.value)
-				.sort();
+			return response || null;
 		},
 	},
 	Program: {
@@ -349,6 +339,7 @@ const resolvers = {
 				submittedDonors: 0,
 				genomicDonors: 0,
 			};
+			console.log('PROGRAM!!!!', program);
 
 			try {
 				const createResponse = await programService.createProgram(program, egoToken);

@@ -31,13 +31,13 @@ export default {
 	getJoinProgramInvite: http.getJoinProgramInvite,
 	listUsers: http.listUsers,
 
-	listCancers: grpc.listCancers,
-	listPrimarySites: grpc.listPrimarySites,
-	listRegions: grpc.listRegions,
-	listInstitutions: grpc.listInstitutions,
-	listCountries: grpc.listCountries,
+	listCancers: http.listCancers,
+	listPrimarySites: http.listPrimarySites,
+	listInstitutions: http.listInstitutions,
+	listRegions: http.listRegions,
+	listCountries: http.listCountries,
 
-	createProgram: grpc.createProgram,
+	createProgram: http.createProgram,
 	updateProgram: grpc.updateProgram,
 
 	inviteUser: grpc.inviteUser,

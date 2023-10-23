@@ -69,16 +69,20 @@ const formatJoinProgramInvite = (invitation) => {
 	return formattedObj;
 };
 
-const formatUsersList = (users) =>
-	users.map((user) => ({
-		email: user.user?.email,
-		firstName: user.user.first_name,
-		lastName: user.user.last_name,
-		role: user.user.role.value,
-		isDacoApproved: user.dacoApproved,
-		inviteStatus: user.status?.value,
-		inviteAcceptedAt: new Date(user.acceptedAt),
+const formatUsersList = (usersList) =>
+	usersList.map((userItem) => ({
+		email: userItem.user?.email,
+		firstName: userItem.user.first_name,
+		lastName: userItem.user.last_name,
+		role: userItem.user.role.value,
+		isDacoApproved: userItem.dacoApproved,
+		inviteStatus: userItem.status?.value,
+		inviteAcceptedAt: new Date(userItem.acceptedAt),
 	}));
+
+//this data formatter is used on multiple lists, such as listCancers, listPrimarySites, listInstitutions, listCountries
+const formatAndSortMultipleLists = (cancersList) =>
+	cancersList.map((cancerItem) => cancerItem.name).sort();
 
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
@@ -159,6 +163,147 @@ export const listUsers = async (jwt = null, programShortName) => {
 				throw new Error('Unable to retrieve users data.');
 			}
 		});
+};
+
+export const listCancers = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/cancers`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				console.log('Error: no data is returned from /programs/cancers');
+				throw new Error('Unable to retrieve cancers data.');
+			}
+		});
+};
+
+export const listInstitutions = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/institutions`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				console.log('Error: no data is returned from /programs/institutions');
+				throw new Error('Unable to retrieve institutions data.');
+			}
+		});
+};
+
+export const listPrimarySites = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/primarySites`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				console.log('Error: no data is returned from /programs/primarySites');
+				throw new Error('Unable to retrieve primarySites data.');
+			}
+		});
+};
+
+export const listRegions = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/regions`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				console.log('Error: no data is returned from /programs/regions');
+				throw new Error('Unable to retrieve regions data.');
+			}
+		});
+};
+
+export const listCountries = async (jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/countries`;
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				console.log('Error: no data is returned from /programs/countries');
+				throw new Error('Unable to retrieve countries data.');
+			}
+		});
+};
+
+export const createProgram = async (program, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	const formattedProgram = {
+		program: {
+			short_name: program.shortName,
+			description: program.description,
+			name: program.name,
+			membership_type: { value: program.membershipType },
+			commitment_donors: program.commitmentDonors,
+			submitted_donors: program.submittedDonors,
+			genomic_donors: program.genomicDonors,
+			website: program.website,
+			cancer_types: program.cancerTypes,
+			primary_sites: program.primarySites,
+			institutions: program.institutions,
+			countries: program.countries,
+		},
+		admins: program.admins.map((admin) => ({
+			email: admin.email,
+			first_name: admin.firstName,
+			last_name: admin.lastName,
+			role: { value: admin.role },
+		})),
+	};
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			// Accept: 'application/json',
+			// 'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedProgram),
+	})
+		.then(restErrorResponseHandler)
+		.then((res) => {
+			console.log('method!!!!', res);
+			return res;
+		})
+		.then((response) => response.json());
 };
 
 // public fields
