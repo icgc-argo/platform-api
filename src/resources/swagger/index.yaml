@@ -70,12 +70,12 @@ paths:
             schema:
               type: object
               properties:
-                fileIds:
-                  description: Array of file IDs. Must have at least one item.
+                objectIds:
+                  description: Array of files' object IDs. Must have at least one item.
                   type: array
                   items:
                     type: string
-                  example: ['FI123']
+                  example: ['33eb128f-fcc5-5a1a-bb86-d6b3f96ed7b0']
       responses:
         '200':
           description: 'A zip file with all program submitted data'

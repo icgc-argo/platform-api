@@ -44,7 +44,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 	 *  ************************************** */
 
 	const FileDownloadRequestBody = zod.object({
-		fileIds: zod.string().array().min(1),
+		objectIds: zod.string().array().min(1),
 	});
 
 	router.use('/donors/data-for-files', async (req: AuthenticatedRequest, res) => {
@@ -78,8 +78,8 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 		// 2. retrieve related files from ES
 		const query = esb
 			.requestBodySearch()
-			.size(body.fileIds.length)
-			.query(esb.boolQuery().must([esb.termsQuery('file_id', body.fileIds)]));
+			.size(body.objectIds.length)
+			.query(esb.boolQuery().must([esb.termsQuery('object_id', body.objectIds)]));
 
 		const filesResponse = await esClient
 			.search<EsHits<EsFileCentricDocument>>({
