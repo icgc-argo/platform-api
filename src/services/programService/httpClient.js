@@ -301,6 +301,29 @@ export const createProgram = async (program, jwt = null) => {
 		.then((response) => response.body);
 };
 
+export const inviteUser = async (userInput, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const formattedUserInput = {
+		programShortName: userInput.programShortName,
+		firstName: userInput.userFirstName,
+		lastName: userInput.userLastName,
+		email: userInput.userEmail,
+		role: {
+			value: userInput.userRole,
+		},
+	};
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
 // public fields
 export const getPublicProgram = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;

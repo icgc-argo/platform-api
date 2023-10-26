@@ -40,7 +40,7 @@ export default {
 	createProgram: http.createProgram,
 	updateProgram: grpc.updateProgram,
 
-	inviteUser: grpc.inviteUser,
+	inviteUser: http.inviteUser,
 	joinProgram: grpc.joinProgram,
 	updateUser: grpc.updateUser,
 	removeUser: grpc.removeUser,
