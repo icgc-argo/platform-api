@@ -103,6 +103,12 @@ const typeDefs = gql`
 		role: UserRole!
 	}
 
+	"""
+	ProgramInput will throw a bad user input error in the following cases:
+	using name that is already in the database,
+	using cancerTypes or countries that doesn't exist or is not in the same format as the database ex. cancerTypes must be Lung cancer. lung, lung cancer will throw an error
+	admin's email must be in an email format ex. use @
+	"""
 	input ProgramInput {
 		name: String!
 		shortName: String!
@@ -111,7 +117,7 @@ const typeDefs = gql`
 		website: String!
 		institutions: [String!]!
 		countries: [String!]!
-		regions: [String!]!
+
 		cancerTypes: [String]!
 		primarySites: [String]!
 
@@ -339,20 +345,9 @@ const resolvers = {
 				submittedDonors: 0,
 				genomicDonors: 0,
 			};
-			console.log('PROGRAM!!!!', program);
 
-			try {
-				const createResponse = await programService.createProgram(program, egoToken);
-				return resolvePrivateSingleProgram(egoToken, program.shortName);
-			} catch (err) {
-				const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
-				if (err.code === GRPC_INVALID_ARGUMENT_ERROR_CODE) {
-					//this just wraps it into standard apollo semantics
-					throw new UserInputError(err);
-				} else {
-					throw new ApolloError(err);
-				}
-			}
+			const createResponse = await programService.createProgram(program, egoToken);
+			return resolvePrivateSingleProgram(egoToken, program.shortName);
 		},
 
 		updateProgram: async (obj, args, context, info) => {

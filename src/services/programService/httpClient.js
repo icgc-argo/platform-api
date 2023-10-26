@@ -293,17 +293,12 @@ export const createProgram = async (program, jwt = null) => {
 		method: 'POST',
 		headers: {
 			Authorization: `Bearer ${jwt}`,
-			// Accept: 'application/json',
-			// 'Content-Type': 'application/json',
+			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedProgram),
 	})
 		.then(restErrorResponseHandler)
-		.then((res) => {
-			console.log('method!!!!', res);
-			return res;
-		})
-		.then((response) => response.json());
+		.then((response) => response.body);
 };
 
 // public fields
