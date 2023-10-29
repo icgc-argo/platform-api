@@ -96,8 +96,8 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 
 		// 3. validations
 		// 3a. all files were found
-		const missingFiles = body.fileIds.filter(
-			(fileId) => !files.find((doc) => doc.file_id === fileId),
+		const missingFiles = body.objectIds.filter(
+			(objectId) => !files.find((doc) => doc.object_id === objectId),
 		);
 
 		if (missingFiles.length > 0) {
