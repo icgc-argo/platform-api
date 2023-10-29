@@ -48,109 +48,128 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 	});
 
 	router.use('/donors/data-for-files', async (req: AuthenticatedRequest, res) => {
-		// 0. Grab requester JWT
-		const { scopes, userId, authenticated } = req.auth;
-
-		if (!authenticated) {
-			logger.debug(`[clinical-routes] /donors/data-for-files: Request not authenticated.`);
-			return res.status(401).send('Must be authenticated to access resource.');
-		}
-		const hasDaco = hasDacoAccess(scopes);
-		if (!hasDaco) {
-			logger.debug(
-				`[clinical-routes] /donors/data-for-files: User ${userId} requesting clinical data without DACO access`,
-			);
-			return res.status(403).send('Users require DACO approval to access clinical data.');
-		}
-
-		// 1. validate request body
-		const bodyParseResult = FileDownloadRequestBody.safeParse(req.body);
-		if (!bodyParseResult.success) {
-			logger.debug(
-				`[clinical-routes] /donors/data-for-files: Received invalid request body: ${JSON.stringify(
-					bodyParseResult.error,
-				)}`,
-			);
-			return res.status(400).send(`Request body is invalid.`);
-		}
-		const body = bodyParseResult.data;
-
-		// 2. retrieve related files from ES
-		const query = esb
-			.requestBodySearch()
-			.size(body.objectIds.length)
-			.query(esb.boolQuery().must([esb.termsQuery('object_id', body.objectIds)]));
-
-		const filesResponse = await esClient
-			.search<EsHits<EsFileCentricDocument>>({
-				index: ARRANGER_FILE_CENTRIC_INDEX,
-				body: query,
-			})
-			.catch((err) => {
-				logger.error(
-					`Error fetching files from ${ARRANGER_FILE_CENTRIC_INDEX} index during attempt to download clinical file data: ${err}`,
-				);
-			});
-
-		const files = filesResponse ? filesResponse.body?.hits?.hits?.map((doc) => doc._source) : [];
-
-		// 3. validations
-		// 3a. all files were found
-		const missingFiles = body.objectIds.filter(
-			(objectId) => !files.find((doc) => doc.object_id === objectId),
-		);
-
-		if (missingFiles.length > 0) {
-			logger.info(
-				`[clinical-routes] /donors/data-for-files: Unable to find requested files in file_centric - ${missingFiles}`,
-			);
-			return res.status(400).send(`File(s) from the request could not be found: ${missingFiles}`);
-		}
-
-		// 3b. all have clinical data
-		const missingClinicalData = files.filter((file) => !file.has_clinical_data);
-		if (missingClinicalData.length > 0) {
-			logger.info(
-				`[clinical-routes] /donors/data-for-files: Requested files are indexed as missing clinical data - ${missingFiles}`,
-			);
-			return res
-				.status(400)
-				.send(
-					`File(s) from the request do not have available clinical data: ${missingClinicalData}`,
-				);
-		}
-		// 3c. user has access to each file
-		const forbiddenFiles = files.filter(
-			(file) => !hasSufficientProgramMembershipAccess({ scopes, file }),
-		);
-		if (forbiddenFiles.length > 0) {
-			logger.info(
-				`[clinical-routes] /donors/data-for-files: User ${userId} missing permissions to access requested files - ${forbiddenFiles}.`,
-			);
-			return res
-				.status(400)
-				.send(`User has insufficient permissions to access the following files: ${forbiddenFiles}`);
-		}
-
-		// 4. fetch files for the donors of the files with data
-		const donorIds = files
-			.flatMap((file) => file.donors.map((donor) => donor.donor_id))
-			.filter((id) => !!id);
-
-		const uniqueDonors = Array.from(new Set(donorIds));
-
-		// 6. return all files in a zip with a manifest
-		const filename = `clinical_data_${Date.now()}`;
 		try {
-			const response = await downloadDonorTsv(clinicalAuthClient, uniqueDonors);
-			res
-				.status(200)
-				.contentType('application/octet-stream')
-				.setHeader('content-disposition', `filename=${filename}.zip`);
-			return res.send(response);
+			// 0. Grab requester JWT
+			const { scopes, userId, authenticated } = req.auth;
+
+			if (!authenticated) {
+				logger.debug(`[clinical-routes] /donors/data-for-files: Request not authenticated.`);
+				return res.status(401).json({ error: 'Must be authenticated to access resource.' });
+			}
+			const hasDaco = hasDacoAccess(scopes);
+			if (!hasDaco) {
+				logger.debug(
+					`[clinical-routes] /donors/data-for-files: User ${userId} requesting clinical data without DACO access`,
+				);
+				return res
+					.status(403)
+					.json({ error: 'Users require DACO approval to access clinical data.' });
+			}
+
+			// 1. validate request body
+			const bodyParseResult = FileDownloadRequestBody.safeParse(req.body);
+			if (!bodyParseResult.success) {
+				logger.debug(
+					`[clinical-routes] /donors/data-for-files: Received invalid request body: ${JSON.stringify(
+						bodyParseResult.error,
+					)}`,
+				);
+				return res.status(400).json({ error: `Request body is invalid.` });
+			}
+			const body = bodyParseResult.data;
+
+			// 2. retrieve related files from ES
+			const query = esb
+				.requestBodySearch()
+				.size(body.objectIds.length)
+				.query(esb.boolQuery().must([esb.termsQuery('object_id', body.objectIds)]));
+
+			const filesResponse = await esClient
+				.search<EsHits<EsFileCentricDocument>>({
+					index: ARRANGER_FILE_CENTRIC_INDEX,
+					body: query,
+				})
+				.catch((err) => {
+					logger.error(
+						`Error fetching files from ${ARRANGER_FILE_CENTRIC_INDEX} index during attempt to download clinical file data: ${err}`,
+					);
+				});
+
+			const files = filesResponse ? filesResponse.body?.hits?.hits?.map((doc) => doc._source) : [];
+
+			// 3. validations
+			// 3a. all files were found
+			const missingFiles = body.objectIds.filter(
+				(objectId) => !files.find((doc) => doc.object_id === objectId),
+			);
+
+			if (missingFiles.length > 0) {
+				logger.info(
+					`[clinical-routes] /donors/data-for-files: Unable to find requested files in file_centric - ${missingFiles}`,
+				);
+				return res.status(400).json({
+					error: `File(s) from the request could not be found: ${missingFiles}`,
+				});
+			}
+
+			// 3b. all have clinical data
+			const missingClinicalData = files.filter((file) => !file.has_clinical_data);
+			if (missingClinicalData.length > 0) {
+				logger.info(
+					`[clinical-routes] /donors/data-for-files: Requested files are indexed as missing clinical data - ${missingClinicalData.map(
+						(doc) => doc.file_id,
+					)}`,
+				);
+				return res.status(400).json({
+					error: `File(s) from the request do not have available clinical data: ${missingClinicalData.map(
+						(doc) => doc.file_id,
+					)}`,
+				});
+			}
+			// 3c. user has access to each file
+			const forbiddenFiles = files.filter(
+				(file) => !hasSufficientProgramMembershipAccess({ scopes, file }),
+			);
+			if (forbiddenFiles.length > 0) {
+				logger.info(
+					`[clinical-routes] /donors/data-for-files: User ${userId} missing permissions to access requested files - ${forbiddenFiles.map(
+						(doc) => doc.file_id,
+					)}.`,
+				);
+				return res.status(400).json({
+					error: `User has insufficient permissions to access the following files: ${forbiddenFiles.map(
+						(doc) => doc.file_id,
+					)}`,
+				});
+			}
+
+			// 4. fetch files for the donors of the files with data
+			const donorIds = files
+				.flatMap((file) => file.donors.map((donor) => donor.donor_id))
+				.filter((id) => !!id);
+
+			const uniqueDonors = Array.from(new Set(donorIds));
+
+			// 6. return all files in a zip with a manifest
+			const filename = `clinical_data_${Date.now()}`;
+			try {
+				const response = await downloadDonorTsv(clinicalAuthClient, uniqueDonors);
+				res
+					.status(200)
+					.contentType('application/octet-stream')
+					.setHeader('content-disposition', `filename=${filename}.zip`);
+				return res.send(response);
+			} catch (e) {
+				logger.error(`Error retrieving clinical donor data from clinical-service ${e}`);
+				return res.status(500).json({
+					error: e.message || 'An unexpected error occurred retrieving clinical file data.',
+				});
+			}
 		} catch (e) {
-			logger.error(`error from clinical ${e}`);
-			return res.status(500).send(e);
+			logger.error(`[clinical-routes] /donors/data-for-files: unexpected error occurred: ${e}`);
+			return res.status(500).json({
+				error: e.message || 'An unexpected error occurred retrieving clinical file data.',
+			});
 		}
 	});
 	return router;
