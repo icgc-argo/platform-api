@@ -27,7 +27,7 @@ import fetch from 'node-fetch';
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
-const getProgramPublicFields = async (programShortName) => {
+export const getProgramPublicFields = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
 	const response = await fetch(url, {
 		method: 'get',
@@ -37,4 +37,15 @@ const getProgramPublicFields = async (programShortName) => {
 	return response;
 };
 
-export { getProgramPublicFields };
+export const listDataCenters = async (jwt) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
+	const response = await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json());
+	return response;
+};
