@@ -41,9 +41,9 @@ export default {
 	updateProgram: grpc.updateProgram,
 
 	inviteUser: http.inviteUser,
-	joinProgram: grpc.joinProgram,
-	updateUser: grpc.updateUser,
-	removeUser: grpc.removeUser,
+	joinProgram: http.joinProgram,
+	updateUser: http.updateUser,
+	removeUser: http.removeUser,
 
 	getPublicProgram: http.getPublicProgram,
 };

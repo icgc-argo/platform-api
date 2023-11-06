@@ -105,8 +105,9 @@ const typeDefs = gql`
 
 	"""
 	ProgramInput will throw a bad user input error in the following cases:
-	using name that is already in the database,
-	using cancerTypes or countries that doesn't exist or is not in the same format as the database ex. cancerTypes must be Lung cancer. lung, lung cancer will throw an error
+	if using name that is already in the database,
+	if using a shortName format that is not "NAME-AREA", a working example is "BOB-CA"
+	using cancerTypes or countries that doesn't exist or is not in the same format as the database ex. a working example of cancerTypes is "Lung cancer". Bad example are "lung", "lung cancer"
 	admin's email must be in an email format ex. use @
 	"""
 	input ProgramInput {
@@ -386,16 +387,18 @@ const resolvers = {
 			const shortName = get(args, 'programShortName');
 			const role = get(args, 'userRole');
 			const userEmail = get(args, 'userEmail');
-			const response = await programService.updateUser(userEmail, shortName, role, egoToken);
+			const input = { shortName, role, userEmail };
+			const response = await programService.updateUser(input, egoToken);
 			return true;
 		},
 
 		removeUser: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const shortName = get(args, 'programShortName');
-			const email = get(args, 'userEmail');
-			const response = await programService.removeUser(email, shortName, egoToken);
-			return get(response, 'message.value', '');
+			const programShortName = get(args, 'programShortName');
+			const userEmail = get(args, 'userEmail');
+			const input = { programShortName, userEmail };
+			const response = await programService.removeUser(input, egoToken);
+			return get(response, 'message', '');
 		},
 	},
 };

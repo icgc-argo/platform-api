@@ -80,6 +80,58 @@ const formatUsersList = (usersList) =>
 		inviteAcceptedAt: new Date(userItem.acceptedAt),
 	}));
 
+const formatCreateProgramInput = (programInput) => ({
+	program: {
+		short_name: programInput.shortName,
+		description: programInput.description,
+		name: programInput.name,
+		membership_type: { value: programInput.membershipType },
+		commitment_donors: programInput.commitmentDonors,
+		submitted_donors: programInput.submittedDonors,
+		genomic_donors: programInput.genomicDonors,
+		website: programInput.website,
+		cancer_types: programInput.cancerTypes,
+		primary_sites: programInput.primarySites,
+		institutions: programInput.institutions,
+		countries: programInput.countries,
+	},
+	admins: programInput.admins.map((admin) => ({
+		email: admin.email,
+		first_name: admin.firstName,
+		last_name: admin.lastName,
+		role: { value: admin.role },
+	})),
+});
+
+const formatInviteUserInput = (userInput) => ({
+	programShortName: userInput.programShortName,
+	firstName: userInput.userFirstName,
+	lastName: userInput.userLastName,
+	email: userInput.userEmail,
+	role: {
+		value: userInput.userRole,
+	},
+});
+
+const formatJoinProgramInput = (joinProgramInput) => ({
+	join_program_invitation_id: joinProgramInput.invitationId,
+	institute: joinProgramInput.institute,
+	affiliate_pi_first_name: joinProgramInput.piFirstName,
+	affiliate_pi_last_name: joinProgramInput.piLastName,
+	department: joinProgramInput.department,
+});
+
+const formatUpdateUserInput = (updateUserInput) => ({
+	shortName: updateUserInput.shortName,
+	userEmail: updateUserInput.userEmail,
+	role: { value: updateUserInput.role },
+});
+
+const formatDeleteUserInput = (deleteUserInput) => ({
+	programShortName: deleteUserInput.programShortName,
+	userEmail: deleteUserInput.userEmail,
+});
+
 //this data formatter is used on multiple lists, such as listCancers, listPrimarySites, listInstitutions, listCountries
 const formatAndSortMultipleLists = (cancersList) =>
 	cancersList.map((cancerItem) => cancerItem.name).sort();
@@ -265,30 +317,9 @@ export const listCountries = async (jwt = null) => {
 		});
 };
 
-export const createProgram = async (program, jwt = null) => {
+export const createProgram = async (programInput, jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
-	const formattedProgram = {
-		program: {
-			short_name: program.shortName,
-			description: program.description,
-			name: program.name,
-			membership_type: { value: program.membershipType },
-			commitment_donors: program.commitmentDonors,
-			submitted_donors: program.submittedDonors,
-			genomic_donors: program.genomicDonors,
-			website: program.website,
-			cancer_types: program.cancerTypes,
-			primary_sites: program.primarySites,
-			institutions: program.institutions,
-			countries: program.countries,
-		},
-		admins: program.admins.map((admin) => ({
-			email: admin.email,
-			first_name: admin.firstName,
-			last_name: admin.lastName,
-			role: { value: admin.role },
-		})),
-	};
+	const formattedProgram = formatCreateProgramInput(programInput);
 	return await fetch(url, {
 		method: 'POST',
 		headers: {
@@ -303,15 +334,7 @@ export const createProgram = async (program, jwt = null) => {
 
 export const inviteUser = async (userInput, jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
-	const formattedUserInput = {
-		programShortName: userInput.programShortName,
-		firstName: userInput.userFirstName,
-		lastName: userInput.userLastName,
-		email: userInput.userEmail,
-		role: {
-			value: userInput.userRole,
-		},
-	};
+	const formattedUserInput = formatInviteUserInput(userInput);
 	return await fetch(url, {
 		method: 'POST',
 		headers: {
@@ -322,6 +345,55 @@ export const inviteUser = async (userInput, jwt = null) => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.body);
+};
+
+//need testing case
+export const joinProgram = async (joinProgramInput, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/join`;
+	const formattedJoinProgramInput = formatJoinProgramInput(joinProgramInput);
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedJoinProgramInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
+//need testing case - users show null for role field
+export const updateUser = async (updateUserInput, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const formattedUpdateUserInput = formatUpdateUserInput(updateUserInput);
+	return await fetch(url, {
+		method: 'PUT',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedUpdateUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
+export const removeUser = async (deleteUserInput, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const formattedDeleteUserInput = formatDeleteUserInput(deleteUserInput);
+	return await fetch(url, {
+		method: 'DELETE',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedDeleteUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => {
+			return response.json();
+		});
 };
 
 // public fields
