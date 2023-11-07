@@ -897,10 +897,10 @@
 					},
 					{
 						"unit": null,
-						"displayValues": {},
+						"displayValues": { "false": "Not Available", "true": "Available" },
 						"quickSearchEnabled": false,
 						"field": "has_clinical_data",
-						"displayName": "Has Clinical Data",
+						"displayName": "Clinical Data",
 						"active": false,
 						"isArray": false,
 						"rangeStep": 1,

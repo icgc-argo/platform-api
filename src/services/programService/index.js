@@ -46,4 +46,6 @@ export default {
 	removeUser: grpc.removeUser,
 
 	getProgramPublicFields: http.getProgramPublicFields,
+
+	listDataCenters: http.listDataCenters,
 };
