@@ -96,6 +96,22 @@ const typeDefs = gql`
 		countries: [String]!
 	}
 
+	type DataCenter {
+		id: ID
+		shortName: String!
+		name: String
+		organization: String
+		email: String
+		uiUrl: String
+		gatewayUrl: String
+		analysisSongCode: String
+		analysisSongUrl: String
+		analysisScoreUrl: String
+		submissionSongCode: String
+		submissionSongUrl: String
+		submissionScoreUrl: String
+	}
+
 	input ProgramUserInput {
 		email: String!
 		firstName: String!
@@ -136,7 +152,6 @@ const typeDefs = gql`
 		website: String
 		institutions: [String]
 		countries: [String]
-		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
 		membershipType: MembershipType
@@ -176,6 +191,11 @@ const typeDefs = gql`
 		joinProgramInvite(id: ID!): JoinProgramInvite
 
 		programOptions: ProgramOptions!
+
+		"""
+		retrieve all DataCenters
+		"""
+		dataCenters: [DataCenter]
 	}
 
 	type Mutation {
@@ -264,6 +284,11 @@ const resolvePublicSingleProgram = async (programShortName) => {
 	return response || null;
 };
 
+const resolveDataCenterList = async (egoToken) => {
+	const response = await programService.listDataCenters(egoToken);
+	return response || null;
+};
+
 const programServicePrivateFields = [
 	'commitmentDonors',
 	'submittedDonors',
@@ -335,6 +360,10 @@ const resolvers = {
 			return response || null;
 		},
 		programOptions: () => ({}),
+		dataCenters: async (obj, args, context, info) => {
+			const { egoToken } = context;
+			return resolveDataCenterList(egoToken);
+		},
 	},
 	Mutation: {
 		createProgram: async (obj, args, context, info) => {
@@ -357,14 +386,12 @@ const resolvers = {
 			const shortName = get(args, 'shortName', {});
 
 			// // Update program takes the complete program object future state
-			const currentPorgramResponse = await programService.getProgram(shortName, egoToken);
-			const currentProgramDetails = convertGrpcProgramToGql(
-				get(currentPorgramResponse, 'program', {}),
-			);
+			const currentProgramResponse = await programService.getPrivateProgram(egoToken, shortName);
 
-			const combinedUpdates = { ...currentProgramDetails, ...updates };
+			const combinedUpdates = { ...currentProgramResponse, ...updates };
+			console.log('combinedUpdates', combinedUpdates);
 
-			const response = await programService.updateProgram(shortName, combinedUpdates, egoToken);
+			const response = await programService.updateProgram(combinedUpdates, egoToken);
 			return response === null ? null : get(args, 'shortName');
 		},
 

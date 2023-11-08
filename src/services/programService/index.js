@@ -38,7 +38,7 @@ export default {
 	listCountries: http.listCountries,
 
 	createProgram: http.createProgram,
-	updateProgram: grpc.updateProgram,
+	updateProgram: http.updateProgram,
 
 	inviteUser: http.inviteUser,
 	joinProgram: http.joinProgram,
@@ -46,4 +46,6 @@ export default {
 	removeUser: http.removeUser,
 
 	getPublicProgram: http.getPublicProgram,
+
+	listDataCenters: http.listDataCenters,
 };

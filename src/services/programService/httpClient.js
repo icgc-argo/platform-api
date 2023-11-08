@@ -332,6 +332,19 @@ export const createProgram = async (programInput, jwt = null) => {
 		.then((response) => response.body);
 };
 
+export const updateProgram = async (programInput, jwt = null) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	return await fetch(url, {
+		method: 'PUT',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(programInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
 export const inviteUser = async (userInput, jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
 	const formattedUserInput = formatInviteUserInput(userInput);
@@ -347,7 +360,7 @@ export const inviteUser = async (userInput, jwt = null) => {
 		.then((response) => response.body);
 };
 
-//need testing case
+//need testing case #TODO
 export const joinProgram = async (joinProgramInput, jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/join`;
 	const formattedJoinProgramInput = formatJoinProgramInput(joinProgramInput);
@@ -363,7 +376,7 @@ export const joinProgram = async (joinProgramInput, jwt = null) => {
 		.then((response) => response.body);
 };
 
-//need testing case - users show null for role field
+//need testing case - users show null for role field #TODO
 export const updateUser = async (updateUserInput, jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
 	const formattedUpdateUserInput = formatUpdateUserInput(updateUserInput);
@@ -394,6 +407,19 @@ export const removeUser = async (deleteUserInput, jwt = null) => {
 		.then((response) => {
 			return response.json();
 		});
+};
+
+export const listDataCenters = async (jwt) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
+	const response = await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json());
+	return response;
 };
 
 // public fields
