@@ -27,6 +27,13 @@ import fetch from 'node-fetch';
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
+//get DataCenter by Program short name handler
+const getDataCenterByShortName = (shortName, dataCenterResponse) => {
+	return dataCenterResponse.filter((dataCenterObject) => {
+		return dataCenterObject.shortName === shortName;
+	});
+};
+
 export const getProgramPublicFields = async (programShortName) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
 	const response = await fetch(url, {
@@ -37,7 +44,7 @@ export const getProgramPublicFields = async (programShortName) => {
 	return response;
 };
 
-export const listDataCenters = async (jwt) => {
+export const listDataCenters = async (shortName, jwt) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
 	const response = await fetch(url, {
 		method: 'get',
@@ -46,6 +53,9 @@ export const listDataCenters = async (jwt) => {
 		},
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => response.json());
+		.then((response) => response.json())
+		.then((response) => {
+			return shortName ? getDataCenterByShortName(shortName, response) : response;
+		});
 	return response;
 };
