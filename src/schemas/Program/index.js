@@ -189,7 +189,7 @@ const typeDefs = gql`
 		"""
 		retrieve all DataCenters
 		"""
-		dataCenters: [DataCenter]
+		dataCenters(shortName: String): [DataCenter]
 	}
 
 	type Mutation {
@@ -292,11 +292,6 @@ const resolveHTTPProgram = async (programShortName) => {
 	return response ? formatHttpProgram(response) : null;
 };
 
-const resolveDataCenterList = async (egoToken) => {
-	const response = await programService.listDataCenters(egoToken);
-	return response || null;
-};
-
 const programServicePrivateFields = [
 	'commitmentDonors',
 	'submittedDonors',
@@ -382,7 +377,9 @@ const resolvers = {
 		programOptions: () => ({}),
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			return resolveDataCenterList(egoToken);
+			const shortName = get(args, 'shortName', null);
+			const response = await programService.listDataCenters(shortName, egoToken);
+			return response || null;
 		},
 	},
 	Mutation: {
