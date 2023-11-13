@@ -88,8 +88,12 @@ export const listPrivatePrograms = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatPrivateProgramList(data);
 			} else {
-				console.log('Error: no data is returned from /programs');
-				throw new Error('Unable to retrieve programs data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from /programs. Data must be an array',
+				);
+				throw new Error(
+					'no data or wrong data type is returned from /programs. Data must be an array',
+				);
 			}
 		});
 };
@@ -108,8 +112,8 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			if (data) {
 				return formatPrivateProgram(data);
 			} else {
-				console.log('Error: no data is returned from /program/{shortName}');
-				throw new Error('Unable to retrieve program data.');
+				logger.error('Error: no data is returned from /program/{shortName}');
+				throw new Error('No data is returned from /program/{shortName}');
 			}
 		});
 };
@@ -128,15 +132,19 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 			if (data.invitation) {
 				return formatJoinProgramInvite(data.invitation);
 			} else {
-				console.log('Error: no data is returned from /programs/joinProgramInvite/{invite_id}');
-				throw new Error('Unable to retrieve joinProgramInvite data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation"',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation"',
+				);
 			}
 		});
 };
 
 export const listDataCenters = async (shortName, jwt) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
-	const response = await fetch(url, {
+	return await fetch(url, {
 		method: 'get',
 		headers: {
 			Authorization: authorizationHeader(jwt),
@@ -144,10 +152,18 @@ export const listDataCenters = async (shortName, jwt) => {
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
-		.then((response) => {
-			return shortName ? getDataCenterByShortName(shortName, response) : response;
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return shortName ? getDataCenterByShortName(shortName, data) : data;
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from /datacenters. Data must be an array',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from /datacenters. Data must be an array',
+				);
+			}
 		});
-	return response;
 };
 
 // public fields
