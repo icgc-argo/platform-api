@@ -23,6 +23,7 @@
  */
 
 import fetch from 'node-fetch';
+import urljoin from 'url-join';
 
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
@@ -70,7 +71,7 @@ const getDataCenterByShortName = (shortName, dataCenterResponse) =>
 	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
@@ -90,7 +91,7 @@ export const listPrivatePrograms = async (jwt = null) => {
 };
 
 export const getPrivateProgram = async (jwt = null, programShortName) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/${programShortName}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
@@ -110,7 +111,7 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 };
 
 export const getJoinProgramInvite = async (jwt = null, id) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/joinProgramInvite/${id}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/joinProgramInvite/${id}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
@@ -130,7 +131,7 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 };
 
 export const listDataCenters = async (shortName, jwt) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
 	const response = await fetch(url, {
 		method: 'get',
 		headers: {
@@ -147,7 +148,7 @@ export const listDataCenters = async (shortName, jwt) => {
 
 // public fields
 export const getPublicProgram = async (programShortName) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `public/program?name=${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 	})
