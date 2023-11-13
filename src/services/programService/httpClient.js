@@ -28,6 +28,8 @@ import urljoin from 'url-join';
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
+import { authorizationHeader } from './util';
+
 //data formatters
 const formatPublicProgram = (program) => ({
 	name: program.name,
@@ -75,7 +77,7 @@ export const listPrivatePrograms = async (jwt = null) => {
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -95,7 +97,7 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -115,7 +117,7 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -135,7 +137,7 @@ export const listDataCenters = async (shortName, jwt) => {
 	const response = await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
