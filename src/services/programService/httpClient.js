@@ -40,10 +40,7 @@ const formatPublicProgram = (program) => ({
 	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
 
-const formatPrivateProgram = (program) => {
-	return program.program;
-};
-
+const formatPrivateProgram = (program) => program.program;
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
 const formatJoinProgramInvite = (invitation) => {
@@ -69,6 +66,8 @@ const formatJoinProgramInvite = (invitation) => {
 	return formattedObj;
 };
 
+const getDataCenterByShortName = (shortName, dataCenterResponse) =>
+	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
 	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
@@ -128,6 +127,22 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 				throw new Error('Unable to retrieve joinProgramInvite data.');
 			}
 		});
+};
+
+export const listDataCenters = async (shortName, jwt) => {
+	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
+	const response = await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: `Bearer ${jwt}`,
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((response) => {
+			return shortName ? getDataCenterByShortName(shortName, response) : response;
+		});
+	return response;
 };
 
 // public fields
