@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,29 +22,7 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-import * as grpc from './grpcClient.js';
-import * as http from './httpClient.js';
+// Create a function that return this repetitive string template in the fecth header
+const authorizationHeader = (jwt: string) => `Bearer ${jwt}`;
 
-export default {
-	getPrivateProgram: http.getPrivateProgram,
-	listPrivatePrograms: http.listPrivatePrograms,
-	getJoinProgramInvite: http.getJoinProgramInvite,
-	listUsers: grpc.listUsers,
-
-	listCancers: grpc.listCancers,
-	listPrimarySites: grpc.listPrimarySites,
-	listRegions: grpc.listRegions,
-	listInstitutions: grpc.listInstitutions,
-	listCountries: grpc.listCountries,
-
-	createProgram: grpc.createProgram,
-	updateProgram: grpc.updateProgram,
-
-	inviteUser: grpc.inviteUser,
-	joinProgram: grpc.joinProgram,
-	updateUser: grpc.updateUser,
-	removeUser: grpc.removeUser,
-
-	getPublicProgram: http.getPublicProgram,
-	listDataCenters: http.listDataCenters,
-};
+export default authorizationHeader;
