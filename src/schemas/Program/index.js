@@ -96,6 +96,22 @@ const typeDefs = gql`
 		countries: [String]!
 	}
 
+	type DataCenter {
+		id: ID
+		shortName: String!
+		name: String
+		organization: String
+		email: String
+		uiUrl: String
+		gatewayUrl: String
+		analysisSongCode: String
+		analysisSongUrl: String
+		analysisScoreUrl: String
+		submissionSongCode: String
+		submissionSongUrl: String
+		submissionScoreUrl: String
+	}
+
 	input ProgramUserInput {
 		email: String!
 		firstName: String!
@@ -169,6 +185,11 @@ const typeDefs = gql`
 		joinProgramInvite(id: ID!): JoinProgramInvite
 
 		programOptions: ProgramOptions!
+
+		"""
+		retrieve all DataCenters
+		"""
+		dataCenters(shortName: String): [DataCenter]
 	}
 
 	type Mutation {
@@ -354,6 +375,12 @@ const resolvers = {
 			return response ? grpcToGql(joinProgramDetails) : null;
 		},
 		programOptions: () => ({}),
+		dataCenters: async (obj, args, context, info) => {
+			const { egoToken } = context;
+			const shortName = get(args, 'shortName', null);
+			const response = await programService.listDataCenters(shortName, egoToken);
+			return response || null;
+		},
 	},
 	Mutation: {
 		createProgram: async (obj, args, context, info) => {
