@@ -23,4 +23,6 @@
  */
 
 // Create a function that return this repetitive string template in the fecth header
-export const authorizationHeader = (jwt) => `Bearer ${jwt}`;
+const authorizationHeader = (jwt: string) => `Bearer ${jwt}`;
+
+export default authorizationHeader;

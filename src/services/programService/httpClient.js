@@ -28,7 +28,9 @@ import urljoin from 'url-join';
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
-import { authorizationHeader } from './util';
+import authorizationHeader from './utils/authorizationHeader';
+
+import logger from 'utils/logger';
 
 //data formatters
 const formatPublicProgram = (program) => ({
