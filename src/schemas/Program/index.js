@@ -180,6 +180,11 @@ const typeDefs = gql`
 		programs: [Program]
 
 		"""
+		retrieve all Programs for a given region
+		"""
+		program(shortName: String!, regions: [String], countries: [String]): [Program]
+
+		"""
 		retrieve join program invitation by id
 		"""
 		joinProgramInvite(id: ID!): JoinProgramInvite
@@ -352,8 +357,20 @@ const resolvers = {
 
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
+
 			return resolvePrivateProgramList(egoToken);
 		},
+
+		programsByRegion: async (obj, args, context, info) => {
+			const { egoToken } = context;
+			const { countries, regions } = args;
+
+			const programs = resolvePrivateProgramList(egoToken);
+			const filteredPrograms = programs.filter((program) => {});
+
+			return filteredPrograms;
+		},
+
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.getJoinProgramInvite(egoToken, args.id);
