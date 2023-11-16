@@ -17,13 +17,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ApolloError, gql, UserInputError } from 'apollo-server-express';
+import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import { get, merge, pickBy } from 'lodash';
 
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
-import { grpcToGql } from 'utils/grpcUtils';
 
 const typeDefs = gql`
 	scalar DateTime
@@ -195,7 +194,7 @@ const typeDefs = gql`
 		"""
 		retrieve all DataCenters
 		"""
-		dataCenters: [DataCenter]
+		dataCenters(shortName: String): [DataCenter]
 	}
 
 	type Mutation {
@@ -284,9 +283,14 @@ const resolvePublicSingleProgram = async (programShortName) => {
 	return response || null;
 };
 
-const resolveDataCenterList = async (egoToken) => {
-	const response = await programService.listDataCenters(egoToken);
-	return response || null;
+const getProgramShortNameFromInvitationID = async (invitationID, egoToken) => {
+	const response = await programService.getJoinProgramInvite(egoToken, invitationID);
+	const programShortName = response.invitation.program.shortName;
+	if (typeof programShortName === 'string') {
+		return programShortName;
+	} else {
+		throw new Error('getProgramShortNameFromInvitationID: return data in wrong formate');
+	}
 };
 
 const programServicePrivateFields = [
@@ -362,7 +366,9 @@ const resolvers = {
 		programOptions: () => ({}),
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			return resolveDataCenterList(egoToken);
+			const shortName = get(args, 'shortName', null);
+			const response = await programService.listDataCenters(shortName, egoToken);
+			return response || null;
 		},
 	},
 	Mutation: {
@@ -399,7 +405,7 @@ const resolvers = {
 			const { egoToken } = context;
 			const invite = get(args, 'invite', {});
 			const response = await programService.inviteUser(invite, egoToken);
-			return get(args, 'invite.userEmail');
+			return response;
 		},
 
 		joinProgram: async (obj, args, context, info) => {

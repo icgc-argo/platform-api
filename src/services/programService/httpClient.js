@@ -23,9 +23,14 @@
  */
 
 import fetch from 'node-fetch';
+import urljoin from 'url-join';
+
+import logger from 'utils/logger';
 
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
+
+import authorizationHeader from './utils/authorizationHeader';
 
 //data formatters
 const formatPublicProgram = (program) => ({
@@ -40,11 +45,11 @@ const formatPublicProgram = (program) => ({
 	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
 
-const formatPrivateProgram = (program) => {
-	return program.program;
-};
-
+const formatPrivateProgram = (program) => program.program;
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
+
+const getDataCenterByShortName = (shortName, dataCenterResponse) =>
+	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
 
 const formatJoinProgramInvite = (invitation) => {
 	const formattedObj = {
@@ -138,11 +143,11 @@ const formatAndSortMultipleLists = (cancersList) =>
 
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -151,18 +156,22 @@ export const listPrivatePrograms = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatPrivateProgramList(data);
 			} else {
-				console.log('Error: no data is returned from /programs');
-				throw new Error('Unable to retrieve programs data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs. Data must be an array.',
+				);
+				throw new Error(
+					'no data or wrong data type is returned from GET /programs. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const getPrivateProgram = async (jwt = null, programShortName) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/${programShortName}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -171,18 +180,18 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			if (data) {
 				return formatPrivateProgram(data);
 			} else {
-				console.log('Error: no data is returned from /programs/{shortName}');
-				throw new Error('Unable to retrieve program data.');
+				logger.error('Error: no data is returned from GET /program/{shortName}.');
+				throw new Error('No data is returned from GET /program/{shortName}.');
 			}
 		});
 };
 
 export const getJoinProgramInvite = async (jwt = null, id) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/joinProgramInvite/${id}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/joinProgramInvite/${id}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -191,18 +200,22 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 			if (data.invitation) {
 				return formatJoinProgramInvite(data.invitation);
 			} else {
-				console.log('Error: no data is returned from /programs/joinProgramInvite/{invite_id}');
-				throw new Error('Unable to retrieve joinProgramInvite data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation".',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation".',
+				);
 			}
 		});
 };
 
 export const listUsers = async (jwt = null, programShortName) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users/${programShortName}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `programs/users/${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -211,18 +224,22 @@ export const listUsers = async (jwt = null, programShortName) => {
 			if (data && Array.isArray(data)) {
 				return formatUsersList(data);
 			} else {
-				console.log('Error: no data is returned from /programs/users/{shortName}');
-				throw new Error('Unable to retrieve users data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/users/{shortName}. Data must be an array',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/users/{shortName}. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const listCancers = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/cancers`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/cancers`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -231,18 +248,22 @@ export const listCancers = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatAndSortMultipleLists(data);
 			} else {
-				console.log('Error: no data is returned from /programs/cancers');
-				throw new Error('Unable to retrieve cancers data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/cancers. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/cancers. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const listInstitutions = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/institutions`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/institutions`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -251,18 +272,22 @@ export const listInstitutions = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatAndSortMultipleLists(data);
 			} else {
-				console.log('Error: no data is returned from /programs/institutions');
-				throw new Error('Unable to retrieve institutions data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/institutions. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/institutions. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const listPrimarySites = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/primarySites`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/primarySites`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -271,18 +296,22 @@ export const listPrimarySites = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatAndSortMultipleLists(data);
 			} else {
-				console.log('Error: no data is returned from /programs/primarySites');
-				throw new Error('Unable to retrieve primarySites data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/primarySites. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/primarySites. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const listRegions = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/regions`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/regions`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -291,18 +320,20 @@ export const listRegions = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatAndSortMultipleLists(data);
 			} else {
-				console.log('Error: no data is returned from /programs/regions');
+				logger.error(
+					'Error: no data or wrong data type is returned from /programs/regions. Data must be an array.',
+				);
 				throw new Error('Unable to retrieve regions data.');
 			}
 		});
 };
 
 export const listCountries = async (jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/countries`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/countries`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 		},
 	})
 		.then(restErrorResponseHandler)
@@ -311,19 +342,47 @@ export const listCountries = async (jwt = null) => {
 			if (data && Array.isArray(data)) {
 				return formatAndSortMultipleLists(data);
 			} else {
-				console.log('Error: no data is returned from /programs/countries');
-				throw new Error('Unable to retrieve countries data.');
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/countries. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/countries. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const listDataCenters = async (shortName, jwt) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return shortName ? getDataCenterByShortName(shortName, data) : data;
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /datacenters. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /datacenters. Data must be an array.',
+				);
 			}
 		});
 };
 
 export const createProgram = async (programInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
 	const formattedProgram = formatCreateProgramInput(programInput);
 	return await fetch(url, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedProgram),
@@ -332,12 +391,13 @@ export const createProgram = async (programInput, jwt = null) => {
 		.then((response) => response.body);
 };
 
+//need endpoint to do testing #TODO
 export const updateProgram = async (programInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
 	return await fetch(url, {
 		method: 'PUT',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(programInput),
@@ -345,29 +405,42 @@ export const updateProgram = async (programInput, jwt = null) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.body);
 };
+
 export const inviteUser = async (userInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
 	const formattedUserInput = formatInviteUserInput(userInput);
 	return await fetch(url, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedUserInput),
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => response.body);
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.inviteId) {
+				return userInput.userEmail;
+			} else {
+				logger.error(
+					'Error: user invite is unsuccessful. POST /programs/users did not return anything. Ensure short name follow its format',
+				);
+				throw new Error(
+					'user invite is unsuccessful. POST /programs/users did not return anything. Ensure short name follow its format',
+				);
+			}
+		});
 };
 
 //need testing case #TODO
 export const joinProgram = async (joinProgramInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/join`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/join`);
 	const formattedJoinProgramInput = formatJoinProgramInput(joinProgramInput);
 	return await fetch(url, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedJoinProgramInput),
@@ -378,12 +451,12 @@ export const joinProgram = async (joinProgramInput, jwt = null) => {
 
 //need testing case - users show null for role field #TODO
 export const updateUser = async (updateUserInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
 	const formattedUpdateUserInput = formatUpdateUserInput(updateUserInput);
 	return await fetch(url, {
 		method: 'PUT',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedUpdateUserInput),
@@ -393,38 +466,35 @@ export const updateUser = async (updateUserInput, jwt = null) => {
 };
 
 export const removeUser = async (deleteUserInput, jwt = null) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/programs/users`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
 	const formattedDeleteUserInput = formatDeleteUserInput(deleteUserInput);
 	return await fetch(url, {
 		method: 'DELETE',
 		headers: {
-			Authorization: `Bearer ${jwt}`,
+			Authorization: authorizationHeader(jwt),
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(formattedDeleteUserInput),
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => {
-			return response.json();
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.message) {
+				return data;
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from DELETE /programs/users. Data must be an object with a property of "message". No message is returned from the endpoint.',
+				);
+				throw new Error(
+					'no data or wrong data type is returned from DELETE /programs/users. Data must be an object with a property of "message". No message is returned from the endpoint.',
+				);
+			}
 		});
-};
-
-export const listDataCenters = async (jwt) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/datacenters`;
-	const response = await fetch(url, {
-		method: 'get',
-		headers: {
-			Authorization: `Bearer ${jwt}`,
-		},
-	})
-		.then(restErrorResponseHandler)
-		.then((response) => response.json());
-	return response;
 };
 
 // public fields
 export const getPublicProgram = async (programShortName) => {
-	const url = `${PROGRAM_SERVICE_HTTP_ROOT}/public/program?name=${programShortName}`;
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `public/program?name=${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 	})

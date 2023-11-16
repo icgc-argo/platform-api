@@ -22,7 +22,6 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-import * as grpc from './grpcClient.js';
 import * as http from './httpClient.js';
 
 export default {
@@ -36,6 +35,7 @@ export default {
 	listInstitutions: http.listInstitutions,
 	listRegions: http.listRegions,
 	listCountries: http.listCountries,
+	listDataCenters: http.listDataCenters,
 
 	createProgram: http.createProgram,
 	updateProgram: http.updateProgram,
@@ -46,6 +46,4 @@ export default {
 	removeUser: http.removeUser,
 
 	getPublicProgram: http.getPublicProgram,
-
-	listDataCenters: http.listDataCenters,
 };
