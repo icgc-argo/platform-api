@@ -182,7 +182,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs for a given region
 		"""
-		programsByRegion(shortName: String!, regions: [String], countries: [String]): [Program]
+		programsByRegion(shortName: String!, regions: [String]): [Program]
 
 		"""
 		retrieve join program invitation by id
