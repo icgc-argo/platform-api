@@ -182,7 +182,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs for a given region
 		"""
-		program(shortName: String!, regions: [String], countries: [String]): [Program]
+		programsByRegion(shortName: String!, regions: [String], countries: [String]): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -365,8 +365,11 @@ const resolvers = {
 			const { egoToken } = context;
 			const { countries, regions } = args;
 
-			const programs = resolvePrivateProgramList(egoToken);
-			const filteredPrograms = programs.filter((program) => {});
+			const programs = await resolvePrivateProgramList(egoToken);
+
+			const filteredPrograms = programs.filter((program) =>
+				countries.some((country) => program.countries.includes(country)),
+			);
 
 			return filteredPrograms;
 		},
