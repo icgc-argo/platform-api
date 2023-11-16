@@ -363,12 +363,12 @@ const resolvers = {
 
 		programsByRegion: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const { countries, regions } = args;
+			const { regions } = args;
 
 			const programs = await resolvePrivateProgramList(egoToken);
 
 			const filteredPrograms = programs.filter((program) =>
-				countries.some((country) => program.countries.includes(country)),
+				regions.some((region) => program.regions?.includes(region)),
 			);
 
 			return filteredPrograms;
