@@ -25,12 +25,12 @@
 import fetch from 'node-fetch';
 import urljoin from 'url-join';
 
+import logger from 'utils/logger';
+
 import { PROGRAM_SERVICE_HTTP_ROOT } from '../../config';
 import { restErrorResponseHandler } from '../../utils/restUtils';
 
 import authorizationHeader from './utils/authorizationHeader';
-
-import logger from 'utils/logger';
 
 //data formatters
 const formatPublicProgram = (program) => ({
