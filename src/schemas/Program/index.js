@@ -358,7 +358,6 @@ const resolvers = {
 
 		programs: async (obj, args, context, info) => {
 			const { egoToken } = context;
-
 			return resolvePrivateProgramList(egoToken);
 		},
 
