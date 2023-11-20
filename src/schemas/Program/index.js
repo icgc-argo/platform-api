@@ -72,6 +72,7 @@ const typeDefs = gql`
 		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
+		dataCenter: DataCenter
 
 		membershipType: MembershipType
 
@@ -289,6 +290,7 @@ const programServicePrivateFields = [
 	'genomicDonors',
 	'membershipType',
 	'users',
+	'dataCenter',
 ];
 
 const resolvers = {
