@@ -23,7 +23,6 @@ import { get, merge, pickBy } from 'lodash';
 
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
-import { grpcToGql } from 'utils/grpcUtils';
 
 const typeDefs = gql`
 	scalar DateTime
@@ -183,7 +182,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs for a given region
 		"""
-		programsByRegion(shortName: String!): [Program]
+		programsByDatacenter(shortName: String!): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -363,7 +362,7 @@ const resolvers = {
 			return resolvePrivateProgramList(egoToken);
 		},
 
-		programsByRegion: async (obj, args, context, info) => {
+		programsByDatacenter: async (obj, args, context) => {
 			const { egoToken } = context;
 			const { shortName } = args;
 
