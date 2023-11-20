@@ -183,7 +183,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs for a given region
 		"""
-		programsByRegion(shortName: String!, regions: [String]): [Program]
+		programsByRegion(shortName: String!): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -365,12 +365,12 @@ const resolvers = {
 
 		programsByRegion: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const { regions } = args;
+			const { shortName } = args;
 
 			const programs = await resolvePrivateProgramList(egoToken);
 
-			const filteredPrograms = programs.filter((program) =>
-				regions.some((region) => program.regions?.includes(region)),
+			const filteredPrograms = programs.filter(
+				(program) => program.dataCenter?.shortName === shortName,
 			);
 
 			return filteredPrograms;
