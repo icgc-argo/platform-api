@@ -177,12 +177,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs
 		"""
-		programs: [Program]
-
-		"""
-		retrieve all Programs for a given region
-		"""
-		programsByDataCenter(shortName: String!): [Program]
+		programs(dataCenter: String): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -356,19 +351,14 @@ const resolvers = {
 				: resolvePublicSingleProgram(shortName);
 		},
 
-		programs: async (obj, args, context, info) => {
+		programs: async (obj, args, context) => {
 			const { egoToken } = context;
-			return resolvePrivateProgramList(egoToken);
-		},
-
-		programsByDataCenter: async (obj, args, context) => {
-			const { egoToken } = context;
-			const { shortName } = args;
+			const { dataCenter } = args;
 
 			const programs = await resolvePrivateProgramList(egoToken);
 
 			const filteredPrograms = programs.filter(
-				(program) => program.dataCenter?.shortName === shortName,
+				(program) => !dataCenter || program.dataCenter?.shortName === dataCenter,
 			);
 
 			return filteredPrograms;
