@@ -357,9 +357,9 @@ const resolvers = {
 
 			const programs = await resolvePrivateProgramList(egoToken);
 
-			const filteredPrograms = !dataCenter
-				? programs
-				: programs.filter((program) => program.dataCenter?.shortName === dataCenter);
+			const filteredPrograms = dataCenter
+				? programs.filter((program) => program.dataCenter?.shortName === dataCenter)
+				: programs;
 
 			return filteredPrograms;
 		},
