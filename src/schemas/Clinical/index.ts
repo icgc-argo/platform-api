@@ -469,8 +469,6 @@ const resolvers = {
 		) => {
 			const { Authorization } = context;
 
-			console.log('clinical errors');
-
 			const errorResponse: ClinicalErrors = await clinicalService.getClinicalErrors(
 				args.programShortName,
 				args.donorIds,
