@@ -71,6 +71,7 @@ const typeDefs = gql`
 		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
+		dataCenter: DataCenter
 
 		membershipType: MembershipType
 
@@ -182,7 +183,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs
 		"""
-		programs: [Program]
+		programs(dataCenter: String): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -299,6 +300,7 @@ const programServicePrivateFields = [
 	'genomicDonors',
 	'membershipType',
 	'users',
+	'dataCenter',
 ];
 
 const resolvers = {
@@ -354,10 +356,19 @@ const resolvers = {
 				: resolvePublicSingleProgram(shortName);
 		},
 
-		programs: async (obj, args, context, info) => {
+		programs: async (obj, args, context) => {
 			const { egoToken } = context;
-			return resolvePrivateProgramList(egoToken);
+			const { dataCenter } = args;
+
+			const programs = await resolvePrivateProgramList(egoToken);
+
+			const filteredPrograms = dataCenter
+				? programs.filter((program) => program.dataCenter?.shortName === dataCenter)
+				: programs;
+
+			return filteredPrograms;
 		},
+
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.getJoinProgramInvite(egoToken, args.id);
