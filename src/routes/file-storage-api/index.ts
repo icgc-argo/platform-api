@@ -20,7 +20,7 @@
 import { Client } from '@elastic/elasticsearch';
 import express, { Router } from 'express';
 import urljoin from 'url-join';
-import { ADVERTISED_HOST } from 'config';
+import { ADVERTISED_HOST, STORAGE_API_PROFILE } from 'config';
 import downloadProxy, { downloadFile } from './handlers/downloadHandler';
 import createEntitiesHandler from './handlers/entitiesHandler';
 import createEntitiesIdHandler from './handlers/entitiesIdHandler';
@@ -88,6 +88,14 @@ export default async ({
 			scoreAuthClient,
 		}),
 	);
+	router.get('/profile', (_req, res) => {
+		// TODO: This is a temporary fix, this will not work with multiple RDPCs!
+
+		// This will tell the score client which storage profile to use. While we have only one rdpc we can simply
+		// report the correct profile for our setup. We will need the download client to report the correct profile
+		// per object it is downloading once there are multiple RDPCs to support.
+		res.send(STORAGE_API_PROFILE);
+	});
 
 	return router;
 };

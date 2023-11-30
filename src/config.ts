@@ -102,6 +102,7 @@ export const DEV_RECAPTCHA_DISABLED = process.env.DEV_RECAPTCHA_DISABLED === 'tr
 
 // File Storage API
 export const MAX_FILE_DOWNLOAD_SIZE = Number(process.env.MAX_FILE_DOWNLOAD_SIZE) || 5000000; // 5MB
+export const STORAGE_API_PROFILE = process.env.STORAGE_API_PROFILE || 'az';
 
 // TSV download configs
 export const DEFAULT_TSV_STREAM_CHUNK_SIZE =
