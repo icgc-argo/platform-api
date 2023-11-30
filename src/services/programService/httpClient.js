@@ -126,6 +126,11 @@ const formatJoinProgramInput = (joinProgramInput) => ({
 	department: joinProgramInput.department,
 });
 
+const formatJoinProgramResponse = (joinProgramResponse) => ({
+	...joinProgramResponse.user,
+	role: joinProgramResponse.user.role.value,
+});
+
 const formatUpdateUserInput = (updateUserInput) => ({
 	shortName: updateUserInput.shortName,
 	userEmail: updateUserInput.userEmail,
@@ -186,13 +191,10 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 		});
 };
 
-export const getJoinProgramInvite = async (jwt = null, id) => {
+export const getJoinProgramInvite = async (id) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/joinProgramInvite/${id}`);
 	return await fetch(url, {
 		method: 'get',
-		headers: {
-			Authorization: authorizationHeader(jwt),
-		},
 	})
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
@@ -433,7 +435,6 @@ export const inviteUser = async (userInput, jwt = null) => {
 		});
 };
 
-//need testing case #TODO
 export const joinProgram = async (joinProgramInput, jwt = null) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/join`);
 	const formattedJoinProgramInput = formatJoinProgramInput(joinProgramInput);
@@ -446,10 +447,22 @@ export const joinProgram = async (joinProgramInput, jwt = null) => {
 		body: JSON.stringify(formattedJoinProgramInput),
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => response.body);
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && data.user) {
+				console.log('FETCH DATA!', data);
+				return formatJoinProgramResponse(data);
+			} else {
+				logger.error(
+					'Error: join program is unsuccessful. POST /programs/join did not return anything or did not return an object with a user property.',
+				);
+				throw new Error(
+					'user invite is unsuccessful. POST /programs/join did not return anything or did not return an object with a user property.',
+				);
+			}
+		});
 };
 
-//need testing case - users show null for role field #TODO
 export const updateUser = async (updateUserInput, jwt = null) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
 	const formattedUpdateUserInput = formatUpdateUserInput(updateUserInput);

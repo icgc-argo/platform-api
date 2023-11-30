@@ -155,6 +155,7 @@ const typeDefs = gql`
 		cancerTypes: [String]
 		primarySites: [String]
 		membershipType: MembershipType
+		dataCenterShortName: String
 	}
 
 	input InviteUserInput {
@@ -241,33 +242,6 @@ const typeDefs = gql`
 /* =========
 HTTP resolvers
  * ========= */
-const getIsoDate = (time) => (time ? new Date(parseInt(time) * 1000).toISOString() : null);
-
-const convertGrpcProgramToGql = (programDetails) => ({
-	name: get(programDetails, 'program.name.value'),
-	shortName: get(programDetails, 'program.short_name.value'),
-	description: get(programDetails, 'program.description.value'),
-	commitmentDonors: get(programDetails, 'program.commitment_donors.value'),
-	submittedDonors: get(programDetails, 'program.submitted_donors.value'),
-	genomicDonors: get(programDetails, 'program.genomic_donors.value'),
-	website: get(programDetails, 'program.website.value'),
-	institutions: get(programDetails, 'program.institutions', []),
-	countries: get(programDetails, 'program.countries', []),
-	regions: get(programDetails, 'program.regions', []),
-	cancerTypes: get(programDetails, 'program.cancer_types', []),
-	primarySites: get(programDetails, 'program.primary_sites', []),
-	membershipType: get(programDetails, 'program.membership_type.value'),
-});
-
-const convertGrpcUserToGql = (userDetails) => ({
-	email: get(userDetails, 'user.email.value'),
-	firstName: get(userDetails, 'user.first_name.value'),
-	lastName: get(userDetails, 'user.last_name.value'),
-	role: get(userDetails, 'user.role.value'),
-	isDacoApproved: get(userDetails, 'daco_approved.value'),
-	inviteStatus: get(userDetails, 'status.value'),
-	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
-});
 
 const resolvePrivateProgramList = async (egoToken) => {
 	const response = await programService.listPrivatePrograms(egoToken);
@@ -282,16 +256,6 @@ const resolvePrivateSingleProgram = async (egoToken, programShortName) => {
 const resolvePublicSingleProgram = async (programShortName) => {
 	const response = await programService.getPublicProgram(programShortName);
 	return response || null;
-};
-
-const getProgramShortNameFromInvitationID = async (invitationID, egoToken) => {
-	const response = await programService.getJoinProgramInvite(egoToken, invitationID);
-	const programShortName = response.invitation.program.shortName;
-	if (typeof programShortName === 'string') {
-		return programShortName;
-	} else {
-		throw new Error('getProgramShortNameFromInvitationID: return data in wrong formate');
-	}
 };
 
 const programServicePrivateFields = [
@@ -370,8 +334,7 @@ const resolvers = {
 		},
 
 		joinProgramInvite: async (obj, args, context, info) => {
-			const { egoToken } = context;
-			const response = await programService.getJoinProgramInvite(egoToken, args.id);
+			const response = await programService.getJoinProgramInvite(args.id);
 			return response || null;
 		},
 		programOptions: () => ({}),
@@ -398,32 +361,54 @@ const resolvers = {
 		},
 
 		updateProgram: async (obj, args, context, info) => {
+			// extract information from query parameters
 			const { egoToken } = context;
 			const updates = pickBy(get(args, 'updates', {}), (v) => v !== undefined);
-			const shortName = get(args, 'shortName', {});
+			const programShortName = get(args, 'shortName', {});
+			const dataCenterShortName = args.updates.dataCenterShortName;
+			delete updates.dataCenterShortName;
 
+			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
+			const [dataCenterResponse] = await programService.listDataCenters(
+				dataCenterShortName,
+				egoToken,
+			);
+			const { id, shortName, name, uiUrl, gatewayUrl } = dataCenterResponse;
 			// // Update program takes the complete program object future state
-			const currentProgramResponse = await programService.getPrivateProgram(egoToken, shortName);
+			const currentProgramResponse = await programService.getPrivateProgram(
+				egoToken,
+				programShortName,
+			);
 
-			const combinedUpdates = { ...currentProgramResponse, ...updates };
-			console.log('combinedUpdates', combinedUpdates);
-
+			//prepare the payload for the fetch endpoint from the previous steps
+			const combinedUpdates = {
+				...currentProgramResponse,
+				...updates,
+				dataCenter: {
+					id,
+					shortName,
+					name,
+					uiUrl,
+					gatewayUrl,
+				},
+			};
+			//make a request to the PUT updateProgram endpoint with the formatted payload
 			const response = await programService.updateProgram(combinedUpdates, egoToken);
-			return response === null ? null : get(args, 'shortName');
+			return response === null ? null : programShortName;
 		},
 
 		inviteUser: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const invite = get(args, 'invite', {});
 			const response = await programService.inviteUser(invite, egoToken);
-			return response;
+			return response || null;
 		},
 
 		joinProgram: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const joinProgramInput = get(args, 'join', {});
 			const response = await programService.joinProgram(joinProgramInput, egoToken);
-			return convertGrpcUserToGql(get(response, 'user'));
+			return response || null;
 		},
 
 		updateUser: async (obj, args, context, info) => {
