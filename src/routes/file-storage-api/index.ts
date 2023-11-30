@@ -89,7 +89,7 @@ export default async ({
 		}),
 	);
 	router.get('/profile', (_req, res) => {
-		// TODO: This is a temorary fix, this will not work for federated data!
+		// TODO: This is a temporary fix, this will not work with multiple RDPCs!
 
 		// This will tell the score client which storage profile to use. While we have only one rdpc we can simply
 		// report the correct profile for our setup. We will need the download client to report the correct profile
