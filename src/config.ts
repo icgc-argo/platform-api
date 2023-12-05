@@ -23,8 +23,9 @@ export const ADVERTISED_HOST = process.env.ADVERTISED_HOST || 'http://localhost:
 
 // Elasticsearch config
 export const ELASTICSEARCH_HOST = process.env.ELASTICSEARCH_HOST || 'http://localhost:9200';
-export const ELASTICSEARCH_VAULT_SECRET_PATH = process.env
-	.ELASTICSEARCH_VAULT_SECRET_PATH as string;
+export const ELASTICSEARCH_VAULT_SECRET_PATH =
+	process.env.ELASTICSEARCH_VAULT_SECRET_PATH ||
+	'Missing env variable ELASTICSEARCH_VAULT_SECRET_PATH';
 export const ELASTICSEARCH_USERNAME = process.env.ELASTICSEARCH_USERNAME;
 export const ELASTICSEARCH_PASSWORD = process.env.ELASTICSEARCH_PASSWORD;
 export const ELASTICSEARCH_CLIENT_TRUST_SSL_CERT =
@@ -44,28 +45,27 @@ export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
 export const EGO_ROOT_GRPC = process.env.EGO_ROOT_GRPC || 'localhost:50051';
 export const EGO_DACO_POLICY_NAME = process.env.EGO_DACO_POLICY_NAME || 'DACO';
-export const EGO_VAULT_SECRET_PATH = process.env.EGO_VAULT_SECRET_PATH as string;
+export const EGO_VAULT_SECRET_PATH =
+	process.env.EGO_VAULT_SECRET_PATH || 'Missing env variable EGO_VAULT_SECRET_PATH';
 export const EGO_CLIENT_ID = process.env.EGO_CLIENT_ID;
 export const EGO_CLIENT_SECRET = process.env.EGO_CLIENT_SECRET;
 
 // Ego Credentials for Score Proxy
-export const EGO_VAULT_SCORE_PROXY_SECRET_PATH = process.env
-	.EGO_VAULT_SCORE_PROXY_SECRET_PATH as string;
+export const EGO_VAULT_SCORE_PROXY_SECRET_PATH = process.env.EGO_VAULT_SCORE_PROXY_SECRET_PATH;
 export const EGO_SCORE_PROXY_CLIENT_ID = process.env.EGO_SCORE_PROXY_CLIENT_ID;
 export const EGO_SCORE_PROXY_CLIENT_SECRET = process.env.EGO_SCORE_PROXY_CLIENT_SECRET;
 
 // Ego Credentials for Clinical API
-export const EGO_VAULT_CLINICAL_API_SECRET_PATH = process.env
-	.EGO_VAULT_CLINICAL_API_SECRET_PATH as string;
+export const EGO_VAULT_CLINICAL_API_SECRET_PATH = process.env.EGO_VAULT_CLINICAL_API_SECRET_PATH;
 export const EGO_CLINICAL_API_CLIENT_ID = process.env.EGO_CLINICAL_API_CLIENT_ID;
 export const EGO_CLINICAL_API_CLIENT_SECRET = process.env.EGO_CLINICAL_API_CLIENT_SECRET;
 
 // Vault
 export const USE_VAULT = process.env.USE_VAULT === 'true';
-export const VAULT_TOKEN = process.env.VAULT_TOKEN as string;
-export const VAULT_AUTH_METHOD = process.env.VAULT_AUTH_METHOD as 'token' | 'kubernetes';
-export const VAULT_URL = (process.env.VAULT_URL as string) || 'http://localhost:8200';
-export const VAULT_ROLE = process.env.VAULT_ROLE as string;
+export const VAULT_TOKEN = process.env.VAULT_TOKEN;
+export const VAULT_AUTH_METHOD = process.env.VAULT_AUTH_METHOD;
+export const VAULT_URL = process.env.VAULT_URL || 'http://localhost:8200';
+export const VAULT_ROLE = process.env.VAULT_ROLE;
 
 // Default ego public key value is the example value provided in the application.yml of the public overture repository
 export const EGO_PUBLIC_KEY =
@@ -85,8 +85,9 @@ export const DATA_CENTER_REGISTRY_API_ROOT =
 export const APP_DIR = __dirname;
 
 // Helpdesk auth
-export const JIRA_ADMIN_VAULT_CREDENTIALS_PATH = process.env
-	.JIRA_ADMIN_VAULT_CREDENTIALS_PATH as string;
+export const JIRA_ADMIN_VAULT_CREDENTIALS_PATH =
+	process.env.JIRA_ADMIN_VAULT_CREDENTIALS_PATH ||
+	'Missing env variable JIRA_ADMIN_VAULT_CREDENTIALS_PATH';
 export const JIRA_REST_URI =
 	process.env.JIRA_REST_URI || 'https://extsd.oicr.on.ca/rest/servicedeskapi';
 export const JIRA_SERVICEDESK_ID = process.env.JIRA_SERVICEDESK_ID || '9';

@@ -23,7 +23,6 @@ import { get, merge, pickBy } from 'lodash';
 
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
-import { grpcToGql } from 'utils/grpcUtils';
 
 const typeDefs = gql`
 	scalar DateTime
@@ -72,6 +71,7 @@ const typeDefs = gql`
 		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
+		dataCenter: DataCenter
 
 		membershipType: MembershipType
 
@@ -94,6 +94,22 @@ const typeDefs = gql`
 		institutions: [String]!
 		regions: [String]!
 		countries: [String]!
+	}
+
+	type DataCenter {
+		id: ID
+		shortName: String!
+		name: String
+		organization: String
+		email: String
+		uiUrl: String
+		gatewayUrl: String
+		analysisSongCode: String
+		analysisSongUrl: String
+		analysisScoreUrl: String
+		submissionSongCode: String
+		submissionSongUrl: String
+		submissionScoreUrl: String
 	}
 
 	input ProgramUserInput {
@@ -161,7 +177,7 @@ const typeDefs = gql`
 		"""
 		retrieve all Programs
 		"""
-		programs: [Program]
+		programs(dataCenter: String): [Program]
 
 		"""
 		retrieve join program invitation by id
@@ -169,6 +185,11 @@ const typeDefs = gql`
 		joinProgramInvite(id: ID!): JoinProgramInvite
 
 		programOptions: ProgramOptions!
+
+		"""
+		retrieve all DataCenters
+		"""
+		dataCenters(shortName: String): [DataCenter]
 	}
 
 	type Mutation {
@@ -212,7 +233,7 @@ const typeDefs = gql`
 `;
 
 /* =========
-    Convert GRPC Response to GQL output
+HTTP resolvers
  * ========= */
 const getIsoDate = (time) => (time ? new Date(parseInt(time) * 1000).toISOString() : null);
 
@@ -242,33 +263,19 @@ const convertGrpcUserToGql = (userDetails) => ({
 	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
 });
 
-const formatHttpProgram = (program) => ({
-	name: program.name,
-	shortName: program.shortName,
-	description: program.description,
-	website: program.website,
-	institutions: program.programInstitutions?.map((institution) => institution.name) || [],
-	countries: program.programCountries?.map((country) => country.name) || [],
-	regions: program.processingRegions?.map((region) => region.name) || [],
-	cancerTypes: program.programCancers?.map((cancer) => cancer.name) || [],
-	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
-});
-
-const resolveProgramList = async (egoToken) => {
-	const response = await programService.listPrograms(egoToken);
-	const programs = get(response, 'programs', []);
-	return programs.map((program) => convertGrpcProgramToGql(program));
+const resolvePrivateProgramList = async (egoToken) => {
+	const response = await programService.listPrivatePrograms(egoToken);
+	return response || null;
 };
 
-const resolveSingleProgram = async (egoToken, programShortName) => {
-	const response = await programService.getProgram(programShortName, egoToken);
-	const programDetails = get(response, 'program');
-	return response ? convertGrpcProgramToGql(programDetails) : null;
+const resolvePrivateSingleProgram = async (egoToken, programShortName) => {
+	const response = await programService.getPrivateProgram(egoToken, programShortName);
+	return response || null;
 };
 
-const resolveHTTPProgram = async (programShortName) => {
-	const response = await programService.getProgramPublicFields(programShortName);
-	return response ? formatHttpProgram(response) : null;
+const resolvePublicSingleProgram = async (programShortName) => {
+	const response = await programService.getPublicProgram(programShortName);
+	return response || null;
 };
 
 const programServicePrivateFields = [
@@ -277,6 +284,7 @@ const programServicePrivateFields = [
 	'genomicDonors',
 	'membershipType',
 	'users',
+	'dataCenter',
 ];
 
 const resolvers = {
@@ -339,21 +347,35 @@ const resolvers = {
 			);
 
 			return hasPrivateField
-				? resolveSingleProgram(egoToken, shortName)
-				: resolveHTTPProgram(shortName);
+				? resolvePrivateSingleProgram(egoToken, shortName)
+				: resolvePublicSingleProgram(shortName);
 		},
 
-		programs: async (obj, args, context, info) => {
+		programs: async (obj, args, context) => {
 			const { egoToken } = context;
-			return resolveProgramList(egoToken);
+			const { dataCenter } = args;
+
+			const programs = await resolvePrivateProgramList(egoToken);
+
+			const filteredPrograms = dataCenter
+				? programs.filter((program) => program.dataCenter?.shortName === dataCenter)
+				: programs;
+
+			return filteredPrograms;
 		},
+
 		joinProgramInvite: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const response = await programService.getJoinProgramInvite(args.id, egoToken);
-			const joinProgramDetails = get(response, 'invitation');
-			return response ? grpcToGql(joinProgramDetails) : null;
+			const response = await programService.getJoinProgramInvite(egoToken, args.id);
+			return response || null;
 		},
 		programOptions: () => ({}),
+		dataCenters: async (obj, args, context, info) => {
+			const { egoToken } = context;
+			const shortName = get(args, 'shortName', null);
+			const response = await programService.listDataCenters(shortName, egoToken);
+			return response || null;
+		},
 	},
 	Mutation: {
 		createProgram: async (obj, args, context, info) => {
@@ -368,7 +390,7 @@ const resolvers = {
 
 			try {
 				const createResponse = await programService.createProgram(program, egoToken);
-				return resolveSingleProgram(egoToken, program.shortName);
+				return resolvePrivateSingleProgram(egoToken, program.shortName);
 			} catch (err) {
 				const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
 				if (err.code === GRPC_INVALID_ARGUMENT_ERROR_CODE) {

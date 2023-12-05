@@ -21,42 +21,13 @@
  * This file dynamically generates a gRPC client from Ego.proto.
  * The content of Ego.proto is copied directly from: https://github.com/overture-stack/ego/blob/develop/src/main/proto/Ego.proto
  */
-import path from 'path';
-
-import * as loader from '@grpc/proto-loader';
-import grpc, { ChannelCredentials } from 'grpc';
 import memoize from 'lodash/memoize';
 import fetch from 'node-fetch';
 import urlJoin from 'url-join';
 
-import { APP_DIR, EGO_DACO_POLICY_NAME, EGO_ROOT_GRPC, EGO_ROOT_REST } from '../../config';
-import { defaultPromiseCallback, getAuthMeta, withRetries } from '../../utils/grpcUtils';
+import { EGO_DACO_POLICY_NAME, EGO_ROOT_REST } from '../../config';
 import logger from '../../utils/logger';
 import { restErrorResponseHandler } from '../../utils/restUtils';
-
-export type EgoGrpcUser = {
-	id: { value: unknown };
-	email: { value: unknown };
-	first_name: { value: unknown };
-	last_name: { value: unknown };
-	created_at: { value: unknown };
-	last_login: { value: unknown };
-	name: { value: unknown };
-	preferred_language: { value: unknown };
-	status: { value: unknown };
-	type: { value: unknown };
-	applications: unknown;
-	groups: unknown;
-	scopes: unknown;
-};
-
-export type ListUserSortOptions = {
-	pageNum?: number;
-	limit?: number;
-	sort?: string;
-	groups?: string[];
-	query?: string;
-};
 
 export type EgoApplicationCredential = {
 	clientId: string;
@@ -88,64 +59,11 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 		`${applicationCredential.clientId}:${applicationCredential.clientSecret}`,
 	).toString('base64');
 
-	const PROTO_PATH = path.join(APP_DIR, '/resources/Ego.proto');
-
 	const EGO_API_KEY_ENDPOINT = urlJoin(EGO_ROOT_REST, '/o/api_key');
-	const packageDefinition = loader.loadSync(PROTO_PATH, {
-		keepCase: true,
-		longs: String,
-		enums: String,
-		defaults: true,
-		oneofs: true,
-	});
-
-	const protoBio = grpc.loadPackageDefinition(packageDefinition).bio as {
-		overture: {
-			ego: {
-				grpc: {
-					UserService: new (grpc_root: string, credentials: ChannelCredentials) => any;
-				};
-			};
-		};
-	};
-	const proto = protoBio.overture.ego.grpc;
-
-	const userService = withRetries(
-		new proto.UserService(EGO_ROOT_GRPC, grpc.credentials.createInsecure()),
-	);
 
 	let memoizedGetDacoIds: ReturnType<typeof getMemoizedDacoIds> | null = null;
 	let dacoIdsCalled = new Date();
 	const dacoGroupIdExpiry = 86400000; // 24hours
-
-	const getUser = async (id: string, jwt: string | null = null): Promise<EgoGrpcUser> => {
-		return await new Promise((resolve, reject) => {
-			userService.getUser(
-				{ id },
-				getAuthMeta(jwt),
-				defaultPromiseCallback(resolve, reject, 'Ego.getUser'),
-			);
-		});
-	};
-
-	const listUsers = async (
-		{ pageNum, limit, sort, groups, query }: ListUserSortOptions = {},
-		jwt: string | null = null,
-	) => {
-		const payload = {
-			page: { page_number: pageNum, page_size: limit, sort },
-			group_ids: groups,
-			query: { value: query },
-		};
-
-		return await new Promise((resolve, reject) => {
-			userService.listUsers(
-				payload,
-				getAuthMeta(jwt),
-				defaultPromiseCallback(resolve, reject, 'Ego.listUsers'),
-			);
-		});
-	};
 
 	type EgoAccessKeyObj = {
 		name: string;
@@ -160,10 +78,6 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 		userId: string,
 		Authorization: string,
 	): Promise<EgoAccessKeyObj[]> => {
-		type EgoApiKeyResponse = {
-			count: number;
-			resultSet: EgoAccessKeyObj[];
-		};
 		const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
 			headers: { Authorization },
 		})
@@ -233,7 +147,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 					method: 'delete',
 					headers: { Authorization },
 				})
-					.then((resp) => ({ key, success: true }))
+					.then((_) => ({ key, success: true }))
 					.catch((err) => {
 						logger.error(err);
 						return { key, success: false };
@@ -326,8 +240,6 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 	};
 
 	return {
-		getUser,
-		listUsers,
 		generateEgoAccessKey,
 		getScopes,
 		getEgoAccessKeys,

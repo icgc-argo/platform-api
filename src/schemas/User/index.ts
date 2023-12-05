@@ -19,12 +19,11 @@
 
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
-import get from 'lodash/get';
 
-import { EgoClient, EgoGrpcUser, ListUserSortOptions } from '../../services/ego';
-import { EGO_DACO_POLICY_NAME } from '../../config';
-import egoTokenUtils from 'utils/egoTokenUtils';
 import { GlobalGqlContext } from 'app';
+import egoTokenUtils from 'utils/egoTokenUtils';
+import { EGO_DACO_POLICY_NAME } from '../../config';
+import { EgoClient } from '../../services/ego';
 import logger from '../../utils/logger';
 
 // Construct a schema, using GraphQL schema language
@@ -70,16 +69,6 @@ const typeDefs = gql`
 
 	type Query {
 		"""
-		retrieve User data by id
-		"""
-		user(id: String!): User
-
-		"""
-		retrieve paginated list of user data
-		"""
-		users(pageNum: Int, limit: Int, sort: String, groups: [String], query: String): [User]
-
-		"""
 		retrive user profile data
 		"""
 		self: Profile
@@ -92,22 +81,6 @@ const typeDefs = gql`
 		generateAccessKey: AccessKey!
 	}
 `;
-
-const convertEgoUser = (user: EgoGrpcUser) => ({
-	id: get(user, 'id.value'),
-	email: get(user, 'email.value'),
-	firstName: get(user, 'first_name.value'),
-	lastName: get(user, 'last_name.value'),
-	createdAt: get(user, 'created_at.value'),
-	lastLogin: get(user, 'last_login.value'),
-	name: get(user, 'name.value'),
-	preferredLanguage: get(user, 'preferred_language.value'),
-	status: get(user, 'status.value'),
-	type: get(user, 'type.value'),
-	applications: get(user, 'applications'),
-	groups: get(user, 'groups'),
-	scopes: get(user, 'scopes'),
-});
 
 const createProfile = ({
 	apiKey,
@@ -124,20 +97,6 @@ const createProfile = ({
 const createResolvers = (egoClient: EgoClient) => {
 	return {
 		Query: {
-			user: async (obj: unknown, args: { id: string }, context: GlobalGqlContext) => {
-				const { egoToken } = context;
-				const egoUser: EgoGrpcUser = await egoClient.getUser(args.id, egoToken);
-				return egoUser === null ? null : convertEgoUser(egoUser);
-			},
-			users: async (obj: unknown, args: ListUserSortOptions, context: GlobalGqlContext) => {
-				const { egoToken } = context;
-				const options = {
-					...args,
-				};
-				const response = await egoClient.listUsers(options, egoToken);
-				const egoUserList: EgoGrpcUser[] = get(response, 'users', []);
-				return egoUserList.map((egoUser) => convertEgoUser(egoUser));
-			},
 			self: async (obj: unknown, args: undefined, context: GlobalGqlContext) => {
 				const { Authorization, egoToken, userJwtData } = context;
 				logger.info({ Authorization, egoToken, userJwtData });
