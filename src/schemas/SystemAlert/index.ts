@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -20,7 +20,9 @@
 import { gql } from 'apollo-server-express';
 import { makeExecutableSchema } from 'graphql-tools';
 import { createCheckers } from 'ts-interface-checker';
-import logger from '../../utils/logger';
+
+import logger from '@/utils/logger';
+
 import systemAlertTI from './systemAlert-ti';
 
 const { SystemAlertTI } = createCheckers(systemAlertTI);
@@ -51,47 +53,45 @@ type AllowedFields = keyof SystemAlert;
 const allowedFields = ['dismissable', 'id', 'level', 'message', 'title'];
 
 const logError = (message: string, name: string) => {
-	logger.error(`📜 System Alert - ${name} - ${message}`);
+	logger.debug(`Banner validation - ${name} - ${message}`);
 };
 
 const getSystemAlerts = () => {
-	let result: SystemAlert[] = [];
+	logger.info('Attempting to gather system alert banners');
 
 	try {
-		const alertsStr = process.env.SYSTEM_ALERTS || '';
-
-		const alertsParsed = [].concat(JSON.parse(alertsStr));
+		const alertsStr = process.env.SYSTEM_ALERTS;
+		const alertsParsed = [].concat(alertsStr ? JSON.parse(alertsStr) : {});
 
 		const alertsValidated = alertsParsed.reduce(
 			(acc, curr) => ({
 				...acc,
-				...(SystemAlertTI.test(curr)
-					? { valid: [...acc.valid, curr] }
-					: { invalid: [...acc.invalid, curr] }),
+				...(SystemAlertTI.test(curr) ? { valid: [...acc.valid, curr] } : { invalid: [...acc.invalid, curr] }),
 			}),
 			{ valid: [], invalid: [] },
-		);
-
-		result = alertsValidated.valid.map((alert: SystemAlert) =>
-			Object.keys(alert)
-				.filter((key) => allowedFields.includes(key))
-				.reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
 		);
 
 		alertsValidated.invalid.forEach((alert: any) => {
 			// check() will throw errors on invalid system alerts.
 			SystemAlertTI.check(alert);
 		});
-	} catch (e) {
-		logError(e.message, e.name);
-	} finally {
-		return result;
+
+		return alertsValidated.valid.map((alert: SystemAlert) =>
+			Object.keys(alert)
+				.filter((key) => allowedFields.includes(key))
+				.reduce((acc, curr: AllowedFields) => ({ ...acc, [curr]: alert[curr] }), {} as SystemAlert),
+		);
+	} catch (error) {
+		logError(error.message, error.name);
+
+		return [];
 	}
 };
 
 const alertsArray = getSystemAlerts();
 
-logger.info(`📜 System Alerts: ${JSON.stringify({ alertsArray })}`);
+logger.info(alertsArray?.length ? `Banners to display: ${JSON.stringify(alertsArray)}` : `No banners to display`);
+console.log('\n');
 
 const typeDefs = gql`
 	type SystemAlert {

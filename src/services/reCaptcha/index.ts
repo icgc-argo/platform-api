@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -18,7 +18,8 @@
  */
 
 import fetch from 'node-fetch';
-import { USE_VAULT, RECAPTCHA_SECRET_KEY, RECAPTCHA_VAULT_SECRET_PATH } from 'config';
+
+import { RECAPTCHA_SECRET_KEY, RECAPTCHA_VAULT_SECRET_PATH, USE_VAULT } from '@/config';
 import { loadVaultSecret } from 'services/vault';
 import logger from 'utils/logger';
 
@@ -63,41 +64,43 @@ const getReCaptchaSecret = async () => {
 };
 
 const createReCaptchaClient = async (): Promise<ReCaptchaClient> => {
-	logger.debug('in create Recaptcha client');
-	let reCaptchaSecretKey = await getReCaptchaSecret();
-	const verifyUserResponse = async (response: string): Promise<ReCaptchaVerificationResult> =>
-		fetch(
-			`https://www.google.com/recaptcha/api/siteverify?secret=${reCaptchaSecretKey}&response=${response}`,
-			{
-				method: 'POST',
-			},
-		).then((res) => res.json()) as Promise<ReCaptchaVerificationResult>;
+	logger.debug('Attempting to create a ReCaptcha Client');
 
-	logger.info('verifying reCaptcha secret');
+	const reCaptchaSecretKey = await getReCaptchaSecret();
+
+	const verifyUserResponse = async (response: string) =>
+		fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${reCaptchaSecretKey}&response=${response}`, {
+			method: 'POST',
+		}).then((res): Promise<ReCaptchaVerificationResult> => res?.json?.());
+
+	logger.info('...verifying reCaptcha secret');
+
 	const testVerificationResponse = await verifyUserResponse('');
-	const verificationErrorCodes =
-		testVerificationResponse['error-codes'] || ([] as ReCaptchaVerificationErrorCode[]);
-	if (
-		verificationErrorCodes.includes('invalid-input-secret') ||
-		verificationErrorCodes.includes('missing-input-secret')
-	) {
+	const verificationErrorCodes = testVerificationResponse['error-codes'];
+
+	if (verificationErrorCodes?.some((error) => ['invalid-input-secret', 'missing-input-secret'].includes(error))) {
 		throw new Error(
-			'Failed to initialize ReCaptcha client, missing or invalid secret key. For local development, provide a reCaptcha secret key through the RECAPTCHA_SECRET_KEY env var. Contact your admin for a secret, or create your own through google for local dev.',
+			'Failed to initialize ReCaptcha client, missing or invalid secret key. For local development, provide a reCaptcha secret key through the RECAPTCHA_SECRET_KEY env var. Contact your admin for a secret, or create your own through Google for local dev.',
 		);
 	}
 
-	logger.info('successfully created reCaptcha client');
+	logger.info('Successfully created reCaptcha client');
+
 	return {
 		verifyUserResponse,
 	};
 };
 
-export const createStubReCaptchaClient = async () =>
-	Promise.resolve({
-		verifyUserResponse: (): Promise<ReCaptchaVerificationResult> => {
+export const createStubReCaptchaClient = async (): Promise<ReCaptchaClient> => {
+	logger.debug('using a stub recaptcha client');
+
+	return Promise.resolve({
+		verifyUserResponse: () => {
 			return Promise.resolve({
 				success: true,
 			});
 		},
 	});
+};
+
 export default createReCaptchaClient;
