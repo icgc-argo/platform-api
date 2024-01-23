@@ -1,0 +1,7 @@
+{
+	"compilerOptions": {
+		"allowJs": true
+	},
+	"exclude": ["dist/**/*", "src/**/*"],
+	"include": [".eslintrc.js", "prettier.config.js", "**/*.json"]
+}
