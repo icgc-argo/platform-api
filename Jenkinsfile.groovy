@@ -194,34 +194,34 @@ spec:
             }
         }
 
-        stage('Deploy to argo-dev') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    expression { return params.DEPLOY_TO_DEV }
-                }
-            }
-            steps {
-                build(job: '/ARGO/provision/gateway', parameters: [
-                    string(name: 'AP_ARGO_ENV', value: 'dev'),
-                    string(name: 'AP_ARGS_LINE', value: "--set-string image.tag=${commit}"),
-                ])
-            }
-        }
+        // stage('Deploy to argo-dev') {
+        //     when {
+        //         anyOf {
+        //             branch 'develop'
+        //             expression { return params.DEPLOY_TO_DEV }
+        //         }
+        //     }
+        //     steps {
+        //         build(job: '/ARGO/provision/gateway', parameters: [
+        //             string(name: 'AP_ARGO_ENV', value: 'dev'),
+        //             string(name: 'AP_ARGS_LINE', value: "--set-string image.tag=${commit}"),
+        //         ])
+        //     }
+        // }
 
-        stage('Deploy to argo-qa') {
-            when {
-                anyOf {
-                    branch 'main'
-                }
-            }
-            steps {
-                build(job: '/ARGO/provision/gateway', parameters: [
-                    string(name: 'AP_ARGO_ENV', value: 'qa'),
-                    string(name: 'AP_ARGS_LINE', value: "--set-string image.tag=${version}"),
-                ])
-            }
-        }
+        // stage('Deploy to argo-qa') {
+        //     when {
+        //         anyOf {
+        //             branch 'main'
+        //         }
+        //     }
+        //     steps {
+        //         build(job: '/ARGO/provision/gateway', parameters: [
+        //             string(name: 'AP_ARGO_ENV', value: 'qa'),
+        //             string(name: 'AP_ARGS_LINE', value: "--set-string image.tag=${version}"),
+        //         ])
+        //     }
+        // }
     }
 
     post {

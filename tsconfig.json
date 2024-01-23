@@ -14,7 +14,8 @@
 		"outDir": "./dist",
 		"baseUrl": "./",
 		"paths": {
-			"*": ["./src/*"]
+			"*": ["./src/*"],
+			"@/*": ["./src/*"]
 		},
 		"plugins": [
 			{ "transform": "typescript-transform-paths", "exclude": ["**/node_modules/**"] }, // absolute paths for source files

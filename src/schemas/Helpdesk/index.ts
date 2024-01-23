@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,17 +17,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import typeDefs from './gqlTypeDefs';
-import { GlobalGqlContext } from 'app';
-import { makeExecutableSchema } from 'graphql-tools';
-import { createJiraClient, JiraClient } from './jiraRequests';
-import { FEATURE_HELP_DESK_ENABLED, DEV_RECAPTCHA_DISABLED } from 'config';
 import { ApolloError, UserInputError } from 'apollo-server-express';
-import createReCaptchaClient, {
-	ReCaptchaClient,
-	createStubReCaptchaClient,
-} from 'services/reCaptcha';
 import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql';
+import { makeExecutableSchema } from 'graphql-tools';
+
+import { GlobalGqlContext } from '@/app';
+import { DEV_RECAPTCHA_DISABLED, FEATURE_HELP_DESK_ENABLED } from '@/config';
+import createReCaptchaClient, { createStubReCaptchaClient, ReCaptchaClient } from '@/services/reCaptcha';
+import logger from '@/utils/logger';
+
+import typeDefs from './gqlTypeDefs';
+import { createJiraClient, JiraClient } from './jiraRequests';
 
 enum JiraTicketCategory {
 	APPLYING_ACCESS,
@@ -66,20 +66,13 @@ const REQUEST_TYPE_MAPPER: CategoryMapper = {
 
 const resolveWithReCaptcha =
 	(resolverFn: GraphQLFieldResolver<unknown, unknown>, reCaptchaClient: ReCaptchaClient) =>
-	async (
-		...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]
-	) => {
+	async (...resolverArgs: [unknown, { reCaptchaResponse: string }, GlobalGqlContext, GraphQLResolveInfo]) => {
 		const { reCaptchaResponse } = resolverArgs[1];
-		const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(
-			reCaptchaResponse,
-		);
+		const { success, 'error-codes': errorCodes } = await reCaptchaClient.verifyUserResponse(reCaptchaResponse);
 		if (success) {
 			return resolverFn(...resolverArgs);
 		} else {
-			if (
-				errorCodes?.includes('invalid-input-response') ||
-				errorCodes?.includes('missing-input-response')
-			) {
+			if (errorCodes?.some((error) => ['invalid-input-response', 'missing-input-response'].includes(error))) {
 				throw new UserInputError(`invalid ReCaptcha response: ${errorCodes}`);
 			} else {
 				throw new ApolloError(`failed to verify reCaptcha response`);
@@ -111,10 +104,7 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
 
 	return {
 		Mutation: {
-			createJiraTicketWithReCaptcha: resolveWithReCaptcha(
-				jiraTicketCreationResolver,
-				reCaptchaClient,
-			),
+			createJiraTicketWithReCaptcha: resolveWithReCaptcha(jiraTicketCreationResolver, reCaptchaClient),
 		},
 	};
 };
@@ -122,20 +112,38 @@ const createResolvers = (jiraClient: JiraClient, reCaptchaClient: ReCaptchaClien
 const createDisabledResolvers = (reCaptchaClient: ReCaptchaClient) => ({
 	Mutation: {
 		createJiraTicketWithReCaptcha: resolveWithReCaptcha(() => {
-			throw new ApolloError(
-				`FEATURE_HELP_DESK_ENABLED is ${FEATURE_HELP_DESK_ENABLED} in this instance of the gateway`,
-			);
+			throw new ApolloError('HelpDesk is unavailable in this instance of the gateway');
 		}, reCaptchaClient),
 	},
 });
 
 export default async () => {
-	const reCaptchaClient = DEV_RECAPTCHA_DISABLED
-		? await createStubReCaptchaClient()
-		: await createReCaptchaClient();
-	const resolvers = FEATURE_HELP_DESK_ENABLED
-		? createResolvers(await createJiraClient(), reCaptchaClient)
-		: createDisabledResolvers(reCaptchaClient);
+	const stubReCaptcha = await createStubReCaptchaClient();
+
+	if (FEATURE_HELP_DESK_ENABLED) {
+		try {
+			logger.info(`Attempting to set up HelpDesk ticket creation`);
+
+			const jiraClient = await createJiraClient();
+			const reCaptchaClient = DEV_RECAPTCHA_DISABLED ? stubReCaptcha : await createReCaptchaClient();
+
+			const resolvers = createResolvers(jiraClient, reCaptchaClient);
+
+			logger.info(`Successful HelpDesk set up\n`);
+
+			return makeExecutableSchema({
+				typeDefs,
+				resolvers,
+			});
+		} catch (error) {
+			logger.error(error);
+		}
+	}
+
+	logger.info(`HelpDesk is unavailable in this instance of the gateway\n`);
+
+	const resolvers = createDisabledResolvers(stubReCaptcha);
+
 	return makeExecutableSchema({
 		typeDefs,
 		resolvers,
