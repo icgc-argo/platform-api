@@ -76,7 +76,7 @@ const formatJoinProgramInvite = (invitation) => {
 
 const formatUsersList = (usersList) =>
 	usersList.map((userItem) => ({
-		email: userItem.user?.email,
+		email: userItem.user.email,
 		firstName: userItem.user.first_name,
 		lastName: userItem.user.last_name,
 		role: userItem.user.role.value,

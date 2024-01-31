@@ -299,9 +299,9 @@ const resolvers = {
 		users: async (program, args, context, info) => {
 			const { egoToken } = context;
 			
-			const response = await programService.listUsers(egoToken, program.shortName);
+			const users = await programService.listUsers(egoToken, program.shortName);
 
-			return response || null;
+			return users || null;
 		},
 	},
 	Query: {
