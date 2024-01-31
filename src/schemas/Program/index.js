@@ -298,16 +298,12 @@ const resolvers = {
 	Program: {
 		users: async (program, args, context, info) => {
 			const { egoToken } = context;
-			
 			const users = await programService.listUsers(egoToken, program.shortName);
-
 			return users || null;
 		},
 		regions: async (program, args, context, info) => {
 			const { egoToken } = context;
-			
 			const regions = await programService.listRegions(egoToken);
-
 			return regions || null;
 		},
 	},
