@@ -77,8 +77,8 @@ const formatJoinProgramInvite = (invitation) => {
 const formatUsersList = (usersList) =>
 	usersList.map((userItem) => ({
 		email: userItem.user.email,
-		firstName: userItem.user.first_name,
-		lastName: userItem.user.last_name,
+		firstName: userItem.user.firstName,
+		lastName: userItem.user.lastName,
 		role: userItem.user.role.value,
 		isDacoApproved: userItem.dacoApproved,
 		inviteStatus: userItem.status?.value,
