@@ -79,10 +79,10 @@ const typeDefs = gql`
 	}
 
 	type ProgramUser {
-		email: String!
-		firstName: String!
-		lastName: String!
-		role: UserRole!
+		email: String
+		firstName: String
+		lastName: String
+		role: UserRole
 		isDacoApproved: Boolean
 		inviteStatus: InviteStatus
 		inviteAcceptedAt: String
@@ -298,7 +298,9 @@ const resolvers = {
 	Program: {
 		users: async (program, args, context, info) => {
 			const { egoToken } = context;
+			
 			const response = await programService.listUsers(egoToken, program.shortName);
+
 			return response || null;
 		},
 	},
@@ -315,9 +317,11 @@ const resolvers = {
 				programServicePrivateFields.includes(field),
 			);
 
-			return hasPrivateField
-				? resolvePrivateSingleProgram(egoToken, shortName)
-				: resolvePublicSingleProgram(shortName);
+			const program = hasPrivateField
+			? await resolvePrivateSingleProgram(egoToken, shortName)
+			: await resolvePublicSingleProgram(shortName);
+
+			return program;
 		},
 
 		programs: async (obj, args, context) => {
