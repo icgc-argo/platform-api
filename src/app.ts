@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -22,7 +22,7 @@ import path from 'path';
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 import cors from 'cors';
 import express, { Request } from 'express';
-import expressWinston from 'express-winston';
+import { logger as loggerMiddleware } from 'express-winston';
 import { mergeSchemas } from 'graphql-tools';
 
 import apiDocRouter from 'routes/api-docs';
@@ -38,15 +38,16 @@ import egoTokenUtils from 'utils/egoTokenUtils';
 import {
 	APP_DIR,
 	ARRANGER_PROJECT_ID,
+	DEBUG_LOGGING,
 	EGO_CLIENT_ID,
 	EGO_CLIENT_SECRET,
 	EGO_VAULT_SECRET_PATH,
 	ELASTICSEARCH_PASSWORD,
 	ELASTICSEARCH_USERNAME,
 	ELASTICSEARCH_VAULT_SECRET_PATH,
-	FEATURE_ARRANGER_SCHEMA_ENABLED,
 	FEATURE_STORAGE_API_ENABLED,
-	NODE_ENV,
+	HEALTH_ENDPOINTS,
+	IS_PROD,
 	PORT,
 	USE_VAULT,
 } from './config';
@@ -78,15 +79,15 @@ const init = async () => {
 
 	const [egoAppCredentials, elasticsearchCredentials] = USE_VAULT
 		? ((await Promise.all([
-				vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((err: any) => {
+				vaultSecretLoader(EGO_VAULT_SECRET_PATH).catch((error) => {
 					logger.error(`could not read Ego secret at path ${EGO_VAULT_SECRET_PATH}`);
-					throw err; //fail fast
+					throw error; //fail fast
 				}),
-				vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((err: any) => {
+				vaultSecretLoader(ELASTICSEARCH_VAULT_SECRET_PATH).catch((error: any) => {
 					logger.error(`could not read Elasticsearch secret at path ${EGO_VAULT_SECRET_PATH}`);
-					throw err; //fail fastw
+					throw error; //fail fastw
 				}),
-		  ])) as [EgoApplicationCredential, EsSecret])
+			])) as [EgoApplicationCredential, EsSecret])
 		: ([
 				{
 					clientId: EGO_CLIENT_ID,
@@ -96,26 +97,25 @@ const init = async () => {
 					user: ELASTICSEARCH_USERNAME,
 					pass: ELASTICSEARCH_PASSWORD,
 				},
-		  ] as [EgoApplicationCredential, EsSecret]);
+			] as [EgoApplicationCredential, EsSecret]);
 
-	const esClient = await createEsClient({
-		auth:
-			elasticsearchCredentials.user && elasticsearchCredentials.pass
-				? elasticsearchCredentials
-				: undefined,
-	});
 	const egoClient = createEgoClient(egoAppCredentials);
+	const esClient = await createEsClient({
+		auth: elasticsearchCredentials.user && elasticsearchCredentials.pass ? elasticsearchCredentials : undefined,
+	});
 
-	const schemas = await Promise.all([
-		userSchema(egoClient),
-		programSchema,
-		clinicalSchema,
-		systemAlertSchema,
-		ProgramDashboardSummarySchema(esClient),
-		ProgramDonorPublishedAnalysisByDateRangeSchema(esClient),
-		createHelpdeskSchema(),
-		...(FEATURE_ARRANGER_SCHEMA_ENABLED ? [getArrangerGqlSchema(esClient)] : []),
-	]);
+	const schemas = await Promise.all(
+		[
+			userSchema(egoClient),
+			programSchema,
+			clinicalSchema,
+			systemAlertSchema,
+			ProgramDashboardSummarySchema(esClient),
+			ProgramDonorPublishedAnalysisByDateRangeSchema(esClient),
+			createHelpdeskSchema(),
+			getArrangerGqlSchema(esClient),
+		].filter(Boolean),
+	);
 
 	const server = new ArgoApolloServer({
 		schema: mergeSchemas({
@@ -143,7 +143,7 @@ const init = async () => {
 			};
 		},
 		introspection: true,
-		tracing: NODE_ENV !== 'production',
+		tracing: !IS_PROD,
 	});
 
 	const app = express();
@@ -154,8 +154,14 @@ const init = async () => {
 	};
 	app.use(cors(corsOptions));
 
+	const DEBUG = DEBUG_LOGGING || !IS_PROD;
 	// Request Logging
-	app.use(expressWinston.logger(loggerConfig));
+	app.use(
+		loggerMiddleware({
+			...loggerConfig,
+			ignoredRoutes: DEBUG ? [] : HEALTH_ENDPOINTS,
+		}),
+	);
 
 	// Attach Arranger
 	server.applyMiddleware({ app, path: '/graphql' });
@@ -186,8 +192,10 @@ const init = async () => {
 	app.use('/api-docs', apiDocRouter());
 
 	app.listen(PORT, () => {
+		console.log('\n');
 		logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
-		logger.info(`🚀 Rest API doc available at http://localhost:${PORT}/api-docs`);
+		logger.info(`🚀 REST API docs available at http://localhost:${PORT}/api-docs`);
+		console.log('\n');
 	});
 };
 

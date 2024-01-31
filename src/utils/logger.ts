@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,21 +17,24 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { createLogger, transports, format } from 'winston';
+import { createLogger, format, transports } from 'winston';
 
-const { combine, timestamp, printf } = format;
+import { DEBUG_LOGGING, IS_PROD } from '@/config';
 
-const isProd = process.env.NODE_ENV === 'production';
+const { combine, colorize, timestamp, printf } = format;
+
+const DEBUG = DEBUG_LOGGING || !IS_PROD;
 
 export const loggerConfig = {
 	format: combine(
+		colorize(),
 		timestamp(),
-		printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
+		printf((info) => `${info.timestamp} ${info.level}:\n  ${info.message}`),
 	),
 	transports: [
 		new transports.Console({
 			handleExceptions: true,
-			level: isProd ? 'error' : 'debug',
+			level: DEBUG ? 'debug' : 'info',
 		}),
 		new transports.File({ filename: 'debug.log', level: 'debug' }),
 	],

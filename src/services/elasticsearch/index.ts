@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -19,22 +19,18 @@
 
 import { Client } from '@elastic/elasticsearch';
 import flatMap from 'lodash/flatMap';
-import logger from 'utils/logger';
-import { ELASTICSEARCH_CLIENT_TRUST_SSL_CERT, ELASTICSEARCH_HOST } from 'config';
 
-import {
-	EsScalarFieldMapping,
-	EsNestedFieldMapping,
-	EsObjectFieldMapping,
-	EsFieldMapping,
-	EsIndexMapping,
-} from './types';
+import { ELASTICSEARCH_CLIENT_TRUST_SSL_CERT, ELASTICSEARCH_HOST } from '@/config';
+import logger from '@/utils/logger';
+
+import { EsFieldMapping, EsNestedFieldMapping, EsObjectFieldMapping, EsScalarFieldMapping } from './types';
+
 export {
-	EsScalarFieldMapping,
-	EsNestedFieldMapping,
-	EsObjectFieldMapping,
 	EsFieldMapping,
 	EsIndexMapping,
+	EsNestedFieldMapping,
+	EsObjectFieldMapping,
+	EsScalarFieldMapping,
 } from './types';
 
 export const isObjectFieldMapping = (obj: object): obj is EsObjectFieldMapping =>
@@ -58,9 +54,7 @@ export const getNestedFields = (fieldMapping: EsFieldMapping, parentField?: stri
 		const nestedOrObjectFieldKey = currentFields.filter(
 			(field) => isNestedFieldMapping(properties[field]) || isObjectFieldMapping(properties[field]),
 		);
-		const nestedFieldKey = nestedOrObjectFieldKey.filter((field) =>
-			isNestedFieldMapping(properties[field]),
-		);
+		const nestedFieldKey = nestedOrObjectFieldKey.filter((field) => isNestedFieldMapping(properties[field]));
 		return flatMap([
 			...(parentField ? nestedFieldKey.map((field) => `${parentField}.${field}`) : nestedFieldKey),
 			...nestedOrObjectFieldKey.map((field) =>
@@ -76,16 +70,9 @@ export type EsSecret = {
 	user: string;
 	pass: string;
 };
-const isEsSecret = (data: { [k: string]: any }): data is EsSecret => {
-	return typeof data['user'] === 'string' && typeof data['pass'] === 'string';
-};
 
-export const createEsClient = async ({
-	node = ELASTICSEARCH_HOST,
-	auth,
-}: { node?: string; auth?: EsSecret } = {}): Promise<Client> => {
-	let esClient: Client;
-	esClient = new Client({
+export const createEsClient = async ({ node = ELASTICSEARCH_HOST, auth }: { node?: string; auth?: EsSecret } = {}) => {
+	const esClient: Client = new Client({
 		node,
 		ssl: {
 			rejectUnauthorized: !ELASTICSEARCH_CLIENT_TRUST_SSL_CERT,
@@ -94,21 +81,25 @@ export const createEsClient = async ({
 			? {
 					username: auth.user,
 					password: auth.pass,
-			  }
+				}
 			: undefined,
 	});
+
+	logger.info(`Attempting to ping elasticsearch at ${ELASTICSEARCH_HOST}`);
 	try {
-		logger.info(`attempting to ping elasticsearch at ${ELASTICSEARCH_HOST}`);
 		await esClient.ping();
-	} catch (err) {
-		logger.error(`esClient failed to connect to cluster`);
-		throw err;
+
+		logger.info('Successfully created Elasticsearch client');
+
+		return esClient;
+	} catch (error) {
+		logger.error('Failed to connect to the Elasticsearch cluster\n');
+
+		throw error;
 	}
-	logger.info(`successfully created Elasticsearch client for ${ELASTICSEARCH_HOST}`);
-	return esClient;
 };
 
-export type EsHits<T = {}> = {
+export type EsHits<T = Record<string, unknown>> = {
 	took: number;
 	timed_out: boolean;
 	_shards: {

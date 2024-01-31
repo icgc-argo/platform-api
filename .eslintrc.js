@@ -14,7 +14,7 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: 'latest',
 		extraFileExtensions: ['.json'],
-		project: ['./tsconfig.json'],
+		project: ['./tsconfig.json', './tsconfig.eslint.json'],
 	},
 	plugins: ['@typescript-eslint', 'prettier'],
 	root: true,
@@ -47,10 +47,10 @@ module.exports = {
 		'prettier/prettier': [
 			'error',
 			{
-				printWidth: 100,
-				trailingComma: 'all',
+				printWidth: 120,
 				semi: true,
 				singleQuote: true,
+				trailingComma: 'all',
 				useTabs: true,
 			},
 		],
