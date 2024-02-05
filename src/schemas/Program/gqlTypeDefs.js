@@ -77,7 +77,7 @@ export default gql`
 		email: String!
 		firstName: String!
 		lastName: String!
-		role: UserRole!
+		role: UserRole
 		isDacoApproved: Boolean
 		inviteStatus: InviteStatus
 		inviteAcceptedAt: String
