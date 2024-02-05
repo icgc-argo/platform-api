@@ -17,251 +17,17 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ApolloError, gql, UserInputError } from 'apollo-server-express';
+import typeDefs from './gqlTypeDefs';
+
 import { makeExecutableSchema } from 'graphql-tools';
 import { get, merge, pickBy } from 'lodash';
 
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
 
-const typeDefs = gql`
-	scalar DateTime
-
-	enum MembershipType {
-		FULL
-		ASSOCIATE
-	}
-
-	enum UserRole {
-		COLLABORATOR
-		ADMIN
-		CURATOR
-		SUBMITTER
-		BANNED
-	}
-
-	enum InviteStatus {
-		REVOKED
-		PENDING
-		ACCEPTED
-		EXPIRED
-	}
-
-	type JoinProgramInvite {
-		id: ID!
-		createdAt: DateTime!
-		expiresAt: DateTime!
-		acceptedAt: DateTime
-		program: Program!
-		user: ProgramUser!
-		emailSent: Boolean!
-		status: InviteStatus!
-	}
-
-	type Program {
-		shortName: String!
-		description: String
-		name: String
-		commitmentDonors: Int
-		submittedDonors: Int
-		genomicDonors: Int
-		website: String
-		institutions: [String]
-		countries: [String]
-		regions: [String]
-		cancerTypes: [String]
-		primarySites: [String]
-		dataCenter: DataCenter
-
-		membershipType: MembershipType
-
-		users: [ProgramUser]
-	}
-
-	type ProgramUser {
-		email: String!
-		firstName: String!
-		lastName: String!
-		role: UserRole!
-		isDacoApproved: Boolean
-		inviteStatus: InviteStatus
-		inviteAcceptedAt: String
-	}
-
-	type ProgramOptions {
-		cancerTypes: [String]!
-		primarySites: [String]!
-		institutions: [String]!
-		regions: [String]!
-		countries: [String]!
-	}
-
-	type DataCenter {
-		id: ID
-		shortName: String!
-		name: String
-		organization: String
-		email: String
-		uiUrl: String
-		gatewayUrl: String
-		analysisSongCode: String
-		analysisSongUrl: String
-		analysisScoreUrl: String
-		submissionSongCode: String
-		submissionSongUrl: String
-		submissionScoreUrl: String
-	}
-
-	input ProgramUserInput {
-		email: String!
-		firstName: String!
-		lastName: String!
-		role: UserRole!
-	}
-
-	input ProgramInput {
-		name: String!
-		shortName: String!
-		description: String
-		commitmentDonors: Int!
-		website: String!
-		institutions: [String!]!
-		countries: [String!]!
-		regions: [String!]!
-		cancerTypes: [String]!
-		primarySites: [String]!
-
-		membershipType: MembershipType!
-
-		admins: [ProgramUserInput!]!
-	}
-
-	input UpdateProgramInput {
-		# This intentionally does not provide access to submittedDonors or genomicDonors
-		# Those are maintained by an internal service and should not be updated by any client through the gateway
-		name: String
-		description: String
-		commitmentDonors: Int
-		website: String
-		institutions: [String]
-		countries: [String]
-		regions: [String]
-		cancerTypes: [String]
-		primarySites: [String]
-		membershipType: MembershipType
-	}
-
-	input InviteUserInput {
-		programShortName: String!
-		userFirstName: String!
-		userLastName: String!
-		userEmail: String!
-
-		userRole: UserRole!
-	}
-
-	input JoinProgramInput {
-		invitationId: ID!
-		institute: String!
-		piFirstName: String!
-		piLastName: String!
-		department: String!
-	}
-
-	type Query {
-		"""
-		retrieve Program data by id
-		"""
-		program(shortName: String!): Program
-
-		"""
-		retrieve all Programs
-		"""
-		programs(dataCenter: String): [Program]
-
-		"""
-		retrieve join program invitation by id
-		"""
-		joinProgramInvite(id: ID!): JoinProgramInvite
-
-		programOptions: ProgramOptions!
-
-		"""
-		retrieve all DataCenters
-		"""
-		dataCenters(shortName: String): [DataCenter]
-	}
-
-	type Mutation {
-		"""
-		Create new program
-		For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
-		Returns Program object details of created program
-		"""
-		createProgram(program: ProgramInput!): Program
-
-		"""
-		Update Program
-		Returns shortName of the program if succesfully updated
-		"""
-		updateProgram(shortName: String!, updates: UpdateProgramInput!): String
-
-		"""
-		Invite a user to join a program
-		Returns the email of the user if the invite is successfully sent
-		"""
-		inviteUser(invite: InviteUserInput!): String
-
-		"""
-		Join a program by accepting an invitation
-		Returns the user data
-		"""
-		joinProgram(join: JoinProgramInput!): ProgramUser
-
-		"""
-		Update a user's role in a prgoram
-		Returns the user data
-		"""
-		updateUser(userEmail: String!, programShortName: String!, userRole: UserRole!): Boolean
-
-		"""
-		Remove a user from a program
-		Returns message from server
-		"""
-		removeUser(userEmail: String!, programShortName: String!): String
-	}
-`;
-
 /* =========
 HTTP resolvers
  * ========= */
-const getIsoDate = (time) => (time ? new Date(parseInt(time) * 1000).toISOString() : null);
-
-const convertGrpcProgramToGql = (programDetails) => ({
-	name: get(programDetails, 'program.name.value'),
-	shortName: get(programDetails, 'program.short_name.value'),
-	description: get(programDetails, 'program.description.value'),
-	commitmentDonors: get(programDetails, 'program.commitment_donors.value'),
-	submittedDonors: get(programDetails, 'program.submitted_donors.value'),
-	genomicDonors: get(programDetails, 'program.genomic_donors.value'),
-	website: get(programDetails, 'program.website.value'),
-	institutions: get(programDetails, 'program.institutions', []),
-	countries: get(programDetails, 'program.countries', []),
-	regions: get(programDetails, 'program.regions', []),
-	cancerTypes: get(programDetails, 'program.cancer_types', []),
-	primarySites: get(programDetails, 'program.primary_sites', []),
-	membershipType: get(programDetails, 'program.membership_type.value'),
-});
-
-const convertGrpcUserToGql = (userDetails) => ({
-	email: get(userDetails, 'user.email.value'),
-	firstName: get(userDetails, 'user.first_name.value'),
-	lastName: get(userDetails, 'user.last_name.value'),
-	role: get(userDetails, 'user.role.value'),
-	isDacoApproved: get(userDetails, 'daco_approved.value'),
-	inviteStatus: get(userDetails, 'status.value'),
-	inviteAcceptedAt: getIsoDate(get(userDetails, 'accepted_at.seconds')),
-});
 
 const resolvePrivateProgramList = async (egoToken) => {
 	const response = await programService.listPrivatePrograms(egoToken);
@@ -292,45 +58,39 @@ const resolvers = {
 		cancerTypes: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listCancers(egoToken);
-			return get(response, 'cancers', [])
-				.map((cancerType) => cancerType.name.value)
-				.sort();
+			return response || null;
 		},
 		primarySites: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listPrimarySites(egoToken);
-			return get(response, 'primary_sites', [])
-				.map((site) => site.name.value)
-				.sort();
+			return response || null;
 		},
 		institutions: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listInstitutions(egoToken);
-			return get(response, 'institutions', [])
-				.map((institution) => institution.name.value)
-				.sort();
+			return response || null;
 		},
 		regions: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listRegions(egoToken);
-			return get(response, 'regions', [])
-				.map((region) => region.name.value)
-				.sort();
+			return response || null;
 		},
 		countries: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listCountries(egoToken);
-			return get(response, 'countries', [])
-				.map((country) => country.name.value)
-				.sort();
+			return response || null;
 		},
 	},
 	Program: {
 		users: async (program, args, context, info) => {
 			const { egoToken } = context;
-			const response = await programService.listUsers(program.shortName, egoToken);
-			const users = response ? get(response, 'userDetails', []).map(convertGrpcUserToGql) : null;
-			return users;
+			const users = await programService.listUsers(egoToken, program.shortName);
+			return users || null;
+		},
+		regions: async (program, args, context, info) => {
+			const { egoToken } = context;
+			const regions = await programService.listRegions(egoToken);
+			return regions || null;
 		},
 	},
 	Query: {
@@ -346,9 +106,11 @@ const resolvers = {
 				programServicePrivateFields.includes(field),
 			);
 
-			return hasPrivateField
-				? resolvePrivateSingleProgram(egoToken, shortName)
-				: resolvePublicSingleProgram(shortName);
+			const program = hasPrivateField
+			? await resolvePrivateSingleProgram(egoToken, shortName)
+			: await resolvePublicSingleProgram(shortName);
+
+			return program;
 		},
 
 		programs: async (obj, args, context) => {
@@ -365,8 +127,7 @@ const resolvers = {
 		},
 
 		joinProgramInvite: async (obj, args, context, info) => {
-			const { egoToken } = context;
-			const response = await programService.getJoinProgramInvite(egoToken, args.id);
+			const response = await programService.getJoinProgramInvite(args.id);
 			return response || null;
 		},
 		programOptions: () => ({}),
@@ -388,49 +149,59 @@ const resolvers = {
 				genomicDonors: 0,
 			};
 
-			try {
-				const createResponse = await programService.createProgram(program, egoToken);
-				return resolvePrivateSingleProgram(egoToken, program.shortName);
-			} catch (err) {
-				const GRPC_INVALID_ARGUMENT_ERROR_CODE = 3;
-				if (err.code === GRPC_INVALID_ARGUMENT_ERROR_CODE) {
-					//this just wraps it into standard apollo semantics
-					throw new UserInputError(err);
-				} else {
-					throw new ApolloError(err);
-				}
-			}
+			const createResponse = await programService.createProgram(program, egoToken);
+			return resolvePrivateSingleProgram(egoToken, program.shortName);
 		},
 
 		updateProgram: async (obj, args, context, info) => {
+			// extract information from query parameters
 			const { egoToken } = context;
 			const updates = pickBy(get(args, 'updates', {}), (v) => v !== undefined);
-			const shortName = get(args, 'shortName', {});
+			const programShortName = get(args, 'shortName', {});
+			const dataCenterShortName = args.updates.dataCenterShortName;
+			delete updates.dataCenterShortName;
 
+			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
+			const [dataCenterResponse] = await programService.listDataCenters(
+				dataCenterShortName,
+				egoToken,
+			);
+			const { id, shortName, name, uiUrl, gatewayUrl } = dataCenterResponse;
 			// // Update program takes the complete program object future state
-			const currentPorgramResponse = await programService.getProgram(shortName, egoToken);
-			const currentProgramDetails = convertGrpcProgramToGql(
-				get(currentPorgramResponse, 'program', {}),
+			const currentProgramResponse = await programService.getPrivateProgram(
+				egoToken,
+				programShortName,
 			);
 
-			const combinedUpdates = { ...currentProgramDetails, ...updates };
-
-			const response = await programService.updateProgram(shortName, combinedUpdates, egoToken);
-			return response === null ? null : get(args, 'shortName');
+			//prepare the payload for the fetch endpoint from the previous steps
+			const combinedUpdates = {
+				...currentProgramResponse,
+				...updates,
+				dataCenter: {
+					id,
+					shortName,
+					name,
+					uiUrl,
+					gatewayUrl,
+				},
+			};
+			//make a request to the PUT updateProgram endpoint with the formatted payload
+			const response = await programService.updateProgram(combinedUpdates, egoToken);
+			return response === null ? null : programShortName;
 		},
 
 		inviteUser: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const invite = get(args, 'invite', {});
 			const response = await programService.inviteUser(invite, egoToken);
-			return get(args, 'invite.userEmail');
+			return response || null;
 		},
 
 		joinProgram: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const joinProgramInput = get(args, 'join', {});
 			const response = await programService.joinProgram(joinProgramInput, egoToken);
-			return convertGrpcUserToGql(get(response, 'user'));
+			return response || null;
 		},
 
 		updateUser: async (obj, args, context, info) => {
@@ -438,16 +209,18 @@ const resolvers = {
 			const shortName = get(args, 'programShortName');
 			const role = get(args, 'userRole');
 			const userEmail = get(args, 'userEmail');
-			const response = await programService.updateUser(userEmail, shortName, role, egoToken);
+			const input = { shortName, role, userEmail };
+			const response = await programService.updateUser(input, egoToken);
 			return true;
 		},
 
 		removeUser: async (obj, args, context, info) => {
 			const { egoToken } = context;
-			const shortName = get(args, 'programShortName');
-			const email = get(args, 'userEmail');
-			const response = await programService.removeUser(email, shortName, egoToken);
-			return get(response, 'message.value', '');
+			const programShortName = get(args, 'programShortName');
+			const userEmail = get(args, 'userEmail');
+			const input = { programShortName, userEmail };
+			const response = await programService.removeUser(input, egoToken);
+			return get(response, 'message', '');
 		},
 	},
 };

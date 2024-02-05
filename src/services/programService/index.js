@@ -22,29 +22,28 @@
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 
-import * as grpc from './grpcClient.js';
 import * as http from './httpClient.js';
 
 export default {
 	getPrivateProgram: http.getPrivateProgram,
 	listPrivatePrograms: http.listPrivatePrograms,
 	getJoinProgramInvite: http.getJoinProgramInvite,
-	listUsers: grpc.listUsers,
+	listUsers: http.listUsers,
 
-	listCancers: grpc.listCancers,
-	listPrimarySites: grpc.listPrimarySites,
-	listRegions: grpc.listRegions,
-	listInstitutions: grpc.listInstitutions,
-	listCountries: grpc.listCountries,
+	listCancers: http.listCancers,
+	listPrimarySites: http.listPrimarySites,
+	listInstitutions: http.listInstitutions,
+	listRegions: http.listRegions,
+	listCountries: http.listCountries,
+	listDataCenters: http.listDataCenters,
 
-	createProgram: grpc.createProgram,
-	updateProgram: grpc.updateProgram,
+	createProgram: http.createProgram,
+	updateProgram: http.updateProgram,
 
-	inviteUser: grpc.inviteUser,
-	joinProgram: grpc.joinProgram,
-	updateUser: grpc.updateUser,
-	removeUser: grpc.removeUser,
+	inviteUser: http.inviteUser,
+	joinProgram: http.joinProgram,
+	updateUser: http.updateUser,
+	removeUser: http.removeUser,
 
 	getPublicProgram: http.getPublicProgram,
-	listDataCenters: http.listDataCenters,
 };

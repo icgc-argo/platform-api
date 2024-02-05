@@ -48,6 +48,9 @@ const formatPublicProgram = (program) => ({
 const formatPrivateProgram = (program) => program.program;
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
+const getDataCenterByShortName = (shortName, dataCenterResponse) =>
+	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
+
 const formatJoinProgramInvite = (invitation) => {
 	const formattedObj = {
 		...invitation,
@@ -71,8 +74,78 @@ const formatJoinProgramInvite = (invitation) => {
 	return formattedObj;
 };
 
-const getDataCenterByShortName = (shortName, dataCenterResponse) =>
-	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
+const formatUsersList = (usersList) =>
+	usersList.map((userItem) => ({
+		email: userItem.user.email,
+		firstName: userItem.user.firstName,
+		lastName: userItem.user.lastName,
+		role: userItem.user.role.value,
+		isDacoApproved: userItem.dacoApproved,
+		inviteStatus: userItem.status?.value,
+		inviteAcceptedAt: new Date(userItem.acceptedAt),
+	}));
+
+const formatCreateProgramInput = (programInput) => ({
+	program: {
+		short_name: programInput.shortName,
+		description: programInput.description,
+		name: programInput.name,
+		membership_type: { value: programInput.membershipType },
+		commitment_donors: programInput.commitmentDonors,
+		submitted_donors: programInput.submittedDonors,
+		genomic_donors: programInput.genomicDonors,
+		website: programInput.website,
+		cancer_types: programInput.cancerTypes,
+		primary_sites: programInput.primarySites,
+		institutions: programInput.institutions,
+		countries: programInput.countries,
+	},
+	admins: programInput.admins.map((admin) => ({
+		email: admin.email,
+		first_name: admin.firstName,
+		last_name: admin.lastName,
+		role: { value: admin.role },
+	})),
+});
+
+const formatInviteUserInput = (userInput) => ({
+	programShortName: userInput.programShortName,
+	firstName: userInput.userFirstName,
+	lastName: userInput.userLastName,
+	email: userInput.userEmail,
+	role: {
+		value: userInput.userRole,
+	},
+});
+
+const formatJoinProgramInput = (joinProgramInput) => ({
+	join_program_invitation_id: joinProgramInput.invitationId,
+	institute: joinProgramInput.institute,
+	affiliate_pi_first_name: joinProgramInput.piFirstName,
+	affiliate_pi_last_name: joinProgramInput.piLastName,
+	department: joinProgramInput.department,
+});
+
+const formatJoinProgramResponse = (joinProgramResponse) => ({
+	...joinProgramResponse.user,
+	role: joinProgramResponse.user.role.value,
+});
+
+const formatUpdateUserInput = (updateUserInput) => ({
+	shortName: updateUserInput.shortName,
+	userEmail: updateUserInput.userEmail,
+	role: { value: updateUserInput.role },
+});
+
+const formatDeleteUserInput = (deleteUserInput) => ({
+	programShortName: deleteUserInput.programShortName,
+	userEmail: deleteUserInput.userEmail,
+});
+
+//this data formatter is used on multiple lists, such as listCancers, listPrimarySites, listInstitutions, listCountries
+const formatAndSortMultipleLists = (cancersList) =>
+	cancersList.map((cancerItem) => cancerItem.name).sort();
+
 //private fields
 export const listPrivatePrograms = async (jwt = null) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
@@ -89,10 +162,10 @@ export const listPrivatePrograms = async (jwt = null) => {
 				return formatPrivateProgramList(data);
 			} else {
 				logger.error(
-					'Error: no data or wrong data type is returned from /programs. Data must be an array',
+					'Error: no data or wrong data type is returned from GET /programs. Data must be an array.',
 				);
 				throw new Error(
-					'no data or wrong data type is returned from /programs. Data must be an array',
+					'no data or wrong data type is returned from GET /programs. Data must be an array.',
 				);
 			}
 		});
@@ -112,14 +185,35 @@ export const getPrivateProgram = async (jwt = null, programShortName) => {
 			if (data) {
 				return formatPrivateProgram(data);
 			} else {
-				logger.error('Error: no data is returned from /program/{shortName}');
-				throw new Error('No data is returned from /program/{shortName}');
+				logger.error('Error: no data is returned from GET /program/{shortName}.');
+				throw new Error('No data is returned from GET /program/{shortName}.');
 			}
 		});
 };
 
-export const getJoinProgramInvite = async (jwt = null, id) => {
+export const getJoinProgramInvite = async (id) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/joinProgramInvite/${id}`);
+	return await fetch(url, {
+		method: 'get',
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.invitation) {
+				return formatJoinProgramInvite(data.invitation);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation".',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation".',
+				);
+			}
+		});
+};
+
+export const listUsers = async (jwt = null, programShortName) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `programs/users/${programShortName}`);
 	return await fetch(url, {
 		method: 'get',
 		headers: {
@@ -129,14 +223,132 @@ export const getJoinProgramInvite = async (jwt = null, id) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
-			if (data.invitation) {
-				return formatJoinProgramInvite(data.invitation);
+			if (data && Array.isArray(data)) {
+				return formatUsersList(data);
 			} else {
 				logger.error(
-					'Error: no data or wrong data type is returned from /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation"',
+					'Error: no data or wrong data type is returned from GET /programs/users/{shortName}. Data must be an array',
 				);
 				throw new Error(
-					'No data or wrong data type is returned from /programs/joinProgramInvite/{invite_id}. Data must be an object with a property of "invitation"',
+					'No data or wrong data type is returned from GET /programs/users/{shortName}. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const listCancers = async (jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/cancers`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/cancers. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/cancers. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const listInstitutions = async (jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/institutions`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/institutions. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/institutions. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const listPrimarySites = async (jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/primarySites`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/primarySites. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/primarySites. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const listRegions = async (jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/regions`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from /programs/regions. Data must be an array.',
+				);
+				throw new Error('Unable to retrieve regions data.');
+			}
+		});
+};
+
+export const listCountries = async (jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/countries`);
+	return await fetch(url, {
+		method: 'get',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+		},
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && Array.isArray(data)) {
+				return formatAndSortMultipleLists(data);
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from GET /programs/countries. Data must be an array.',
+				);
+				throw new Error(
+					'No data or wrong data type is returned from GET /programs/countries. Data must be an array.',
 				);
 			}
 		});
@@ -157,10 +369,137 @@ export const listDataCenters = async (shortName, jwt) => {
 				return shortName ? getDataCenterByShortName(shortName, data) : data;
 			} else {
 				logger.error(
-					'Error: no data or wrong data type is returned from /datacenters. Data must be an array',
+					'Error: no data or wrong data type is returned from GET /datacenters. Data must be an array.',
 				);
 				throw new Error(
-					'No data or wrong data type is returned from /datacenters. Data must be an array',
+					'No data or wrong data type is returned from GET /datacenters. Data must be an array.',
+				);
+			}
+		});
+};
+
+export const createProgram = async (programInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
+	const formattedProgram = formatCreateProgramInput(programInput);
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedProgram),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
+//need endpoint to do testing #TODO
+export const updateProgram = async (programInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs`);
+	return await fetch(url, {
+		method: 'PUT',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(programInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
+export const inviteUser = async (userInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
+	const formattedUserInput = formatInviteUserInput(userInput);
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.inviteId) {
+				return userInput.userEmail;
+			} else {
+				logger.error(
+					'Error: user invite is unsuccessful. POST /programs/users did not return anything. Ensure short name follow its format',
+				);
+				throw new Error(
+					'user invite is unsuccessful. POST /programs/users did not return anything. Ensure short name follow its format',
+				);
+			}
+		});
+};
+
+export const joinProgram = async (joinProgramInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/join`);
+	const formattedJoinProgramInput = formatJoinProgramInput(joinProgramInput);
+	return await fetch(url, {
+		method: 'POST',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedJoinProgramInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data && data.user) {
+				console.log('FETCH DATA!', data);
+				return formatJoinProgramResponse(data);
+			} else {
+				logger.error(
+					'Error: join program is unsuccessful. POST /programs/join did not return anything or did not return an object with a user property.',
+				);
+				throw new Error(
+					'user invite is unsuccessful. POST /programs/join did not return anything or did not return an object with a user property.',
+				);
+			}
+		});
+};
+
+export const updateUser = async (updateUserInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
+	const formattedUpdateUserInput = formatUpdateUserInput(updateUserInput);
+	return await fetch(url, {
+		method: 'PUT',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedUpdateUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.body);
+};
+
+export const removeUser = async (deleteUserInput, jwt = null) => {
+	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/users`);
+	const formattedDeleteUserInput = formatDeleteUserInput(deleteUserInput);
+	return await fetch(url, {
+		method: 'DELETE',
+		headers: {
+			Authorization: authorizationHeader(jwt),
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formattedDeleteUserInput),
+	})
+		.then(restErrorResponseHandler)
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.message) {
+				return data;
+			} else {
+				logger.error(
+					'Error: no data or wrong data type is returned from DELETE /programs/users. Data must be an object with a property of "message". No message is returned from the endpoint.',
+				);
+				throw new Error(
+					'no data or wrong data type is returned from DELETE /programs/users. Data must be an object with a property of "message". No message is returned from the endpoint.',
 				);
 			}
 		});
