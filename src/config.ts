@@ -47,7 +47,6 @@ export const ARRANGER_PROJECT_ID = process.env.ARRANGER_PROJECT_ID || 'argo';
 
 // Ego config
 export const EGO_ROOT_REST = process.env.EGO_ROOT_REST || 'http://localhost:8081';
-export const EGO_ROOT_GRPC = process.env.EGO_ROOT_GRPC || 'localhost:50051';
 export const EGO_DACO_POLICY_NAME = process.env.EGO_DACO_POLICY_NAME || 'DACO';
 export const EGO_VAULT_SECRET_PATH = process.env.EGO_VAULT_SECRET_PATH || 'Missing env variable EGO_VAULT_SECRET_PATH';
 export const EGO_CLIENT_ID = process.env.EGO_CLIENT_ID;

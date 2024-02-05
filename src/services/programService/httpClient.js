@@ -18,7 +18,7 @@
  */
 
 /*
- * This file dynamically generates a gRPC client from Ego.proto.
+ * This file dynamically generates an HTTP client from Ego.proto.
  * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
  */
 

@@ -18,7 +18,7 @@
  */
 
 /*
- * This file dynamically generates a gRPC client from Ego.proto.
+ * This file dynamically generates an HTTP client from Ego.proto.
  * The content of Ego.proto is copied directly from: https://github.com/overture-stack/ego/blob/develop/src/main/proto/Ego.proto
  */
 import memoize from 'lodash/memoize';
