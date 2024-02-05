@@ -74,10 +74,10 @@ export default gql`
 	}
 
 	type ProgramUser {
-		email: String
-		firstName: String
-		lastName: String
-		role: UserRole
+		email: String!
+		firstName: String!
+		lastName: String!
+		role: UserRole!
 		isDacoApproved: Boolean
 		inviteStatus: InviteStatus
 		inviteAcceptedAt: String
