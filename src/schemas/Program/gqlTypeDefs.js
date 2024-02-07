@@ -150,7 +150,6 @@ export default gql`
 		cancerTypes: [String]
 		primarySites: [String]
 		membershipType: MembershipType
-		dataCenterShortName: String
 	}
 
 	input InviteUserInput {
@@ -206,7 +205,7 @@ export default gql`
 		Update Program
 		Returns shortName of the program if succesfully updated
 		"""
-		updateProgram(shortName: String!, updates: UpdateProgramInput!): String
+		updateProgram(shortName: String!, dataCenterShortName: String, updates: UpdateProgramInput!): String
 
 		"""
 		Invite a user to join a program

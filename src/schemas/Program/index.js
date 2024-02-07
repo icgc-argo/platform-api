@@ -17,10 +17,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import typeDefs from './gqlTypeDefs';
-
 import { makeExecutableSchema } from 'graphql-tools';
-import { get, merge, pickBy } from 'lodash';
+import { get, merge, pick } from 'lodash';
+import typeDefs from './gqlTypeDefs';
 
 import customScalars from 'schemas/customScalars';
 import programService from 'services/programService';
@@ -102,13 +101,11 @@ const resolvers = {
 			const { shortName } = args;
 
 			//create a condition to determine using either public or private endpoint
-			const hasPrivateField = requestedFields.some((field) =>
-				programServicePrivateFields.includes(field),
-			);
+			const hasPrivateField = requestedFields.some((field) => programServicePrivateFields.includes(field));
 
 			const program = hasPrivateField
-			? await resolvePrivateSingleProgram(egoToken, shortName)
-			: await resolvePublicSingleProgram(shortName);
+				? await resolvePrivateSingleProgram(egoToken, shortName)
+				: await resolvePublicSingleProgram(shortName);
 
 			return program;
 		},
@@ -156,35 +153,29 @@ const resolvers = {
 		updateProgram: async (obj, args, context, info) => {
 			// extract information from query parameters
 			const { egoToken } = context;
-			const updates = pickBy(get(args, 'updates', {}), (v) => v !== undefined);
-			const programShortName = get(args, 'shortName', {});
-			const dataCenterShortName = args.updates.dataCenterShortName;
-			delete updates.dataCenterShortName;
+			const { shortName: programShortName, dataCenterShortName } = args;
+			const updates = args.updates;
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
-			const [dataCenterResponse] = await programService.listDataCenters(
-				dataCenterShortName,
-				egoToken,
-			);
-			const { id, shortName, name, uiUrl, gatewayUrl } = dataCenterResponse;
+			const dataCenterResponse = dataCenterShortName
+				? await programService.listDataCenters(dataCenterShortName, egoToken)
+				: undefined;
+
+			const dataCenter =
+				dataCenterResponse && Array.isArray(dataCenterResponse)
+					? pick(dataCenterResponse[0], ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
+					: {};
+
 			// // Update program takes the complete program object future state
-			const currentProgramResponse = await programService.getPrivateProgram(
-				egoToken,
-				programShortName,
-			);
+			const currentProgramResponse = await programService.getPrivateProgram(egoToken, programShortName);
 
 			//prepare the payload for the fetch endpoint from the previous steps
 			const combinedUpdates = {
 				...currentProgramResponse,
 				...updates,
-				dataCenter: {
-					id,
-					shortName,
-					name,
-					uiUrl,
-					gatewayUrl,
-				},
+				dataCenter,
 			};
+
 			//make a request to the PUT updateProgram endpoint with the formatted payload
 			const response = await programService.updateProgram(combinedUpdates, egoToken);
 			return response === null ? null : programShortName;
