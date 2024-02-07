@@ -69,11 +69,6 @@ const resolvers = {
 			const response = await programService.listInstitutions(egoToken);
 			return response || null;
 		},
-		regions: async (constants, args, context, info) => {
-			const { egoToken } = context;
-			const response = await programService.listRegions(egoToken);
-			return response || null;
-		},
 		countries: async (constants, args, context, info) => {
 			const { egoToken } = context;
 			const response = await programService.listCountries(egoToken);
@@ -85,11 +80,6 @@ const resolvers = {
 			const { egoToken } = context;
 			const users = await programService.listUsers(egoToken, program.shortName);
 			return users || null;
-		},
-		regions: async (program, args, context, info) => {
-			const { egoToken } = context;
-			const regions = await programService.listRegions(egoToken);
-			return regions || null;
 		},
 	},
 	Query: {

@@ -63,7 +63,6 @@ export default gql`
 		website: String
 		institutions: [String]
 		countries: [String]
-		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
 		dataCenter: DataCenter
@@ -87,7 +86,6 @@ export default gql`
 		cancerTypes: [String]!
 		primarySites: [String]!
 		institutions: [String]!
-		regions: [String]!
 		countries: [String]!
 	}
 
