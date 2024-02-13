@@ -35,7 +35,6 @@ const formatPublicProgram = (program) => ({
 	website: program.website,
 	institutions: program.programInstitutions?.map((institution) => institution.name) || [],
 	countries: program.programCountries?.map((country) => country.name) || [],
-	regions: program.processingRegions?.map((region) => region.name) || [],
 	cancerTypes: program.programCancers?.map((cancer) => cancer.name) || [],
 	primarySites: program.programPrimarySites?.map((primarySite) => primarySite.name) || [],
 });
@@ -296,26 +295,6 @@ export const listPrimarySites = async (jwt = null) => {
 		});
 };
 
-export const listRegions = async (jwt = null) => {
-	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/regions`);
-	return await fetch(url, {
-		method: 'get',
-		headers: {
-			Authorization: authorizationHeader(jwt),
-		},
-	})
-		.then(restErrorResponseHandler)
-		.then((response) => response.json())
-		.then((data) => {
-			if (data && Array.isArray(data)) {
-				return formatAndSortMultipleLists(data);
-			} else {
-				logger.error('Error: no data or wrong data type is returned from /programs/regions. Data must be an array.');
-				throw new Error('Unable to retrieve regions data.');
-			}
-		});
-};
-
 export const listCountries = async (jwt = null) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/programs/countries`);
 	return await fetch(url, {
@@ -504,7 +483,6 @@ export default {
 	listCancers,
 	listPrimarySites,
 	listInstitutions,
-	listRegions,
 	listCountries,
 	listDataCenters,
 	createProgram,

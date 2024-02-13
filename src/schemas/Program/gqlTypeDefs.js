@@ -63,7 +63,6 @@ export default gql`
 		website: String
 		institutions: [String]
 		countries: [String]
-		regions: [String]
 		cancerTypes: [String]
 		primarySites: [String]
 		dataCenter: DataCenter
@@ -87,7 +86,6 @@ export default gql`
 		cancerTypes: [String]!
 		primarySites: [String]!
 		institutions: [String]!
-		regions: [String]!
 		countries: [String]!
 	}
 
@@ -196,7 +194,7 @@ export default gql`
 	type Mutation {
 		"""
 		Create new program
-		For lists (Cancer Type, Primary Site, Institution, Regions, Countries) the entire new value must be provided, not just values being added.
+		For lists (Cancer Type, Primary Site, Institution, Countries) the entire new value must be provided, not just values being added.
 		Returns Program object details of created program
 		"""
 		createProgram(program: ProgramInput!): Program
