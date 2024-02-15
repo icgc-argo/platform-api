@@ -117,7 +117,12 @@ const resolvers = {
 			const response = await programService.getJoinProgramInvite(args.id);
 			return response || null;
 		},
-		programOptions: () => ({}),
+		programOptions: async (obj, args, context, info) => {
+			const { egoToken } = context;
+			const shortName = get(args, 'shortName', null);
+			const dataCenters = await programService.listDataCenters(shortName, egoToken);
+			return { dataCenters } || null;
+		},
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const shortName = get(args, 'shortName', null);

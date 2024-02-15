@@ -87,6 +87,7 @@ export default gql`
 		primarySites: [String]!
 		institutions: [String]!
 		countries: [String]!
+		dataCenters: [DataCenter]!
 	}
 
 	type DataCenter {
