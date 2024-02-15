@@ -128,12 +128,10 @@ export default gql`
 		website: String!
 		institutions: [String!]!
 		countries: [String!]!
-
+		dataCenter: String
 		cancerTypes: [String]!
 		primarySites: [String]!
-
 		membershipType: MembershipType!
-
 		admins: [ProgramUserInput!]!
 	}
 
@@ -146,6 +144,7 @@ export default gql`
 		website: String
 		institutions: [String]
 		countries: [String]
+		dataCenter: String
 		cancerTypes: [String]
 		primarySites: [String]
 		membershipType: MembershipType
@@ -156,7 +155,6 @@ export default gql`
 		userFirstName: String!
 		userLastName: String!
 		userEmail: String!
-
 		userRole: UserRole!
 	}
 
