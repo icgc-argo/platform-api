@@ -202,7 +202,7 @@ export default gql`
 		Update Program
 		Returns shortName of the program if succesfully updated
 		"""
-		updateProgram(shortName: String!, dataCenterShortName: String, updates: UpdateProgramInput!): String
+		updateProgram(shortName: String!, updates: UpdateProgramInput!): String
 
 		"""
 		Invite a user to join a program
