@@ -128,7 +128,7 @@ export default gql`
 		website: String!
 		institutions: [String!]!
 		countries: [String!]!
-		dataCenter: String
+		dataCenter: String!
 		cancerTypes: [String]!
 		primarySites: [String]!
 		membershipType: MembershipType!
