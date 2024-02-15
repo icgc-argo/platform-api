@@ -74,6 +74,9 @@ const resolvers = {
 			const response = await programService.listCountries(egoToken);
 			return response || null;
 		},
+		dataCenters: async (obj, args, context, info) => {
+			return resolvers.Query.dataCenters(obj, args, context, info) || null;
+		},
 	},
 	Program: {
 		users: async (program, args, context, info) => {
@@ -117,12 +120,7 @@ const resolvers = {
 			const response = await programService.getJoinProgramInvite(args.id);
 			return response || null;
 		},
-		programOptions: async (obj, args, context, info) => {
-			const { egoToken } = context;
-			const shortName = get(args, 'shortName', null);
-			const dataCenters = await programService.listDataCenters(shortName, egoToken);
-			return { dataCenters } || null;
-		},
+		programOptions: () => ({}),
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const shortName = get(args, 'shortName', null);
