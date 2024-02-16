@@ -94,6 +94,7 @@ const formatCreateProgramInput = (programInput) => ({
 		institutions: programInput.institutions,
 		countries: programInput.countries,
 	},
+	dataCenterId: programInput.dataCenter,
 	admins: programInput.admins.map((admin) => ({
 		email: admin.email,
 		first_name: admin.firstName,
