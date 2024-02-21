@@ -74,6 +74,9 @@ const resolvers = {
 			const response = await programService.listCountries(egoToken);
 			return response || null;
 		},
+		dataCenters: async (obj, args, context, info) => {
+			return resolvers.Query.dataCenters(obj, args, context, info) || null;
+		},
 	},
 	Program: {
 		users: async (program, args, context, info) => {
@@ -147,8 +150,8 @@ const resolvers = {
 			const updates = args.updates;
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
-			const dataCenterResponse = dataCenterShortName
-				? await programService.listDataCenters(dataCenterShortName, egoToken)
+			const dataCenterResponse = updates.dataCenter
+				? await programService.listDataCenters(updates.dataCenter, egoToken)
 				: undefined;
 
 			const dataCenter =

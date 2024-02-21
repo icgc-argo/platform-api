@@ -87,6 +87,7 @@ export default gql`
 		primarySites: [String]!
 		institutions: [String]!
 		countries: [String]!
+		dataCenters: [DataCenter]!
 	}
 
 	type DataCenter {
@@ -127,12 +128,10 @@ export default gql`
 		website: String!
 		institutions: [String!]!
 		countries: [String!]!
-
+		dataCenter: String!
 		cancerTypes: [String]!
 		primarySites: [String]!
-
 		membershipType: MembershipType!
-
 		admins: [ProgramUserInput!]!
 	}
 
@@ -145,6 +144,7 @@ export default gql`
 		website: String
 		institutions: [String]
 		countries: [String]
+		dataCenter: String
 		cancerTypes: [String]
 		primarySites: [String]
 		membershipType: MembershipType
@@ -155,7 +155,6 @@ export default gql`
 		userFirstName: String!
 		userLastName: String!
 		userEmail: String!
-
 		userRole: UserRole!
 	}
 
@@ -203,7 +202,7 @@ export default gql`
 		Update Program
 		Returns shortName of the program if succesfully updated
 		"""
-		updateProgram(shortName: String!, dataCenterShortName: String, updates: UpdateProgramInput!): String
+		updateProgram(shortName: String!, updates: UpdateProgramInput!): String
 
 		"""
 		Invite a user to join a program
