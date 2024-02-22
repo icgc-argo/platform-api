@@ -172,7 +172,7 @@ const resolvers = {
 			//make a request to the PUT updateProgram endpoint with the formatted payload
 			const response = await programService.updateProgram(combinedUpdates, egoToken);
 
-			return response === 200 ? programShortName : null;
+			return response ? programShortName : null;
 		},
 
 		inviteUser: async (obj, args, context, info) => {

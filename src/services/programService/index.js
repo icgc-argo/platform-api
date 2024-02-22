@@ -46,7 +46,7 @@ const getDataCenterByShortName = (shortName, dataCenterResponse) =>
 	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
 
 const getDataCenterById = (id, dataCenterResponse) =>
-	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.id === id);
+	dataCenterResponse.find((dataCenterObject) => dataCenterObject.id === id);
 
 const formatJoinProgramInvite = (invitation) => {
 	const formattedObj = {
@@ -332,7 +332,7 @@ export const listDataCenters = async (shortName, jwt, id) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
-			if (data && Array.isArray(data)) {
+			if (Array.isArray(data)) {
 				if (shortName) {
 					return getDataCenterByShortName(shortName, data);
 				} else if (id) {
@@ -373,7 +373,7 @@ export const updateProgram = async (programInput, jwt = null) => {
 		body: JSON.stringify(programInput),
 	})
 		.then(restErrorResponseHandler)
-		.then((response) => response.status);
+		.then((response) => response.body);
 };
 
 export const inviteUser = async (userInput, jwt = null) => {
