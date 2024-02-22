@@ -146,12 +146,12 @@ const resolvers = {
 		updateProgram: async (obj, args, context, info) => {
 			// extract information from query parameters
 			const { egoToken } = context;
-			const { shortName: programShortName, dataCenterShortName } = args;
+			const { shortName: programShortName } = args;
 			const updates = args.updates;
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
 			const dataCenterResponse = updates.dataCenter
-				? await programService.listDataCenters(updates.dataCenter, egoToken)
+				? await programService.listDataCenters(undefined, egoToken, updates.dataCenter)
 				: undefined;
 
 			const dataCenter =
@@ -171,7 +171,8 @@ const resolvers = {
 
 			//make a request to the PUT updateProgram endpoint with the formatted payload
 			const response = await programService.updateProgram(combinedUpdates, egoToken);
-			return response === null ? null : programShortName;
+
+			return response === 200 ? programShortName : null;
 		},
 
 		inviteUser: async (obj, args, context, info) => {
