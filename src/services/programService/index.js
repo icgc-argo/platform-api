@@ -321,7 +321,7 @@ export const listCountries = async (jwt = null) => {
 		});
 };
 
-export const listDataCenters = async (shortName, jwt, id) => {
+export const listDataCenters = async (jwt) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
 	return await fetch(url, {
 		method: 'get',
@@ -333,11 +333,6 @@ export const listDataCenters = async (shortName, jwt, id) => {
 		.then((response) => response.json())
 		.then((data) => {
 			if (Array.isArray(data)) {
-				if (shortName) {
-					return getDataCenterByShortName(shortName, data);
-				} else if (id) {
-					return getDataCenterById(id, data);
-				}
 				return data;
 			} else {
 				logger.error('Error: no data or wrong data type is returned from GET /datacenters. Data must be an array.');
@@ -494,6 +489,8 @@ export default {
 	listInstitutions,
 	listCountries,
 	listDataCenters,
+	getDataCenterByShortName,
+	getDataCenterById,
 	createProgram,
 	updateProgram,
 	inviteUser,

@@ -124,8 +124,11 @@ const resolvers = {
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const shortName = get(args, 'shortName', null);
-			const response = await programService.listDataCenters(shortName, egoToken);
-			return response || null;
+			const response = await programService.listDataCenters(egoToken).then((data) => {
+				return shortName ? programService.getDataCenterByShortName(shortName, data) : data;
+			});
+
+			return response ? response : null;
 		},
 	},
 	Mutation: {
@@ -151,13 +154,14 @@ const resolvers = {
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
 			const dataCenterResponse = updates.dataCenter
-				? await programService.listDataCenters(undefined, egoToken, updates.dataCenter)
+				? await programService
+						.listDataCenters(egoToken)
+						.then((data) => programService.getDataCenterById(updates.dataCenter, data))
 				: undefined;
 
-			const dataCenter =
-				dataCenterResponse && Array.isArray(dataCenterResponse)
-					? pick(dataCenterResponse[0], ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
-					: {};
+			const dataCenter = dataCenterResponse
+				? pick(dataCenterResponse, ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
+				: {};
 
 			// // Update program takes the complete program object future state
 			const currentProgramResponse = await programService.getPrivateProgram(egoToken, programShortName);
