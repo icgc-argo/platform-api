@@ -43,7 +43,7 @@ const formatPrivateProgram = (program) => program.program;
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
 const getDataCenterByShortName = (shortName, dataCenterResponse) =>
-	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
+	dataCenterResponse.find((dataCenterObject) => dataCenterObject.shortName === shortName);
 
 const getDataCenterById = (id, dataCenterResponse) =>
 	dataCenterResponse.find((dataCenterObject) => dataCenterObject.id === id);
