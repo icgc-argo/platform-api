@@ -321,7 +321,12 @@ export const listCountries = async (jwt = null) => {
 		});
 };
 
-export const listDataCenters = async (jwt) => {
+/**
+ * - change this to be internal (remove export)
+ *
+ * - kept as it's own function because it's nicely encapsulated
+ */
+const listDataCenters = async (jwt) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
 	return await fetch(url, {
 		method: 'get',
@@ -339,6 +344,18 @@ export const listDataCenters = async (jwt) => {
 				throw new Error('No data or wrong data type is returned from GET /datacenters. Data must be an array.');
 			}
 		});
+};
+
+/**
+ * - export a lighter function that does one thing and one thing well
+ *
+ * - it's still readable what it does by it's name
+ *
+ * - calls `listDataCenters` internally so there's no need for promise chain higher up
+ */
+export const getDataCenterByShortNameFunc = async (shortName, jwt) => {
+	const centers = await listDataCenters(jwt);
+	return centers.find((dataCenterObject) => dataCenterObject.shortName === shortName);
 };
 
 export const createProgram = async (programInput, jwt = null) => {

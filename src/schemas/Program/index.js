@@ -124,9 +124,32 @@ const resolvers = {
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const shortName = get(args, 'shortName', null);
-			const response = await programService.listDataCenters(egoToken).then((data) => {
-				return shortName ? programService.getDataCenterByShortName(shortName, data) : data;
-			});
+
+			// Previous code:
+			// const response = await programService.listDataCenters(egoToken).then((data) => {
+			// 	return shortName ? programService.getDataCenterByShortName(shortName, data) : data;
+			// });
+
+			/**
+			 * - param handling - early return if user input is bad, no need to call deeper functionality
+			 * - no need to have it nested in a promise chain where it's hard to handle (eg. what if you wanted to throw a specific error)
+			 */
+			if (!shortName) {
+				return error('No short name provided');
+			}
+
+			/**
+			 * - only call programService if we have correct input
+			 *
+			 * - everything we need from this function can be passed in as params
+			 *
+			 * - simplify - we don't need to use the anon function scope here "async (obj, args, context, info) => {...}"
+			 * and we can handle finding the data center in the returned array internally in program service
+			 *
+			 * - where it differs from the original code is that here we're calling one specific function to do one thing
+			 * instead of calling a confusing function to do multiple things based on inputs
+			 */
+			const response = await programService.getDataCenterByShortName(shortName, egoToken);
 
 			return response ? response : null;
 		},
