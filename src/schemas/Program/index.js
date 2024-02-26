@@ -149,7 +149,7 @@ const resolvers = {
 			 * - where it differs from the original code is that here we're calling one specific function to do one thing
 			 * instead of calling a confusing function to do multiple things based on inputs
 			 */
-			const response = await programService.getDataCenterByShortName(shortName, egoToken);
+			const response = await programService.getDataCenterByShortNameFunc(shortName, egoToken);
 
 			return response ? response : null;
 		},
