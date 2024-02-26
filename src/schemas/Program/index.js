@@ -124,8 +124,11 @@ const resolvers = {
 		dataCenters: async (obj, args, context, info) => {
 			const { egoToken } = context;
 			const shortName = get(args, 'shortName', null);
-			const response = await programService.listDataCenters(shortName, egoToken);
-			return response || null;
+			const response = await programService.listDataCenters(egoToken).then((data) => {
+				return shortName ? programService.getDataCenterByShortName(shortName, data) : data;
+			});
+
+			return response ? response : null;
 		},
 	},
 	Mutation: {
@@ -146,18 +149,19 @@ const resolvers = {
 		updateProgram: async (obj, args, context, info) => {
 			// extract information from query parameters
 			const { egoToken } = context;
-			const { shortName: programShortName, dataCenterShortName } = args;
+			const { shortName: programShortName } = args;
 			const updates = args.updates;
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
-			const dataCenterResponse = updates.dataCenter
-				? await programService.listDataCenters(updates.dataCenter, egoToken)
+			const dataCenters = await programService.listDataCenters(egoToken);
+
+			const relatedDataCenter = updates.dataCenter
+				? programService.getDataCenterById(updates.dataCenter, dataCenters)
 				: undefined;
 
-			const dataCenter =
-				dataCenterResponse && Array.isArray(dataCenterResponse)
-					? pick(dataCenterResponse[0], ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
-					: {};
+			const dataCenter = relatedDataCenter
+				? pick(relatedDataCenter, ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
+				: {};
 
 			// // Update program takes the complete program object future state
 			const currentProgramResponse = await programService.getPrivateProgram(egoToken, programShortName);
@@ -171,7 +175,8 @@ const resolvers = {
 
 			//make a request to the PUT updateProgram endpoint with the formatted payload
 			const response = await programService.updateProgram(combinedUpdates, egoToken);
-			return response === null ? null : programShortName;
+
+			return response ? programShortName : null;
 		},
 
 		inviteUser: async (obj, args, context, info) => {

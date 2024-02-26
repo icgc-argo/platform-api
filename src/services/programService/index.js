@@ -43,7 +43,10 @@ const formatPrivateProgram = (program) => program.program;
 const formatPrivateProgramList = (programList) => programList.map(formatPrivateProgram);
 
 const getDataCenterByShortName = (shortName, dataCenterResponse) =>
-	dataCenterResponse.filter((dataCenterObject) => dataCenterObject.shortName === shortName);
+	dataCenterResponse.find((dataCenterObject) => dataCenterObject.shortName === shortName);
+
+const getDataCenterById = (id, dataCenterResponse) =>
+	dataCenterResponse.find((dataCenterObject) => dataCenterObject.id === id);
 
 const formatJoinProgramInvite = (invitation) => {
 	const formattedObj = {
@@ -318,7 +321,7 @@ export const listCountries = async (jwt = null) => {
 		});
 };
 
-export const listDataCenters = async (shortName, jwt) => {
+export const listDataCenters = async (jwt) => {
 	const url = urljoin(PROGRAM_SERVICE_HTTP_ROOT, `/datacenters`);
 	return await fetch(url, {
 		method: 'get',
@@ -329,8 +332,8 @@ export const listDataCenters = async (shortName, jwt) => {
 		.then(restErrorResponseHandler)
 		.then((response) => response.json())
 		.then((data) => {
-			if (data && Array.isArray(data)) {
-				return shortName ? getDataCenterByShortName(shortName, data) : data;
+			if (Array.isArray(data)) {
+				return data;
 			} else {
 				logger.error('Error: no data or wrong data type is returned from GET /datacenters. Data must be an array.');
 				throw new Error('No data or wrong data type is returned from GET /datacenters. Data must be an array.');
@@ -486,6 +489,8 @@ export default {
 	listInstitutions,
 	listCountries,
 	listDataCenters,
+	getDataCenterByShortName,
+	getDataCenterById,
 	createProgram,
 	updateProgram,
 	inviteUser,
