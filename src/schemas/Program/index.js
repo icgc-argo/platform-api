@@ -153,14 +153,14 @@ const resolvers = {
 			const updates = args.updates;
 
 			//make a request to get dataCenter data using dataCenterShortName (from query paramenter, updates) and format response
-			const dataCenterResponse = updates.dataCenter
-				? await programService
-						.listDataCenters(egoToken)
-						.then((data) => programService.getDataCenterById(updates.dataCenter, data))
+			const dataCenters = await programService.listDataCenters(egoToken);
+
+			const relatedDataCenter = updates.dataCenter
+				? programService.getDataCenterById(updates.dataCenter, dataCenters)
 				: undefined;
 
-			const dataCenter = dataCenterResponse
-				? pick(dataCenterResponse, ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
+			const dataCenter = relatedDataCenter
+				? pick(relatedDataCenter, ['id', 'shortName', 'name', 'uiUrl', 'gatewayUrl'])
 				: {};
 
 			// // Update program takes the complete program object future state
