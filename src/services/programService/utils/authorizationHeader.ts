@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,12 +17,21 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This file dynamically generates a gRPC client from Ego.proto.
- * The content of Ego.proto is copied directly from: https://github.com/icgc-argo/argo-proto/blob/4e2aeda59eb48b7af20b462aef2f04ef5d0d6e7c/ProgramService.proto
+/**
+ * Format JWT as Bearer Token for Authorization header.
+ * @param {string} jwt
+ * @returns {string}
+ *
+ * @example
+ * ```
+ * await fetch(url, {
+ * 	method: 'get',
+ * 	headers: {
+ * 		Authorization: authorizationHeader(jwt),
+ * 	},
+ * })
+ * ```
  */
-
-// Create a function that return this repetitive string template in the fecth header
 const authorizationHeader = (jwt: string) => `Bearer ${jwt}`;
 
 export default authorizationHeader;

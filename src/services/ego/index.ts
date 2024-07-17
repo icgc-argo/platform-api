@@ -17,10 +17,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * This file dynamically generates a gRPC client from Ego.proto.
- * The content of Ego.proto is copied directly from: https://github.com/overture-stack/ego/blob/develop/src/main/proto/Ego.proto
- */
 import memoize from 'lodash/memoize';
 import fetch from 'node-fetch';
 import urlJoin from 'url-join';
@@ -74,10 +70,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 		issueDate: string;
 	};
 
-	const getEgoAccessKeys = async (
-		userId: string,
-		Authorization: string,
-	): Promise<EgoAccessKeyObj[]> => {
+	const getEgoAccessKeys = async (userId: string, Authorization: string): Promise<EgoAccessKeyObj[]> => {
 		const firstResponse = await fetch(urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}`), {
 			headers: { Authorization },
 		})
@@ -108,10 +101,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 		scopes: string[],
 		Authorization: string,
 	): Promise<EgoAccessKeyObj> => {
-		const url = urlJoin(
-			EGO_API_KEY_ENDPOINT,
-			`?user_id=${userId}&scopes=${encodeURIComponent(scopes.join())}`,
-		);
+		const url = urlJoin(EGO_API_KEY_ENDPOINT, `?user_id=${userId}&scopes=${encodeURIComponent(scopes.join())}`);
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: { Authorization },
@@ -121,10 +111,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 		return response;
 	};
 
-	const getScopes = async (
-		userId: string,
-		Authorization: string,
-	): Promise<{ scopes: string[] }> => {
+	const getScopes = async (userId: string, Authorization: string): Promise<{ scopes: string[] }> => {
 		const url = `${EGO_ROOT_REST}/o/scopes?userId=${userId}`;
 		const response = await fetch(url, {
 			method: 'get',
@@ -184,9 +171,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 							resultSet: { name: string; id: string }[];
 						}>,
 				)
-				.then(({ resultSet = [] }) =>
-					resultSet.filter((data) => data.name === EGO_DACO_POLICY_NAME),
-				)
+				.then(({ resultSet = [] }) => resultSet.filter((data) => data.name === EGO_DACO_POLICY_NAME))
 				.then((group) => {
 					if (group.length === 0) {
 						throw new Error('DACO group id not found');
@@ -219,9 +204,7 @@ const createEgoClient = (applicationCredential: EgoApplicationCredential) => {
 	const isAuthError = (resp: EgoAccessToken | EgoAccessTokenError): resp is EgoAccessTokenError =>
 		(resp as EgoAccessTokenError).error !== undefined;
 
-	const getApplicationJwt = async (
-		applicationCredentials: EgoApplicationCredential,
-	): Promise<string> => {
+	const getApplicationJwt = async (applicationCredentials: EgoApplicationCredential): Promise<string> => {
 		const url = urlJoin(
 			EGO_ROOT_REST,
 			`/oauth/token?client_id=${applicationCredentials.clientId}&client_secret=${applicationCredentials.clientSecret}&grant_type=client_credentials`,

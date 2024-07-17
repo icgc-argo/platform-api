@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2024 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,11 +17,13 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import vault, { VaultOptions } from 'node-vault';
-import { VAULT_URL, VAULT_ROLE, VAULT_TOKEN, VAULT_AUTH_METHOD } from 'config';
 import { promises } from 'fs';
+
 import memoize from 'lodash/memoize';
-import logger from 'utils/logger';
+import vault, { VaultOptions } from 'node-vault';
+
+import { VAULT_AUTH_METHOD, VAULT_ROLE, VAULT_TOKEN, VAULT_URL } from '@/config';
+import logger from '@/utils/logger';
 
 /**
  * Memoized client factory for a singleton Vault client
@@ -35,10 +37,11 @@ export const createVaultClient = memoize(async (vaultOptions: VaultOptions = {})
 	};
 	const vaultClient = vault(options);
 
+	logger.debug(`VAULT_AUTH_METHOD: ${VAULT_AUTH_METHOD}`);
+
 	if (VAULT_AUTH_METHOD === 'kubernetes') {
 		const k8Token =
-			VAULT_TOKEN ||
-			(await promises.readFile('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf-8'));
+			VAULT_TOKEN || (await promises.readFile('/var/run/secrets/kubernetes.io/serviceaccount/token', 'utf-8'));
 		await vaultClient.kubernetesLogin({
 			role: VAULT_ROLE,
 			jwt: k8Token,
@@ -49,9 +52,11 @@ export const createVaultClient = memoize(async (vaultOptions: VaultOptions = {})
 
 export const loadVaultSecret =
 	(vaultClient: ReturnType<typeof createVaultClient> = createVaultClient()) =>
-	async (path: string) => {
+	async <T = Record<string, string>>(path: string): Promise<T> => {
 		const result = await (await vaultClient).read(path);
-		const secretData = result.data as { [k: string]: any };
+		const secretData = result.data;
+
 		logger.info(`Loaded Vault secret at ${path}: ${Object.keys(secretData)}`);
+
 		return secretData;
 	};
