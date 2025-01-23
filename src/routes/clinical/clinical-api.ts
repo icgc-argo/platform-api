@@ -4,7 +4,7 @@ import * as esb from 'elastic-builder';
 import * as express from 'express';
 import { z as zod } from 'zod';
 
-import { ADVERTISED_HOST, ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
 import authenticatedRequestMiddleware, { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import { hasDacoAccess, hasSufficientProgramMembershipAccess } from 'routes/utils/accessValidations';
 import { downloadDonorTsv } from 'services/clinical/api';
@@ -13,11 +13,8 @@ import createClinicalApiAuthClient from 'services/ego/clinicalApiAuthClient';
 import { EsHits } from 'services/elasticsearch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
-import { get } from 'lodash';
-import fetch from 'node-fetch';
-import { createEsDocumentStream, createFilterToEsQueryConverter } from 'routes/file-centric-tsv/utils';
-import urljoin from 'url-join';
 import logger from '../../utils/logger';
+import queryArranger from './arranger';
 
 const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) => {
 	const router = express.Router();
@@ -26,8 +23,6 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 	router.use(authenticatedRequestMiddleware({ egoClient }));
 
 	const clinicalAuthClient = await createClinicalApiAuthClient(egoClient);
-
-	const convertFilterToEsQuery = await createFilterToEsQueryConverter(esClient, ARRANGER_FILE_CENTRIC_INDEX);
 
 	/* **************************************
 	 * Download clinical donor data for files
@@ -194,57 +189,14 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 				throw err;
 			}
 
-			// query GQL Arranger
-			// version 2.19 does not have direct access to Arranger apis directly
-			const gqlQuery = JSON.stringify({
-				query: `
-				query test($filters: JSON) {
-					file {
-    				hits(filters: $filters) {
-      				total
-							edges {
-								node {
-									has_clinical_data
-									donors {
-										hits {
-											edges {
-												node {
-													donor_id
-												}
-											}
-										}
-									}
-								}
-							}
-    				}
-					}
-				}`,
-				variables: { filters: requestFilter },
-			});
-			const url = urljoin(ADVERTISED_HOST, '/graphql');
-			const response = await fetch(url, {
-				method: 'post',
-				headers: { Authorization: `Bearer ${egoJwt}`, 'Content-Type': 'application/json' },
-				body: gqlQuery,
-			});
-			const data = await response.json();
-
-			const donorIdPath = 'node.donors.hits.edges[0].node.donor_id';
-			const donorEdgePath = 'data.file.hits.edges';
-			const records = get(data, donorEdgePath, undefined);
-			if (!records) {
-				res.status(200).send(`No records available.`);
-			}
-
-			const uniqueDonors: string[] = Array.from(
-				new Set(records.map((record: Record<string, unknown>) => get(record, donorIdPath))),
-			);
-
-			console.log('donors', uniqueDonors);
-
-			// Return all files in a zip with a manifest
-			const filename = `clinical_data_${Date.now()}`;
 			try {
+				// query GQL Arranger
+				// version 2.19 does not have direct access to Arranger apis directly
+				const uniqueDonors = await queryArranger({ requestFilter, egoJwt });
+
+				// Return all files in a zip with a manifest
+				const filename = `clinical_data_${Date.now()}`;
+
 				const response = await downloadDonorTsv(clinicalAuthClient, uniqueDonors);
 				res
 					.status(200)
