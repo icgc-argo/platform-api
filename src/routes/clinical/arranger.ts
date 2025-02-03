@@ -1,7 +1,8 @@
-import { ADVERTISED_HOST } from 'config';
 import { get } from 'lodash';
 import fetch from 'node-fetch';
 import urljoin from 'url-join';
+
+import { ADVERTISED_HOST } from 'config';
 
 const url = urljoin(ADVERTISED_HOST, '/graphql');
 
