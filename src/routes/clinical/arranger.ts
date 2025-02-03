@@ -58,6 +58,14 @@ function createQueryClient({ requestConfig }: { requestConfig: Record<string, un
 	};
 }
 
+/**
+ * Queries Arranger instance for all donor ids (no pagination), optionally filtered by input param
+ * Use case: retrieving all donor ids to send download file request to clinical service
+ *
+ * @param param.requestFilter - SQON filter
+ * @param param.egoJwt - User Ego token
+ * @returns Unique set of donor ids
+ */
 async function queryArranger({
 	requestFilter,
 	egoJwt,
@@ -71,6 +79,7 @@ async function queryArranger({
 	};
 	try {
 		const queryClient = createQueryClient({ requestConfig });
+		// SQON Builder is not Arrangerv2 compatible
 		const queryVariables = { filters: requestFilter };
 		// need two queries to pass "total" into hits filter to specify offset range
 		const queryResponse = await queryClient({ query: makeRequest({ query: totalQuery, variables: queryVariables }) });
