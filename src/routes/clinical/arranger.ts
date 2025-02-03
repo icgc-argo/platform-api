@@ -70,7 +70,7 @@ async function queryArranger({
 	requestFilter,
 	egoJwt,
 }: {
-	requestFilter: Record<string, unknown>;
+	requestFilter: Record<string, {}[]>;
 	egoJwt: string;
 }): Promise<string[]> {
 	const requestConfig = {
@@ -80,7 +80,18 @@ async function queryArranger({
 	try {
 		const queryClient = createQueryClient({ requestConfig });
 		// SQON Builder is not Arrangerv2 compatible
-		const queryVariables = { filters: requestFilter };
+		const filters = {
+			op: 'and',
+			content: [
+				{
+					op: 'in',
+					content: { fieldName: 'has_clinical_data', value: ['true'] },
+				},
+				...requestFilter.content,
+			],
+		};
+		const queryVariables = { filters };
+
 		// need two queries to pass "total" into hits filter to specify offset range
 		const queryResponse = await queryClient({ query: makeRequest({ query: totalQuery, variables: queryVariables }) });
 		const totalHits = get(queryResponse, 'data.file.hits.total');
