@@ -102,8 +102,8 @@ paths:
         - Clinical API
       security:
         - bearerAuth: []
-      summary: Download clinical data for all available files from filter.
-      description: Download clinical data for all available files from filter.
+      summary: Download clinical data associated with the donors for all files. A SQON filter can be provided to restrict the data retrieved to the files returned by a specific query.
+      description: Download clinical data associated with the donors for all files. A SQON filter can be provided to restrict the data retrieved to the files returned by a specific query.
       responses:
         '200':
           description: 'A zip file with all program submitted data'
