@@ -89,7 +89,7 @@ paths:
         '500':
           description: Internal server error
 
-  '/clinical/api/donors/data-for-all-files':
+  '/clinical/api/donors/data-for-query':
     parameters:
       - name: filter
         description: JSON filter following the SQON spec

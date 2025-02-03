@@ -73,8 +73,8 @@ async function queryArranger({
 		const queryClient = createQueryClient({ requestConfig });
 		const queryVariables = { filters: requestFilter };
 		// need two queries to pass "total" into hits filter to specify offset range
-		const totalData = await queryClient({ query: makeRequest({ query: totalQuery, variables: queryVariables }) });
-		const totalHits = get(totalData, 'data.file.hits.total');
+		const queryResponse = await queryClient({ query: makeRequest({ query: totalQuery, variables: queryVariables }) });
+		const totalHits = get(queryResponse, 'data.file.hits.total');
 		const hits = await queryClient({
 			query: makeRequest({ query: hitsQuery, variables: { ...queryVariables, first: totalHits } }),
 		});

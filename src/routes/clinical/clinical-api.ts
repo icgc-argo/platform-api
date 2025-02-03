@@ -161,19 +161,19 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 		}
 	});
 
-	router.use('/donors/data-for-all-files', async (req: AuthenticatedRequest, res) => {
+	router.use('/donors/data-for-query', async (req: AuthenticatedRequest, res) => {
 		try {
 			// Grab requester JWT
 			const { scopes, userId, authenticated, egoJwt } = req.auth;
 
 			if (!authenticated) {
-				logger.debug(`[clinical-routes] /donors/data-for-all-files: Request not authenticated.`);
+				logger.debug(`[clinical-routes] /donors/data-for-query: Request not authenticated.`);
 				return res.status(401).json({ error: 'Must be authenticated to access resource.' });
 			}
 			const hasDaco = hasDacoAccess(scopes);
 			if (!hasDaco) {
 				logger.debug(
-					`[clinical-routes] /donors/data-for-all-files: User ${userId} requesting clinical data without DACO access`,
+					`[clinical-routes] /donors/data-for-query: User ${userId} requesting clinical data without DACO access`,
 				);
 				return res.status(403).json({ error: 'Users require DACO approval to access clinical data.' });
 			}
@@ -210,7 +210,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 				});
 			}
 		} catch (e) {
-			logger.error(`[clinical-routes] /donors/data-for-all-files: unexpected error occurred: ${e}`);
+			logger.error(`[clinical-routes] /donors/data-for-query: unexpected error occurred: ${e}`);
 			return res.status(500).json({
 				error: e.message || 'An unexpected error occurred retrieving clinical file data.',
 			});
