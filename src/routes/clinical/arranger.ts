@@ -85,9 +85,9 @@ async function queryArranger({
 			content: [
 				{
 					op: 'in',
-					content: { fieldName: 'has_clinical_data', value: ['true'] },
+					content: { field: 'has_clinical_data', value: 'true' },
 				},
-				...requestFilter.content,
+				requestFilter,
 			],
 		};
 		const queryVariables = { filters };
