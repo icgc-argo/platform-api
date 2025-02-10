@@ -5,13 +5,8 @@ import * as express from 'express';
 import { z as zod } from 'zod';
 
 import { ARRANGER_FILE_CENTRIC_INDEX } from 'config';
-import authenticatedRequestMiddleware, {
-	AuthenticatedRequest,
-} from 'routes/middleware/authenticatedRequestMiddleware';
-import {
-	hasDacoAccess,
-	hasSufficientProgramMembershipAccess,
-} from 'routes/utils/accessValidations';
+import authenticatedRequestMiddleware, { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
+import { hasDacoAccess, hasSufficientProgramMembershipAccess } from 'routes/utils/accessValidations';
 import { downloadDonorTsv } from 'services/clinical/api';
 import { EgoClient } from 'services/ego';
 import createClinicalApiAuthClient from 'services/ego/clinicalApiAuthClient';
@@ -19,6 +14,7 @@ import { EsHits } from 'services/elasticsearch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
 import logger from '../../utils/logger';
+import queryArranger from './arranger';
 
 const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) => {
 	const router = express.Router();
@@ -61,9 +57,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 				logger.debug(
 					`[clinical-routes] /donors/data-for-files: User ${userId} requesting clinical data without DACO access`,
 				);
-				return res
-					.status(403)
-					.json({ error: 'Users require DACO approval to access clinical data.' });
+				return res.status(403).json({ error: 'Users require DACO approval to access clinical data.' });
 			}
 
 			// 1. validate request body
@@ -99,9 +93,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 
 			// 3. validations
 			// 3a. all files were found
-			const missingFiles = body.objectIds.filter(
-				(objectId) => !files.find((doc) => doc.object_id === objectId),
-			);
+			const missingFiles = body.objectIds.filter((objectId) => !files.find((doc) => doc.object_id === objectId));
 
 			if (missingFiles.length > 0) {
 				logger.info(
@@ -127,9 +119,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 				});
 			}
 			// 3c. user has access to each file
-			const forbiddenFiles = files.filter(
-				(file) => !hasSufficientProgramMembershipAccess({ scopes, file }),
-			);
+			const forbiddenFiles = files.filter((file) => !hasSufficientProgramMembershipAccess({ scopes, file }));
 			if (forbiddenFiles.length > 0) {
 				logger.info(
 					`[clinical-routes] /donors/data-for-files: User ${userId} missing permissions to access requested files - ${forbiddenFiles.map(
@@ -144,9 +134,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 			}
 
 			// 4. fetch files for the donors of the files with data
-			const donorIds = files
-				.flatMap((file) => file.donors.map((donor) => donor.donor_id))
-				.filter((id) => !!id);
+			const donorIds = files.flatMap((file) => file.donors.map((donor) => donor.donor_id)).filter((id) => !!id);
 
 			const uniqueDonors = Array.from(new Set(donorIds));
 
@@ -172,6 +160,63 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 			});
 		}
 	});
+
+	router.use('/donors/data-for-query', async (req: AuthenticatedRequest, res) => {
+		try {
+			// Grab requester JWT
+			const { scopes, userId, authenticated, egoJwt } = req.auth;
+
+			if (!authenticated) {
+				logger.debug(`[clinical-routes] /donors/data-for-query: Request not authenticated.`);
+				return res.status(401).json({ error: 'Must be authenticated to access resource.' });
+			}
+			const hasDaco = hasDacoAccess(scopes);
+			if (!hasDaco) {
+				logger.debug(
+					`[clinical-routes] /donors/data-for-query: User ${userId} requesting clinical data without DACO access`,
+				);
+				return res.status(403).json({ error: 'Users require DACO approval to access clinical data.' });
+			}
+
+			// Get request SQON filter
+			const { filter: filterString }: { filter?: string } = req.query;
+			let requestFilter = {};
+			try {
+				requestFilter = filterString ? JSON.parse(filterString) : undefined;
+			} catch (err) {
+				res.status(400).send(`${filterString} is not a valid filter`);
+				logger.error(err);
+				throw err;
+			}
+
+			try {
+				// query GQL Arranger
+				// version 2.19 does not have direct access to Arranger apis directly
+				const uniqueDonors = await queryArranger({ requestFilter, egoJwt });
+
+				// Return all files in a zip with a manifest
+				const filename = `clinical_data_${Date.now()}`;
+
+				const response = await downloadDonorTsv(clinicalAuthClient, uniqueDonors);
+				res
+					.status(200)
+					.contentType('application/octet-stream')
+					.setHeader('content-disposition', `filename=${filename}.zip`);
+				return res.send(response);
+			} catch (e) {
+				logger.error(`Error retrieving clinical donor data from clinical-service ${e}`);
+				return res.status(500).json({
+					error: e.message || 'An unexpected error occurred retrieving clinical file data.',
+				});
+			}
+		} catch (e) {
+			logger.error(`[clinical-routes] /donors/data-for-query: unexpected error occurred: ${e}`);
+			return res.status(500).json({
+				error: e.message || 'An unexpected error occurred retrieving clinical file data.',
+			});
+		}
+	});
+
 	return router;
 };
 
