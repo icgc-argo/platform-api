@@ -53,7 +53,7 @@ paths:
                 type: string
         '500':
           description: Internal server error
-          
+
   '/clinical/api/donors/data-for-files':
     post:
       tags:
@@ -88,6 +88,35 @@ paths:
           description: The error message indicates something wrong with the request
         '500':
           description: Internal server error
+
+  '/clinical/api/donors/data-for-query':
+    parameters:
+      - name: filter
+        description: JSON filter following the SQON spec
+        in: query
+        required: false
+        schema:
+          type: string
+    post:
+      tags:
+        - Clinical API
+      security:
+        - bearerAuth: []
+      summary: Download clinical data associated with the donors for all files. A SQON filter can be provided to restrict the data retrieved to the files returned by a specific query.
+      description: Download clinical data associated with the donors for all files. A SQON filter can be provided to restrict the data retrieved to the files returned by a specific query.
+      responses:
+        '200':
+          description: 'A zip file with all program submitted data'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: The error message indicates something wrong with the request
+        '500':
+          description: Internal server error
+
   '/clinical/proxy/program/{programId}/all-clinical-data':
     parameters:
       - name: programId
