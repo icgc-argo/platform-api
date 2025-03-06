@@ -25,6 +25,7 @@ import express, { Request } from 'express';
 import { logger as loggerMiddleware } from 'express-winston';
 import { mergeSchemas } from 'graphql-tools';
 
+import arrangerV3 from '@overture-stack/arranger-server';
 import apiDocRouter from 'routes/api-docs';
 import createDonorAggregatorRouter from 'routes/donor-aggregator-api';
 import createFileCentricTsvRoute from 'routes/file-centric-tsv';
@@ -165,6 +166,9 @@ const init = async () => {
 
 	// Attach Arranger
 	server.applyMiddleware({ app, path: '/graphql' });
+
+	// Arranger v3 endpoint
+	app.use('/arranger-v3', await arrangerV3({ enableLogs: true }));
 
 	// Health Check / Status Endpoint
 	app.get('/status', (req, res) => {
