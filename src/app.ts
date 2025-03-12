@@ -199,6 +199,7 @@ const init = async () => {
 		console.log('\n');
 		logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 		logger.info(`🚀 REST API docs available at http://localhost:${PORT}/api-docs`);
+		logger.info(`🚀 Arranger v3 ready at http://localhost:${PORT}/arranger-v3/graphql`);
 		console.log('\n');
 	});
 };
