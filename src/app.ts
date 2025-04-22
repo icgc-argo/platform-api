@@ -20,6 +20,7 @@
 import path from 'path';
 
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
+import arrangerV3 from '@overture-stack/arranger-server';
 import cors from 'cors';
 import express, { Request } from 'express';
 import { logger as loggerMiddleware } from 'express-winston';
@@ -45,6 +46,8 @@ import {
 	ELASTICSEARCH_PASSWORD,
 	ELASTICSEARCH_USERNAME,
 	ELASTICSEARCH_VAULT_SECRET_PATH,
+	FEATURE_DOCUMENT_HITS_ENABLED,
+	FEATURE_NETWORK_AGGREGATION_ENABLED,
 	FEATURE_STORAGE_API_ENABLED,
 	HEALTH_ENDPOINTS,
 	IS_PROD,
@@ -166,6 +169,17 @@ const init = async () => {
 	// Attach Arranger
 	server.applyMiddleware({ app, path: '/graphql' });
 
+	// Arranger v3 endpoint
+	app.use(
+		'/arranger-v3',
+		await arrangerV3({
+			enableLogs: true,
+			configsSource: '.ignore/fedSearch',
+			enableNetworkAggregation: FEATURE_NETWORK_AGGREGATION_ENABLED,
+			enableDocumentHits: FEATURE_DOCUMENT_HITS_ENABLED,
+		}),
+	);
+
 	// Health Check / Status Endpoint
 	app.get('/status', (req, res) => {
 		res.json(version);
@@ -195,6 +209,7 @@ const init = async () => {
 		console.log('\n');
 		logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 		logger.info(`🚀 REST API docs available at http://localhost:${PORT}/api-docs`);
+		//logger.info(`🚀 Arranger v3 ready at http://localhost:${PORT}/arranger-v3/graphql`);
 		console.log('\n');
 	});
 };
