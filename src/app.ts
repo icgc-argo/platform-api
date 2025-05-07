@@ -43,11 +43,10 @@ import {
 	EGO_CLIENT_ID,
 	EGO_CLIENT_SECRET,
 	EGO_VAULT_SECRET_PATH,
+	ELASTICSEARCH_HOST,
 	ELASTICSEARCH_PASSWORD,
 	ELASTICSEARCH_USERNAME,
 	ELASTICSEARCH_VAULT_SECRET_PATH,
-	FEATURE_DOCUMENT_HITS_ENABLED,
-	FEATURE_NETWORK_AGGREGATION_ENABLED,
 	FEATURE_STORAGE_API_ENABLED,
 	HEALTH_ENDPOINTS,
 	IS_PROD,
@@ -174,9 +173,6 @@ const init = async () => {
 		'/arranger-v3',
 		await arrangerV3({
 			enableLogs: true,
-			configsSource: '.ignore/fedSearch',
-			enableNetworkAggregation: FEATURE_NETWORK_AGGREGATION_ENABLED,
-			enableDocumentHits: FEATURE_DOCUMENT_HITS_ENABLED,
 		}),
 	);
 
@@ -209,7 +205,6 @@ const init = async () => {
 		console.log('\n');
 		logger.info(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
 		logger.info(`🚀 REST API docs available at http://localhost:${PORT}/api-docs`);
-		//logger.info(`🚀 Arranger v3 ready at http://localhost:${PORT}/arranger-v3/graphql`);
 		console.log('\n');
 	});
 };
