@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "rm -rf dist && tsc -p ./tsconfig.build.json && cp -r ./src/resources ./dist",
-		"dev": "NODE_PATH=./src NODE_ENV=development nodemon -e js,json,ts ./src/index.ts",
+		"dev": "tsx --watch ./src/index.ts",
 		"fileCentricEsInit": "ts-node --project tsconfig.script.json ./compose/fileCentricEsInit.ts",
 		"embargoStageEsInit": "ts-node --project tsconfig.script.json ./compose/embargoStageEsInit.ts",
 		"generateFakeEsFiles": "ts-node --project tsconfig.script.json ./compose/generateFake.ts",
@@ -57,6 +57,7 @@
 		"retry": "^0.13.1",
 		"swagger-ui-express": "^4.4.0",
 		"ts-interface-checker": "^1.0.2",
+		"tsx": "^4.19.4",
 		"url-join": "4.0.1",
 		"winston": "^3.8.1",
 		"yamljs": "^0.3.0",
