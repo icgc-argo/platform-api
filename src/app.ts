@@ -21,7 +21,7 @@ import path from 'path';
 
 import { EgoJwtData } from '@icgc-argo/ego-token-utils/dist/common';
 import cors from 'cors';
-import express, { Request } from 'express';
+import express, { Request, Response } from 'express';
 import { logger as loggerMiddleware } from 'express-winston';
 import { mergeSchemas } from 'graphql-tools';
 
@@ -35,6 +35,7 @@ import { loadVaultSecret } from 'services/vault';
 import ArgoApolloServer from 'utils/ArgoApolloServer';
 import egoTokenUtils from 'utils/egoTokenUtils';
 
+import { createArrangerV3Route } from 'routes/arrangerV3';
 import {
 	APP_DIR,
 	ARRANGER_PROJECT_ID,
@@ -170,6 +171,9 @@ const init = async () => {
 	app.get('/status', (req, res) => {
 		res.json(version);
 	});
+
+	// Arranger V3 proxy
+	app.use('/arranger-v3', createArrangerV3Route(egoClient));
 
 	// Routers
 	app.use('/kafka', createKafkaRouter(egoClient));
