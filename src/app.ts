@@ -173,7 +173,7 @@ const init = async () => {
 	});
 
 	// Arranger V3 proxy
-	app.use('/arranger-v3', createArrangerV3Route(egoClient));
+	app.use('/discovery', createArrangerV3Route(egoClient));
 
 	// Routers
 	app.use('/kafka', createKafkaRouter(egoClient));
