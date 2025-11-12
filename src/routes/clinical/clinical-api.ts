@@ -16,7 +16,7 @@ import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 import {
 	extractUniqueDonorIds,
 	generateClinicalDataFile,
-	searchFilesInElasticsearch,
+	searchDataDiscoveryIndex,
 	validateQueryParams,
 } from 'lib/discovery';
 import logger from '../../utils/logger';
@@ -247,7 +247,7 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 			const parsedFilter = validateQueryParams(req.query);
 
 			// 2. Search ES
-			const files = await searchFilesInElasticsearch(parsedFilter, esClient);
+			const files = await searchDataDiscoveryIndex(parsedFilter, esClient);
 
 			// 3. Extract unique donor IDs
 			const uniqueDonorIds = extractUniqueDonorIds(files);

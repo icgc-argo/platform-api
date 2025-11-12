@@ -43,13 +43,13 @@ export const validateQueryParams = (query: unknown) => {
 };
 
 /**
- * Converts filter to ES query and queries index
+ * Converts filter to ES query and queries Data Discovery index.
  *
- * @param filter
- * @param esClient
- * @returns
+ * @param filter - SQON
+ * @param esClient - ES client
+ * @returns Data Discovery records
  */
-export const searchFilesInElasticsearch = async (filter: {}, esClient: Client) => {
+export const searchDataDiscoveryIndex = async (filter: object, esClient: Client) => {
 	const convertFilterToEsQuery = await createFilterToEsQueryConverter(esClient, ELASTICSEARCH_DISCOVERY_INDEX);
 
 	try {
@@ -69,11 +69,10 @@ export const searchFilesInElasticsearch = async (filter: {}, esClient: Client) =
 };
 
 export const extractUniqueDonorIds = (files: Record<string, any>[]) => {
-	const donorIds = files.filter((file) => file?.donor_id).map((file) => file.donor_id);
-
-	const uniqueDonors = [...new Set(donorIds)];
-
-	return uniqueDonors;
+	return files.reduce<Set<string>>((set, file) => {
+		typeof file.donor_id === 'string' && set.add(file.donor_id);
+		return set;
+	}, new Set());
 };
 
 /**
@@ -81,16 +80,16 @@ export const extractUniqueDonorIds = (files: Record<string, any>[]) => {
  *
  * @param clinicalAuthClient
  * @param donorIds
- * @returns
+ * @returns Filename for download and data for attachment
  */
 export const generateClinicalDataFile = async (
 	clinicalAuthClient: Awaited<ReturnType<typeof createAuthClient>>,
-	donorIds: string[],
+	donorIds: Set<string>,
 ) => {
 	const filename = `clinical_data_${Date.now()}.zip`;
 
 	try {
-		const data = await downloadDonorTsv(clinicalAuthClient, donorIds);
+		const data = await downloadDonorTsv(clinicalAuthClient, Array.from(donorIds));
 		return { data, filename };
 	} catch (error) {
 		logger.error(`Error retrieving clinical donor data: ${error}`);
