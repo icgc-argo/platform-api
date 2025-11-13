@@ -17,31 +17,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import express, { Response, RequestHandler, Request } from 'express';
 import { Client } from '@elastic/elasticsearch';
-import { EgoClient } from 'services/ego';
 import { ARRANGER_FILE_CENTRIC_INDEX, FEATURE_METADATA_ACCESS_CONTROL } from 'config';
-import { get } from 'lodash';
+import { format } from 'date-fns';
+import express, { Request, RequestHandler, Response } from 'express';
 import fileSize from 'filesize';
+import { get } from 'lodash';
+import { EgoClient } from 'services/ego';
+import egoTokenUtils from 'utils/egoTokenUtils';
 import logger from 'utils/logger';
 import { EsFileDocument, TsvFileSchema } from './types';
-import { format } from 'date-fns';
 import {
-	createFilterToEsQueryConverter,
 	createEsDocumentStream,
-	writeTsvStreamToWritableTarget,
+	createFilterToEsQueryConverter,
 	FilterStringParser,
+	writeTsvStreamToWritableTarget,
 } from './utils';
-import egoTokenUtils from 'utils/egoTokenUtils';
 
-import authenticatedRequestMiddleware, {
-	AuthenticatedRequest,
-} from 'routes/middleware/authenticatedRequestMiddleware';
+import authenticatedRequestMiddleware, { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMiddleware';
 import getAccessControlFilter from '../../schemas/Arranger/getAccessControlFilter';
 
-import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
-import demoTsvSchema from './tsvSchemas/demo';
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
+import demoTsvSchema from './tsvSchemas/demo';
+import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 
 const specialColumnHeaders = {
 	fileSize: ['Size'],
@@ -54,7 +52,7 @@ function combineSqonFilters(filters: {}[]): {} {
 	};
 }
 
-const createDownloadHandler = ({
+export const createDownloadHandler = ({
 	defaultFileName,
 	tsvSchema,
 	convertFilterToEsQuery,
@@ -103,27 +101,19 @@ const createDownloadHandler = ({
 
 		const columnsSchema =
 			columns &&
-			JSON.parse(decodeURIComponent(columns)).map(
-				({ header, getter }: { header: string; getter: string }) => ({
-					header,
-					getter: (source: EsFileDocument) => {
-						const getSource = get(source, getter);
-						return specialColumnHeaders.fileSize.includes(header) ? fileSize(getSource) : getSource;
-					},
-				}),
-			);
+			JSON.parse(decodeURIComponent(columns)).map(({ header, getter }: { header: string; getter: string }) => ({
+				header,
+				getter: (source: EsFileDocument) => {
+					const getSource = get(source, getter);
+					return specialColumnHeaders.fileSize.includes(header) ? fileSize(getSource) : getSource;
+				},
+			}));
 
 		res.setHeader(
 			'content-disposition',
-			`attachment; filename=${
-				fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)
-			}`,
+			`attachment; filename=${fileName ? `${fileName.split('.tsv')[0]}.tsv` : defaultFileName(req)}`,
 		);
-		await writeTsvStreamToWritableTarget(
-			fileCentricDocumentStream,
-			res,
-			columnsSchema || tsvSchema,
-		);
+		await writeTsvStreamToWritableTarget(fileCentricDocumentStream, res, columnsSchema || tsvSchema);
 		res.end();
 	};
 };
@@ -136,10 +126,7 @@ const createFileCentricTsvRouter = async (esClient: Client, egoClient: EgoClient
 
 	router.use(authenticatedRequestMiddleware({ egoClient }));
 
-	const convertFilterToEsQuery = await createFilterToEsQueryConverter(
-		esClient,
-		ARRANGER_FILE_CENTRIC_INDEX,
-	);
+	const convertFilterToEsQuery = await createFilterToEsQueryConverter(esClient, ARRANGER_FILE_CENTRIC_INDEX);
 
 	router.use(
 		'/file-table',
