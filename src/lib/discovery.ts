@@ -21,7 +21,6 @@ import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_DISCOVERY_INDEX } from 'config';
 import { format } from 'date-fns';
 import { RequestHandler } from 'express';
-import { TsvFileSchema } from 'routes/file-centric-tsv/types';
 import {
 	createEsDocumentStream,
 	createFilterToEsQueryConverter,
@@ -32,6 +31,7 @@ import { AuthenticatedRequest } from 'routes/middleware/authenticatedRequestMidd
 import { hasDacoAccess } from 'routes/utils/accessValidations';
 import { downloadDonorTsv } from 'services/clinical/api';
 import { createAuthClient } from 'services/ego/authClient';
+import { TsvFileSchema } from 'utils/commonTypes/tsv-schema';
 import logger from 'utils/logger';
 import { z } from 'zod';
 

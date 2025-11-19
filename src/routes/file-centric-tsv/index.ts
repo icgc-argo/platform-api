@@ -26,7 +26,7 @@ import { get } from 'lodash';
 import { EgoClient } from 'services/ego';
 import egoTokenUtils from 'utils/egoTokenUtils';
 import logger from 'utils/logger';
-import { EsFileDocument, TsvFileSchema } from './types';
+import { EsFileDocument } from './types';
 import {
 	createEsDocumentStream,
 	createFilterToEsQueryConverter,
@@ -38,6 +38,7 @@ import authenticatedRequestMiddleware, { AuthenticatedRequest } from 'routes/mid
 import getAccessControlFilter from '../../schemas/Arranger/getAccessControlFilter';
 
 import { FILE_METADATA_FIELDS } from 'utils/commonTypes/EsFileCentricDocument';
+import { TsvFileSchema } from 'utils/commonTypes/tsv-schema';
 import demoTsvSchema from './tsvSchemas/demo';
 import scoreManifestTsvSchema from './tsvSchemas/scoreManifest';
 
