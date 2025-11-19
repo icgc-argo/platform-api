@@ -56,6 +56,7 @@ export const searchDataDiscoveryIndex = async (filter: object, esClient: Client)
 		const query = await convertFilterToEsQuery(filter);
 		const result = await esClient.search({
 			index: ELASTICSEARCH_DISCOVERY_INDEX,
+			size: 10000, // ES max is 10,000
 			body: {
 				query,
 			},
