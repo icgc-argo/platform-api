@@ -4,7 +4,7 @@
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
  * GNU Affero General Public License along with this program.
- *  If not, see <http://www.gnu.org/licenses/>.
+ * If not, see <http://www.gnu.org/licenses/>.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -16,21 +16,15 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import { Client } from '@elastic/elasticsearch';
 import { ELASTICSEARCH_DISCOVERY_INDEX } from 'config';
-import { format } from 'date-fns';
 import express from 'express';
+import { createDownloadHandler } from 'lib/discovery';
 import { EgoClient } from 'services/ego';
-import { createDownloadHandler } from './file-centric-tsv';
-import scoreManifestTsvSchema from './file-centric-tsv/tsvSchemas/scoreManifest';
 import { createFilterToEsQueryConverter } from './file-centric-tsv/utils';
 import authenticatedRequestMiddleware from './middleware/authenticatedRequestMiddleware';
 
 export const createDataDiscoveryTsvRouter = async (esClient: Client, egoClient: EgoClient) => {
-	/**
-	 * All this stuff gets initialized once at application start-up
-	 */
 	const router = express.Router();
 
 	router.use(authenticatedRequestMiddleware({ egoClient }));
@@ -42,8 +36,6 @@ export const createDataDiscoveryTsvRouter = async (esClient: Client, egoClient: 
 		createDownloadHandler({
 			esClient,
 			convertFilterToEsQuery,
-			defaultFileName: (req) => `score-manifest.${format(Date.now(), 'yyyyMMddHHmmss')}.tsv`,
-			tsvSchema: scoreManifestTsvSchema,
 		}),
 	);
 
