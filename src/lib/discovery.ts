@@ -36,7 +36,7 @@ import logger from 'utils/logger';
 import { z } from 'zod';
 
 const FilterQuerySchema = z.object({
-	filter: z.string().min(1, 'Filter cannot be empty'),
+	filter: z.string().min(1, 'Filter cannot be empty').trim(),
 });
 export const validateQueryParams = (query: unknown) => {
 	const result = FilterQuerySchema.safeParse(query);
