@@ -17,7 +17,8 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { EsFileDocument, TsvFileSchema } from '../types';
+import { TsvFileSchema } from 'utils/commonTypes/tsv-schema';
+import { EsFileDocument } from '../types';
 
 const demoTsvSchema: TsvFileSchema<EsFileDocument> = [
 	{

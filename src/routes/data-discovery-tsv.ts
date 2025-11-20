@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
  * GNU Affero General Public License along with this program.
- *  If not, see <http://www.gnu.org/licenses/>.
+ * If not, see <http://www.gnu.org/licenses/>.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -16,7 +16,28 @@
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { Client } from '@elastic/elasticsearch';
+import { ELASTICSEARCH_DISCOVERY_INDEX } from 'config';
+import express from 'express';
+import { createDownloadHandler } from 'lib/discovery';
+import { EgoClient } from 'services/ego';
+import { createFilterToEsQueryConverter } from './file-centric-tsv/utils';
+import authenticatedRequestMiddleware from './middleware/authenticatedRequestMiddleware';
 
-import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
+export const createDataDiscoveryTsvRouter = async (esClient: Client, egoClient: EgoClient) => {
+	const router = express.Router();
 
-export type EsFileDocument = EsFileCentricDocument;
+	router.use(authenticatedRequestMiddleware({ egoClient }));
+
+	const convertFilterToEsQuery = await createFilterToEsQueryConverter(esClient, ELASTICSEARCH_DISCOVERY_INDEX);
+
+	router.use(
+		'/score-manifest',
+		createDownloadHandler({
+			esClient,
+			convertFilterToEsQuery,
+		}),
+	);
+
+	return router;
+};
