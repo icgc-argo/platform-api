@@ -17,8 +17,9 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { EsFileDocument, TsvFileSchema } from '../types';
 import flatMap from 'lodash/flatMap';
+import { TsvFileSchema } from 'utils/commonTypes/tsv-schema';
+import { EsFileDocument } from '../types';
 
 const manifestFileFields: TsvFileSchema<EsFileDocument> = [
 	{

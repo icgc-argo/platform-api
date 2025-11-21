@@ -117,6 +117,41 @@ paths:
         '500':
           description: Internal server error
 
+  '/clinical/api/donors/data-for-files-discovery':
+    parameters:
+      - name: filter
+        description: JSON filter following the SQON spec
+        in: query
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Clinical API
+      security:
+        - bearerAuth: []
+      summary: Download clinical data for SQON filter
+      description: |
+        Download clinical data for a SQON filter.  
+        Important: There is a limitation in this endpoint of using ElasticSearchs max return window size of 10k records.  
+
+        For more than 10k donors a good approach would be to:  
+        1 - Use a cardinality query to determine how many hits we have.  
+        2 - Query the documents with a size equal to the number of hits listed in query 1.  
+        If request size is greater than ES max then use a streaming approach with ES "searchAfter" api.
+      responses:
+        '200':
+          description: 'A zip file with all program submitted data'
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: The error message indicates something wrong with the request
+        '500':
+          description: Internal server error
+
   '/clinical/proxy/program/{programId}/all-clinical-data':
     parameters:
       - name: programId

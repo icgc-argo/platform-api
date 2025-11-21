@@ -17,16 +17,16 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import logger from 'utils/logger';
 import { Client } from '@elastic/elasticsearch';
+import logger from 'utils/logger';
 
 // @ts-ignore
 import { buildQuery } from '@arranger/middleware/dist';
-import { DEFAULT_TSV_STREAM_CHUNK_SIZE, ARRANGER_FILE_CENTRIC_INDEX } from 'config';
+import { ARRANGER_FILE_CENTRIC_INDEX, DEFAULT_TSV_STREAM_CHUNK_SIZE } from 'config';
 import esb from 'elastic-builder';
-import { TsvFileSchema } from './types';
 import { Response } from 'express';
 import { EsIndexMapping, getNestedFields } from 'services/elasticsearch';
+import { TsvFileSchema } from 'utils/commonTypes/tsv-schema';
 
 export const parseFilterString = (filterString: string): {} => {
 	try {
@@ -50,7 +50,7 @@ export const createFilterToEsQueryConverter = async (esClient: Client, index: st
 			? buildQuery({
 					filters: filter,
 					nestedFields: nestedFields,
-			  })
+				})
 			: undefined;
 		const {
 			body: { valid },
@@ -62,9 +62,7 @@ export const createFilterToEsQueryConverter = async (esClient: Client, index: st
 		});
 		if (!valid) {
 			throw new Error(
-				`invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${JSON.stringify(
-					filter,
-				)}`,
+				`invalid Elasticsearch query ${JSON.stringify(esQuery)} generated from ${JSON.stringify(filter)}`,
 			);
 		}
 		return esQuery;
@@ -129,9 +127,7 @@ export const writeTsvStreamToWritableTarget = async <Document>(
 	let chunkCount = 0; // for logging
 	for await (const chunk of stream) {
 		writableTarget.write(
-			chunk
-				.map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t'))
-				.join('\n'),
+			chunk.map((fileObj): string => tsvSchema.map(({ getter }) => getter(fileObj)).join('\t')).join('\n'),
 		);
 		writableTarget.write('\n');
 		documentCount += chunk.length;
