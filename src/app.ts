@@ -36,6 +36,7 @@ import ArgoApolloServer from 'utils/ArgoApolloServer';
 import egoTokenUtils from 'utils/egoTokenUtils';
 
 import { createArrangerV3Route } from 'routes/arrangerV3';
+import { createDataDiscoveryTsvRouter } from 'routes/data-discovery-tsv';
 import {
 	APP_DIR,
 	ARRANGER_PROJECT_ID,
@@ -179,6 +180,7 @@ const init = async () => {
 	app.use('/kafka', createKafkaRouter(egoClient));
 	app.use('/clinical', await createClinicalRouter(esClient, egoClient));
 	app.use('/file-centric-tsv', await createFileCentricTsvRoute(esClient, egoClient));
+	app.use('/data-discovery-tsv', await createDataDiscoveryTsvRouter(esClient, egoClient));
 	app.use('/donor-aggregator', createDonorAggregatorRouter(egoClient));
 
 	if (FEATURE_STORAGE_API_ENABLED) {

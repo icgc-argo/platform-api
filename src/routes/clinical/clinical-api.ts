@@ -13,6 +13,12 @@ import createClinicalApiAuthClient from 'services/ego/clinicalApiAuthClient';
 import { EsHits } from 'services/elasticsearch';
 import { EsFileCentricDocument } from 'utils/commonTypes/EsFileCentricDocument';
 
+import {
+	extractUniqueDonorIds,
+	generateClinicalDataFile,
+	searchDataDiscoveryIndex,
+	validateQueryParams,
+} from 'lib/discovery';
 import logger from '../../utils/logger';
 import queryArranger from './arranger';
 
@@ -213,6 +219,53 @@ const createClincalApiRouter = async (esClient: Client, egoClient: EgoClient) =>
 			logger.error(`[clinical-routes] /donors/data-for-query: unexpected error occurred: ${e}`);
 			return res.status(500).json({
 				error: e.message || 'An unexpected error occurred retrieving clinical file data.',
+			});
+		}
+	});
+
+	/**
+	 * Download clinical data from data discovery index
+	 */
+	router.use('/donors/data-for-files-discovery', async (req: AuthenticatedRequest, res) => {
+		try {
+			// 0. Grab requester JWT
+			const { scopes, userId, authenticated } = req.auth;
+
+			if (!authenticated) {
+				logger.debug(`[clinical-routes] /donors/data-for-files-discovery: Request not authenticated.`);
+				return res.status(401).json({ error: 'Must be authenticated to access resource.' });
+			}
+			const hasDaco = hasDacoAccess(scopes);
+			if (!hasDaco) {
+				logger.debug(
+					`[clinical-routes] /donors/data-for-files-discovery: User ${userId} requesting clinical data without DACO access`,
+				);
+				return res.status(403).json({ error: 'Users require DACO approval to access clinical data.' });
+			}
+
+			// 1. Validate input
+			const parsedFilter = validateQueryParams(req.query);
+
+			// 2. Search ES
+			const files = await searchDataDiscoveryIndex(parsedFilter, esClient);
+
+			// 3. Extract unique donor IDs
+			const uniqueDonorIds = extractUniqueDonorIds(files);
+
+			// 4. Generate and return clinical data
+			const { data, filename } = await generateClinicalDataFile(clinicalAuthClient, uniqueDonorIds);
+
+			res
+				.status(200)
+				.contentType('application/octet-stream')
+				.setHeader('content-disposition', `attachment; filename="${filename}"`);
+
+			return res.send(data);
+		} catch (error) {
+			logger.error(`[clinical-routes] /donors/data-for-files-discovery: ${error.message}`);
+
+			return res.status(500).json({
+				error: error.message || 'An unexpected error occurred',
 			});
 		}
 	});
