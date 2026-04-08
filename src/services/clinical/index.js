@@ -286,7 +286,7 @@ const approveClinicalSubmissionData = async (programShortName, versionId, Author
  * @returns {Promise<{ idPrefix: string; }>}
  */
 const getDatacenterPrefixId = async () => {
-	return await fetch(`${CLINICAL_SERVICE_ROOT}/submission/configs/id-prefix`)
+	return await fetch(`${CLINICAL_SERVICE_ROOT}/configs/id-prefix`)
 		.then(restErrorResponseHandler)
 		.then((response) => response.json());
 };
