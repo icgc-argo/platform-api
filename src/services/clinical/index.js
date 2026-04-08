@@ -142,12 +142,7 @@ const getClinicalData = async (variables, Authorization) => {
 	const { completionState, entityTypes, donorIds, submitterDonorIds } = filters;
 	const queryString = buildClinicalInputQueryString(filters);
 
-	const url = urlJoin(
-		CLINICAL_SERVICE_ROOT,
-		`/clinical/program/`,
-		programShortName,
-		`/clinical-data?${queryString}`,
-	);
+	const url = urlJoin(CLINICAL_SERVICE_ROOT, `/clinical/program/`, programShortName, `/clinical-data?${queryString}`);
 
 	const response = await fetch(url, {
 		method: 'post',
@@ -193,12 +188,7 @@ const getClinicalSearchResults = async (variables, Authorization) => {
 };
 
 const getClinicalErrors = async (programShortName, donorIds, Authorization) => {
-	const url = urlJoin(
-		CLINICAL_SERVICE_ROOT,
-		`/clinical/program/`,
-		programShortName,
-		`/clinical-errors`,
-	);
+	const url = urlJoin(CLINICAL_SERVICE_ROOT, `/clinical/program/`, programShortName, `/clinical-errors`);
 
 	const body = Array.isArray(donorIds) ? JSON.stringify({ donorIds }) : undefined;
 	const response = await fetch(url, {
@@ -230,12 +220,7 @@ const uploadClinicalSubmissionData = async (programShortName, filesMap, Authoriz
 	return response;
 };
 
-const clearClinicalSubmissionData = async (
-	programShortName,
-	versionId,
-	fileType,
-	Authorization,
-) => {
+const clearClinicalSubmissionData = async (programShortName, versionId, fileType, Authorization) => {
 	const response = await fetch(
 		`${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/${versionId}/${fileType}`,
 		{
@@ -288,16 +273,22 @@ const reopenClinicalSubmissionData = async (programShortName, versionId, Authori
 };
 
 const approveClinicalSubmissionData = async (programShortName, versionId, Authorization) => {
-	await fetch(
-		`${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`,
-		{
-			method: 'post',
-			headers: { Authorization },
-		},
-	)
+	await fetch(`${CLINICAL_SERVICE_ROOT}/submission/program/${programShortName}/clinical/approve/${versionId}`, {
+		method: 'post',
+		headers: { Authorization },
+	})
 		.then(restErrorResponseHandler)
 		.then((response) => response);
 	return true;
+};
+
+/**
+ * @returns {Promise<{ idPrefix: string; }>}
+ */
+const getDatacenterPrefixId = async () => {
+	return await fetch(`${CLINICAL_SERVICE_ROOT}/submission/configs/id-prefix`)
+		.then(restErrorResponseHandler)
+		.then((response) => response.json());
 };
 
 export default {
@@ -312,6 +303,7 @@ export default {
 	getClinicalData,
 	getClinicalSearchResults,
 	getClinicalErrors,
+	getDatacenterPrefixId,
 	uploadClinicalSubmissionData,
 	clearClinicalSubmissionData,
 	validateClinicalSubmissionData,
