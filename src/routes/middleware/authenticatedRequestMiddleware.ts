@@ -32,7 +32,7 @@ type AuthRequestProperties = {
 };
 export type AuthenticatedRequest = Request & { auth: AuthRequestProperties };
 
-const extractUserScopes = async (config: {
+export const extractUserScopes = async (config: {
 	authHeader?: string;
 	egoClient: EgoClient;
 }): Promise<AuthRequestProperties> => {

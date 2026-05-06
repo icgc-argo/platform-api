@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2026 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,46 +17,143 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { gql } from 'apollo-server-express';
+import { json } from 'body-parser';
+import express, { Request, Response, Router, type RequestHandler } from 'express';
+import { GraphQLError, type DocumentNode } from 'graphql';
+import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware';
+
 import { DISCOVERY_ARRANGER_ROOT } from 'config';
-import express, { Request, Response, Router } from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import { EgoClient } from 'services/ego';
 import logger from 'utils/logger';
-import authenticatedRequestMiddleware, { AuthenticatedRequest } from './middleware/authenticatedRequestMiddleware';
+
+import { extractUserScopes } from './middleware/authenticatedRequestMiddleware';
 import { hasDacoAccess } from './utils/accessValidations';
+
+/**
+ * Check if the contents of the document are exclusively a query introspecting the gql schema.
+ *
+ * An introspection query can only have OperationDefinitions with the name `__schema` or `__type`.
+ * Top level FragmentDefintions are also allowed, and are ignored in this check.
+ */
+function isIntrospectionQuery(document: DocumentNode): boolean {
+	const { definitions } = document;
+
+	// Allow all FragmentDefinitions (will not be checked)
+	const definitionsToCheck = definitions.filter((definition) => definition.kind !== 'FragmentDefinition');
+
+	const ALLOWED_OPERATION_NAMES: string[] = ['__schema', '__type'];
+
+	// Only allow query operation where all selections are from the ALLOWED_OPERATION_NAMES
+	return definitionsToCheck.every(
+		(definition) =>
+			definition.kind === 'OperationDefinition' &&
+			definition.operation === 'query' &&
+			definition.selectionSet.selections.every(
+				(selection) => selection.kind === 'Field' && ALLOWED_OPERATION_NAMES.includes(selection.name.value),
+			),
+	);
+}
+
+function getQueryDocument(body: any): { success: true; query: DocumentNode } | { success: false; error: object } {
+	const query = body?.query;
+
+	if (query) {
+		try {
+			const gqlQuery = gql`
+				${query}
+			`;
+			return { success: true, query: gqlQuery };
+		} catch (error: unknown) {
+			// Could not parse incoming query as valid gql string
+			const detailedError =
+				error instanceof GraphQLError
+					? {
+							...error,
+							message: error.message,
+							locations: error.locations,
+							path: error.path,
+							extensions: error.extensions,
+						}
+					: error instanceof Error
+						? { message: error.message }
+						: { message: 'Syntax Error' };
+			return { success: false, error: detailedError };
+		}
+	}
+	return { success: false, error: { message: 'No request query provided.' } };
+}
+
+/**
+ * Auth is always required, except for schema introspection queries.
+ */
+function isAuthRequired(query: DocumentNode): boolean {
+	return !isIntrospectionQuery(query);
+}
+
+/**
+ * Creates an express middleware to perform authorization for all discovery arranger requests.
+ * This uses an ego client to validate user credentials, if required for the request.
+ *
+ * The auth check is not performed if the request is only for gql schema introspection details, but is
+ * made for all other requests.
+ *
+ * When auth is required, the user must:
+ *   - authenticated
+ *   - have DACO approval
+ */
+const discoveryArrangerAuthMiddleware =
+	(config: { egoClient: EgoClient }): RequestHandler =>
+	async (req, res, next) => {
+		const { egoClient } = config;
+
+		const queryResult = getQueryDocument(req.body);
+		if (!queryResult.success) {
+			// Could not parse request body, respond with status 400 and the result error details
+			return res.status(400).json(queryResult.error);
+		}
+		if (isAuthRequired(queryResult.query)) {
+			console.log('auth required');
+			const { authorization } = req.headers;
+			const authParams = await extractUserScopes({
+				egoClient,
+				authHeader: authorization,
+			});
+
+			if (!authParams.authenticated) {
+				return res.status(401).json({ error: 'invalid auth token' });
+			}
+
+			if (!hasDacoAccess(authParams.scopes)) {
+				return res.status(403).json({ error: 'not authorized' });
+			}
+		}
+		next();
+	};
 
 export const createArrangerV3Route = (egoClient: EgoClient): Router => {
 	const router = express.Router();
+	router.use(json());
 
-	router.use(authenticatedRequestMiddleware({ egoClient }));
-
-	const handleRequest = createProxyMiddleware({
+	const discoveryArrangerProxy = createProxyMiddleware({
 		target: DISCOVERY_ARRANGER_ROOT,
 		onError: (err: Error, req: Request, res: Response) => {
 			logger.error(`Arranger V3 error: + ${err}`);
 			return res.status(500).send('Internal Server Error');
 		},
 		changeOrigin: true,
-		onProxyReq: () => {
+		onProxyReq: (proxyReq, req, _res) => {
 			logger.debug(`proxying request to ${DISCOVERY_ARRANGER_ROOT}`);
+
+			// Need to fix request body since we consumed the original stream while enforcing auth rules
+			fixRequestBody(proxyReq, req);
 		},
 	});
 
-	router.all('/', (req: AuthenticatedRequest, res: Response, next) => {
-		const { authenticated, scopes } = req.auth;
-
-		if (!authenticated) {
-			res.status(401).json({ error: 'invalid auth token' });
-			return;
-		}
-
-		if (!hasDacoAccess(scopes)) {
-			res.status(403).json({ error: 'not authorized' });
-			return;
-		}
-
-		handleRequest(req, res, next);
-	});
+	/**
+	 * Use custom discoveryAuthMiddleware to protect the discovery arranger contents, but allow access to introspection queries.
+	 */
+	router.all('/', discoveryArrangerAuthMiddleware({ egoClient }), discoveryArrangerProxy);
 
 	return router;
 };
