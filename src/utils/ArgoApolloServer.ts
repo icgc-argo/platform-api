@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Ontario Institute for Cancer Research. All rights reserved
+ * Copyright (c) 2026 The Ontario Institute for Cancer Research. All rights reserved
  *
  * This program and the accompanying materials are made available under the terms of
  * the GNU Affero General Public License v3.0. You should have received a copy of the
@@ -17,15 +17,20 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Request, Response } from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import { Request, Response } from 'express';
 
 import logger from 'utils/logger';
 
 class ArgoApolloServer extends ApolloServer {
 	async createGraphQLServerOptions(req: Request, res: Response) {
 		const options = await super.createGraphQLServerOptions(req, res);
-		logger.debug(`Query: ${req.body.query.split('\n').join(' ')}`);
+		logger.debug(
+			`Query: ${req.body.query
+				.split('\n')
+				.map((val: string) => val.trim())
+				.join(' ')}`,
+		);
 		logger.debug(`Variables: ${JSON.stringify(req.body.variables)}`);
 
 		return {
