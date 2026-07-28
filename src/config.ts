@@ -21,10 +21,7 @@ export const PORT = Number(process.env.PORT) || 9000;
 export const NODE_ENV = String(process.env.NODE_ENV || 'development').toLowerCase();
 export const IS_PROD = process.env.NODE_ENV === 'production';
 export const DEBUG_LOGGING = (process.env.DEBUG_LOGGING || '').toLowerCase() === 'true';
-export const HEALTH_ENDPOINTS = (process.env.HEALTH_ENDPOINTS || '')
-	.split(',')
-	.filter((e) => Boolean(e.trim()))
-	.map((e) => e.replace(/['"]+/g, '').trim()) || ['/', '/status'];
+export const HEALTH_ENDPOINTS = ['/', '/status'];
 
 export const ADVERTISED_HOST = process.env.ADVERTISED_HOST || 'http://localhost:9000';
 
