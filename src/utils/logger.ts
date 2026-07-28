@@ -23,7 +23,7 @@ import { DEBUG_LOGGING, IS_PROD } from '@/config';
 
 const { combine, colorize, timestamp, printf } = format;
 
-const DEBUG = DEBUG_LOGGING || !IS_PROD;
+const DEBUG = DEBUG_LOGGING ?? !IS_PROD;
 
 export const loggerConfig = {
 	format: combine(
