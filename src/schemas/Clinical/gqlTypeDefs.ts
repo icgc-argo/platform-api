@@ -179,6 +179,16 @@ export default gql`
 	}
 
 	"""
+	Configuration state of the clinical service
+	"""
+	type ClinicalConfigs {
+		"""
+		The ID Prefix used by the clinical service in this datacenter.
+		"""
+		idPrefix: String!
+	}
+
+	"""
 	Collated Clinical Data Query Response
 	"""
 	type ClinicalData {
@@ -319,6 +329,11 @@ export default gql`
 		clinicalData(programShortName: String!, filters: ClinicalInput!): ClinicalData!
 
 		"""
+		Get the configurationation state for the clinical service.
+		"""
+		clinicalConfigs: ClinicalConfigs!
+
+		"""
 		Retrieve all stored Clinical Migration Errors for a program
 		"""
 		clinicalErrors(programShortName: String!, donorIds: [Int]): [ClinicalErrors!]!
@@ -328,10 +343,7 @@ export default gql`
 		"""
 		Upload a Registration file
 		"""
-		uploadClinicalRegistration(
-			shortName: String!
-			registrationFile: Upload!
-		): ClinicalRegistrationData!
+		uploadClinicalRegistration(shortName: String!, registrationFile: Upload!): ClinicalRegistrationData!
 
 		"""
 		Remove the Clinical Registration data currently uploaded and not committed
@@ -347,28 +359,18 @@ export default gql`
 		"""
 		Upload Clinical Submission files
 		"""
-		uploadClinicalSubmissions(
-			programShortName: String!
-			clinicalFiles: [Upload!]
-		): ClinicalSubmissionData!
+		uploadClinicalSubmissions(programShortName: String!, clinicalFiles: [Upload!]): ClinicalSubmissionData!
 
 		"""
 		Clear Clinical Submission
 		fileType is optional, if it is not provided all fileTypes will be cleared. The values for fileType are the same as the file names from each template (ex. donor, specimen)
 		"""
-		clearClinicalSubmission(
-			programShortName: String!
-			version: String!
-			fileType: String
-		): ClinicalSubmissionData!
+		clearClinicalSubmission(programShortName: String!, version: String!, fileType: String): ClinicalSubmissionData!
 
 		"""
 		Validate the uploaded clinical files
 		"""
-		validateClinicalSubmissions(
-			programShortName: String!
-			version: String!
-		): ClinicalSubmissionData!
+		validateClinicalSubmissions(programShortName: String!, version: String!): ClinicalSubmissionData!
 
 		"""
 		- If there is update: makes a clinical submission ready for approval by a DCC member,

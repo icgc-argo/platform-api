@@ -21,10 +21,7 @@ export const PORT = Number(process.env.PORT) || 9000;
 export const NODE_ENV = String(process.env.NODE_ENV || 'development').toLowerCase();
 export const IS_PROD = process.env.NODE_ENV === 'production';
 export const DEBUG_LOGGING = (process.env.DEBUG_LOGGING || '').toLowerCase() === 'true';
-export const HEALTH_ENDPOINTS = (process.env.HEALTH_ENDPOINTS || '')
-	.split(',')
-	.filter((e) => Boolean(e.trim()))
-	.map((e) => e.replace(/['"]+/g, '').trim()) || ['/', '/status'];
+export const HEALTH_ENDPOINTS = ['/', '/status'];
 
 export const ADVERTISED_HOST = process.env.ADVERTISED_HOST || 'http://localhost:9000';
 
@@ -75,7 +72,6 @@ export const EGO_PUBLIC_KEY =
 	`-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0lOqMuPLCVusc6szklNXQL1FHhSkEgR7An+8BllBqTsRHM4bRYosseGFCbYPn8r8FsWuMDtxp0CwTyMQR2PCbJ740DdpbE1KC6jAfZxqcBete7gP0tooJtbvnA6X4vNpG4ukhtUoN9DzNOO0eqMU0Rgyy5HjERdYEWkwTNB30i9I+nHFOSj4MGLBSxNlnuo3keeomCRgtimCx+L/K3HNo0QHTG1J7RzLVAchfQT0lu3pUJ8kB+UM6/6NG+fVyysJyRZ9gadsr4gvHHckw8oUBp2tHvqBEkEdY+rt1Mf5jppt7JUV7HAPLB/qR5jhALY2FX/8MN+lPLmb/nLQQichVQIDAQAB\r\n-----END PUBLIC KEY-----`;
 
 // External service root
-export const PROGRAM_SERVICE_ROOT = process.env.PROGRAM_SERVICE_ROOT || 'localhost:50052';
 export const PROGRAM_SERVICE_HTTP_ROOT = process.env.PROGRAM_SERVICE_HTTP_ROOT || 'localhost:8083';
 export const CLINICAL_SERVICE_ROOT = process.env.CLINICAL_SERVICE_ROOT || 'http://localhost:3000';
 export const KAFKA_REST_PROXY_ROOT = process.env.KAFKA_REST_PROXY_ROOT || 'http://localhost:8085';

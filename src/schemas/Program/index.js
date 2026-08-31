@@ -43,14 +43,7 @@ const resolvePublicSingleProgram = async (programShortName) => {
 	return response || null;
 };
 
-const programServicePrivateFields = [
-	'commitmentDonors',
-	'submittedDonors',
-	'genomicDonors',
-	'membershipType',
-	'users',
-	'dataCenter',
-];
+const programServicePrivateFields = ['commitmentDonors', 'submittedDonors', 'genomicDonors', 'membershipType', 'users'];
 
 const resolvers = {
 	ProgramOptions: {
