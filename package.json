@@ -1,6 +1,6 @@
 {
 	"name": "server",
-	"version": "3.47.0",
+	"version": "3.48.1",
 	"description": "",
 	"main": "index.js",
 	"scripts": {
@@ -28,7 +28,6 @@
 		"@babel/register": "^7.18.6",
 		"@elastic/elasticsearch": "^7.17.0",
 		"@icgc-argo/ego-token-utils": "^8.2.0",
-		"@icgc-argo/program-service-proto": "0.1.0",
 		"apollo-link-context": "^1.0.20",
 		"apollo-link-http": "^1.5.17",
 		"apollo-server-express": "^2.25.4",
