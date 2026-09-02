@@ -43,7 +43,7 @@ export const downloadDonorTsv = async (authClient: EgoAuthClient, donorIds: stri
 
 	const authToken = await authClient.getAuth();
 
-	const donorIdNumbers = donorIds.map((donorId) => Number(donorId.replace(/^DO/, '')));
+	const donorIdNumbers = donorIds.map((donorId) => Number(donorId.replace(/^.*DO/, '')));
 
 	const response = await fetch(url, {
 		method: 'post',
